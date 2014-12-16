@@ -413,7 +413,7 @@ p {
 
 .top-bar-section ul li {background: white}
 .expanded > nav > section > ul > li > h3 > a{margin: 3%}
-.fixed.medium-offset-2:not(.expanded){margin-left:8.89% !important}
+.fixed.medium-offset-2:not(.expanded){margin-left:8.89%}
 .top-bar-section .divider,
 .top-bar-section [role="separator"] {
   border-top: solid 1px gray;
