@@ -14,11 +14,7 @@
 <?php echo js('assets/js/foundation/foundation.topbar.js') ?>
 <script>
 	$(document).foundation();
-    $(document).on('replace', 'img', function (e, new_path, original_path) {
-  console.log(e.currentTarget, new_path, original_path);
-});
 </script>
-
 </body>
 
 </html>
