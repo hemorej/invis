@@ -5,7 +5,8 @@ class Api {
   static public function createPage($uri, $title, $template, $uid) {
 
     $parent = empty($uri)  ? site() : page($uri);
-    $uid    = empty($uid) ? str::slug($title) : str::slug($uid);
+    $last = $parent->children()->count();
+    $uid = ++$last. '-' . str::slug($title);
 
     if(empty($title)) {
       throw new Exception(l('pages.add.error.title'));
