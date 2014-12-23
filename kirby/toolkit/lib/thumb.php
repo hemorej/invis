@@ -58,7 +58,7 @@ class Thumb extends Obj {
       'safeFilename' => f::safeName($this->source->name()) . '.' . $this->extension(),
       'width'        => $this->options['width'],
       'height'       => $this->options['height'],
-      'hash'         => md5($this->source->name()),
+      'hash'         => md5($this->source->filename() . $this->settingsIdentifier()),
     ));
 
     $this->destination->url  = $this->options['url'] . '/' . $this->destination->filename;

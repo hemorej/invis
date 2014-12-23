@@ -33,3 +33,4 @@ c::set('timezone', 'America/Montreal');
 
 c::set('url', 'newinvis');
 c::set('url', 'http://home:8888/newinvis');
+c::set('debug', true);

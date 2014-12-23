@@ -4,7 +4,7 @@
 <div class="row small-space-top">
 	<section class="small-12 medium-10 medium-push-2 columns">
 	  <article>
-        <?php 
+        <?php
         $image = $pages->find('portfolio')->files()->shuffle()->first();
         snippet('interchange', array('image' => $image)) ?>
 	  </article>
