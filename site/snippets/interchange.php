@@ -1,5 +1,6 @@
 <?php
 $thumbDirectory = '/thumbs';
+$placeholder = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
 
 if(!isset($alt) || $alt == ''){$alt = 'photograph';}
 if(!isset($title) || $title == ''){$title = $alt;}
@@ -27,6 +28,6 @@ else{
     <div class="caption"><?php echo $caption ?></div>
 <?php endif ?>
 
-<img  <?php echo "alt='$alt' title='$title'" ?> data-interchange="[<?php echo $medium; ?>, (default)], [<?php echo $small; ?>, (small)], [<?php echo $medium; ?>, (medium)]">
+<img class="lazy" <?php echo "alt='$alt' title='$title'" ?> data-original="[<?php echo $medium; ?>, (default)], [<?php echo $small; ?>, (small)], [<?php echo $medium; ?>, (medium)]" src="<?php echo $placeholder ?>" width="600" height="400">
 <noscript><img src="<?php echo $medium; ?>"></noscript>
 

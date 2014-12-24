@@ -12,8 +12,19 @@
 <?php echo js('assets/js/foundation/foundation.min.js') ?>
 <?php echo js('assets/js/foundation/foundation.interchange.js') ?>
 <?php echo js('assets/js/foundation/foundation.topbar.js') ?>
+<?php echo js('assets/js/vendor/unveil.js') ?>
 <script>
 	$(document).foundation();
+    function reflow(){
+        $(this).removeAttr('data-original');
+        $(this).removeAttr('width');
+        $(this).removeAttr('height');
+        $(document).foundation('interchange', 'reflow');
+        $(document).foundation('interchange', 'resize');
+    }
+    $(document).ready(function() {
+        $("img.lazy").unveil(50, reflow) ;
+    });
 </script>
 </body>
 
