@@ -5,7 +5,9 @@ class Api {
   static public function createPage($uri, $title, $template, $uid) {
 
     $parent = empty($uri)  ? site() : page($uri);
-    $last = $parent->children()->count();
+    $dir = $parent->root() . '/*';
+
+    $last = count(array_filter(glob($dir)), GLOB_ONLYDIR);
     $uid = ++$last. '-' . str::slug($title);
 
     if(empty($title)) {
