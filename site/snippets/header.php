@@ -17,6 +17,13 @@
 
   <link rel="alternate" type="application/rss+xml" href="<?php echo url('feed') ?>" title="Feed | <?php echo html($site->title()) ?>" />
 
+  <? if(isset($extraHeaders)){
+    foreach($extraHeaders as $header){
+      echo $header."\n";
+    }
+  }
+  ?>
+
 </head>
 
 <body>

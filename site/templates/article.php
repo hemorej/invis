@@ -1,4 +1,16 @@
-<?php snippet('header') ?>
+<?php 
+
+$image = thumb($page->images()->first(), array('height' => 600));
+$extraHeaders = array(
+	"<meta name='twitter:card' content='photo' />",
+	"<meta name='twitter:site' content='@jerome_a_' />",
+	"<meta name='twitter:title' content='".$page->title()."' />",
+	"<meta name='twitter:image' content='".$image->url()."' />",
+	"<meta name='twitter:url' content='".$page->url()."' />"
+	);
+?>
+
+<?php snippet('header', array('extraHeaders' => $extraHeaders)) ?>
 <?php snippet('menu') ?>
 
 <div class="row medium-space-top">
