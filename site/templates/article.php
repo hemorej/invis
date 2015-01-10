@@ -1,10 +1,13 @@
 <?php 
 
 $image = thumb($page->images()->first(), array('height' => 600));
+$title = $page->title();
+if( $page->title() == $page->uid()){ $title = $page->parent()->slug();}
+
 $extraHeaders = array(
 	"<meta name='twitter:card' content='photo' />",
 	"<meta name='twitter:site' content='@jerome_a_' />",
-	"<meta name='twitter:title' content='".$page->title()."' />",
+	"<meta name='twitter:title' content='".$title."' />",
 	"<meta name='twitter:image' content='".$image->url()."' />",
 	"<meta name='twitter:url' content='".$page->url()."' />"
 	);
