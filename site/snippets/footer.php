@@ -17,12 +17,10 @@
 	$(document).foundation();
     function reflow(){
         $(this).removeAttr('data-original');
-        $(this).removeAttr('width');
-        $(this).removeAttr('height');
         $(document).foundation('interchange', 'reflow');
     }
     $(document).ready(function() {
-        $("img.lazy").unveil(50, reflow) ;
+        $("img.lazy").unveil(500, reflow) ;
     });
 </script>
 </body>
