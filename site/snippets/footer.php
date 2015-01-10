@@ -20,7 +20,6 @@
         $(this).removeAttr('width');
         $(this).removeAttr('height');
         $(document).foundation('interchange', 'reflow');
-        $(document).foundation('interchange', 'resize');
     }
     $(document).ready(function() {
         $("img.lazy").unveil(50, reflow) ;
