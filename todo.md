@@ -1,5 +1,3 @@
 todo
 
-- cache-control/expiry
-- gzip compression
-- cat js files
+- test latest perf optimizations in prod

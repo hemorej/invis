@@ -9,10 +9,11 @@
 <body <?php if (isset($error)) echo 'class="error"' ?>>
 
 <?php echo js('assets/js/vendor/jquery.js') ?>
-<?php echo js('assets/js/foundation/foundation.min.js') ?>
-<?php echo js('assets/js/foundation/foundation.interchange.js') ?>
-<?php echo js('assets/js/foundation/foundation.topbar.js') ?>
-<?php echo js('assets/js/vendor/unveil.js') ?>
+<?php //echo js('assets/js/foundation/foundation.min.js') ?>
+<?php //echo js('assets/js/foundation/foundation.interchange.js') ?>
+<?php //echo js('assets/js/foundation/foundation.topbar.js') ?>
+<?php //echo js('assets/js/vendor/unveil.js') ?>
+<?php echo js('assets/js/vendor/min.js') ?>
 <script>
 	$(document).foundation();
     function reflow(){
