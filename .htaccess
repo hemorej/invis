@@ -20,7 +20,7 @@ RewriteEngine on
 RewriteRule ^content/(.*)\.(txt|md|mdown)$ error [R=301,L]
 
 RewriteCond %{REQUEST_URI} !(thumbs) [NC]
-RewriteRule ^content/(.*)\.(jpg)$ error [R=301,L]
+RewriteRule ^content/(.*)\.(jpg)$ - [R=404,L]
 
 # block all files in the site folder from being accessed directly
 RewriteRule ^site/(.*) error [R=301,L]

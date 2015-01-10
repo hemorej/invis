@@ -4,7 +4,7 @@ Published: February 2014
 ----
 Text: 
 
-(image: about/self.jpg text: self portrait)
+(image: about/thumbs/self.jpg text: self portrait)
 
 <br>
 
