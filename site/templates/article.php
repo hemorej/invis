@@ -1,5 +1,21 @@
 <?php 
 
+if(!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+	$param = $_GET['kudos'];
+	$current = 0;
+	if($file = $page->file('kudos.md')){
+		$current = file_get_contents($page->file('kudos.md'));
+	}
+
+	if(null == $param){
+		echo $current;
+	}else{
+		$param == 'plus' ? ++$current : --$current;
+		file_put_contents ( $page->root().'/kudos.md', $current);
+	}
+	return;
+}
+
 $image = thumb($page->images()->first(), array('height' => 600));
 $title = $page->title();
 if( $page->title() == $page->uid()){ $title = $page->parent()->slug();}
@@ -24,6 +40,7 @@ $extraHeaders = array(
 	else if("" !== $page->published()->toString()){
 		$headline = date('F d, Y', strtotime($page->published()->toString()));
 	}
+
 	?>
 
 </div>
@@ -41,7 +58,18 @@ $extraHeaders = array(
 			endforeach ?>
 
 			<p class="medium-space-top"></p>
-					
+
+			<figure class="kudo kudoable" data-id="1">
+			        <a class="kudobject">
+			            <div class="opening">
+			            	<span style="margin-left:-80px" class="num">0</span> Kudos
+			                <div class="circle">&nbsp;</div>
+			            </div>
+			        </a>
+			</figure>
+
+			<p class="medium-space-top"></p>
+
 				<?php if($page->hasPrev()): ?>
 					<span class="left">
 						<a href="<?php echo $page->prev()->url() ?>">&laquo; Previous</a>
