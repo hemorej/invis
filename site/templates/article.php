@@ -72,10 +72,10 @@ $extraHeaders = array(
 
 				<?php if($page->hasPrev()): ?>
 					<span class="left">
-						<a href="<?php echo $page->prev()->url() ?>">&laquo; Previous</a>
+						<a href="<?php echo $page->prev()->url() ?>">&laquo; Previous | </a>
 					</span>
 				<?php endif ?>
-				
+				<span><a href="<?php echo $page->parent()->url() . '?archive' ?>">Archives</a></span>
 				<?php if($page->hasNext()): ?>
 					<span class="right">
 						<a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
