@@ -6,7 +6,7 @@ if(isset($_GET['archive'])){
     snippet('menu');
 
     $archive = array();
-    $articles = $page->children()->visible()->flip()->paginate(180);
+    $articles = $page->children()->visible()->flip()->paginate(80);
     
     foreach($articles as $article){
         $key = date('M Y', strtotime($article->published()->toString()));
@@ -42,15 +42,15 @@ if(isset($_GET['archive'])){
     <?php if($articles->pagination()->hasPages()): ?>
     <div class="row medium-space-top">       
         <div class="small-12 small-centered medium-12 columns">
-            <?php if($articles->pagination()->hasPrevPage()): ?>
+            <?php if($articles->pagination()->hasNextPage()): ?>
                 <span class="left">
-                    <a href="<?= $articles->pagination()->prevPageURL() ?>">&laquo; older</a>
+                    <a href="<?= $articles->pagination()->nextPageURL() ?>">&laquo; older</a>
                 </span>
             <?php endif ?>
             
-            <?php if($articles->pagination()->hasNextPage()): ?>
+            <?php if($articles->pagination()->hasPrevPage()): ?>
                 <span class="right">
-                    <a href="<?= $articles->pagination()->nextPageURL() ?>">newer  &raquo;</a>
+                    <a href="<?= $articles->pagination()->prevPageURL() ?>">newer  &raquo;</a>
                 </span>
             <?php endif ?>  
         </div>
