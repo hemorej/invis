@@ -54,7 +54,7 @@ class PagesController extends Controller {
     if($blueprint->pages()->max() !== 0 and $blueprint->pages()->hide() == false) {
 
       // fetch all subpages in the right order
-      $children = api::subpages($page->children(), $blueprint);
+      $children = api::subpages($page->children(), $blueprint)->flip();
 
       // add pagination to the subpages
       if($limit = $blueprint->pages()->limit()) {
