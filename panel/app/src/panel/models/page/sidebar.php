@@ -22,7 +22,7 @@ class Sidebar {
     }
 
     // fetch all subpages in the right order
-    $children = $this->page->children()->paginated('sidebar');
+    $children = $this->page->children()->flip()->paginated('sidebar');
 
     // create the pagination snippet
     $pagination = new Snippet('pagination', array(
