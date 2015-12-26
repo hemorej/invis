@@ -1,10 +1,7 @@
 <?php
 
 /**
- *
- * Language
- *
- * Some handy methods to handle multi-language support
+ * Toolkit
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -12,6 +9,12 @@
  * @copyright Bastian Allgeier
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
-class L extends Silo {
-  public static $data = array();
+class Toolkit {
+
+  public static $version = '2.2.3';
+
+  public static function version() {
+    return static::$version;
+  }
+
 }

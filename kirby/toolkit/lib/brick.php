@@ -2,7 +2,7 @@
 
 class Brick {
 
-  static public $bricks = array();
+  public static $bricks = array();
 
   public $tag    = null;
   public $attr   = array();
@@ -155,7 +155,9 @@ class Brick {
   }
 
   public function html($html = null) {
-    if(is_null($html)) return $this->html;
+    if(is_null($html)) {
+      return $this->html = $this->isVoid() ? null : $this->html;
+    }
     $this->html = $html;
     return $this;
   }
@@ -172,6 +174,10 @@ class Brick {
     return $this;
   }
 
+  public function isVoid() {
+    return html::isVoid($this->tag());
+  }
+
   public function toString() {
     $this->attr['class'] = implode(' ', $this->classNames());
     return html::tag($this->tag(), $this->html(), $this->attr());
@@ -181,11 +187,11 @@ class Brick {
     return $this->toString();
   }
 
-  static public function make($id, $callback) {
+  public static function make($id, $callback) {
     static::$bricks[$id] = $callback;
   }
 
-  static public function get($id) {
+  public static function get($id) {
     if(!isset(static::$bricks[$id])) return false;
     $args = array_slice(func_get_args(), 1);
     return call_user_func_array(static::$bricks[$id], $args);

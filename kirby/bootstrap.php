@@ -2,19 +2,9 @@
 
 if(!defined('KIRBY'))  define('KIRBY', true);
 if(!defined('DS'))     define('DS', DIRECTORY_SEPARATOR);
-if(!defined('TERROR')) define('TERROR', true);
 
 // load the kirby toolkit
 include(__DIR__ . DS . 'toolkit' . DS . 'bootstrap.php');
-
-// load the custom error handler
-if(TERROR) {
-  include(__DIR__ . DS . 'terror' . DS . 'terror.php');
-  terror::init();
-}
-
-// start a session
-s::start();
 
 // load all core classes
 load(array(
@@ -46,10 +36,14 @@ load(array(
 
   // lib
   'pageextension'          => __DIR__ . DS . 'lib' . DS . 'pageextension.php',
+  'structure'              => __DIR__ . DS . 'lib' . DS . 'structure.php',
 
-  // vendors
+  // parsedown
   'parsedown'              => __DIR__ . DS . 'vendors' . DS . 'parsedown.php',
-  'parsedownextra'         => __DIR__ . DS . 'vendors' . DS . 'parsedownextra.php'
+  'parsedownextra'         => __DIR__ . DS . 'vendors' . DS . 'parsedownextra.php',
+
+  // smartypants
+  'smartypantstypographer_parser' => __DIR__ . DS . 'vendors' . DS . 'smartypants.php',
 
 ));
 
