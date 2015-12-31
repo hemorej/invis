@@ -17,11 +17,10 @@ $extraHeaders = array(
 
 <div class="row medium-space-top">
 	<?php 
-	if( $page->title() != $page->uid()){
-		$headline = "_".$page->title()->lower();
-	}
-	else if("" !== $page->published()->toString()){
+	if("" !== $page->published()->toString()){
 		$headline = date('F d, Y', strtotime($page->published()->toString()));
+	}else if( $page->title() != $page->uid()){
+		$headline = "_".$page->title()->lower();
 	}
 
 	?>
@@ -44,7 +43,7 @@ $extraHeaders = array(
 
 				<?php if($page->hasPrev()): ?>
 					<span class="left">
-						<a href="<?php echo $page->prev()->url() ?>">&laquo; Previous</a> | 
+						<a href="<?php echo $page->prev()->url() ?>">&laquo; Previous | </a>
 					</span>
 				<?php endif ?>
 				<span><a href="<?php echo $page->parent()->url() . '?archive' ?>">Archives</a></span>

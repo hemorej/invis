@@ -3,7 +3,7 @@
 
 <?php	
 	  $articles = $page->children()
-	                    ->visible()
+						->sortBy('modified', 'desc')
 	                    ->paginate(10);
 ?>
 

@@ -6,7 +6,7 @@ if(isset($_GET['archive'])){
     snippet('menu');
 
     $archive = array();
-    $articles = $page->children()->visible()->flip()->paginate(80);
+    $articles = $page->children()->flip()->paginate(80);
     
     foreach($articles as $article){
         $key = date('M Y', strtotime($article->published()->toString()));
@@ -60,7 +60,7 @@ if(isset($_GET['archive'])){
     <?php snippet('footer') ?>
 
 <?php }else{
-    $article = $page->children()->visible()->flip()->first();
+    $article = $page->children()->sortBy('modified', 'desc')->first();
     echo go($article->url());
 }
 ?>
