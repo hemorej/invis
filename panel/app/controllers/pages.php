@@ -6,6 +6,7 @@ class PagesController extends Kirby\Panel\Controllers\Base {
 
     $self   = $this;
     $parent = $this->page($id);
+
     $form   = $parent->form('add', function($form) use($parent, $self) {
     
       $form->validate();
@@ -14,10 +15,14 @@ class PagesController extends Kirby\Panel\Controllers\Base {
         return $form->alert(l('pages.add.error.template'));
       } 
 
-      try {        
+      try {   
+        $dir = $parent->root() . '/*';
+
+        $last = count(glob($dir, GLOB_ONLYDIR));
+        $last = ++$last. '-' ;
 
         $data = $form->serialize();
-        $page = $parent->children()->create($data['uid'], $data['template'], array(
+        $page = $parent->children()->create($last.$data['uid'], $data['template'], array(
           'title' => $data['title']
         ));
 
