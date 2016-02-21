@@ -35,10 +35,10 @@ $extraHeaders = array(
 			<?php 
 
 			echo kirbytext($page->text()) ;
-			foreach($page->images() as $image): 
-				snippet('interchange', array('image' => $image, 'alt' => $image->alt(), 'caption' => $image->caption()));
-			endforeach ?>
+			snippet('interchange', array('images' => $page->images())) ;
 
+			?>
+			
 			<p class="medium-space-top"></p>
 
 				<?php if($page->hasPrev()): ?>

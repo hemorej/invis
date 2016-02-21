@@ -6,7 +6,8 @@
 	  <article>
         <?php
         $image = $pages->find('portfolio')->files()->shuffle()->first();
-        snippet('interchange', array('image' => $image)) ?>
+        $page = array('images' => $image) ;
+        snippet('interchange', array('images' => $page)) ?>
 	  </article>
 	</section>
 </div>
