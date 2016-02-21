@@ -17,6 +17,7 @@
 <script>
 
     $(document).foundation();
+    $("img.lazy").show() ;
     function reflow(){
         $(this).removeAttr('data-original');
         $(document).foundation('interchange', 'reflow');
