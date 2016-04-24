@@ -17,8 +17,13 @@ $extraHeaders = array(
 
 <div class="row medium-space-top">
 	<?php 
-	if("" !== $page->published()->toString()){
-		$headline = date('F d, Y', strtotime($page->published()->toString()));
+	$published = $page->published()->toString() ;
+	if("" !== $published){
+		if(strpos($published, ',') == false){
+			$headline = $published ;
+		}else{
+			$headline = date('F d, Y', strtotime($published));
+		}
 	}else if( $page->title() != $page->uid()){
 		$headline = "_".$page->title()->lower();
 	}
