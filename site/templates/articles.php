@@ -3,8 +3,8 @@
 
 <?php	
 	  $articles = $page->children()
-						->sortBy('modified', 'desc')
-	                    ->paginate(10);
+			->sortBy('publishDate', 'desc')
+	                 ->paginate(10);
 ?>
 
 	<?php foreach($articles as $article): ?>
