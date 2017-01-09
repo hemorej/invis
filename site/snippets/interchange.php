@@ -16,7 +16,6 @@ foreach($images as $image):
     if($page->isVisible()){
         $destination = $image->dir() . $thumbDirectory;
         $url = $page->url() . $thumbDirectory ;
-        dir::make($destination);
         $options = array('root' => $destination, 'url' => $url);
     }
 

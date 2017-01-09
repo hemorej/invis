@@ -6,7 +6,7 @@ if(isset($_GET['archive'])){
     snippet('menu');
 
     $archive = array();
-    $articles = $page->children()->visible()->flip()->paginate(80) ;
+    $articles = $page->children()->visible()->sortBy('publishDate', 'desc')->paginate(80);
     
     foreach($articles as $article){
         $key = date('M Y', strtotime($article->published()->toString()));

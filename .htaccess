@@ -17,19 +17,22 @@ RewriteEngine on
 #
 # RewriteBase /mysite
 
-# block text files in the content folder from being accessed directly
-RewriteRule ^content/(.*)\.(txt|md|mdown)$ error [R=301,L]
+# In some enviroments it's necessary to
+# set the RewriteBase to:
+#
+# RewriteBase /
 
-RewriteCond %{REQUEST_URI} !(thumbs) [NC]
-RewriteRule ^content/(.*)\.(jpg)$ - [R=404,L]
+# block text files in the content folder from being accessed directly
+RewriteRule ^content/(.*)\.(txt|md|mdown)$ index.php [L]
 
 # block all files in the site folder from being accessed directly
-RewriteRule ^site/(.*) error [R=301,L]
+# except for requests to plugin assets files
+#RewriteRule ^assets/plugins/([a-zA-Z0-9\.\-_%=]+)/(.*)$ site/plugins/$1/assets/$2 [L,N]
+#RewriteCond $1 !^plugins/[a-zA-Z0-9\.\-_%=]+/assets/.*
+RewriteRule ^site/(.*) index.php [L]
 
-# block all files in the kirby folder from being accessed directly
-RewriteRule ^kirby/(.*) error [R=301,L]
-
-RewriteRule ^blog(.*) /journal [R=301,L]
+# block direct access to kirby and the panel sources
+RewriteRule ^(kirby|panel\/app|panel\/tests)/(.*) index.php [L]
 
 # make panel links work
 RewriteCond %{REQUEST_FILENAME} !-f

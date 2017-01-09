@@ -30,4 +30,4 @@ of the system, please check out http://getkirby.com/docs/advanced/options
 */
 
 c::set('timezone', 'America/Montreal');
-c::set('debug', true);
+c::set('debug', false);
