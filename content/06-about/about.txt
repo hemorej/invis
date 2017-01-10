@@ -1,19 +1,21 @@
 Title: About
+
 ----
+
 Published: February 2014
+
 ----
+
 Text: 
 
 (image: about/thumbs/self.jpg text: self portrait)
 
 <br>
 
-When I was 15 years old, my cousin gave me my first and very own film camera before a family trip abroad. Growing up, we never travelled much, combine the foreign with this curious new way of looking through a frame and I was instantly hooked.<br /><br />
-Photography is essentially about seeing. But to the curious and restless, it’s also about relating to the endlessly fascinating outside world. It's probably the best-suited medium to explore reality, our perception of it and its relation to our imagination. While my photographic character is not quite there yet, I work mostly along a line of graphic self expression. I shoot to understand the world around me and to understand myself.<br /><br />
 Born in 1988, working and living in Montreal<br /><br />
 
-&laquo;The inferno of the living is not something that will be; if there is one, it is what is already here, the inferno where we live every day, that we form by being together. There are two ways to escape suffering it. The first is easy for many: accept the inferno and become such a part of it that you can no longer see it. The second is risky and demands constant vigilance and apprehension: seek and learn to recognize who and what, in the midst of inferno, are not inferno, then make them endure, give them space.&raquo;<br />
-<span class="sc">&mdash; italo calvino, invisible cities</span><br /><br />
+«The inferno of the living is not something that will be; if there is one, it is what is already here, the inferno where we live every day, that we form by being together. There are two ways to escape suffering it. The first is easy for many: accept the inferno and become such a part of it that you can no longer see it. The second is risky and demands constant vigilance and apprehension: seek and learn to recognize who and what, in the midst of inferno, are not inferno, then make them endure, give them space.»<br />
+<span class="sc">— italo calvino, invisible cities</span><br /><br />
 
 ###influences
 (link: http://www.sluban.com/ text: klavdij sluban popup: yes )
@@ -27,21 +29,19 @@ Born in 1988, working and living in Montreal<br /><br />
 (link: http://www.magnumphotos.com/PaoloPellegrin text: paolo pellegrin popup: yes )
 (link: http://www.magnumphotos.com/JosefKoudelka text: josef koudelka popup: yes )
 (link: http://www.magnumphotos.com/RaymondDepardon text: raymond depardon popup: yes )
-(link: http://invisiblephotographer.asia text: IPA popup: yes )
 (link: http://www.christopheagou.com text: christophe agou popup: yes )
-(link: http://www.jehsongbaak.com/fr/accueil.html text: jehsong baak popup: yes )
+(link: http://www.magnumphotos.com/larrytowell text: larry towell popup: yes )
 (link: http://www.anderspetersen.se text: anders petersen popup: yes )
 (link: http://www.davidalanharvey.com/ text: david alan harvey popup: yes )
 (link: http://www.magnumphotos.com/alexwebb text: alex webb popup: yes)
+(link: http://www.magnumphotos.com/thomasdworzak text: thomas dworzak popup: yes)
 (link: http://www.magnumphotos.com/bruceDavidson text: bruce davidson popup: yes )
 (link: http://www.jeromelorieau.com/ text: jerome lorieau popup: yes )
 (link: http://www.yannickolivier.net/ text: yannick olivier popup: yes )
-(link: http://www.olli-bery.com/ text: olli bery popup: yes )
 (link: http://www.flickr.com/photos/62915814@N02/ text: elhacedor popup: yes )
 (link: http://www.flickr.com/photos/simonsawsunlight text: simon becker popup: yes )
 (link: http://www.hobokollektiv.net/ text: florian fritsch popup: yes )
-(link: http://www.klarayoon.com text: klara yoon popup: yes )
-(link: http://gonzale.net/ text: charlotte gonzalez popup: yes)<br /><br />
+(link: http://www.klarayoon.com text: klara yoon popup: yes )<br /><br />
 ###contact
 (link: http://flickr.com/photos/jerome88 text: flickr popup: yes)
 (link: http://twitter.com/jerome_a_ text: twitter popup: yes)
