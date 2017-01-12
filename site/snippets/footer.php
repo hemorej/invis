@@ -1,7 +1,7 @@
 <?php if (!isset($noCopyright)): ?>
     <div class="row large-space-top">
       <footer class="small-12 small-centered medium-10 medium-offset-2 medium-centered columns low-contrast">
-        <?php echo kirbytext($site->copyright()) ?>
+        <p><?php echo html::decode($site->copyright()->kirbytext()) ?></p>
       </footer>
     </div>
 <?php endif; ?>
