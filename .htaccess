@@ -34,6 +34,9 @@ RewriteRule ^site/(.*) index.php [L]
 # block direct access to kirby and the panel sources
 RewriteRule ^(kirby|panel\/app|panel\/tests)/(.*) index.php [L]
 
+# make /prints redirect to actual shop
+RewriteRule ^prints$ http://shop.the-invisible-cities.com/ [L,R=301]
+
 # make panel links work
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
