@@ -60,7 +60,7 @@ if(isset($_GET['archive'])){
     <?php snippet('footer') ?>
 
 <?php }else{
-    $article = $page->children()->visible()->flip()->first();
+    $article = $page->children()->last();
     echo go($article->url());
 }
 ?>
