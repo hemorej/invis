@@ -17,6 +17,10 @@ RewriteEngine on
 #
 # RewriteBase /mysite
 
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [QSA,L,R=301]
+
 # In some enviroments it's necessary to
 # set the RewriteBase to:
 #
@@ -46,11 +50,6 @@ RewriteRule ^panel/(.*) panel/index.php [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*) index.php [L]
-
-#https
-RewriteCond %{HTTPS} off     
-RewriteCond %{REQUEST_URI} ^/panel/?
-RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 </IfModule>
 
