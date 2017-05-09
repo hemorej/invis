@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
-  <title><?php echo html($site->title()) ?> - <?php echo html($page->title()) ?></title>
+
+  <?php
+  $title = $page->published()->toString();
+  if(!empty($page->title()) && $page->title() != $page->uid())
+    $title = $page->title();
+  ?>
+
+  <title><?php echo html($site->title()) . ' - ' . html(strtolower($title)) ?></title>
   <meta charset="utf-8" />
   <meta name="description" content="<?php echo html($site->description()) ?>" />
   <meta name="keywords" content="<?php echo html($site->keywords()) ?>" />
