@@ -57,7 +57,7 @@ RewriteRule ^(.*) index.php [L]
   ExpiresActive on
 
 # Perhaps better to whitelist expires rules? Perhaps.
-  ExpiresDefault                          "access plus 1 month"
+  ExpiresDefault                          "access plus 1 day"
 
 # Feed
   ExpiresByType application/rss+xml       "access plus 1 hour"

@@ -12,4 +12,4 @@
 	</section>
 </div>
 
-<?php snippet('footer', array('noCopyright' => true)) ?>
+<?php snippet('footer') ?>
