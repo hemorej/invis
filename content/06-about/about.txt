@@ -44,7 +44,6 @@ Born in 1988, working and living in Montreal<br /><br />
 (link: http://www.klarayoon.com text: klara yoon popup: yes )<br /><br />
 ###contact
 (link: http://flickr.com/photos/jerome88 text: flickr popup: yes)
-(link: http://twitter.com/jerome_a_ text: twitter popup: yes)
 (link: http://instagram.com/jerome_a_ text: instagram popup: yes)
 (link: http://the-invisible-cities.com/feed text: rss popup: yes)
 (email: jerome@the-invisible-cities.com text: email)
