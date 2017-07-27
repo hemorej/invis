@@ -30,8 +30,10 @@ foreach($images as $image):
 
     ?>
 
-    <?php if(isset($caption)): ?>
-        <div class="caption"><?php echo $caption ?></div>
+    <?php if(!empty($caption->value)): ?>
+        <div class="caption"><?php echo $caption->value ?></div>
+    <?php elseif(empty($caption->value) && $loop != 0): ?>
+        <div class="row large-space-top"></div>
     <?php endif ?>
 
     <?php if($loop > 0): ?>
