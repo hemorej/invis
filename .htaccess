@@ -99,3 +99,7 @@ AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css a
 # AddDefaultCharset UTF-8
 #
 # php_flag short_open_tag on
+
+<FilesMatch "\.(ttf|otf|eot|woff|woff2)$">
+ Header set Access-Control-Allow-Origin "http://shop.the-invisible-cities.com"
+</FilesMatch>
