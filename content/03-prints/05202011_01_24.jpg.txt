@@ -1,5 +1,0 @@
-alt: boston, cafe
-----
-text: Boston cafe 
-----
-caption: Boston cafe
