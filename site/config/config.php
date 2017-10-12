@@ -31,3 +31,6 @@ of the system, please check out http://getkirby.com/docs/advanced/options
 
 c::set('timezone', 'America/Montreal');
 c::set('debug', false);
+c::set('cache', true);
+c::set('cache.driver', 'file');
+c::set('cache.autoupdate',true);
