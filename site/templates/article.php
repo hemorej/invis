@@ -18,8 +18,8 @@ $extraHeaders = array(
 <div class="row medium-space-top">
 	<?php 
 	$published = $page->published()->toString() ;
-	if("" !== $published){
-		if(strpos($published, ',') == false){
+	if(!empty($published)){
+       if(strpos($published, ',') != false){
 			$headline = $published ;
 		}else{
 			$headline = date('F d, Y', strtotime($published));
