@@ -34,3 +34,4 @@ c::set('debug', false);
 c::set('cache', true);
 c::set('cache.driver', 'file');
 c::set('cache.autoupdate',true);
+c::set('ssl',true);
