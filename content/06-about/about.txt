@@ -8,23 +8,28 @@ Published: February 2014
 
 Text: 
 
-(image: about/thumbs/self.jpg text: self portrait)
+(image: about/self.jpg text: self portrait)
 
 <br>
 
-Born in 1988, working and living in Montreal<br /><br />
+Born in 1988, living and working in Montreal<br /><br />
 
 «The inferno of the living is not something that will be; if there is one, it is what is already here, the inferno where we live every day, that we form by being together. There are two ways to escape suffering it. The first is easy for many: accept the inferno and become such a part of it that you can no longer see it. The second is risky and demands constant vigilance and apprehension: seek and learn to recognize who and what, in the midst of inferno, are not inferno, then make them endure, give them space.»<br />
 <span class="sc">— italo calvino, invisible cities</span><br /><br />
 
 ###influences
 (link: http://www.sluban.com/ text: klavdij sluban popup: yes )
-(link: http://www.magnumphotos.com/TrentParke text: trent parke popup: yes )
 (link: http://www.in-public.com/SaulLeiter/gallery/104 text: saul leiter popup: yes )
-(link: http://www.moriyamadaido.com/english/ text: daido moriyama popup: yes )<br /><br />
+(link: http://www.moriyamadaido.com/english/ text: daido moriyama popup: yes )
+(link: http://jasoneskenazi.com/ text: jason eskenazi popup: yes)<br /><br />
+
 ###links
+(link: http://kityoung.co.uk/ text: kit young popup:yes)
+(link: http://www.magnumphotos.com/TrentParke text: trent parke popup: yes )
 (link: http://www.gracielaiturbide.org/en/ text: graciela iturbide popup: yes)
 (link: http://www.peterlindbergh.com/essay/ text: peter lindbergh popup: yes)
+(link: http://www.ralphgibson.com/gallery.html text: ralph gibson popup: yes)
+(link: http://www.renatodagostin.com/renato-d-agostin/home text: renato d'agostin  popup: yes)
 (link: http://www.lensculture.com/klein.html text: william klein popup: yes)
 (link: http://www.magnumphotos.com/PaoloPellegrin text: paolo pellegrin popup: yes )
 (link: http://www.magnumphotos.com/JosefKoudelka text: josef koudelka popup: yes )
@@ -36,12 +41,8 @@ Born in 1988, working and living in Montreal<br /><br />
 (link: http://www.magnumphotos.com/alexwebb text: alex webb popup: yes)
 (link: http://www.magnumphotos.com/thomasdworzak text: thomas dworzak popup: yes)
 (link: http://www.magnumphotos.com/bruceDavidson text: bruce davidson popup: yes )
-(link: http://www.jeromelorieau.com/ text: jerome lorieau popup: yes )
 (link: http://www.yannickolivier.net/ text: yannick olivier popup: yes )
-(link: http://www.flickr.com/photos/62915814@N02/ text: elhacedor popup: yes )
-(link: http://www.flickr.com/photos/simonsawsunlight text: simon becker popup: yes )
-(link: http://www.hobokollektiv.net/ text: florian fritsch popup: yes )
-(link: http://www.klarayoon.com text: klara yoon popup: yes )<br /><br />
+(link: http://www.flickr.com/photos/62915814@N02/ text: elhacedor popup: yes )<br /><br />
 ###contact
 (link: http://flickr.com/photos/jerome88 text: flickr popup: yes)
 (link: http://instagram.com/jerome_a_ text: instagram popup: yes)
