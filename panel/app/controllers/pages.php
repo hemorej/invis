@@ -24,13 +24,8 @@ class PagesController extends Kirby\Panel\Controllers\Base {
           throw new Exception(l('pages.add.error.template'));
         } 
 
-        $dir = $parent->root() . '/*';
-
-        $last = count(glob($dir, GLOB_ONLYDIR));
-        $last = ++$last. '-' ;
-
         $data = $form->serialize();
-        $page = $parent->children()->create($last.$data['uid'], $data['template'], array(
+        $page = $parent->children()->create($data['uid'], $data['template'], array(
           'title' => $data['title']
         ));
 
@@ -106,6 +101,11 @@ class PagesController extends Kirby\Panel\Controllers\Base {
 
     $form = $page->form('delete', function($form) use($page, $self) {
       try {
+
+        if($page->children()->count() && get('check') !== 'on') {
+          throw new PermissionsException();
+        }
+
         $page->delete();
         $self->notify(':)');
         $self->redirect($page->parent()->isSite() ? '/' : $page->parent());

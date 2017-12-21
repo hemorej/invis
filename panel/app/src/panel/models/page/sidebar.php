@@ -29,12 +29,12 @@ class Sidebar {
 
   public function subpages() {
 
-    if($this->page->ui()->pages() === false) {
+    if($this->blueprint->pages()->hide() === true) {
       return null;
     }
 
     // fetch all subpages in the right order
-    $children = $this->page->children()->flip()->paginated('sidebar');
+    $children = $this->page->children()->paginated('sidebar');
 
     // create the pagination snippet
     $pagination = new Snippet('pagination', array(
