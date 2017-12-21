@@ -12,11 +12,6 @@ fields:
 		type: text
 		help: Publishing date (01 January 2012).
 		required: true
-	tags:
-		label: Tags
-		type: text
-		help: Your Tags (Tag One, Tag Two, Tag 3).
-		required: false
 	text:
 		label: Your content
 		type: textarea
