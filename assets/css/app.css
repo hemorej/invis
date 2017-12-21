@@ -125,6 +125,16 @@ figure{
   float: left;
 }
 
+.date{
+    width: 150px;
+    height: 150px;
+    text-align: right;
+    font-weight: bolder;
+    font-size: 1.5rem;
+    line-height: 150px;
+    color: #ffa819;
+}
+
 @media only screen {
   .columns {
     position: relative;
@@ -232,32 +242,44 @@ a{
   line-height: inherit;
   padding: 5px;
 }
-a.active {border-bottom: 5px solid #A60C06}
+a.active {border-bottom: 5px solid #ffa819}
 span a{font-size: 1.2rem}
 h1 a {
   padding: 0;
 }
 
 ::selection {
-  background: #A60C06;
+  background: #ffa819;
   color: #ffffff;
 }
 
 ::-moz-selection {
-  background: #A60C06;
+  background: #ffa819;
   color: #ffffff;
 }
 
-a:hover,
-a:focus {
-  color: white;
-  background-color: #A60C06;
+.thumb:hover,
+.thumb:focus {
+  background-color: #ffa819;
+  background-blend-mode: multiply;
+  width: 150px;
+  height: 150px;
+}
+.thumb {
+  height: 150px;
+  width: 150px
 }
 
 small{font-style: italic}
 header h1 a {
   font-variant: small-caps;
   color: black;
+}
+
+a:hover,
+a:focus {
+  color: white;
+  background-color: #ffa819;
 }
 
 header h1 a:hover,

@@ -9,9 +9,10 @@ fields:
 		required: true    
 	published:
 		label: Published
-		type: text
+		type: date
 		help: Publishing date (01 January 2012).
 		required: true
+		default: today
 	text:
 		label: Your content
 		type: textarea
