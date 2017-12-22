@@ -137,7 +137,7 @@ figure{
 }
 
 ul > li:first-child > h3 > a{
-  font-variant: small-caps;
+  /*font-variant: small-caps;*/
   color: #000;
   font-size: 2.75rem;
 }
@@ -351,8 +351,8 @@ ul {
     font-size: 1.6875rem;
   }
 }
-.sc{text-transform: uppercase}
-.high-contrast{color:#666;font-size:2.2rem;}
+.sc{font-variant: small-caps}
+.high-contrast{color:#666;font-size:2.2rem;margin-right:1rem}
 .low-contrast{color: #bbb}
 .low-contrast > p {font-size: 0.8rem}
 
@@ -496,7 +496,7 @@ p {
   .top-bar-section ul li {float: left}
   .top-bar-section li:not(.has-form) a:not(.button) {
     margin: 0 15px;
-    padding: 5px;
+    padding: 5px 0;
     line-height: 45px;
   /*background: white;*/
   }

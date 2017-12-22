@@ -18,21 +18,26 @@ if(isset($_GET['archive'])){
         }
     }
     ?>
+    <div class="row">
+    <div class="small-12 medium-12 columns">
+        <h3><span class="high-contrast"><?= $page->title()->lower() ?></span><a href="<?= $page->url() . '?archive' ?>">archives</a></h3>
+    </div>
+
     <div class="row medium-space-top">
         <div class="medium-12 columns">
-        <ul class="inline-list">
-    <?php 
-    foreach (array_keys($archive) as $key): 
-        $value = $archive[$key]; ?>
+            <ul class="inline-list">
+        <?php 
+        foreach (array_keys($archive) as $key): 
+            $value = $archive[$key]; ?>
 
-                <li class="date"><?php echo html($key) ?></small></li>
-                <?php foreach($value as $link): ?>
-                    <li>
-                        <a class="thumb" style="background-image:url(<?php echo thumb($link->images()->first(), array('height' => 150, 'width' => 150, 'crop' => true))->url(); ?>)" href="<?php echo $link->url(); ?>"></a>
-                    </li>
-                <?php endforeach ?>
+            <li class="date"><?php echo html($key) ?></small></li>
+            <?php foreach($value as $link): ?>
+                <li>
+                    <a class="thumb" style="background-image:url(<?php echo thumb($link->images()->first(), array('height' => 150, 'width' => 150, 'crop' => true))->url(); ?>)" href="<?php echo $link->url(); ?>"></a>
+                </li>
+        <?php endforeach ?>
     <?php endforeach ?>
-                </ul>
+            </ul>
         </div>
     </div>
 
