@@ -232,7 +232,7 @@ a{
   line-height: inherit;
   padding: 5px;
 }
-a.active {border-bottom: 5px solid #A60C06}
+li.active, a.active {border-bottom: 5px solid #A60C06}
 span a{font-size: 1.2rem}
 h1 a {
   padding: 0;
@@ -248,8 +248,7 @@ h1 a {
   color: #ffffff;
 }
 
-a:hover,
-a:focus {
+a:hover {
   color: white;
   background-color: #A60C06;
 }

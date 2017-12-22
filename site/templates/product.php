@@ -46,31 +46,33 @@ $extraHeaders = array(
 
             <section class="variants">
             <?php $variants = $page->variants()->toStructure();
-            if(count($variants) == 0 || (count($variants) == 1 && !inStock($variants[0]))){
-                echo 'not in stock';
+            if(count($variants) == 0 || (count($variants) == 1 && !inStock($variants->first()))){
+                echo 'Out of stock';
             }else{ ?>
 
             <ul class="inline-list">
-            <?php foreach ($variants as $variant) { ?>
-                <li class="variant">
+            <?php $first = true;
+            foreach ($variants as $variant) { ?>
+                <li <?php ecco($first == true, 'class="active variant"', 'class="variant"') ?>>
                     <?php if(inStock($variant)): ?>
-                    <h3><?= $variant->name() ?> &mdash; $<?= $variant->price ?></h3>
+                    <a href="#" data-option-variant='<?= $variant->name() ?>' data-option-price="<?= $variant->price ?>"><?= $variant->name() ?> &mdash; $<?= $variant->price ?></a>
                     <?php endif ?>
                 </li>&nbsp;
-            <?php } ?>
+            <?php $first = false;
+            } ?>
             </ul>
 
-                <form method="post" action="<?= url('shop/cart') ?>">
-                    <div class="description">
-                        <input type="hidden" name="action" value="add">
-                        <input type="hidden" name="uri" value="<?= $page->uri() ?>">
-                        <input type="hidden" name="variant" value="<?= str::slug($variant->name()) ?>">
-                    </div>
+            <form id="cart-form" method="post" action="<?= url('prints/cart') ?>">
+                <div class="description">
+                    <input type="hidden" name="action" value="add">
+                    <input type="hidden" name="uri" value="<?= $page->uri() ?>">
+                    <input type="hidden" name="variant" value='<?= $variants->first()->name() ?>'>
+                </div>
 
-                    <div class="action">
-                        <button type="submit">Add to cart</button>
-                    </div>
-                </form>
+                <div class="action">
+                    <button type="submit">Add to cart</button>
+                </div>
+            </form>
             <?php } ?>
             </section>
             
@@ -91,19 +93,15 @@ $extraHeaders = array(
     </div>  
 </div>
 <?php snippet('footer') ?>
+<?php echo js('assets/js/vendor/cart.js') ?>
 
 <?php
 function inStock($variant) {
-  // It it's a blank string, item has unlimited stock
+
   if (!is_numeric($variant->stock()->value) and $variant->stock()->value === '') return true;
-
-  // If it's zero or less, item is out of stock
   if (is_numeric($variant->stock()->value) and intval($variant->stock()->value) <= 0) return false;
-
-  // If it's greater than zero, return the number of items
   if (is_numeric($variant->stock()->value) and intval($variant->stock()->value) > 0) return intval($variant->stock()->value);
 
-  // Otherwise, it's an invalid value (e.g. a non-blank arbitrary string)
   return false;
 }
 ?>
