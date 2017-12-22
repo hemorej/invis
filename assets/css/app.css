@@ -132,7 +132,14 @@ figure{
     font-weight: bolder;
     font-size: 1.5rem;
     line-height: 150px;
-    color: #ffa819;
+    color: #ffcd39;
+    padding-right: 10px
+}
+
+ul > li:first-child > h3 > a{
+  font-variant: small-caps;
+  color: #000;
+  font-size: 2.75rem;
 }
 
 @media only screen {
@@ -242,25 +249,25 @@ a{
   line-height: inherit;
   padding: 5px;
 }
-a.active {border-bottom: 5px solid #ffa819}
+a.active {border-bottom: 5px solid #ffcd39}
 span a{font-size: 1.2rem}
 h1 a {
   padding: 0;
 }
 
 ::selection {
-  background: #ffa819;
-  color: #ffffff;
+  background: #ffcd39;
+  color: #999;
 }
 
 ::-moz-selection {
-  background: #ffa819;
-  color: #ffffff;
+  background: #ffcd39;
+  color: #999;
 }
 
 .thumb:hover,
 .thumb:focus {
-  background-color: #ffa819;
+  background-color: #FFE187;
   background-blend-mode: multiply;
   width: 150px;
   height: 150px;
@@ -279,7 +286,7 @@ header h1 a {
 a:hover,
 a:focus {
   color: white;
-  background-color: #ffa819;
+  background-color: #ffcd39;
 }
 
 header h1 a:hover,
@@ -456,72 +463,56 @@ p {
   
 .large-space-top {margin-top: 6%}
 .medium-space-top {margin-top: 3%}
+.lazy {display: none}
 
 @media only screen and (min-width: 40.063em) {
   .top-bar {
     background: white;
     overflow: visible;
   }
-.top-bar:before,
+  .top-bar:before,
   .top-bar:after {
     content: " ";
     display: table;
   }
-.top-bar:after {
-    clear: both;
-  }
-.top-bar .toggle-topbar {
-    display: none;
-  }
-  .top-bar .title-area {
-    float: left;
-  }
+  .top-bar:after {clear: both}
+  .top-bar .toggle-topbar {display: none}
+  .top-bar .title-area {float: left}
   .contain-to-grid .top-bar {
     max-width: 62.5rem;
     margin: 0 auto;
   }
 
-  body > div:nth-child(3) {
-    margin-top: 5%;
-  }
+  body > div:nth-child(3) {margin-top: 5%}
   .top-bar-section {
     transition: none 0 0;
     left: 0 !important;
   }
- .top-bar-section ul {
+  .top-bar-section ul {
     width: auto;
     height: auto !important;
     display: inline;
   }
-  .top-bar-section ul li {
-    float: left;
-  }
+  .top-bar-section ul li {float: left}
   .top-bar-section li:not(.has-form) a:not(.button) {
     margin: 0 15px;
     padding: 5px;
     line-height: 45px;
-    /*background: white;*/
+  /*background: white;*/
   }
   .top-bar-section li:not(.has-form) a:not(.button):hover {
-    /*    background-color: white;
-    background: white;*/
+  /*    background-color: white;
+  background: white;*/
   }
-  .medium-2 {
-    width: 16.66667%;
-  }
+  .medium-2 {width: 16.66667%}
+  .medium-4 {width: 33.33333%}
+  .medium-6 {width: 50%}
+  .medium-8 {width: 66.66667%}
+  .show-for-small-only {display: none !important}
 }
 
-@media only screen and (min-width: 64.063em) {
-header h1 a {
-    font-size: 4rem;
-  }
-}
-@media only screen and (min-width: 90.063em) {}
-@media only screen and (min-width: 120.063em) {}
-@media only screen and (orientation: landscape) {}
-@media only screen and (orientation: portrait) {}
-@media print {}
 @media only screen and (max-width: 40.063em) {
+  .hide-for-small {display: none !important}
   header h1 a {
     font-size: 3.2rem;
   }
@@ -530,6 +521,12 @@ header h1 a {
   }
   p{font-size: 1rem}
 }
-.lazy{
-  display: none
+
+@media only screen and (min-width: 64.063em) {
+  header h1 a {font-size: 4rem}
 }
+@media only screen and (min-width: 90.063em) {}
+@media only screen and (min-width: 120.063em) {}
+@media only screen and (orientation: landscape) {}
+@media only screen and (orientation: portrait) {}
+@media print {}

@@ -7,18 +7,22 @@
 	                 ->paginate(10);
 ?>
 
+    <div class="row medium-space-top">
+        <div class="medium-12 columns">
+
+        <ul class="inline-list">
 	<?php foreach($articles as $article): ?>
-
-<div class="row medium-space-top">
-	<div class="medium-2 columns">
-		<h3><small><?php echo html($article->published()->lower()) ?></small></h3>
-	</div>
-
-	<div class="small-12 small-centered medium-10 columns">
-			<h3><a class="sc high-contrast" href="<?php echo $article->url() ?>"><?php echo html($article->title()->lower()) ?></a></h3>
-	</div>
-</div>
+			<?php $pub = date('M/y', strtotime($article->published()->toString())); ?>
+        	<li class="date"><?= $article->title()->lower() ?></li>
+    		<?php foreach($article->images()->slice(0, rand(2,4)) as $image): ?>
+        	<li>
+            	<a class="thumb" style="background-image:url(<?php echo thumb($image, array('height' => 150, 'width' => 150, 'crop' => true))->url(); ?>)"  href="<?php echo $article->url() ?>"></a>
+			</li>
+        	<?php endforeach ?>
 	<?php endforeach ?>
+        </ul>
+</div>
+</div>
 	<?php if($articles->pagination()->hasPages()): ?>
 	<div class="row">		
 		<div class="small-12 small-centered medium-12 columns">
