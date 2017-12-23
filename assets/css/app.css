@@ -76,9 +76,6 @@ img {
   display: inline-block;
   vertical-align: middle
 }
-figure{
-  margin: 0
-}
 .caption{
   margin-bottom: 2px;
   margin-top: 40px;
@@ -193,7 +190,7 @@ h1 a {
 
 .thumb:hover,
 .thumb:focus {
-  background-color: #FFE187;
+  background-color: #FFE085;
   background-blend-mode: multiply;
   width: 9.375rem;
   height: 9.375rem;
@@ -418,17 +415,11 @@ p {
   .medium-10 {width: 83.33333%}
   .medium-11 {width: 91.66667%}
   .show-for-small-only {display: none !important}
-  .pull-2 {
-    position: relative;
-    right: 16.66667%;
-    left: auto
-  }
   .medium-push-2 {
     position: relative;
     left: 16.66667%;
     right: auto;
   }
-
   .columns {
     position: relative;
     padding-left: 0.9375rem;
@@ -444,19 +435,23 @@ p {
 }
 
 @media only screen and (min-width: 64.063em) {
+  .pull-2 {
+    position: relative;
+    right: 16.66667%;
+    left: auto
+  }
+  .medium-overflow{width: 81.25rem}
   header h1 a {font-size: 4rem}
   .columns {
     position: relative;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
     float: left;
-    width: 81.25rem
   }
   .large-offset-1 {margin-left: 8.33333% !important}
   .large-offset-2 {margin-left: 16.66667% !important}
   .fixed.large-offset-2:not(.expanded){margin-left:8.89%}
 }
-
 @media only screen {
   .columns {
     position: relative;
