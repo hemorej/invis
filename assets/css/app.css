@@ -415,13 +415,14 @@ p {
   .medium-4 {width: 33.33333%}
   .medium-6 {width: 50%}
   .medium-8 {width: 66.66667%}
+  .medium-11 {width: 91.66667%}
   .show-for-small-only {display: none !important}
   .pull-2 {
     position: relative;
     right: 16.66667%;
     left: auto
   }
-    .medium-push-2 {
+  .medium-push-2 {
     position: relative;
     left: 16.66667%;
     right: auto;
