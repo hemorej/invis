@@ -24,7 +24,7 @@ if(isset($_GET['archive'])){
     </div>
 
     <div class="row medium-space-top">
-        <div class="medium-12 columns">
+        <div class="medium-12 pull-2 columns">
             <ul class="inline-list">
         <?php 
         foreach (array_keys($archive) as $key): 

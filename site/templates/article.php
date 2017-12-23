@@ -33,35 +33,30 @@ if($page->parent()->title() != 'journal'){
 
 ?>
 
-
 <div class="row">
-	<div class="small-12 medium-12 columns">
-		<h3><span class="high-contrast"><?= $page->parent()->title()->lower() ?></span><a href="<?= $page->url() ?>"><?= strtolower($headline) ?></a></h3>
-	</div>
-
-	<div class="small-12 medium-12 columns medium-space-top">	
+	<h3><span class="high-contrast"><?= $page->parent()->title()->lower() ?></span><a href="<?= $page->url() ?>"><?= strtolower($headline) ?></a></h3>
+	<div class="small-12 medium-12 pull-2 columns">
 		<?php 
 
 		echo kirbytext($page->text()) ;
 		snippet('interchange', array('images' => $page->images())) ;
 
 		?>
-		
-		<p class="medium-space-top"></p>
-
-			<?php if($page->hasPrev()): ?>
-				<span class="left">
-					<a href="<?php echo $page->prev()->url() ?>">&laquo; Previous</a>
-				</span>
-			<?php endif ?>
-			<?php if($page->parent()->title() == 'journal'){ ?>
-				<span><a href="<?= $page->parent()->url() . '?archive' ?>">| Archives</a></span>
-			<?php } ?>
-			<?php if($page->hasNext()): ?>
-				<span class="right">
-					<a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
-				</span>
-			<?php endif ?>
 	</div>
-</div>
+	<p class="medium-space-top"></p>
+
+	<?php if($page->hasPrev()): ?>
+		<span class="left">
+			<a href="<?php echo $page->prev()->url() ?>">&laquo; Previous</a>
+		</span>
+	<?php endif ?>
+	<?php if($page->parent()->title() == 'journal'){ ?>
+		<span><a href="<?= $page->parent()->url() . '?archive' ?>">| Archives</a></span>
+	<?php } ?>
+	<?php if($page->hasNext()): ?>
+		<span class="right">
+			<a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
+		</span>
+	<?php endif ?>
+
 <?php snippet('footer') ?>
