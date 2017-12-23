@@ -110,7 +110,7 @@ figure{
 .columns {
   padding-left: 0.9375rem;
   padding-right: 0.9375rem;
-  width: 81.25rem;
+  width: 100%;
   float: left;
 }
 [class*="column"] + [class*="column"]:last-child{float: right}
@@ -233,13 +233,8 @@ h3 {
   line-height: 1.4;
 }
 
-h1 {
-  font-size: 2.125rem;
-}
-
-h3 {
-  font-size: 1.625rem;
-}
+h1 {font-size: 2.125rem}
+h3 {font-size: 1.625rem}
 h3 small{
   font-size: 60%;
   color: #6f6f6f;
@@ -259,12 +254,10 @@ ul {
   font-family: inherit;
 }
 
-ul {
-  margin-left: 1.1rem;
-}
+ul {margin-left: 1.1rem}
 
 .sc{font-variant: small-caps}
-.high-contrast{color:#666;font-size:2.2rem;margin-right:1rem}
+.high-contrast{color:#666;font-size:2.2rem;margin-right:1rem;padding-left:15px}
 .low-contrast{color: #bbb}
 .low-contrast > p {font-size: 0.8rem}
 
@@ -286,9 +279,7 @@ p {
   background: white;
 }
 
-.contain-to-grid .top-bar {
-  margin-bottom: 0;
-}
+.contain-to-grid .top-bar {margin-bottom: 0}
 .fixed {
   width: 100%;
   left: 0;
@@ -376,8 +367,17 @@ p {
 .large-space-top {margin-top: 6%}
 .medium-space-top {margin-top: 3%}
 .lazy {display: none}
+.columns > h3 > span.high-contrast {padding-left:0}
 
-@media only screen and (min-width: 40.063em) {
+@media only screen and (max-width: 40.063em) {
+  .small-12 {width: 100%}
+  .hide-for-small {display: none !important}
+  header h1 a {font-size:3.2rem}
+  .top-bar-section h2 {margin-left:1rem}
+  p{font-size:1rem}
+}
+
+@media only screen and (min-width: 49.063em) {
   .top-bar {
     background: white;
     overflow: visible;
@@ -415,6 +415,7 @@ p {
   .medium-4 {width: 33.33333%}
   .medium-6 {width: 50%}
   .medium-8 {width: 66.66667%}
+  .medium-10 {width: 83.33333%}
   .medium-11 {width: 91.66667%}
   .show-for-small-only {display: none !important}
   .pull-2 {
@@ -432,41 +433,14 @@ p {
     position: relative;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
-    float: left;
+    float: left
   }
-
-  .medium-10 {
-    width: 83.33333%;
-  }
-
-  .medium-offset-2 {
-    margin-left: 16.66667% !important;
-  }
+  .medium-offset-2 {margin-left: 16.66667% !important}
   .fixed.medium-offset-2:not(.expanded){margin-left:8.89%}
   h1,
-  h3 {
-    line-height: 1.4;
-  }
-
-  h1 {
-    font-size: 2.75rem;
-  }
-
-  h3 {
-    font-size: 1.6875rem;
-  }
-}
-
-@media only screen and (max-width: 40.063em) {
-  .small-12 {width: 100%}
-  .hide-for-small {display: none !important}
-  header h1 a {
-    font-size: 3.2rem;
-  }
- .top-bar-section h2 {
-    margin-left: 1rem;
-  }
-  p{font-size: 1rem}
+  h3 {line-height: 1.4}
+  h1 {font-size: 2.75rem}
+  h3 {font-size: 1.6875rem}
 }
 
 @media only screen and (min-width: 64.063em) {
@@ -476,13 +450,10 @@ p {
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
     float: left;
+    width: 81.25rem
   }
-  .large-offset-1 {
-    margin-left: 8.33333% !important;
-  }
-  .large-offset-2 {
-    margin-left: 16.66667% !important;
-  }
+  .large-offset-1 {margin-left: 8.33333% !important}
+  .large-offset-2 {margin-left: 16.66667% !important}
   .fixed.large-offset-2:not(.expanded){margin-left:8.89%}
 }
 
@@ -498,9 +469,7 @@ p {
     margin-right: auto;
     float: none;
   }
-  .columns.small-centered:last-child {
-    float: none;
-  }
+  .columns.small-centered:last-child {float: none}
 }
 @media only screen and (min-width: 90.063em) {}
 @media only screen and (min-width: 120.063em) {}
