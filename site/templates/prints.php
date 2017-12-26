@@ -1,57 +1,42 @@
 <?php snippet('header') ?>
 <?php snippet('menu') ?>
 
-<?php
-$archive = array();
-$articles = $page->children()->visible()->sortBy('publishDate', 'desc')->paginate(80);
-
-foreach($articles as $article){
-    $key = date('M Y', strtotime($article->published()->toString()));
-    if(array_key_exists($key, $archive)) {
-        array_push($archive[$key], $article);
-    }
-    else{
-        $archive[$key] = array($article);
-    }
-}
-
-foreach (array_keys($archive) as $key): 
-    $value = $archive[$key]; ?>
+<?php   
+      $articles = $page->children()->visible()->sortBy('publishDate', 'desc')->paginate(10);
+?>
 
     <div class="row medium-space-top">
-        <div class="medium-2 columns">
-            <h3><small><?php echo html($key) ?></small></h3>
-        </div>
-        <div class="small-12 medium-10 columns">
-            <ul class="inline-list">
-            <?php foreach($value as $link): ?>
-                <li>
-                    <a href="<?php echo $link->url(); ?>">
-                        <img src="<?php echo thumb($link->images()->first(), array('height' => 100, 'width' => 100, 'crop' => true))->url(); ?>" />
-                    </a>
-                </li>
-            <?php endforeach ?>
-            </ul>
-        </div>
-    </div>
-<?php endforeach ?>
+        <div class="medium-11 columns">
 
-<?php if($articles->pagination()->hasPages()): ?>
-<div class="row medium-space-top">       
-    <div class="small-12 small-centered medium-12 columns">
-        <?php if($articles->pagination()->hasNextPage()): ?>
-            <span class="left">
-                <a href="<?= $articles->pagination()->nextPageURL() ?>">&laquo; older</a>
-            </span>
-        <?php endif ?>
-        
-        <?php if($articles->pagination()->hasPrevPage()): ?>
-            <span class="right">
-                <a href="<?= $articles->pagination()->prevPageURL() ?>">newer  &raquo;</a>
-            </span>
-        <?php endif ?>  
-    </div>
+        <ul class="inline-list">
+    <?php foreach($articles as $article): ?>
+            <li class="date"><?= $article->title()->lower() ?></li>
+            <?php foreach($article->images()->slice(0, rand(2,4)) as $image): ?>
+            <li>
+                <a class="thumb" style="background-image:url(<?php echo thumb($image, array('height' => 150, 'width' => 150, 'crop' => true))->url(); ?>)"  href="<?php echo $article->url() ?>"></a>
+            </li>
+            <?php endforeach ?>
+    <?php endforeach ?>
+        </ul>
 </div>
-<?php endif ?>
+</div>
+    <?php if($articles->pagination()->hasPages()): ?>
+    <div class="row">       
+        <div class="small-12 small-centered medium-12 columns">
+            <?php if($articles->pagination()->hasPrevPage()): ?>
+                <span class="left">
+                    <a href="<?= $articles->pagination()->prevPageURL() ?>">&laquo; Previous</a>
+                </span>
+            <?php endif ?>
+            
+            <?php if($articles->pagination()->hasNextPage()): ?>
+                <span class="right">
+                    <a href="<?= $articles->pagination()->nextPageURL() ?>">Next  &raquo;</a>
+                </span>
+            <?php endif ?>  
+        </div>
+    </div>
+    <?php endif ?>
+
 
 <?php snippet('footer') ?>

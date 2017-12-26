@@ -119,10 +119,10 @@ img {
     text-align: right;
     font-weight: bolder;
     font-size: 1.442rem;
-    line-height: 9.375rem;
     color: #ffcd39;
     padding-right: 10px
 }
+.date.centre{line-height: 9.375rem}
 
 ul > li:first-child > h3 > a{
   color: #000;

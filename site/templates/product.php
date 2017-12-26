@@ -15,9 +15,11 @@ $extraHeaders = array(
 <?php snippet('header', array('extraHeaders' => $extraHeaders)) ?>
 <?php snippet('menu') ?>
 
-<div class="row medium-space-top">
-    <?php 
-    $published = $page->published()->toString() ;
+<?php 
+if($page->parent()->title() != 'journal'){
+    $headline = $page->title()->lower();
+}else{
+    $published = $page->published()->toString();
     if(!empty($published)){
        if(strpos($published, ',') != false){
             $headline = $published ;
@@ -27,69 +29,65 @@ $extraHeaders = array(
     }else if( $page->title() != $page->uid()){
         $headline = "_".$page->title()->lower();
     }
+}
 
-    ?>
+?>
 
-</div>
 <div class="row">
-    <div class="small-12 medium-2 columns">
-        <h3><a href="<?php echo $page->url() ?>"><?php echo $headline ?></a></h3>
+    <h3><span class="high-contrast"><?= $page->parent()->title()->lower() ?></span><a href="<?= $page->url() ?>"><?= strtolower($headline) ?></a></h3>
+    <div class="small-12 medium-10 <?= ecco($page->images()->first()->isLandscape(), 'medium-overflow pull-2') ?> columns">   
+        <?php 
+
+        echo kirbytext($page->text()) ;
+        snippet('interchange', array('images' => $page->images())) ;
+
+        ?>
+
+        <p class="medium-space-top"></p>
+
+        <?php if($page->hasPrev()): ?>
+            <span class="left">
+                <a href="<?php echo $page->prev()->url() ?>">&laquo; Previous | </a>
+            </span>
+        <?php endif ?>
+        <?php if($page->hasNext()): ?>
+            <span class="right">
+                <a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
+            </span>
+        <?php endif ?>
     </div>
+        <section class="medium-2 columns variants">
+        <?php $variants = $page->variants()->toStructure();
+        if(count($variants) == 0 || (count($variants) == 1 && !inStock($variants->first()))){
+            echo 'Out of stock';
+        }else{ ?>
 
-    <div class="small-12 medium-10 columns">    
-            <?php 
-
-            echo kirbytext($page->text()) ;
-            snippet('interchange', array('images' => $page->images())) ;
-
-            ?>
-
-            <section class="variants">
-            <?php $variants = $page->variants()->toStructure();
-            if(count($variants) == 0 || (count($variants) == 1 && !inStock($variants->first()))){
-                echo 'Out of stock';
-            }else{ ?>
-
-            <ul class="inline-list">
-            <?php $first = true;
-            foreach ($variants as $variant) { ?>
-                <li <?php ecco($first == true, 'class="active variant"', 'class="variant"') ?>>
-                    <?php if(inStock($variant)): ?>
-                    <a href="#" data-option-variant='<?= $variant->name() ?>' data-option-price="<?= $variant->price ?>"><?= $variant->name() ?> &mdash; $<?= $variant->price ?></a>
-                    <?php endif ?>
-                </li>&nbsp;
-            <?php $first = false;
-            } ?>
-            </ul>
-
-            <form id="cart-form" method="post" action="<?= url('prints/cart') ?>">
-                <div class="description">
-                    <input type="hidden" name="action" value="add">
-                    <input type="hidden" name="uri" value="<?= $page->uri() ?>">
-                    <input type="hidden" name="variant" value='<?= $variants->first()->name() ?>'>
-                </div>
-
-                <div class="action">
-                    <button type="submit">Add to cart</button>
-                </div>
-            </form>
-            <?php } ?>
-            </section>
-            
-            <p class="medium-space-top"></p>
-
-                <?php if($page->hasPrev()): ?>
-                    <span class="left">
-                        <a href="<?php echo $page->prev()->url() ?>">&laquo; Previous | </a>
-                    </span>
+        <ul class="inline-list">
+        <?php $first = true;
+        foreach ($variants as $variant) { ?>
+            <li <?php ecco($first == true, 'class="active variant"', 'class="variant"') ?>>
+                <?php if(inStock($variant)): ?>
+                <a href="#" data-option-variant='<?= $variant->name() ?>' data-option-price="<?= $variant->price ?>"><?= $variant->name() ?> &mdash; $<?= $variant->price ?></a>
                 <?php endif ?>
-                <?php if($page->hasNext()): ?>
-                    <span class="right">
-                        <a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
-                    </span>
-                <?php endif ?>
+            </li>&nbsp;
+        <?php $first = false;
+        } ?>
+        </ul>
 
-        </div>
+        <form id="cart-form" method="post" action="<?= url('prints/cart') ?>">
+            <div class="description">
+                <input type="hidden" name="action" value="add">
+                <input type="hidden" name="uri" value="<?= $page->uri() ?>">
+                <input type="hidden" name="variant" value='<?= $variants->first()->name() ?>'>
+            </div>
+
+            <div class="action">
+                <button type="submit">Add to cart</button>
+            </div>
+        </form>
+        <?php } ?>
+        </section>
+           
     </div>  
 </div>
 <?php snippet('footer') ?>

@@ -30,7 +30,7 @@ if(isset($_GET['archive'])){
         foreach (array_keys($archive) as $key): 
             $value = $archive[$key]; ?>
 
-            <li class="date"><?php echo html($key) ?></small></li>
+            <li class="date centre"><?php echo html($key) ?></small></li>
             <?php foreach($value as $link): ?>
                 <li>
                     <a class="thumb" style="background-image:url(<?php echo thumb($link->images()->first(), array('height' => 150, 'width' => 150, 'crop' => true))->url(); ?>)" href="<?php echo $link->url(); ?>"></a>
