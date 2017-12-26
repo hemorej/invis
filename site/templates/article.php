@@ -15,11 +15,13 @@ $extraHeaders = array(
 <?php snippet('header', array('extraHeaders' => $extraHeaders)) ?>
 <?php snippet('menu') ?>
 
-<div class="row medium-space-top">
-	<?php 
-	$published = $page->published()->toString() ;
+<?php 
+if($page->parent()->title() != 'journal'){
+	$headline = $page->title()->lower();
+}else{
+	$published = $page->published()->toString();
 	if(!empty($published)){
-       if(strpos($published, ',') != false){
+	   if(strpos($published, ',') != false){
 			$headline = $published ;
 		}else{
 			$headline = date('F d, Y', strtotime($published));
@@ -27,38 +29,34 @@ $extraHeaders = array(
 	}else if( $page->title() != $page->uid()){
 		$headline = "_".$page->title()->lower();
 	}
+}
 
-	?>
+?>
 
-</div>
 <div class="row">
-	<div class="small-12 medium-2 columns">
-		<h3><a href="<?php echo $page->url() ?>"><?php echo $headline ?></a></h3>
+	<h3><span class="high-contrast"><?= $page->parent()->title()->lower() ?></span><a href="<?= $page->url() ?>"><?= strtolower($headline) ?></a></h3>
+	<div class="small-12 medium-12 <?= ecco($page->images()->first()->isLandscape(), 'medium-overflow pull-2') ?> columns">
+		<?php 
+
+		echo kirbytext($page->text()) ;
+		snippet('interchange', array('images' => $page->images())) ;
+
+		?>
 	</div>
+	<p class="medium-space-top"></p>
 
-	<div class="small-12 medium-10 columns">	
-			<?php 
+	<?php if($page->hasPrev()): ?>
+		<span class="left">
+			<a href="<?php echo $page->prev()->url() ?>">&laquo; Previous</a>
+		</span>
+	<?php endif ?>
+	<?php if($page->parent()->title() == 'journal'){ ?>
+		<span><a href="<?= $page->parent()->url() . '?archive' ?>">| Archives</a></span>
+	<?php } ?>
+	<?php if($page->hasNext()): ?>
+		<span class="right">
+			<a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
+		</span>
+	<?php endif ?>
 
-			echo kirbytext($page->text()) ;
-			snippet('interchange', array('images' => $page->images())) ;
-
-			?>
-			
-			<p class="medium-space-top"></p>
-
-				<?php if($page->hasPrev()): ?>
-					<span class="left">
-						<a href="<?php echo $page->prev()->url() ?>">&laquo; Previous | </a>
-					</span>
-				<?php endif ?>
-				<span><a href="<?php echo $page->parent()->url() . '?archive' ?>">Archives</a></span>
-				<?php if($page->hasNext()): ?>
-					<span class="right">
-						<a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
-					</span>
-				<?php endif ?>
-
-		</div>
-	</div>	
-</div>
 <?php snippet('footer') ?>

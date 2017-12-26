@@ -2,7 +2,7 @@
 <?php snippet('menu') ?>
 
 <div class="row small-space-top">
-	<section class="small-12 medium-10 medium-push-2 columns">
+	<section class="small-12 medium-12 medium-overflow pull-2 columns">
 	  <article>
         <?php
         $image = $pages->invisible()->find('portfolio')->files()->shuffle()->first();

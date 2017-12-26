@@ -50,11 +50,7 @@ meta.foundation-data-attribute-namespace {
 }
 
 html,
-body {
-  font-size: 100%;
-  /*-webkit-text-stroke: 0.2px;
-  -ms-text-shadow: 0.3px 0px 0px #000000;*/
-}
+body {font-size: 100%}
 
 body {
   background: white;
@@ -79,9 +75,6 @@ img {
   -ms-interpolation-mode: bicubic;
   display: inline-block;
   vertical-align: middle
-}
-figure{
-  margin: 0
 }
 .caption{
   margin-bottom: 2px;
@@ -117,76 +110,23 @@ figure{
   width: 100%;
   float: left;
 }
-[class*="column"] + [class*="column"]:last-child {
-  float: right;
+[class*="column"] + [class*="column"]:last-child{float: right}
+[class*="column"] + [class*="column"].end{float: left}
+
+.date{
+    width: 9.375rem;
+    height: 9.375rem;
+    text-align: right;
+    font-weight: bolder;
+    font-size: 1.442rem;
+    line-height: 9.375rem;
+    color: #ffcd39;
+    padding-right: 10px
 }
 
-[class*="column"] + [class*="column"].end {
-  float: left;
-}
-
-@media only screen {
-  .columns {
-    position: relative;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    float: left;
-  }
-  .small-12 {
-    width: 100%;
-  }
-  .columns.small-centered {
-    margin-left: auto;
-    margin-right: auto;
-    float: none;
-  }
-  .columns.small-centered:last-child {
-    float: none;
-  }
-}
-
-@media only screen and (min-width: 40.063em) {
-  .medium-push-2 {
-    position: relative;
-    left: 16.66667%;
-    right: auto;
-  }
-
-  .columns {
-    position: relative;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    float: left;
-  }
-
-  .medium-10 {
-    width: 83.33333%;
-  }
-
-  .medium-offset-2 {
-    margin-left: 16.66667% !important;
-  }
-  .fixed.medium-offset-2:not(.expanded){margin-left:8.89%}
-}
-
-@media only screen and (min-width: 64.063em) {
-
-  header h1 a {
-    font-size: 4rem;
-  }
-  .columns {
-    position: relative;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    float: left;
-  }
-  .large-offset-1 {
-    margin-left: 8.33333% !important;
-  }
-  .large-offset-2 {
-    margin-left: 16.66667% !important;
-  }
-  .fixed.large-offset-2:not(.expanded){margin-left:8.89%}
+ul > li:first-child > h3 > a{
+  color: #000;
+  font-size: 2.75rem;
 }
 
 button::-moz-focus-inner {
@@ -232,31 +172,43 @@ a{
   line-height: inherit;
   padding: 5px;
 }
-li.active, a.active {border-bottom: 5px solid #A60C06}
+li.active, a.active {border-bottom: 5px solid #ffcd39}
 span a{font-size: 1.2rem}
 h1 a {
   padding: 0;
 }
 
 ::selection {
-  background: #A60C06;
-  color: #ffffff;
+  background: #ffcd39;
+  color: #999;
 }
 
 ::-moz-selection {
-  background: #A60C06;
-  color: #ffffff;
+  background: #ffcd39;
+  color: #999;
 }
 
-a:hover {
-  color: white;
-  background-color: #A60C06;
+.thumb:hover,
+.thumb:focus {
+  background-color: #FFE085;
+  background-blend-mode: multiply;
+  width: 9.375rem;
+  height: 9.375rem;
+}
+.thumb {
+  height: 9.375rem;
+  width: 9.375rem
 }
 
 small{font-style: italic}
 header h1 a {
   font-variant: small-caps;
   color: black;
+}
+
+a:hover{
+  color: white;
+  background-color: #ffcd39;
 }
 
 header h1 a:hover,
@@ -269,7 +221,7 @@ header h1 a:focus {
 h1,
 h3 {
   font-family: "meta-cd", sans-serif;
-  font-variant: lowercase;
+  text-transform: lowercase;
   font-weight: 100;
   font-style: normal;
   margin-top: 0.2rem;
@@ -277,13 +229,6 @@ h3 {
   line-height: 1.4;
 }
 
-h1 {
-  font-size: 2.125rem;
-}
-
-h3 {
-  font-size: 1.625rem;
-}
 h3 small{
   font-size: 60%;
   color: #6f6f6f;
@@ -303,37 +248,21 @@ ul {
   font-family: inherit;
 }
 
-ul {
-  margin-left: 1.1rem;
-}
+ul {margin-left: 1.1rem}
 
-@media only screen and (min-width: 40.063em) {
-  h1,
-  h3 {
-    line-height: 1.4;
-  }
-
-  h1 {
-    font-size: 2.75rem;
-  }
-
-  h3 {
-    font-size: 1.6875rem;
-  }
-}
-.sc{text-transform: uppercase}
-.high-contrast{color:#666;font-size:2.2rem;}
+.sc{font-variant: small-caps}
+.high-contrast{color:#666;font-size:2.923rem;margin-right:1rem;padding-left:15px}
 .low-contrast{color: #bbb}
 .low-contrast > p {font-size: 0.8rem}
 
 meta.foundation-mq-topbar {
-  font-family: "/only screen and (min-width:40.063em)/";
-  width: 40.063em;
+  font-family: "/only screen and (min-width:46.5em)/";
+  width: 46.5em;
 }
 p {
   font-family: inherit;
   font-weight: normal;
-  font-size: 1.354rem;
+  font-size: 1.44rem;
   line-height: 1.6;
   margin-bottom: 1.25rem;
   text-rendering: optimizeLegibility;
@@ -344,9 +273,7 @@ p {
   background: white;
 }
 
-.contain-to-grid .top-bar {
-  margin-bottom: 0;
-}
+.contain-to-grid .top-bar {margin-bottom: 0}
 .fixed {
   width: 100%;
   left: 0;
@@ -433,80 +360,105 @@ p {
   
 .large-space-top {margin-top: 6%}
 .medium-space-top {margin-top: 3%}
+.lazy {display: none}
+.columns > h3 > span.high-contrast {padding-left:0}
+span.high-contrast, span.high-contrast+a {font-size: 1.825rem}
+article > h3 {font-size: 1.825rem}
 
-@media only screen and (min-width: 40.063em) {
+@media only screen and (max-width: 40.063em) {
+  .small-12 {width: 100%}
+  header h1 a {font-size:2.053rem}
+  .top-bar-section h2 {margin-left:1rem}
+  p{font-size:1rem}
+}
+@media only screen and (max-width: 46.5em){.hide-for-small {display: none !important}}
+
+@media only screen and (min-width: 46.5em) {
+  header h1 a {font-size:2.923rem}
   .top-bar {
     background: white;
     overflow: visible;
   }
-.top-bar:before,
+  .top-bar:before,
   .top-bar:after {
     content: " ";
     display: table;
   }
-.top-bar:after {
-    clear: both;
-  }
-.top-bar .toggle-topbar {
-    display: none;
-  }
-  .top-bar .title-area {
-    float: left;
-  }
+  .top-bar:after {clear: both}
+  .top-bar .toggle-topbar {display: none}
+  .top-bar .title-area {float: left}
   .contain-to-grid .top-bar {
     max-width: 62.5rem;
     margin: 0 auto;
   }
 
-  body > div:nth-child(3) {
-    margin-top: 5%;
-  }
   .top-bar-section {
     transition: none 0 0;
     left: 0 !important;
   }
- .top-bar-section ul {
+  .top-bar-section ul {
     width: auto;
     height: auto !important;
     display: inline;
   }
-  .top-bar-section ul li {
-    float: left;
-  }
+  .top-bar-section ul li {float: left}
   .top-bar-section li:not(.has-form) a:not(.button) {
     margin: 0 15px;
-    padding: 5px;
-    line-height: 45px;
-    /*background: white;*/
+    padding: 5px 0;
+    line-height: 45px
   }
-  .top-bar-section li:not(.has-form) a:not(.button):hover {
-    /*    background-color: white;
-    background: white;*/
+  body > div:nth-child(3) {margin-top: 5%}
+  .medium-2 {width: 16.66667%}
+  .medium-4 {width: 33.33333%}
+  .medium-6 {width: 50%}
+  .medium-8 {width: 66.66667%}
+  .medium-10 {width: 83.33333%}
+  .medium-11 {width: 91.66667%}
+  .show-for-small-only {display: none !important}
+  .medium-push-2 {
+    position: relative;
+    left: 16.66667%;
+    right: auto;
   }
-  .medium-2 {
-    width: 16.66667%;
+  .columns {
+    position: relative;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    float: left
   }
+  .medium-offset-2 {margin-left: 16.66667% !important}
+  .fixed.medium-offset-2:not(.expanded){margin-left:8.89%}
+  h1,
+  h3 {line-height: 1.4}
+  h1 {font-size: 2.923rem}
+  h3 {font-size: 2.053rem}
+}
+@media only screen and (max-width: 53.75em){
+  ul > li:first-child > h3 > a {font-size: 2.053rem}
+  h3 {font-size: 1.444rem}
+  span.high-contrast, span.high-contrast+a {font-size: 1.444rem}
+}
+@media only screen and (min-width: 64.063em) {
+  .pull-2 {
+    position: relative;
+    right: 16.66667%;
+    left: auto
+  }
+  .medium-overflow{width: 81.25rem}
+  header h1 a {font-size: 4rem}
+  .columns {
+    position: relative;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    float: left;
+  }
+  .large-offset-1 {margin-left: 8.33333% !important}
+  .large-offset-2 {margin-left: 16.66667% !important}
+  .fixed.large-offset-2:not(.expanded){margin-left:8.89%}
 }
 
-@media only screen and (min-width: 64.063em) {
-header h1 a {
-    font-size: 4rem;
-  }
-}
 @media only screen and (min-width: 90.063em) {}
 @media only screen and (min-width: 120.063em) {}
 @media only screen and (orientation: landscape) {}
 @media only screen and (orientation: portrait) {}
 @media print {}
-@media only screen and (max-width: 40.063em) {
-  header h1 a {
-    font-size: 3.2rem;
-  }
- .top-bar-section h2 {
-    margin-left: 1rem;
-  }
-  p{font-size: 1rem}
-}
-.lazy{
-  display: none
-}

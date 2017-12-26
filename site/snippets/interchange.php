@@ -20,12 +20,12 @@ foreach($images as $image):
     }
 
     if($image->isPortrait()){
-        $small = thumb($image, a::merge(array('height' => 600), $options))->url() ; 
-        $medium = thumb($image, a::merge(array('height' => 800), $options))->url() ; 
+        $small = thumb($image, a::merge(array('height' => 800), $options))->url() ; 
+        $medium = thumb($image, a::merge(array('height' => 1200), $options))->url() ; 
     }
     else{
-        $small = thumb($image, a::merge(array('width' => 600), $options))->url() ; 
-        $medium = thumb($image, a::merge(array('width' => 800), $options))->url() ; 
+        $small = thumb($image, a::merge(array('width' => 800), $options))->url() ; 
+        $medium = thumb($image, a::merge(array('width' => 1200), $options))->url() ; 
     }
 
     ?>

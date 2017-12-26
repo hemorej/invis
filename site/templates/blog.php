@@ -9,7 +9,7 @@ if(isset($_GET['archive'])){
     $articles = $page->children()->visible()->sortBy('publishDate', 'desc')->paginate(80);
     
     foreach($articles as $article){
-        $key = date('M Y', strtotime($article->published()->toString()));
+        $key = date('M/y', strtotime($article->published()->toString()));
         if(array_key_exists($key, $archive)) {
             array_push($archive[$key], $article);
         }
@@ -17,27 +17,29 @@ if(isset($_GET['archive'])){
             $archive[$key] = array($article);
         }
     }
+    ?>
+    <div class="row">
+    <div class="small-12 medium-12 columns">
+        <h3><span class="high-contrast"><?= $page->title()->lower() ?></span><a href="<?= $page->url() . '?archive' ?>">archives</a></h3>
+    </div>
 
-    foreach (array_keys($archive) as $key): 
-        $value = $archive[$key]; ?>
+    <div class="row medium-space-top">
+        <div class="medium-11 columns">
+            <ul class="inline-list">
+        <?php 
+        foreach (array_keys($archive) as $key): 
+            $value = $archive[$key]; ?>
 
-        <div class="row medium-space-top">
-            <div class="medium-2 columns">
-                <h3><small><?php echo html($key) ?></small></h3>
-            </div>
-            <div class="small-12 medium-10 columns">
-                <ul class="inline-list">
-                <?php foreach($value as $link): ?>
-                    <li>
-                        <a href="<?php echo $link->url(); ?>">
-                            <img src="<?php echo thumb($link->images()->first(), array('height' => 100, 'width' => 100, 'crop' => true))->url(); ?>" />
-                        </a>
-                    </li>
-                <?php endforeach ?>
-                </ul>
-            </div>
-        </div>
+            <li class="date"><?php echo html($key) ?></small></li>
+            <?php foreach($value as $link): ?>
+                <li>
+                    <a class="thumb" style="background-image:url(<?php echo thumb($link->images()->first(), array('height' => 150, 'width' => 150, 'crop' => true))->url(); ?>)" href="<?php echo $link->url(); ?>"></a>
+                </li>
+        <?php endforeach ?>
     <?php endforeach ?>
+            </ul>
+        </div>
+    </div>
 
     <?php if($articles->pagination()->hasPages()): ?>
     <div class="row medium-space-top">       

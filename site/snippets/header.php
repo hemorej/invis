@@ -33,7 +33,7 @@
 
 <body>
   <div class="row large-space-top">
-	  <header class="small-12 small-centered medium-10 medium-offset-2 columns">
+	  <header class="show-for-small-only columns">
 	    <h1><a href="<?php echo url() ?>"> <?php echo html($site->title()) ?> </a></h1>
 	  </header>
   </div>
