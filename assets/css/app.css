@@ -118,7 +118,7 @@ img {
     height: 9.375rem;
     text-align: right;
     font-weight: bolder;
-    font-size: 1.5rem;
+    font-size: 1.442rem;
     line-height: 9.375rem;
     color: #ffcd39;
     padding-right: 10px
@@ -222,7 +222,7 @@ header h1 a:focus {
 h1,
 h3 {
   font-family: "meta-cd", sans-serif;
-  font-variant: lowercase;
+  text-transform: lowercase;
   font-weight: 100;
   font-style: normal;
   margin-top: 0.2rem;
@@ -230,8 +230,6 @@ h3 {
   line-height: 1.4;
 }
 
-h1 {font-size: 2.125rem}
-h3 {font-size: 1.625rem}
 h3 small{
   font-size: 60%;
   color: #6f6f6f;
@@ -254,18 +252,18 @@ ul {
 ul {margin-left: 1.1rem}
 
 .sc{font-variant: small-caps}
-.high-contrast{color:#666;font-size:2.2rem;margin-right:1rem;padding-left:15px}
+.high-contrast{color:#666;font-size:2.923rem;margin-right:1rem;padding-left:15px}
 .low-contrast{color: #bbb}
 .low-contrast > p {font-size: 0.8rem}
 
 meta.foundation-mq-topbar {
-  font-family: "/only screen and (min-width:40.063em)/";
-  width: 40.063em;
+  font-family: "/only screen and (min-width:46.5em)/";
+  width: 46.5em;
 }
 p {
   font-family: inherit;
   font-weight: normal;
-  font-size: 1.354rem;
+  font-size: 1.44rem;
   line-height: 1.6;
   margin-bottom: 1.25rem;
   text-rendering: optimizeLegibility;
@@ -365,16 +363,19 @@ p {
 .medium-space-top {margin-top: 3%}
 .lazy {display: none}
 .columns > h3 > span.high-contrast {padding-left:0}
+span.high-contrast, span.high-contrast+a {font-size: 1.825rem}
+article > h3 {font-size: 1.825rem}
 
 @media only screen and (max-width: 40.063em) {
   .small-12 {width: 100%}
-  .hide-for-small {display: none !important}
-  header h1 a {font-size:3.2rem}
+  header h1 a {font-size:2.053rem}
   .top-bar-section h2 {margin-left:1rem}
   p{font-size:1rem}
 }
+@media only screen and (max-width: 46.5em){.hide-for-small {display: none !important}}
 
-@media only screen and (min-width: 49.063em) {
+@media only screen and (min-width: 46.5em) {
+  header h1 a {font-size:2.923rem}
   .top-bar {
     background: white;
     overflow: visible;
@@ -392,7 +393,6 @@ p {
     margin: 0 auto;
   }
 
-  body > div:nth-child(3) {margin-top: 5%}
   .top-bar-section {
     transition: none 0 0;
     left: 0 !important;
@@ -408,6 +408,7 @@ p {
     padding: 5px 0;
     line-height: 45px
   }
+  body > div:nth-child(3) {margin-top: 5%}
   .medium-2 {width: 16.66667%}
   .medium-4 {width: 33.33333%}
   .medium-6 {width: 50%}
@@ -430,10 +431,14 @@ p {
   .fixed.medium-offset-2:not(.expanded){margin-left:8.89%}
   h1,
   h3 {line-height: 1.4}
-  h1 {font-size: 2.75rem}
-  h3 {font-size: 1.6875rem}
+  h1 {font-size: 2.923rem}
+  h3 {font-size: 2.053rem}
 }
-
+@media only screen and (max-width: 53.75em){
+  ul > li:first-child > h3 > a {font-size: 2.053rem}
+  h3 {font-size: 1.444rem}
+  span.high-contrast, span.high-contrast+a {font-size: 1.444rem}
+}
 @media only screen and (min-width: 64.063em) {
   .pull-2 {
     position: relative;
@@ -452,20 +457,7 @@ p {
   .large-offset-2 {margin-left: 16.66667% !important}
   .fixed.large-offset-2:not(.expanded){margin-left:8.89%}
 }
-@media only screen {
-  .columns {
-    position: relative;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    float: left;
-  }
-  .columns.small-centered {
-    margin-left: auto;
-    margin-right: auto;
-    float: none;
-  }
-  .columns.small-centered:last-child {float: none}
-}
+
 @media only screen and (min-width: 90.063em) {}
 @media only screen and (min-width: 120.063em) {}
 @media only screen and (orientation: landscape) {}
