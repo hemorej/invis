@@ -8,8 +8,6 @@ return function($site, $pages, $page) {
     return true;
 
   } else {
-    // load stripe stuff
-
     // Handle cart updates
     if ($action = get('action')) {
       $id = get('id', implode('::', array(get('uri', ''), get('variant', ''), get('option', ''))));
@@ -135,12 +133,10 @@ function updateQty($id, $newQty) {
       $siblingsQty += $item->quantity()->value;
     }
   }
-  echo $siblingsQty;
 
   foreach (page($uri)->variants()->toStructure() as $variant) {
       // Store the stock in a variable for quicker processing
       $stock = inStock($variant);
-      echo $variant->stock()->value;
 
       if ($siblingsQty === 0) {
         // If there are no siblings

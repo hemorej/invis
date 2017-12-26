@@ -2,9 +2,7 @@
 <?php snippet('menu') ?>
 
 <?php	
-	  $articles = $page->children()
-			->sortBy('publishDate', 'desc')
-	                 ->paginate(10);
+	  $articles = $page->children()->visible()->sortBy('publishDate', 'desc')->paginate(10);
 ?>
 
     <div class="row medium-space-top">
@@ -12,7 +10,6 @@
 
         <ul class="inline-list">
 	<?php foreach($articles as $article): ?>
-			<?php $pub = date('M/y', strtotime($article->published()->toString())); ?>
         	<li class="date centre"><?= $article->title()->lower() ?></li>
     		<?php foreach($article->images()->slice(0, rand(2,4)) as $image): ?>
         	<li>
