@@ -2,101 +2,78 @@
 <?php snippet('menu') ?>
 
 <div class="row medium-space-top">
-<h1 dir="auto"><?= $page->title()->html() ?></h1>
+    <h1><span class="high-contrast">
+        <?= $page->title()->html() ?>
+    </h1></span>
 
 <?= $page->text()->kirbytext() ?>
 
 <?php if (!s::get('txn') or $txn->products()->toStructure()->count() === 0) { ?>
-    <p dir="auto" class="notification warning">
+    <section class="small-12 medium-8 columns">
+      <article>
         No cart items
-    </p>
+        </article>
+    </section>
+
 <?php } else { ?>
 
-    <!-- Cart items -->
-    <div class="table-overflow">
-        <table dir="auto" class="checkout">
-            <thead>
-                <tr>
-                    <th> product </th>
-                    <th> quantity </th>
-                    <th> price </th>
-                    <th></th>
-                </tr>
-            </thead>
+<!-- Cart items -->
+<div class="row">
+    <div class="small-2 medium-2 columns">image</div>
+    <div class="small-6 medium-6 columns text-center">
+        description
+    </div>
+    <div class="small-2 medium-2 columns text-right">
+        quantity
+    </div>
+    <div class="small-2 medium-2 columns"></div>
+</div>
 
-            <tbody>
-                <?php foreach(getItems() as $i => $item) { ?>
-                    <?php $product = page($item->uri()) ?>
-                    <tr>
-                        <td>
-                            <a href="<?= $product->url() ?>">
-                                <?php if ($product->hasImages()) { ?>
-                                    <img src="<?= $product->images()->first()->thumb(['width'=>60, 'height'=>60, 'crop'=>true])->url() ?>" title="<?= $item->name() ?>">
-                                <?php } ?>
-                                <strong><?= $item->name ?></strong><br>
-                                <?php e($item->sku()->isNotEmpty(), '<strong>SKU</strong> '.$item->sku().' / ') ?>
-                                <?php e($item->variant()->isNotEmpty(), $item->variant()) ?>
-                            </a>
-                        </td>
-                        <td class="quantity">
-                            <form action="" method="post">
-                                <input type="hidden" name="id" value="<?= $item->id() ?>">
-                                <?php if ($item->quantity()->value == 1) { ?>
-                                    <input type="hidden" name="action" value="delete">
-                                    <button type="submit">
-                                        x
-                                    </button>
-                                <?php } else { ?>
-                                    <input type="hidden" name="action" value="remove">
-                                    <button type="submit">
-                                        -
-                                    </button>
-                                <?php } ?>
-                            </form>
-                            <span><?= $item->quantity() ?></span>
-                            <form action="" method="post">
-                                <input type="hidden" name="action" value="add">
-                                <input type="hidden" name="id" value="<?= $item->id() ?>">
-                                <button type="submit">
-                                    +
-                                </button>
-                            </form>
-                        </td>
-                        <td>
-                            <?php
-                                // Price text
-                                foreach ($product->variants()->toStructure() as $variant) {
-                                    if ($item->variant() == str::slug($variant->name())) {
-                                        $v = $variant;
-                                    }
-                                }
-                                echo '<class="badge">CAD'.$item->amount()->value * $item->quantity()->value.'</del><br>';
-                            ?>
+<?php $first = true;
+    foreach(getItems() as $i => $item): ?>
+    <div class="row cart <?php ecco($first==true, 'medium-space-top') ?>">
+        <div class="small-2 medium-2 columns">
+            <?php $product = page($item->uri()) ?>
+            <img src="<?= $product->images()->first()->thumb(['width'=>100, 'height'=>100, 'crop'=>true])->url() ?>" title="<?= $item->name() ?>">
+        </div>
+        <div class="small-6 medium-6 columns">
+            <a href="<?= $product->url() ?>">
+            <?= $item->name ?>&mdash;<?php e($item->variant()->isNotEmpty(), $item->variant()) ?>
+            </a>
+        </div>
+        <div class="small-2 medium-2 columns">
+            <input class="input-qty right" name="cart" value="<?= $item->quantity() ?>" min="0" type="number" id="form-cart">
+        </div>
+        <div class="small-2 medium-2 columns">
+            <?php
+                foreach ($product->variants()->toStructure() as $variant) {
+                    if ($item->variant() == str::slug($variant->name())) {
+                        $v = $variant;
+                    }
+                }
+            ?>
+            <span class="right"><?= 'CAD'.$item->amount()->value * $item->quantity()->value ?>
+                <form action="" method="post">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="id" value="<?= $item->id() ?>">
+                    <button type="submit">delete</button> 
+                </form>
+            </span>
+        </div>
+    </div>
+<?php $first = false;
+    endforeach ?>
 
-                        </td>
-                        <td>
-                            <form action="" method="post">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="<?= $item->id() ?>">
-                                <button type="submit">delete</button> 
-                            </form>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
+<div class="row medium-space-top">
+    <div class="small-12 medium-8 columns">
+        <h2>total</h2>
+    </div>
+    <div class="small-12 medium-4 columns">
+        <h2 class="right">CAD<?= $total ?></h2>
+    </div>
+</div>
 
-            <tfoot>
-                <tr class="total">
-                    <td colspan="2"> total </td>
-                    <td>
-                        CAD<?= $total ?>
-                    </td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
 <script src="https://checkout.stripe.com/checkout.js"></script>
-
 <button id="customButton">Checkout with stripe</button>
 
 <script>
