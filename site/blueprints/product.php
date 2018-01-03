@@ -16,6 +16,15 @@ fields:
   description:
     label: Description
     type: textarea
+  type:
+    label: Attribute
+    help: Product attribute (print, zine...)
+    type: select
+    options:
+        print: print
+        zine: zine
+    required: true
+    default: print
   variants:
     label: Variants
     type: snippetfield

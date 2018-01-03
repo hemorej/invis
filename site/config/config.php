@@ -49,5 +49,12 @@ Stripe Configuration
 */
 
 require_once(__DIR__ . '/../../site/plugins/stripe-php/init.php');
-c::set('stripe_key_prv', 'sk_test_qT72b5ux3mRQblppmd9fSNT2');
-c::set('stripe_key_pub', 'pk_test_xaHPLT96gz2Eg1xn6hwVCxa8');
+require_once(__DIR__ . '/../../site/models/stripeHandler.php');
+c::set('stripe_key_prv', '');
+c::set('stripe_key_pub', '');
+
+
+kirby()->hook('panel.page.*', function($page, $oldPage = null) {
+	$stripeHandler = new \Models\StripeHandler();
+	$stripeHandler->handle($page, $oldPage, $this->type());
+});
