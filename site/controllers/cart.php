@@ -1,4 +1,5 @@
 <?php
+ini_set('session.gc_maxlifetime', 10800);
 s::start();
 
 return function($site, $pages, $page) {
