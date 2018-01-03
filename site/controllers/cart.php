@@ -28,11 +28,34 @@ return function($site, $pages, $page) {
     return [
         'items' => getItems()->count(),
         'total' => $total,
-        'type' => "prints",
+        'content' => cartContents(getItems()),
         'txn' => $txn
     ];
   }
 };
+
+function cartContents($items){
+  $types = array();
+  $content = "";
+
+  foreach($items as $item){
+    if(array_key_exists($item->type()->value(), $types)){
+      $types[$item->type()->value()] = ++$types[$item->type()->value()];
+    }else{
+      $types[$item->type()->value()] = 1*$item->quantity()->value;
+    }
+  }
+
+  foreach($types as $type => $quantity){
+    $line = join(' ', array($quantity, $type));
+    if($quantity > 1)
+      $line .= 's';
+    
+    $content = $content . ', ' . $line;
+  }
+
+  return ltrim($content, ', ');
+}
 
 function cartSubtotal($items) {
   $subtotal = 0;
@@ -53,17 +76,6 @@ function getItems() {
   if (!$items->count()) return $return;
 
   foreach ($items as $key => $item) {
-
-      if ($item->option()->isNotEmpty()) {
-        $matches = 0;
-        foreach ($variant->options()->split() as $option) {
-          if ($item->option() == str::slug($option)) {
-            $matches++;
-          }
-        }
-
-        if ($matches == 0) continue;
-      }
       $return->append($key, $item);
     }
 
@@ -107,6 +119,7 @@ function add($id, $quantity) {
       'variant' => $variantSlug,
       'name' => $product->title(),
       'amount' => $variant->price(),
+      'type' => $product->type()->value(),
       'quantity' => updateQty($id, $quantityToAdd),
     ];
   } else {

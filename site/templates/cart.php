@@ -91,7 +91,7 @@ document.getElementById('customButton').addEventListener('click', function(e) {
   // Open Checkout with further options:
   handler.open({
     name: 'the Invisible Cities',
-    description: <?= $items ?> + ' <?= $type ?>',
+    description: '<?= $content ?>',
     zipCode: true,
     currency: 'CAD',
     shippingAddress: true,
