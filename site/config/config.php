@@ -39,3 +39,15 @@ c::set('cache.ignore', array(
   'feed'
 ));
 c::set('ssl',true);
+
+/*
+
+---------------------------------------
+Stripe Configuration
+---------------------------------------
+
+*/
+
+require_once(__DIR__ . '/../../site/plugins/stripe-php/init.php');
+c::set('stripe_key_prv', 'sk_test_qT72b5ux3mRQblppmd9fSNT2');
+c::set('stripe_key_pub', 'pk_test_xaHPLT96gz2Eg1xn6hwVCxa8');

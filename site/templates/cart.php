@@ -78,8 +78,8 @@
 
 <script>
 var handler = StripeCheckout.configure({
-  key: 'pk_test_6pRNASCoBOKtIshFeQd4XMUh',
-  image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+  key: '<?= c::get("stripe_key_pub") ?>',
+  image: '../assets/images/logo.png',
   locale: 'auto',
   token: function(token) {
     // You can access the token ID with `token.id`.
