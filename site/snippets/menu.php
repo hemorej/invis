@@ -8,10 +8,13 @@
 
 	  	<section class="top-bar-section">
   		  <ul>
-  		  	<li class="hide-for-small"><h3><a href="<?php echo url() ?>"> <?php echo html($site->title()) ?> </a></h3></li>
+  		  	<li class="hide-for-small"><h3><a href="<?= url() ?>"> <?= html($site->title()) ?> </a></h3></li>
 		    <?php foreach($pages->visible() AS $p): ?>
-		    <li><h3><a<?php echo ($p->isOpen()) ? ' class="active"' : '' ?> href="<?php echo $p->url() ?>"><?php echo $p->title()->lower() ?></a></h3></li>
+		    <li><h3><a<?php ecco($p->isOpen() && $page->title() != 'cart', ' class="active"') ?> href="<?php echo $p->url() ?>"><?= $p->title()->lower() ?></a></h3></li>
 		    <?php endforeach ?>
+		    <?php if(s::get('txn')): ?>
+		    	<li><h3><a <?php ecco($page->title() == 'cart', ' class="active"') ?>href="/prints/cart">cart</a></h3></li>
+		    <?php endif ?>
 		  </ul>
 		</section>
 		</nav>
