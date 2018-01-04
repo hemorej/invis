@@ -469,7 +469,7 @@ input[type=number]::-webkit-outer-spin-button {
   .pull-2 {
     position: relative;
     right: 16.66667%;
-    left: auto
+    left: -10%
   }
   .medium-overflow{width: 81.25rem}
   header h1 a {font-size: 4rem}
