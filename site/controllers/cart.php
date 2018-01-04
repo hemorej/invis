@@ -39,9 +39,9 @@ function cartContents($items){
 
   foreach($items as $item){
     if(array_key_exists($item->type()->value(), $types)){
-      $types[$item->type()->value()] = ++$types[$item->type()->value()];
+      $types[$item->type()->value()] = $types[$item->type()->value()] + $item->quantity->value();
     }else{
-      $types[$item->type()->value()] = 1*$item->quantity()->value;
+      $types[$item->type()->value()] = 1*$item->quantity->value();
     }
   }
 
