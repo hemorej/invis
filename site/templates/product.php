@@ -64,17 +64,17 @@ if($page->parent()->title() != 'journal'){
 
         <ul class="inline-list">
         <?php $first = true;
-        foreach ($variants as $variant) { ?>
+        foreach ($variants as $variant): ?>
             <li <?php ecco($first == true, 'class="active variant"', 'class="variant"') ?>>
                 <?php if(inStock($variant)): ?>
                 <a href="#" data-option-variant='<?= $variant->name() ?>' data-option-price="<?= $variant->price ?>"><?= $variant->name() ?> &mdash; $<?= $variant->price ?></a>
                 <?php endif ?>
             </li>&nbsp;
         <?php $first = false;
-        } ?>
+        endforeach ?>
         </ul>
 
-        <form id="cart-form" method="post" action="<?= url('prints/cart') ?>">
+        <form id="cart-form" method="post" action="">
             <div class="description">
                 <input type="hidden" name="csrf" value="<?= csrf() ?>">
                 <input type="hidden" name="action" value="add">
@@ -83,7 +83,7 @@ if($page->parent()->title() != 'journal'){
             </div>
 
             <div class="action">
-                <button type="submit">Add to cart</button>
+                <button id="add-cart" type="submit">Add to cart</button>
             </div>
         </form>
         <?php } ?>

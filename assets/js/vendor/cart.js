@@ -33,4 +33,17 @@ $( document ).ready(function(){
             });
         }
     });
+
+   $("#add-cart").click(function(e){
+        e.preventDefault();
+
+        var uri = $("[name=uri]").val();
+        var variant = $("[name=variant]").val();
+        var csrf = $("[name=csrf]").val();
+
+        $.post( "cart", { uri: uri, variant: variant, action: "add", csrf: csrf})
+        .done(function( data ) {
+            document.location.replace('cart');
+        });
+   });
 });
