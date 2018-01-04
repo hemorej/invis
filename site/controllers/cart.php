@@ -14,9 +14,7 @@ return function($site, $pages, $page) {
       $id = get('id', implode('::', array(get('uri', ''), get('variant', ''), get('option', ''))));
       $quantity = intval(get('quantity'));
       $variant = get('variant');
-      $option = get('option');
       if ($action == 'add') add($id, $quantity);
-      if ($action == 'remove') remove($id);
       if ($action == 'delete') delete($id);
     }
 
@@ -108,7 +106,8 @@ function add($id, $quantity) {
   $product = page($uri);
   $variant = null;
   foreach (page($uri)->variants()->toStructure() as $v) {
-    $variant = $v;
+    // if ((string)$v->name() == (string)$variant)
+      $variant = $v;
   }
 
   if (empty($item)) {
@@ -126,7 +125,8 @@ function add($id, $quantity) {
     // Increase the quantity of an existing item
     foreach ($items as $key => $i) {
       if ($i['id'] == $item->id()) {
-        $items[$key]['quantity'] = updateQty($id, (int) $item->quantity()->value + $quantityToAdd);
+        $newQty = $quantity ? (int)$quantity : (int)$item->quantity()->value + 1;
+        $items[$key]['quantity'] = updateQty($id, $newQty);
         continue;
       }
     }
@@ -166,15 +166,15 @@ function updateQty($id, $newQty) {
         }
       } else {
         // If there are siblings
-        if ($stock === true or $stock >= $siblingsQty + $newQty) {
+        if ($stock === true or $stock >= $newQty) {
           // If the siblings plus $newQty won't exceed the max stock, go ahead
           return $newQty;
         } else if ($stock === false or $stock <= $siblingsQty) {
           // If the siblings have already maxed out the stock, return 0 
-          return 0;
+          return $siblingsQty;
         } else if ($stock > $siblingsQty and $stock <= $siblingsQty + $newQty) {
           // If the siblings don't exceed max stock, but the newQty will, reduce newQty to the appropriate level
-          return $stock - $siblingsQty;
+          return $siblingsQty;
         }
       }
     }
@@ -183,7 +183,29 @@ function updateQty($id, $newQty) {
   return 0;
 }
 
+function delete($id) {
+  $items = page(s::get('txn'))->products()->yaml();
+  foreach ($items as $key => $i) {
+    if ($i['id'] == $id) {
+      unset($items[$key]);
+    }
+  }
+  page(s::get('txn'))->update(['products' => yaml::encode($items)]);
+}
+
 function inStock($variant) {
+
+  if(strstr($variant, '::')){
+    $idParts = explode('::',$variant);
+    $uri = $idParts[0];
+    $variant = $idParts[1];
+
+    foreach (page($uri)->variants()->toStructure() as $v) {
+      if ((string)$v->name() == (string)$variant)
+        $variant = $v;
+    }
+    return $variant->stock->value();
+  }
 
   if (!is_numeric($variant->stock()->value) and $variant->stock()->value === '') return true;
   if (is_numeric($variant->stock()->value) and intval($variant->stock()->value) <= 0) return false;

@@ -8,14 +8,14 @@
 
 <?= $page->text()->kirbytext() ?>
 
-<?php if (!s::get('txn') or $txn->products()->toStructure()->count() === 0) { ?>
+<?php if (!s::get('txn') or $txn->products()->toStructure()->count() === 0): ?>
     <section class="small-12 medium-8 columns">
       <article>
         No cart items
         </article>
     </section>
 
-<?php } else { ?>
+<?php else: ?>
 
 <!-- Cart items -->
 <div class="row">
@@ -42,16 +42,9 @@
             </a>
         </div>
         <div class="small-2 medium-2 columns">
-            <input class="input-qty right" name="cart" value="<?= $item->quantity() ?>" min="0" type="number" id="form-cart">
+            <input class="input-qty right" name="cart[<?=$item->id() ?>]" id="<?= $item->id() ?>" value="<?= $item->quantity() ?>" min="0" max="<?= inStock($item->id()) ?>" data-variant="<?= $item->variant() ?>" type="number">
         </div>
         <div class="small-2 medium-2 columns">
-            <?php
-                foreach ($product->variants()->toStructure() as $variant) {
-                    if ($item->variant() == str::slug($variant->name())) {
-                        $v = $variant;
-                    }
-                }
-            ?>
             <span class="right"><?= 'CAD'.$item->amount()->value * $item->quantity()->value ?>
                 <form action="" method="post">
                     <input type="hidden" name="action" value="delete">
@@ -74,7 +67,7 @@
 </div>
 
 <script src="https://checkout.stripe.com/checkout.js"></script>
-<button id="customButton">Checkout with stripe</button>
+<button id="checkoutButton">Checkout with stripe</button>
 
 <script>
 var handler = StripeCheckout.configure({
@@ -87,7 +80,7 @@ var handler = StripeCheckout.configure({
   }
 });
 
-document.getElementById('customButton').addEventListener('click', function(e) {
+document.getElementById('checkoutButton').addEventListener('click', function(e) {
   // Open Checkout with further options:
   handler.open({
     name: 'the Invisible Cities',
@@ -106,7 +99,8 @@ window.addEventListener('popstate', function() {
 });
 </script>
     </div>
-<?php } ?>
+<?php endif ?>
 </div>
 </div>
 <?php snippet('footer') ?>
+<?php echo js('assets/js/vendor/cart.js') ?>
