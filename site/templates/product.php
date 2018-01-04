@@ -35,7 +35,7 @@ if($page->parent()->title() != 'journal'){
 
 <div class="row">
     <h3><span class="high-contrast"><?= $page->parent()->title()->lower() ?></span><a href="<?= $page->url() ?>"><?= strtolower($headline) ?></a></h3>
-    <div class="small-12 medium-10 <?= ecco($page->images()->first()->isLandscape(), 'medium-overflow pull-2') ?> columns">   
+    <div class="small-12 medium-10 columns">   
         <?php 
 
         echo kirbytext($page->text()) ;
@@ -50,7 +50,7 @@ if($page->parent()->title() != 'journal'){
                 <a href="<?php echo $page->prev()->url() ?>">&laquo; Previous | </a>
             </span>
         <?php endif ?>
-        <?php if($page->hasNext()): ?>
+        <?php if($page->hasNext() && $page->next()->isVisible()): ?>
             <span class="right">
                 <a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
             </span>
