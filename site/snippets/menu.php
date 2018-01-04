@@ -13,7 +13,10 @@
 		    <li><h3><a<?php ecco($p->isOpen() && $page->title() != 'cart', ' class="active"') ?> href="<?php echo $p->url() ?>"><?= $p->title()->lower() ?></a></h3></li>
 		    <?php endforeach ?>
 		    <?php if(s::get('txn')): ?>
+		    	<?php $items = page(s::get('txn'))->products()->yaml();
+		    		if(count($items) > 0): ?>
 		    	<li><h3><a <?php ecco($page->title() == 'cart', ' class="active"') ?>href="/prints/cart">cart</a></h3></li>
+		    	<?php endif ?>
 		    <?php endif ?>
 		  </ul>
 		</section>

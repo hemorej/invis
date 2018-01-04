@@ -50,7 +50,7 @@ if($page->parent()->title() != 'journal'){
                 <a href="<?php echo $page->prev()->url() ?>">&laquo; Previous | </a>
             </span>
         <?php endif ?>
-        <?php if($page->hasNext() && $page->next()->isVisible()): ?>
+        <?php if($page->hasNextVisible()): ?>
             <span class="right">
                 <a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
             </span>
