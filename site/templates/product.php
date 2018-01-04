@@ -76,6 +76,7 @@ if($page->parent()->title() != 'journal'){
 
         <form id="cart-form" method="post" action="<?= url('prints/cart') ?>">
             <div class="description">
+                <input type="hidden" name="csrf" value="<?= csrf() ?>">
                 <input type="hidden" name="action" value="add">
                 <input type="hidden" name="uri" value="<?= $page->uri() ?>">
                 <input type="hidden" name="variant" value='<?= $variants->first()->name() ?>'>

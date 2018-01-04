@@ -20,13 +20,14 @@ $( document ).ready(function(){
         var variant = $(this).attr("data-variant");
         var qty = $(this).val();
         var max = $(this).attr("max");
+        var csrf = $("#input-csrf").val();
 
         if(parseInt(qty) > parseInt(max)){
             $('[data-variant="'+variant+'"]').val(prevQty);
             // out of stock
             return false;
         }else{
-            $.post( "cart", { id: id, action: "add", quantity: qty})
+            $.post( "cart", { id: id, action: "add", quantity: qty, csrf: csrf})
             .done(function( data ) {
                 location.reload(true);
             });

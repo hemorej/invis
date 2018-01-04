@@ -5,19 +5,20 @@ s::start();
 return function($site, $pages, $page) {
 
   if (!s::get('txn') && get('action') != 'add') {
-    // Show the empty cart page if no transaction file has been created yet
     return true;
 
   } else {
-    // Handle cart updates
-    if ($action = get('action')) {
-      $id = get('id', implode('::', array(get('uri', ''), get('variant', ''), get('option', ''))));
-      $quantity = intval(get('quantity'));
-      $variant = get('variant');
-      if ($action == 'add') add($id, $quantity);
-      if ($action == 'delete') delete($id);
+    $token = get('csrf');
+    if(csrf($token) === true)
+    {
+      if ($action = get('action')) {
+        $id = get('id', implode('::', array(get('uri', ''), get('variant', ''), get('option', ''))));
+        $quantity = intval(get('quantity'));
+        $variant = get('variant');
+        if ($action == 'add') add($id, $quantity);
+        if ($action == 'delete') delete($id);
+      }
     }
-
     // Set txn object
     $txn = page(s::get('txn'));
 

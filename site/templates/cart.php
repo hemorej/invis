@@ -43,10 +43,12 @@
         </div>
         <div class="small-2 medium-2 columns">
             <input class="input-qty right" name="cart[<?=$item->id() ?>]" id="<?= $item->id() ?>" value="<?= $item->quantity() ?>" min="0" max="<?= inStock($item->id()) ?>" data-variant="<?= $item->variant() ?>" type="number">
+            <input id="input-csrf" type="hidden" name="csrf" value="<?= csrf() ?>">
         </div>
         <div class="small-2 medium-2 columns">
             <span class="right"><?= 'CAD'.$item->amount()->value * $item->quantity()->value ?>
                 <form action="" method="post">
+                    <input type="hidden" name="csrf" value="<?= csrf() ?>">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="<?= $item->id() ?>">
                     <button type="submit">delete</button> 
