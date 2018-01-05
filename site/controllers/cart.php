@@ -105,11 +105,7 @@ function add($id, $quantity) {
   $item = page(s::get('txn'))->products()->toStructure()->findBy('sku', $sku);
   $items = page(s::get('txn'))->products()->yaml();
   $product = page($uri);
-  $variant = null;
-  foreach (page($uri)->variants()->toStructure() as $v) {
-    // if ((string)$v->name() == (string)$variant)
-      $variant = $v;
-  }
+  $variant = page($uri)->variants()->toStructure()->findBy('sku', $sku);
 
   if (empty($item)) {
     // Add a new item
