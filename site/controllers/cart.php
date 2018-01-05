@@ -89,10 +89,11 @@ function add($id, $quantity) {
     $timestamp = time();
     page('prints')->create('prints/orders/'.$txn_id, 'order', [
       'txn-id' => $txn_id,
-      'txn-date'  => $timestamp,
-      'status' => 'abandoned',
+      'txn-date'  => date('d/m/Y', $timestamp),
+      'status' => 'pending',
       'session-start' => $timestamp,
       'session-end' => $timestamp,
+      'products' => []
     ]);
 
     s::set('txn', 'prints/orders/'.$txn_id);
