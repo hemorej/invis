@@ -99,11 +99,11 @@ function add($id, $quantity) {
   }
 
   $quantityToAdd = $quantity ? (int) $quantity : 1;
-  $item = page(s::get('txn'))->products()->toStructure()->findBy('id', $id);
-  $items = page(s::get('txn'))->products()->yaml();
   $idParts = explode('::',$id); // $id is formatted uri::sku
   $uri = $idParts[0];
   $sku = $idParts[1];
+  $item = page(s::get('txn'))->products()->toStructure()->findBy('sku', $sku);
+  $items = page(s::get('txn'))->products()->yaml();
   $product = page($uri);
   $variant = null;
   foreach (page($uri)->variants()->toStructure() as $v) {
@@ -202,10 +202,7 @@ function inStock($variant) {
     $uri = $idParts[0];
     $sku = $idParts[1];
 
-    foreach (page($uri)->variants()->toStructure() as $v) {
-      if ((string)$v->sku() == (string)$sku)
-        $variant = $v;
-    }
+    $variant = page($uri)->variants()->toStructure()->findBy('sku', $sku);
     return $variant->stock->value();
   }
 

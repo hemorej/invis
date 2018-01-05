@@ -42,7 +42,7 @@
             </a>
         </div>
         <div class="small-2 medium-2 columns">
-            <input class="input-qty right" name="cart[<?=$item->sku() ?>]" id="<?= $item->id() ?>" value="<?= $item->quantity() ?>" min="0" max="<?= inStock($item->id()) ?>" data-variant="<?= $item->variant() ?>" type="number">
+            <input class="input-qty right" name="cart[<?=$item->sku() ?>]" id="<?= $item->uri() . '::' . $item->sku() ?>" value="<?= $item->quantity() ?>" min="0" max="<?= inStock($item->id()) ?>" data-variant="<?= $item->sku() ?>" type="number">
             <input id="input-csrf" type="hidden" name="csrf" value="<?= csrf() ?>">
         </div>
         <div class="small-2 medium-2 columns">
