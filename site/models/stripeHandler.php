@@ -125,7 +125,10 @@ class StripeHandler
     public function delete($page)
     {
         try{
-            //deactivate all skus associated with prod
+            foreach($page->variants()->toStructure() as $variant){
+                $this->deleteOrDeactivateSKU($variant->sku->value());
+            }
+
             $product = \Stripe\Product::retrieve($page->product_id());
             $product->delete();
         }catch (\Stripe\Error\Base $e) {}
