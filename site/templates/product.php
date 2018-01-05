@@ -67,7 +67,7 @@ if($page->parent()->title() != 'journal'){
         foreach ($variants as $variant): ?>
             <li <?php ecco($first == true, 'class="active variant"', 'class="variant"') ?>>
                 <?php if(inStock($variant)): ?>
-                <a href="#" data-option-variant='<?= $variant->name() ?>' data-option-price="<?= $variant->price ?>"><?= $variant->name() ?> &mdash; $<?= $variant->price ?></a>
+                <a href="#" data-option-variant='<?= $variant->sku() ?>' data-option-price="<?= $variant->price ?>"><?= $variant->name() ?> &mdash; $<?= $variant->price ?></a>
                 <?php endif ?>
             </li>&nbsp;
         <?php $first = false;
@@ -79,7 +79,7 @@ if($page->parent()->title() != 'journal'){
                 <input type="hidden" name="csrf" value="<?= csrf() ?>">
                 <input type="hidden" name="action" value="add">
                 <input type="hidden" name="uri" value="<?= $page->uri() ?>">
-                <input type="hidden" name="variant" value='<?= $variants->first()->name() ?>'>
+                <input type="hidden" name="variant" value='<?= $variant->sku() ?>'>
             </div>
 
             <div class="action">

@@ -12,7 +12,7 @@ return function($site, $pages, $page) {
     if(csrf($token) === true)
     {
       if ($action = get('action')) {
-        $id = get('id', implode('::', array(get('uri', ''), get('variant', ''), get('option', ''))));
+        $id = get('id', implode('::', array(get('uri', ''), get('variant', ''))));
         $quantity = intval(get('quantity'));
         $variant = get('variant');
         if ($action == 'add') add($id, $quantity);
@@ -101,9 +101,9 @@ function add($id, $quantity) {
   $quantityToAdd = $quantity ? (int) $quantity : 1;
   $item = page(s::get('txn'))->products()->toStructure()->findBy('id', $id);
   $items = page(s::get('txn'))->products()->yaml();
-  $idParts = explode('::',$id); // $id is formatted uri::variantslug::optionslug
+  $idParts = explode('::',$id); // $id is formatted uri::sku
   $uri = $idParts[0];
-  $variantSlug = $idParts[1];
+  $sku = $idParts[1];
   $product = page($uri);
   $variant = null;
   foreach (page($uri)->variants()->toStructure() as $v) {
@@ -116,10 +116,11 @@ function add($id, $quantity) {
     $items[] = [
       'id' => $id,
       'uri' => $uri,
-      'variant' => $variantSlug,
+      'variant' => $variant->name(),
       'name' => $product->title(),
       'amount' => $variant->price(),
       'type' => $product->type()->value(),
+      'sku' => $sku,
       'quantity' => updateQty($id, $quantityToAdd),
     ];
   } else {
@@ -199,10 +200,10 @@ function inStock($variant) {
   if(strstr($variant, '::')){
     $idParts = explode('::',$variant);
     $uri = $idParts[0];
-    $variant = $idParts[1];
+    $sku = $idParts[1];
 
     foreach (page($uri)->variants()->toStructure() as $v) {
-      if ((string)$v->name() == (string)$variant)
+      if ((string)$v->sku() == (string)$sku)
         $variant = $v;
     }
     return $variant->stock->value();
