@@ -55,6 +55,6 @@ c::set('stripe_key_pub', '');
 
 
 kirby()->hook('panel.page.*', function($page, $oldPage = null) {
-	$stripeHandler = new \Models\StripeHandler();
+	$stripeHandler = new \StripeHandler();
 	$stripeHandler->handle($page, $oldPage, $this->type());
 });
