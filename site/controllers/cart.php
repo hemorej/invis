@@ -83,22 +83,6 @@ function getItems() {
 
 function add($id, $quantity) {
 
-  // Create the transaction file if we don't have one yet
-  if (!s::get('txn')) {
-    $txn_id = s::id();
-    $timestamp = time();
-    page('prints')->create('prints/orders/'.$txn_id, 'order', [
-      'txn-id' => $txn_id,
-      'txn-date'  => date('d/m/Y', $timestamp),
-      'status' => 'pending',
-      'session-start' => $timestamp,
-      'session-end' => $timestamp,
-      'products' => []
-    ]);
-
-    s::set('txn', 'prints/orders/'.$txn_id);
-  }
-
   $quantityToAdd = $quantity ? (int) $quantity : 1;
   $idParts = explode('::',$id); // $id is formatted uri::sku
   $uri = $idParts[0];
@@ -130,7 +114,25 @@ function add($id, $quantity) {
       }
     }
   }
-  page(s::get('txn'))->update(['products' => yaml::encode($items)]);
+
+  // Create the transaction file if we don't have one yet
+  if (!s::get('txn')) {
+    $txn_id = s::id();
+    $timestamp = time();
+    page('prints')->create('prints/orders/'.$txn_id, 'order', [
+      'txn-id' => $txn_id,
+      'txn-date'  => date('d/m/Y', $timestamp),
+      'status' => 'pending',
+      'session-start' => $timestamp,
+      'session-end' => $timestamp,
+      'products' => yaml::encode($items)
+    ]);
+
+    s::set('txn', 'prints/orders/'.$txn_id);
+  }else{
+    page(s::get('txn'))->update(['products' => yaml::encode($items)]);
+  }
+
 }
 
 function updateQty($id, $newQty) {
