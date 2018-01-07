@@ -392,13 +392,49 @@ input[type=number]::-webkit-outer-spin-button {
 .text-center {text-align: center !important}
 .text-right {text-align: right !important}
 
+.alert-box {
+  border-style: solid;
+  border-width: 1px;
+  display: block;
+  font-weight: normal;
+  margin-bottom: 1.25rem;
+  position: relative;
+  padding: 0.875rem 1.5rem 0.875rem 0.875rem;
+  font-size: 0.8125rem;
+  transition: opacity 300ms ease-out;
+  background-color: #ffcd39;
+  border-color: #ffcd39;
+  color: #000;
+  display:none}
+.alert-box .close {
+  font-size: 1.375rem;
+  padding: 9px 6px 4px;
+  line-height: 0;
+  position: absolute;
+  top: 50%;
+  margin-top: -0.6875rem;
+  right: 0.25rem;
+  color: #333333;
+  opacity: 0.3}
+.alert-box .close:hover, .alert-box .close:focus {opacity: 0.5}
+.alert-box h3{font-size:1.3rem}
+
 @media only screen and (max-width: 40.063em) {
-  .small-12 {width: 100%}
   header h1 a {font-size:2.053rem}
   .top-bar-section h2 {margin-left:1rem}
   p{font-size:1rem}
 }
-@media only screen and (max-width: 46.5em){.hide-for-small {display: none !important}}
+@media only screen and (max-width: 46.5em){
+  .alert-box h3{font-size:1rem}
+  .hide-for-small {display: none !important}
+  .small-2 {width: 16.66667%}
+  .small-4 {width: 33.33333%}
+  .small-6 {width: 50%}
+  .small-8 {width: 66.66667%}
+  .small-10 {width: 83.33333%}
+  .small-11 {width: 91.66667%}
+  .small-12 {width: 100%}
+}
 
 @media only screen and (min-width: 46.5em) {
   header h1 a {font-size:2.923rem}

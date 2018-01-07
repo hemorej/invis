@@ -1,3 +1,9 @@
+<div class="alert-box row">
+    <div class="medium-12 columns">
+      <h3>Sorry, there's only <span id="stock-error"></span> left in stock</h3>
+      <a href="#" class="close">&times;</a>
+    </div>
+</div>
 <?php snippet('header') ?>
 <?php snippet('menu') ?>
 

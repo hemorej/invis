@@ -24,7 +24,8 @@ $( document ).ready(function(){
 
         if(parseInt(qty) > parseInt(max)){
             $('[data-variant="'+variant+'"]').val(prevQty);
-            // out of stock
+            $('#stock-error').html(parseInt(max));
+            $('.alert-box').show();
             return false;
         }else{
             $.post( "cart", { id: id, action: "add", quantity: qty, csrf: csrf})
@@ -32,6 +33,11 @@ $( document ).ready(function(){
                 location.reload(true);
             });
         }
+    });
+
+   $(".close").click(function(e){
+        e.preventDefault();
+        $('.alert-box').hide();
     });
 
    $("#add-cart").click(function(e){
