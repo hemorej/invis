@@ -30,7 +30,7 @@ fields:
     readonly: true
     type: structure
     entry: >
-      <a href="/invis/{{uri}}" target="_blank">{{name}} ({{variant}})</a><br />
+      <a href="/{{uri}}" target="_blank">{{name}} ({{variant}})</a><br />
       sku: {{sku}}<br />
       qty: {{quantity}} total: {{amount}}
     fields:
