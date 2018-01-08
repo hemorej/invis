@@ -52,4 +52,36 @@ $( document ).ready(function(){
             document.location.replace('cart');
         });
    });
+
+   // checkout
+   var handler = StripeCheckout.configure({
+      key: $("#checkout-key").val(),
+      image: '../assets/images/logo.png',
+      locale: 'auto',
+      token: function(token) {
+        var csrf = $("#input-csrf").val();
+        $.post( "order", { token: JSON.stringify(token), csrf: csrf})
+        .done(function( data ) {
+            document.location.replace('order');
+        });
+      }
+    });
+
+    document.getElementById('checkoutButton').addEventListener('click', function(e) {
+      // Open Checkout with further options:
+      handler.open({
+        name: 'the Invisible Cities',
+        description: $("#checkout-content").val(),
+        zipCode: true,
+        currency: 'CAD',
+        shippingAddress: true,
+        amount: parseInt($("#checkout-total").val()),
+      });
+      e.preventDefault();
+    });
+
+    // Close Checkout on page navigation:
+    window.addEventListener('popstate', function() {
+      handler.close();
+    });
 });

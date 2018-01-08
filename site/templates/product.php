@@ -38,8 +38,8 @@ if($page->parent()->title() != 'journal'){
     <div class="small-12 medium-10 columns">   
         <?php 
 
-        echo kirbytext($page->text()) ;
-        snippet('interchange', array('images' => $page->images())) ;
+        echo kirbytext($page->text());
+        snippet('interchange', array('images' => $page->images()));
 
         ?>
 
@@ -58,9 +58,9 @@ if($page->parent()->title() != 'journal'){
     </div>
         <section class="medium-2 columns variants">
         <?php $variants = $page->variants()->toStructure();
-        if(count($variants) == 0 || (count($variants) == 1 && !inStock($variants->first()))){
+        if(count($variants) == 0 || (count($variants) == 1 && !inStock($variants->first()))):
             echo 'Out of stock';
-        }else{ ?>
+        else: ?>
 
         <ul class="inline-list">
         <?php $first = true;
@@ -86,13 +86,13 @@ if($page->parent()->title() != 'journal'){
                 <button id="add-cart" type="submit">Add to cart</button>
             </div>
         </form>
-        <?php } ?>
+        <?php endif ?>
         </section>
            
     </div>  
 </div>
 <?php snippet('footer') ?>
-<?php echo js('assets/js/vendor/cart.js') ?>
+<?= js('assets/js/vendor/cart.js') ?>
 
 <?php
 function inStock($variant) {

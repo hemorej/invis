@@ -16,8 +16,8 @@
 
 <?php if (!s::get('txn') or $txn->products()->toStructure()->count() === 0): ?>
     <section class="small-12 medium-8 columns">
-      <article>
-        No cart items
+        <article>
+            No cart items
         </article>
     </section>
 
@@ -26,12 +26,8 @@
 <!-- Cart items -->
 <div class="row">
     <div class="small-2 medium-2 columns">image</div>
-    <div class="small-6 medium-6 columns text-center">
-        description
-    </div>
-    <div class="small-2 medium-2 columns text-right">
-        quantity
-    </div>
+    <div class="small-6 medium-6 columns text-center">description</div>
+    <div class="small-2 medium-2 columns text-right">quantity</div>
     <div class="small-2 medium-2 columns"></div>
 </div>
 
@@ -74,44 +70,15 @@
     </div>
 </div>
 
-<script src="https://checkout.stripe.com/checkout.js"></script>
 <button id="checkoutButton">Checkout with stripe</button>
+</div>
 
-<script>
-var handler = StripeCheckout.configure({
-  key: '<?= c::get("stripe_key_pub") ?>',
-  image: '../assets/images/logo.png',
-  locale: 'auto',
-  token: function(token) {
-    var csrf = $("#input-csrf").val();
-    $.post( "order", { token: JSON.stringify(token), csrf: csrf})
-    .done(function( data ) {
-        document.location.replace('order');
-    });
-  }
-});
+<?= js('https://checkout.stripe.com/checkout.js') ?>
+<input id="checkout-key" type="hidden" name="key" value="<?= c::get("stripe_key_pub") ?>">
+<input id="checkout-total" type="hidden" name="total" value="<?= $total*100 ?>">
+<input id="checkout-content" type="hidden" name="content" value="<?= $content ?>">
 
-document.getElementById('checkoutButton').addEventListener('click', function(e) {
-  // Open Checkout with further options:
-  handler.open({
-    name: 'the Invisible Cities',
-    description: '<?= $content ?>',
-    zipCode: true,
-    currency: 'CAD',
-    shippingAddress: true,
-    amount: <?= $total*100 ?>
-  });
-  e.preventDefault();
-});
-
-// Close Checkout on page navigation:
-window.addEventListener('popstate', function() {
-  handler.close();
-});
-</script>
-    </div>
 <?php endif ?>
-</div>
-</div>
+
 <?php snippet('footer') ?>
-<?php echo js('assets/js/vendor/cart.js') ?>
+<?= js('assets/js/vendor/cart.js') ?>
