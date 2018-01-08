@@ -83,8 +83,11 @@ var handler = StripeCheckout.configure({
   image: '../assets/images/logo.png',
   locale: 'auto',
   token: function(token) {
-    // You can access the token ID with `token.id`.
-    // Get the token ID to your server-side code for use.
+    var csrf = $("#input-csrf").val();
+    $.post( "order", { token: JSON.stringify(token), csrf: csrf})
+    .done(function( data ) {
+        document.location.replace('order');
+    });
   }
 });
 
