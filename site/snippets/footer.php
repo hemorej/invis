@@ -27,6 +27,7 @@
     });
 
 </script>
+<?php snippet('ga') ?>
 </body>
 
 </html>

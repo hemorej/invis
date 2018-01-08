@@ -39,6 +39,7 @@ c::set('cache.ignore', array(
   'feed'
 ));
 c::set('ssl',true);
+c::set('ga_code', '');
 
 /*
 
