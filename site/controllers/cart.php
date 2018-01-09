@@ -193,21 +193,3 @@ function delete($id) {
   }
   page(s::get('txn'))->update(['products' => yaml::encode($items)]);
 }
-
-function inStock($variant) {
-
-  if(strstr($variant, '::')){
-    $idParts = explode('::',$variant);
-    $uri = $idParts[0];
-    $sku = $idParts[1];
-
-    $variant = page($uri)->variants()->toStructure()->findBy('sku', $sku);
-    return $variant->stock->value();
-  }
-
-  if (!is_numeric($variant->stock()->value) and $variant->stock()->value === '') return true;
-  if (is_numeric($variant->stock()->value) and intval($variant->stock()->value) <= 0) return false;
-  if (is_numeric($variant->stock()->value) and intval($variant->stock()->value) > 0) return intval($variant->stock()->value);
-
-  return false;
-}

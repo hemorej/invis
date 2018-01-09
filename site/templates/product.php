@@ -93,14 +93,3 @@ if($page->parent()->title() != 'journal'){
 </div>
 <?php snippet('footer') ?>
 <?= js('assets/js/vendor/cart.js') ?>
-
-<?php
-function inStock($variant) {
-
-  if (!is_numeric($variant->stock()->value) and $variant->stock()->value === '') return true;
-  if (is_numeric($variant->stock()->value) and intval($variant->stock()->value) <= 0) return false;
-  if (is_numeric($variant->stock()->value) and intval($variant->stock()->value) > 0) return intval($variant->stock()->value);
-
-  return false;
-}
-?>

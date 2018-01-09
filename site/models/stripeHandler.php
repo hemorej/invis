@@ -86,7 +86,7 @@ class StripeHandler
                             $updatedVariant['price'] = $variant->price->value();
                             $updatedVariant['stock'] = $variant->stock->value();
 
-                            $this->addToStructure($page, 'variants', $updatedVariant);
+                            addToStructure($page, 'variants', $updatedVariant);
 
                         }catch(\Stripe\Error\Base $e) {
                             $page->update(array('synced' => "false:cannot create sku"));
@@ -132,21 +132,6 @@ class StripeHandler
             $product = \Stripe\Product::retrieve($page->product_id());
             $product->delete();
         }catch (\Stripe\Error\Base $e) {}
-    }
-
-    public function addToStructure($page, $field, $data = array()){
-      $fieldData = $page->$field()->yaml();
-      $key = array_search($data['name'], array_column($fieldData, 'name'));
-      unset($fieldData[$key]);
-
-      $fieldData[] = $data;
-      $fieldData = yaml::encode($fieldData);
-      try {
-        $page->update(array($field => $fieldData));
-        return true;
-      } catch(Exception $e) {
-        return $e->getMessage();
-      }
     }
 
     public function removeOldVariants($page, $oldPage){

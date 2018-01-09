@@ -15,21 +15,6 @@ return function($site, $pages, $page) {
 			return [ 'state' => 'no session' ];
 		}
 	}else{
-		// TODO: check if customer exists
-		$customer = \Stripe\Customer::create(array(
-		      'email' => $token['email'],
-		      'source'  => $token['id'],
-		      'shipping' => array(
-		      		'name' => $token['card']['name'],
-		      		'address' => array(
-		      			"line1" => $token['card']['address_line1'],
-		      			"city" => $token['card']['address_city'],
-		      			"country" => $token['card']['address_country'],
-		      			"postal_code" => $token['card']['address_zip'],
-		      			"state" => $token['card']['address_state']
-		      		)
-		      )
-		  ));
 
 		$orderItems = array();
 		foreach($items as $item){
@@ -42,12 +27,22 @@ return function($site, $pages, $page) {
 		}
 
 		$order = \Stripe\Order::create(array(
-		  "items" => $orderItems,
-		  "currency" => "cad",
-		  "customer" => $customer->id
+			"items" => $orderItems,
+			"currency" => "cad",
+			"shipping" => array(
+					'name' => $token['card']['name'],
+					'address' => array(
+						"line1" => $token['card']['address_line1'],
+						"city" => $token['card']['address_city'],
+						"country" => $token['card']['address_country'],
+						"postal_code" => $token['card']['address_zip'],
+						"state" => $token['card']['address_state']
+					)
+			),
+			"email" => $token['email']
 		));
 
-		$order->pay(array("customer" => $customer->id));
+		$order->pay(array("source" => $token['id']));
 
 		$email = email(array(
 		  'to'      => $token['email'],
@@ -57,7 +52,20 @@ return function($site, $pages, $page) {
 		));
 		$email->send();
 
-		// TODO: update local inventory page(prints)->products()->toStructure()->findBy('sku', $sku);
+		foreach($items as $item){
+			$idParts = explode('::', $item['variant']);
+  			$uri = $idParts[0];
+
+			$variant = page($uri)->variants()->toStructure()->findBy('sku', $item['sku']);
+
+	        $updatedVariant = array();
+	        $updatedVariant['sku'] = $item['sku'];
+	        $updatedVariant['name'] = $variant->name->value();
+	        $updatedVariant['price'] = $variant->price->value();
+	        $updatedVariant['stock'] = $variant->stock->value() - $item['quantity'];
+
+	        addToStructure(page($uri), 'variants', $updatedVariant);
+		}
 
 		page(s::get('txn'))->update(['status' => 'paid', 'order_id' => $order->id]);
 		page(s::get('txn'))->move($order->id);
