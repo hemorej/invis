@@ -67,7 +67,16 @@ return function($site, $pages, $page) {
 	        addToStructure(page($uri), 'variants', $updatedVariant);
 		}
 
-		page(s::get('txn'))->update(['status' => 'paid', 'order_id' => $order->id]);
+		$customer = array('name' => $token['card']['name'],
+						'email' => $token['email'],
+						'address' => array(
+							"street" => $token['card']['address_line1'],
+							"city" => $token['card']['address_city'],
+							"country" => $token['card']['address_country'],
+							"postal_code" => $token['card']['address_zip'],
+							"state" => $token['card']['address_state']),
+					);
+		page(s::get('txn'))->update(['status' => 'paid', 'order_id' => $order->id, 'customer' => yaml::encode($customer)]);
 		page(s::get('txn'))->move($order->id);
 		s::remove('txn');
 		s::set('state', 'success');

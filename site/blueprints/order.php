@@ -25,6 +25,10 @@ fields:
         shipped: shipped
         paid: paid
     required: true
+  order_id:
+    label: order id
+    type: text
+    readonly: true
   products:
     label: products
     readonly: true
@@ -52,3 +56,7 @@ fields:
       amount:
         label: amount
         type: int
+  customer:
+    label: customer
+    readonly: true
+    type: textarea
