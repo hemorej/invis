@@ -1,5 +1,4 @@
-<?= $values->name() ?>  CAD<?= $values->price() ?><br />
-<?= $values->stock() ?> in stock
-<?= $values->sku() != '' ? '<br><small>SKU: '.$values->sku().'</small>' : '' ?>
+<b><?= $values->name() ?></b>  CAD<?= $values->price() ?>, <?= $values->stock() ?> in stock<br />
+<?= $values->sku() ?>
 
 
