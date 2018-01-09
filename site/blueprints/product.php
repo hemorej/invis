@@ -38,12 +38,17 @@ fields:
       price:
         label: Price
         type:  text
-        width: 1/2
+        width: 1/3
         help: Numbers only
         required: true
       stock:
         label: Quantity in stock
         type: text
         validate: integer
-        width: 1/2
+        width: 1/3
         help: Leave blank for unlimited stock
+      sku:
+        label: SKU
+        type: text
+        width: 1/3
+        readonly: true
