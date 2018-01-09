@@ -59,8 +59,15 @@ $( document ).ready(function(){
       image: '../assets/images/logo.png',
       locale: 'auto',
       token: function(token) {
+        $('.loading').show();
         var csrf = $("#input-csrf").val();
-        $.post( "order", { token: JSON.stringify(token), csrf: csrf})
+        var items = [];
+        $(".input-qty.right").each(function(i, obj) {
+          var item = {"variant": obj.id, "sku": obj.getAttribute('data-variant'), "quantity": obj.value};
+          items.push(item);
+        });
+
+        $.post( "order", { token: JSON.stringify(token), csrf: csrf, items: JSON.stringify(items)})
         .done(function( data ) {
             document.location.replace('order');
         });
@@ -75,6 +82,7 @@ $( document ).ready(function(){
         zipCode: true,
         currency: 'CAD',
         shippingAddress: true,
+        billingAddress: true,
         amount: parseInt($("#checkout-total").val()),
       });
       e.preventDefault();

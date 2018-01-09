@@ -2,6 +2,7 @@
 
 return function($site, $pages, $page) {
 	$token = json_decode(get('token'), true);
+	$items = json_decode(get('items'), true);
 	\Stripe\Stripe::setApiKey(\c::get('stripe_key_prv'));
 
 	// TODO: if csrf and if token
@@ -30,26 +31,36 @@ return function($site, $pages, $page) {
 		      )
 		  ));
 
-		$order = \Stripe\Order::create(array(
-		  "items" => array(
-		    array(
+		$orderItems = array();
+		foreach($items as $item){
+			$orderItems[] = array(
 		      "type" => "sku",
-		      "parent" => ""
-		    )
-		  ),
+		      "parent" => $item['sku'],
+		      "description" => $item['variant'],
+		      "quantity" => $item['quantity']
+		    );
+		}
+
+		$order = \Stripe\Order::create(array(
+		  "items" => $orderItems,
 		  "currency" => "cad",
 		  "customer" => $customer->id
 		));
 
-		$order->pay(array(
-		  "customer" => $customer->id
+		$order->pay(array("customer" => $customer->id));
+
+		$email = email(array(
+		  'to'      => $token['email'],
+		  'from'    => 'info@the-invisible-cities.com',
+		  'subject' => 'Your order from The Invisible Cities has been received',
+		  'body'    => snippet('order-confirm', array('name' => $token['card']['name'], 'order' => $order), true)
 		));
+		$email->send();
 
-		// TODO: pass sku array
 		// TODO: update local inventory page(prints)->products()->toStructure()->findBy('sku', $sku);
-		// TODO: update order obj to paid, add order id
-		// TODO: change uid of page to order_id
 
+		page(s::get('txn'))->update(['status' => 'paid', 'order_id' => $order->id]);
+		page(s::get('txn'))->move($order->id);
 		s::remove('txn');
 		s::set('state', 'success');
 

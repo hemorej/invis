@@ -22,7 +22,7 @@
     </section>
 
 <?php else: ?>
-
+<div class="loading">Loading&#8230;</div>
 <!-- Cart items -->
 <div class="row">
     <div class="small-2 medium-2 columns">image</div>
