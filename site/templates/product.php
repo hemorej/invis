@@ -36,12 +36,8 @@ if($page->parent()->title() != 'journal'){
 <div class="row">
     <h3><span class="high-contrast"><?= $page->parent()->title()->lower() ?></span><a href="<?= $page->url() ?>"><?= strtolower($headline) ?></a></h3>
     <div class="small-12 medium-10 columns">   
-        <?php 
-
-        echo kirbytext($page->text());
-        snippet('interchange', array('images' => $page->images()));
-
-        ?>
+        <?php snippet('interchange', array('images' => $page->images())); ?>
+        <?= kirbytext($page->description()); ?>
 
         <p class="medium-space-top"></p>
 
