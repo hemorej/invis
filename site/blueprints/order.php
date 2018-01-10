@@ -22,8 +22,10 @@ fields:
     type: select
     options:
         pending: pending
-        shipped: shipped
         paid: paid
+        shipped: shipped
+        canceled: canceled
+        returned: returned
     required: true
   order_id:
     label: order id

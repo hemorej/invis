@@ -8,13 +8,12 @@ class StripeHandler
     function __construct(){
         $this->logger = new Logger('stripe');
         $this->logger->pushHandler(new RotatingFileHandler(__DIR__.'/../../logs/invis.log', Logger::DEBUG));
+        \Stripe\Stripe::setApiKey(\c::get('stripe_key_prv'));
     }
 
     public function handle($page, $oldPage, $type){
 
         if($page->parent() == 'prints'){
-            \Stripe\Stripe::setApiKey(\c::get('stripe_key_prv'));
-            
             switch($type){
                 case 'panel.page.create':
                     $this->create($page);
@@ -26,6 +25,8 @@ class StripeHandler
                     $this->delete($page);
                     break;
             }
+        }elseif($page->parent() == 'prints/orders' && $type == 'panel.page.update'){
+            $this->updateOrder($page);
         }
     }
 
@@ -205,10 +206,37 @@ class StripeHandler
 
     }
 
+    public function updateOrder($page){
+        $this->logger->info("stripe handler called order update");
+
+        try{
+            $order = \Stripe\Order::retrieve($page->order_id());
+
+            switch($page->status()){
+                case 'paid':
+                case 'canceled':
+                case 'returned':
+                    $stripeStatus = $page->status();
+                    break;
+                case 'shipped':
+                    $stripeStatus = 'fulfilled';
+                    break;
+            }
+
+            $order->status = $stripeStatus;
+            $order->save();
+            $this->logger->info("stripe updated order ". $page->order_id());
+        }catch (\Stripe\Error\Base $e) {
+            $this->logger->error("order update failed, stripe error", array('exception' => $this->getStripeErrorMessage($e)));
+            $page->update(array('synced' => "false:cannot create product"));
+        }catch(\Exception $e){
+            $this->logger->error("order update failed, general error", array('exception' => $e->getMessage()));
+        }
+    }
+
     private function getStripeErrorMessage($e){
         $body = $e->getJsonBody();
         $err  = $body['error'];
         return $err['message'];
     }
 }
-

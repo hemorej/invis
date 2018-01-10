@@ -43,14 +43,14 @@ $unshippedOrders = page('prints/orders')->children()->filter(function($page){
   <div class="cart-stats-card">
     <h3>Shipped orders</h3>
   <?php foreach ($shippedOrders as $order): ?>
-    <div><?= $order->products()->toStructure()->first()->sku()->value() ?></div>
+    <div><a href="pages/prints/orders/<?= $order->uid() ?>/edit"><?= $order->order_id()->value() ?></a></div>
   <?php endforeach ?>
   </div>
 
   <div class="cart-stats-card">
     <h3>Unshipped orders</h3>
   <?php foreach ($unshippedOrders as $order): ?>
-    <div><?= $order->products()->toStructure()->first()->sku()->value() ?></div>
+    <div><a href="pages/prints/orders/<?= $order->uid() ?>/edit"><?= $order->order_id()->value() ?></a></div>
   <?php endforeach ?>
   </div>
 </div>
