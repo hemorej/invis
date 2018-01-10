@@ -15,7 +15,7 @@ for more information: http://getkirby.com/license
 
 */
 
-c::set('license', 'put your license key here');
+c::set('license', '');
 
 /*
 
@@ -38,7 +38,8 @@ c::set('cache.ignore', array(
   'home',
   'feed'
 ));
-c::set('ssl',true);
+c::set('ssl', true);
+
 c::set('ga_code', '');
 
 /*
@@ -49,8 +50,9 @@ Stripe Configuration
 
 */
 
-require_once(__DIR__ . '/../../site/plugins/stripe-php/init.php');
+require_once(__DIR__ . '/../../vendor/autoload.php');
 require_once(__DIR__ . '/../../site/models/stripeHandler.php');
+
 c::set('stripe_key_prv', '');
 c::set('stripe_key_pub', '');
 
