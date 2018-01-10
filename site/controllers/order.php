@@ -1,8 +1,13 @@
 <?php
+use \Monolog\Logger;
+use \Monolog\Handler\RotatingFileHandler;
 
 return function($site, $pages, $page) {
 	$token = json_decode(get('token'), true);
 	$items = json_decode(get('items'), true);
+	$logger = new Logger('order');
+    $logger->pushHandler(new RotatingFileHandler(__DIR__.'/../../logs/invis.log', Logger::DEBUG));
+
 	\Stripe\Stripe::setApiKey(\c::get('stripe_key_prv'));
 
 	// TODO: if csrf and if token
@@ -15,6 +20,7 @@ return function($site, $pages, $page) {
 			return [ 'state' => 'no session' ];
 		}
 	}else{
+		$logger->info(s::id() . ":order processing start");
 
 		$orderItems = array();
 		foreach($items as $item){
@@ -25,6 +31,7 @@ return function($site, $pages, $page) {
 		      "quantity" => $item['quantity']
 		    );
 		}
+		$logger->info(s::id() . ":items processed");
 
 		$order = \Stripe\Order::create(array(
 			"items" => $orderItems,
@@ -41,8 +48,10 @@ return function($site, $pages, $page) {
 			),
 			"email" => $token['email']
 		));
+		$logger->info(s::id() . ":stripe order created with id " . $order->id);
 
 		$order->pay(array("source" => $token['id']));
+		$logger->info(s::id() . ":stripe order id " . $order->id . " paid");
 
 		$email = email(array(
 		  'to'      => $token['email'],
@@ -51,6 +60,7 @@ return function($site, $pages, $page) {
 		  'body'    => snippet('order-confirm', array('name' => $token['card']['name'], 'order' => $order), true)
 		));
 		$email->send();
+		$logger->info(s::id() . ":email confirmation sent for order id " . $order->id);
 
 		foreach($items as $item){
 			$idParts = explode('::', $item['variant']);
@@ -66,6 +76,7 @@ return function($site, $pages, $page) {
 
 	        addToStructure(page($uri), 'variants', $updatedVariant);
 		}
+		$logger->info("inventory updated");
 
 		$customer = array('name' => $token['card']['name'],
 						'email' => $token['email'],
@@ -76,10 +87,14 @@ return function($site, $pages, $page) {
 							"postal_code" => $token['card']['address_zip'],
 							"state" => $token['card']['address_state']),
 					);
+		$logger->info("customer information added to order");
+
 		page(s::get('txn'))->update(['status' => 'paid', 'order_id' => $order->id, 'customer' => yaml::encode($customer)]);
 		page(s::get('txn'))->move($order->id);
 		s::remove('txn');
 		s::set('state', 'success');
+
+		$logger->info(s::id() . ":order processing done");
 
 		return [ 'state' => 'success' ];
 	}
