@@ -1,6 +1,7 @@
 <?php
 
-function addToStructure($page, $field, $data = array()){
+function addToStructure($page, $field, $data = array())
+{
   $fieldData = $page->$field()->yaml();
   $key = array_search($data['name'], array_column($fieldData, 'name'));
   unset($fieldData[$key]);
@@ -15,8 +16,8 @@ function addToStructure($page, $field, $data = array()){
   }
 }
 
-function inStock($variant) {
-
+function inStock($variant)
+{
   if(strstr($variant, '::')){
     $idParts = explode('::',$variant);
     $uri = $idParts[0];
@@ -31,4 +32,26 @@ function inStock($variant) {
   if (is_numeric($variant->stock()->value) and intval($variant->stock()->value) > 0) return intval($variant->stock()->value);
 
   return false;
+}
+
+function getUniqueId($type = 'sku')
+{
+  $prefix = 'pre_';
+
+  switch($type){
+    case 'sku':
+      $prefix = 'sku_';
+      break;
+    case 'product':
+      $prefix = 'prd_';
+      break;
+    case 'order':
+      $prefix = 'ord_';
+      break;
+  }
+
+  $bytes = openssl_random_pseudo_bytes(14, $cstrong);
+  $hex   = bin2hex($bytes);
+
+  return $prefix . $hex;
 }

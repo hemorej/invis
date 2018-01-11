@@ -15,7 +15,7 @@
       <!-- The class, align, and <center> tag center the container -->
       <td class="float-center" align="center" valign="top">
         <center>
-          Hi <?= $name ?>, thanks for your order <?= $order->id ?>
+          Hi <?= $name ?>, thanks for your order <?= $order ?>
         </center>
       </td>
     </tr>

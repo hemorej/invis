@@ -51,13 +51,13 @@ Stripe Configuration
 */
 
 require_once(__DIR__ . '/../../vendor/autoload.php');
-require_once(__DIR__ . '/../../site/models/stripeHandler.php');
+require_once(__DIR__ . '/../../site/models/uidHandler.php');
 
 c::set('stripe_key_prv', '');
 c::set('stripe_key_pub', '');
 
 
 kirby()->hook('panel.page.*', function($page, $oldPage = null) {
-	$stripeHandler = new \StripeHandler();
+	$stripeHandler = new \UidHandler();
 	$stripeHandler->handle($page, $oldPage, $this->type());
 });

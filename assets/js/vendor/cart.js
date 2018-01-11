@@ -66,8 +66,9 @@ $( document ).ready(function(){
           var item = {"variant": obj.id, "sku": obj.getAttribute('data-variant'), "quantity": obj.value};
           items.push(item);
         });
+        var total = parseInt($("#checkout-total").val());
 
-        $.post( "order", { token: JSON.stringify(token), csrf: csrf, items: JSON.stringify(items)})
+        $.post( "order", { token: JSON.stringify(token), csrf: csrf, items: JSON.stringify(items), total: total } )
         .done(function( data ) {
             document.location.replace('order');
         });
