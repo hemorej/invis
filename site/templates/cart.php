@@ -29,7 +29,7 @@
 <!-- Cart items -->
 <div class="row">
     <div class="small-2 medium-2 columns">image</div>
-    <div class="small-6 medium-6 columns text-center">description</div>
+    <div class="small-6 medium-6 columns">description</div>
     <div class="small-2 medium-2 columns text-right">quantity</div>
     <div class="small-2 medium-2 columns"></div>
 </div>

@@ -35,24 +35,11 @@ if($page->parent()->title() != 'journal'){
 
 <div class="row">
     <h3><span class="high-contrast"><?= $page->parent()->title()->lower() ?></span><a href="<?= $page->url() ?>"><?= strtolower($headline) ?></a></h3>
-    <div class="small-12 medium-10 columns">   
+    <div class="small-12 medium-8 columns">
         <?php snippet('interchange', array('images' => $page->images())); ?>
-        <?= kirbytext($page->description()); ?>
-
         <p class="medium-space-top"></p>
-
-        <?php if($page->hasPrev()): ?>
-            <span class="left">
-                <a href="<?php echo $page->prev()->url() ?>">&laquo; Previous | </a>
-            </span>
-        <?php endif ?>
-        <?php if($page->hasNextVisible()): ?>
-            <span class="right">
-                <a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
-            </span>
-        <?php endif ?>
     </div>
-        <section class="medium-2 columns variants">
+        <section class="small-12 medium-4 columns variants">
         <?php $variants = $page->variants()->toStructure();
         if(count($variants) == 0 || (count($variants) == 1 && !inStock($variants->first()))):
             echo 'Out of stock';
@@ -82,9 +69,23 @@ if($page->parent()->title() != 'journal'){
                 <button id="add-cart" type="submit">Add to cart</button>
             </div>
         </form>
+        <?= kirbytext($page->description()); ?>
         <?php endif ?>
         </section>
-           
+    </div>
+    <div class="row medium-space-top">
+        <div class="small-12 medium-12 columns">
+        <?php if($page->hasPrevVisible()): ?>
+            <span class="left">
+                <a href="<?= $page->prev()->url() ?>">&laquo; <?= $page->prev()->title() ?></a>
+            </span>
+        <?php endif ?>
+        <?php if($page->hasNextVisible()): ?>
+            <span class="right">
+                <a href="<?= $page->next()->url() ?>"><?= $page->next()->title() ?> &raquo;</a>
+            </span>
+        <?php endif ?>
+        </div>
     </div>  
 </div>
 <?php snippet('footer') ?>
