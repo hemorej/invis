@@ -28,7 +28,7 @@
 <div class="loading">Loading&#8230;</div>
 <!-- Cart items -->
 <div class="row">
-    <div class="small-2 medium-2 columns">image</div>
+    <div class="small-2 medium-2 columns">&nbsp;</div>
     <div class="small-6 medium-6 columns">description</div>
     <div class="small-2 medium-2 columns text-right">quantity</div>
     <div class="small-2 medium-2 columns"></div>
@@ -65,15 +65,15 @@
     endforeach ?>
 
 <div class="row medium-space-top">
-    <div class="small-12 medium-8 columns">
+    <div class="small-10 medium-10 columns text-right">
         <h2>total</h2>
     </div>
-    <div class="small-12 medium-4 columns">
+    <div class="small-10 medium-2 columns">
         <h2 class="right">CAD<?= $total ?></h2>
     </div>
+    <button class="right" id="checkoutButton">checkout</button>
 </div>
 
-<button id="checkoutButton">Checkout with stripe</button>
 </div>
 
 <?= js('https://checkout.stripe.com/checkout.js') ?>

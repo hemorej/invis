@@ -66,7 +66,7 @@ if($page->parent()->title() != 'journal'){
             </div>
 
             <div class="action">
-                <button id="add-cart" type="submit">Add to cart</button>
+                <button id="add-cart" type="submit">add to cart</button>
             </div>
         </form>
         <?= kirbytext($page->description()); ?>
