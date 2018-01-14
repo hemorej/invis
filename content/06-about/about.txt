@@ -8,9 +8,11 @@ Published: February 2014
 
 Text: 
 
-I'm a photographer, born in 1988 in Beirut now living in Montreal, Canada. In my photography I look for the lyrical and meditative in the every day.
+Born in Beirut in 1988, living in Montreal, Canada. 
 
-I love the photographic process and the physical nature of film. I started making photographs around 2005 and have been printing since 2012, first in a communal darkroom then at home. All of my work is shot with a 35mm or 50mm lens on Leica M cameras using Ilford HP5+ film. After I develop the film, I will print some frames on Ilford FB classic paper with a Leitz Focomat enlarger.
+In my photography I look for the lyrical and meditative in the every day. I love the photographic process and the slow, physical nature of film. I started making photographs around 2005 and have been printing since 2012, first in a communal darkroom then at home. 
+
+All of my work is shot with a 35mm or 50mm lens on Leica M cameras using Ilford HP5+ film. After I develop the film, I will print some frames on Ilford FB classic paper with a Leitz Focomat enlarger.
 
 Signed, unmounted prints are made by myself on Ilford Multigrade FB (baryta) Classic paper from black and white negatives. Prints are ready and will ship right away. Most items to the US and Canada arrive within 5 business days, items to Europe about 10 business days.
 
@@ -22,12 +24,12 @@ The name of the website is from an Italo Calvino book, its layered, poetic and s
 Links:
 
 ###influences
-(link: http://www.sluban.com/ text: klavdij sluban popup: yes )
-(link: http://www.in-public.com/SaulLeiter/gallery/104 text: saul leiter popup: yes )
-(link: http://www.moriyamadaido.com/english/ text: daido moriyama popup: yes )
+(link: http://www.sluban.com/ text: klavdij sluban popup: yes)
+(link: http://www.in-public.com/SaulLeiter/gallery/104 text: saul leiter popup: yes)
+(link: https://www.shashasha.co/en/artist/kazuo-kitai text: kazuo kitai popup: yes)
 (link: http://jasoneskenazi.com/ text: jason eskenazi popup: yes)
 
-###photographers I follow
+###people I follow
 (link: http://kityoung.co.uk/ text: kit young popup:yes)
 (link: http://www.magnumphotos.com/TrentParke text: trent parke popup: yes )
 (link: http://www.gracielaiturbide.org/en/ text: graciela iturbide popup: yes)
@@ -35,18 +37,21 @@ Links:
 (link: http://www.ralphgibson.com/gallery.html text: ralph gibson popup: yes)
 (link: http://www.renatodagostin.com/renato-d-agostin/home text: renato d'agostin  popup: yes)
 (link: http://www.lensculture.com/klein.html text: william klein popup: yes)
-(link: http://www.magnumphotos.com/PaoloPellegrin text: paolo pellegrin popup: yes )
-(link: http://www.magnumphotos.com/JosefKoudelka text: josef koudelka popup: yes )
-(link: http://www.magnumphotos.com/RaymondDepardon text: raymond depardon popup: yes )
-(link: http://www.christopheagou.com text: christophe agou popup: yes )
-(link: http://www.magnumphotos.com/larrytowell text: larry towell popup: yes )
-(link: http://www.anderspetersen.se text: anders petersen popup: yes )
-(link: http://www.davidalanharvey.com/ text: david alan harvey popup: yes )
-(link: http://www.magnumphotos.com/alexwebb text: alex webb popup: yes)
-(link: http://www.magnumphotos.com/thomasdworzak text: thomas dworzak popup: yes)
-(link: http://www.magnumphotos.com/bruceDavidson text: bruce davidson popup: yes )
-(link: http://www.yannickolivier.net/ text: yannick olivier popup: yes )
-(link: http://www.flickr.com/photos/62915814@N02/ text: elhacedor popup: yes )
+(link: http://www.magnumphotos.com/PaoloPellegrin text: paolo pellegrin popup: yes)
+(link: http://www.magnumphotos.com/JosefKoudelka text: josef koudelka popup: yes)
+(link: http://www.magnumphotos.com/RaymondDepardon text: raymond depardon popup: yes)
+(link: http://www.christopheagou.com text: christophe agou popup: yes)
+(link: http://www.magnumphotos.com/larrytowell text: larry towell popup: yes)
+(link: http://www.magnumphotos.com/alexwebb text: alex webb popup: ye)
+(link: http://www.magnumphotos.com/thomasdworzak text: thomas dworzak popup: ye)
+(link: http://www.flickr.com/photos/62915814@N02/ text: elhacedor popup: yes)
+(link: http://www.mikaelsiirila.fi/ text: mikael siirila popup: yes)
+(link: https://www.instagram.com/randall_fm/ text: randall macneil popup: yes)
+(link: http://www.gueorgui.net/ text: gueorgui tcherednitchenko popup: yes)
+(link: http://www.tatianaplotnikova.com/ text: tatiana plotnikova popup: yes)
+(link: http://www.lasthein.se/ text: jens olof lasthein popup: yes)
+(link: http://www.moriyamadaido.com/english/ text: daido moriyama popup: yes)
+(link: http://klarayoon.com/ text: klara yoon popup: yes)
 
 ----
 
