@@ -4,7 +4,7 @@
 <?php $articles = $page->children()->visible()->sortBy('publishDate', 'desc'); ?>
 
 <div class="row medium-space-top">
-	<div class="medium-11 columns">
+	<div class="medium-12 columns">
 
 		<ul class="inline-list">
 			<?php foreach($articles as $article): ?>

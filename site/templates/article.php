@@ -51,7 +51,7 @@ if($page->parent()->title() != 'journal'){
 		</span>
 	<?php endif ?>
 	<?php if($page->parent()->title() == 'journal'){ ?>
-		<span><a href="<?= $page->parent()->url() . '?archive' ?>">| Archives</a></span>
+		<span><a href="<?= $page->parent()->url() . '?all' ?>">| All posts</a></span>
 	<?php } ?>
 	<?php if($page->hasNext()): ?>
 		<span class="right">

@@ -1,6 +1,6 @@
 <?php
 
-if(isset($_GET['archive'])){
+if(isset($_GET['all'])){
 
     snippet('header');
     snippet('menu');
@@ -24,7 +24,7 @@ if(isset($_GET['archive'])){
     </div>
 
     <div class="row medium-space-top">
-        <div class="medium-11 columns">
+        <div class="medium-12 columns">
             <ul class="inline-list">
         <?php 
         foreach (array_keys($archive) as $key): 
