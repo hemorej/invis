@@ -15,7 +15,12 @@ fields:
     default: today
   description:
     label: Description
+    help: Details for the product page
     type: textarea
+  meta:
+    label: Meta
+    help: Small text for the cart
+    type: text
   type:
     label: Attribute
     help: Product attribute (print, zine...)

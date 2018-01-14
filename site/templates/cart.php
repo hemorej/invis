@@ -42,9 +42,10 @@
             <img src="<?= $product->images()->first()->thumb(['width'=>100, 'height'=>100, 'crop'=>true])->url() ?>" title="<?= $item->name() ?>">
         </div>
         <div class="small-6 medium-6 columns">
-            <a href="<?= $product->url() ?>">
+            <a class="cart-prod" href="<?= $product->url() ?>">
             <?= $item->name ?>&mdash;<?php e($item->variant()->isNotEmpty(), $item->variant()) ?>
-            </a>
+            </a><br />
+            <span class="meta"><?= $product->meta()->value() ?></span>
         </div>
         <div class="small-2 medium-2 columns">
             <input class="input-qty right" name="cart[<?=$item->sku() ?>]" id="<?= $item->uri() . '::' . $item->sku() ?>" value="<?= $item->quantity() ?>" min="0" max="<?= inStock($item->id()) ?>" data-variant="<?= $item->sku() ?>" type="number">
