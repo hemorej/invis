@@ -1,9 +1,21 @@
 Title: the invisible cities
+
 ----
+
 Author: Jerome Arfouche
+
 ----
+
 Description: The Invisible Cities is a visual journal of life in the city, documenting and continuing in a subtle street photography tradition. To wander the Cities is to see and observe, to know the streets, walk, get lost in other places. It is to wait for the fleeting moments that pass unseen, the hidden mysteries. It is an unfinished story.
+
 ----
-Keywords: invisible cities, photography, black and white, travel, jerome arfouche
+
+Keywords: invisible cities,photography,black and white,travel,jerome arfouche
+
 ----
+
 Copyright: design and photographs © 2009–(date: Year) jerome arfouche, all rights reserved.
+
+----
+
+Terms: Payments are processed by Stripe and are governed by its privacy policy, your payment information is never seen or stored by The Invisible Cities nor shared with third parties. All communication is done over HTTPS to ensure sensitive data is protected from unauthorized viewing. All orders are charged in Canadian dollars, the final amount charged depends on the exchange rate used by the credit card company. Your email and shipping address are only required for the purpose of shipping and notification, they are not shared with third parties. All shipping is handled by Canada Post using the most affordable option. If an item arrives damaged, I will either refund the purchase or replace it free of charge.

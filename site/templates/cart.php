@@ -43,7 +43,7 @@
         </div>
         <div class="small-6 medium-6 columns">
             <a class="cart-prod" href="<?= $product->url() ?>">
-            <?= $item->name ?>&mdash;<?php e($item->variant()->isNotEmpty(), $item->variant()) ?>
+            <?= $item->name ?>&nbsp;&mdash;&nbsp;<?php e($item->variant()->isNotEmpty(), $item->variant()) ?>
             </a><br />
             <span class="meta"><?= $product->meta()->value() ?></span>
         </div>
@@ -67,14 +67,29 @@
 
 <div class="row medium-space-top">
     <div class="small-10 medium-10 columns text-right">
-        <h2>total</h2>
+        <span>shipping</span>
     </div>
-    <div class="small-10 medium-2 columns">
-        <h2 class="right">CAD<?= $total ?></h2>
+    <div class="small-2 medium-2 columns">
+        <span class="right">included</span>
     </div>
-    <button class="right" id="checkoutButton">checkout</button>
 </div>
 
+<div class="row">
+    <div class="small-10 medium-10 columns text-right">
+        <h2>total</h2>
+    </div>
+    <div class="small-2 medium-2 columns">
+        <h2 class="right">CAD<?= $total ?></h2>
+    </div>
+</div>
+<div class="row">
+    <div class="small-12 medium-12 columns text-right">
+        <div class="low-contrast text-right">
+        <p>By continuing to checkout, you agree to have read the general <a id="terms" href="#">terms.</a></p>
+        <p id="term-details"><?= $site->terms() ?></p>
+        </div>
+        <button class="right" id="checkoutButton">checkout</button>
+    </div>
 </div>
 
 <?= js('https://checkout.stripe.com/checkout.js') ?>

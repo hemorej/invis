@@ -18,3 +18,7 @@ fields:
   copyright:
     label: Copyright
     type:  textarea
+  terms:
+    label: Terms and Conditions
+    help: terms text for store checkout
+    type: textarea

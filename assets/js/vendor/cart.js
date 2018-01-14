@@ -93,4 +93,9 @@ $( document ).ready(function(){
     window.addEventListener('popstate', function() {
       handler.close();
     });
+
+    $("#terms").click(function(e){
+        e.preventDefault();
+        $("#term-details").toggle();
+    });
 });
