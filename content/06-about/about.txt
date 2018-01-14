@@ -8,14 +8,14 @@ Published: February 2014
 
 Text: 
 
-(image: about/self.jpg text: self portrait)
+I'm a photographer, born in 1988 in Beirut now living in Montreal, Canada. In my photography I look for the lyrical and meditative in the every day.
 
-<br>
+I love the photographic process and the physical nature of film. I started making photographs around 2005 and have been printing since 2012, first in a communal darkroom then at home. All of my work is shot with a 35mm or 50mm lens on Leica M cameras using Ilford HP5+ film. After I develop the film, I will print some frames on Ilford FB classic paper with a Leitz Focomat enlarger.
 
-Born in 1988, living and working in Montreal<br /><br />
+Signed, unmounted prints are made by myself on Ilford Multigrade FB (baryta) Classic paper from black and white negatives. Prints are ready and will ship right away. Most items to the US and Canada arrive within 5 business days, items to Europe about 10 business days.
 
-«The inferno of the living is not something that will be; if there is one, it is what is already here, the inferno where we live every day, that we form by being together. There are two ways to escape suffering it. The first is easy for many: accept the inferno and become such a part of it that you can no longer see it. The second is risky and demands constant vigilance and apprehension: seek and learn to recognize who and what, in the midst of inferno, are not inferno, then make them endure, give them space.»<br />
-<span class="sc">— italo calvino, invisible cities</span><br /><br />
+The name of the website is from an Italo Calvino book, its layered, poetic and sharp texts inspired a lot of my early explorations and still informs my work to this day.
+<br /><br />
 
 ----
 
@@ -25,9 +25,9 @@ Links:
 (link: http://www.sluban.com/ text: klavdij sluban popup: yes )
 (link: http://www.in-public.com/SaulLeiter/gallery/104 text: saul leiter popup: yes )
 (link: http://www.moriyamadaido.com/english/ text: daido moriyama popup: yes )
-(link: http://jasoneskenazi.com/ text: jason eskenazi popup: yes)<br /><br />
+(link: http://jasoneskenazi.com/ text: jason eskenazi popup: yes)
 
-###links
+###photographers I follow
 (link: http://kityoung.co.uk/ text: kit young popup:yes)
 (link: http://www.magnumphotos.com/TrentParke text: trent parke popup: yes )
 (link: http://www.gracielaiturbide.org/en/ text: graciela iturbide popup: yes)
@@ -46,9 +46,10 @@ Links:
 (link: http://www.magnumphotos.com/thomasdworzak text: thomas dworzak popup: yes)
 (link: http://www.magnumphotos.com/bruceDavidson text: bruce davidson popup: yes )
 (link: http://www.yannickolivier.net/ text: yannick olivier popup: yes )
-(link: http://www.flickr.com/photos/62915814@N02/ text: elhacedor popup: yes )<br /><br />
-###contact
-(link: http://flickr.com/photos/jerome88 text: flickr popup: yes)
-(link: http://instagram.com/jerome_a_ text: instagram popup: yes)
-(link: http://the-invisible-cities.com/feed text: rss popup: yes)
-(email: jerome@the-invisible-cities.com text: email)
+(link: http://www.flickr.com/photos/62915814@N02/ text: elhacedor popup: yes )
+
+----
+
+Contact: 
+
+### contact (link: http://flickr.com/photos/jerome88 text: flickr popup: yes) (link: http://instagram.com/jerome_a_ text: instagram popup: yes) (link: http://the-invisible-cities.com/feed text: rss popup: yes) (email: jerome@the-invisible-cities.com text: email)

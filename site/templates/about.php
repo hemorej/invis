@@ -2,14 +2,23 @@
 <?php snippet('menu') ?>
 
 <div class="row medium-space-top">
-	<section class="small-12 medium-8 columns">
-	  <article>
-	    <?php echo kirbytext($page->text()) ?>
-	  </article>
+	<section class="small-12 medium-12 columns">
+	  <?php snippet('interchange', array('images' => $page->images())); ?>
+	  <p class="medium-space-top">&nbsp;</p>
+	  <?= kirbytext($page->text()) ?>
 	</section>
-	<section class="small-12 medium-4 columns">
+</div>
+
+<div class="row medium-space-top distribute">
+	<section class="small-12 medium-12 columns">
+		<?= kirbytext($page->links()); ?>
+	</section>
+</div>
+
+<div class="row medium-space-top">
+	<section class="small-12 medium-12 columns">
 	  <article>
-	    <?php echo kirbytext($page->links()) ?>
+	    <?= kirbytext($page->contact()) ?>
 	  </article>
 	</section>
 </div>

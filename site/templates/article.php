@@ -39,7 +39,7 @@ if($page->parent()->title() != 'journal'){
 		<?php 
 
 		echo kirbytext($page->text()) ;
-		snippet('interchange', array('images' => $page->images())) ;
+		snippet('interchange', array('images' => $page->images()));
 
 		?>
 	</div>
