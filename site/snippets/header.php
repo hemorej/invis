@@ -30,10 +30,3 @@
   }
   ?>
 </head>
-
-<body>
-  <div class="row large-space-top">
-	  <header class="show-for-small-only columns">
-	    <h1><a href="<?php echo url() ?>"> <?php echo html($site->title()) ?> </a></h1>
-	  </header>
-  </div>

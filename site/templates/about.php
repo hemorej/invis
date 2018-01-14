@@ -17,9 +17,7 @@
 
 <div class="row medium-space-top">
 	<section class="small-12 medium-12 columns">
-	  <article>
 	    <?= kirbytext($page->contact()) ?>
-	  </article>
 	</section>
 </div>
 
