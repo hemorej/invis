@@ -6,7 +6,7 @@
 ?>
 
     <div class="row medium-space-top">
-        <div class="medium-11 columns">
+        <div class="small-12 medium-12 columns">
 
         <ul class="inline-list">
     <?php foreach($articles as $article): ?>

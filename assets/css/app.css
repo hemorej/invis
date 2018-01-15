@@ -1,6 +1,6 @@
 meta.foundation-mq-small {
   font-family: "/only screen/";
-  width: 0em;
+  width: 0
 }
 meta.foundation-mq-medium {
   font-family: "/only screen and (min-width:40.063em)/";
@@ -18,9 +18,7 @@ meta.foundation-mq-xxlarge {
   font-family: "/only screen and (min-width:120.063em)/";
   width: 120.063em;
 }
-meta.foundation-data-attribute-namespace {
-  font-family: false;
-}
+meta.foundation-data-attribute-namespace {font-family: false}
 
 @font-face {
   font-family: 'ff-meta-serif';
@@ -68,30 +66,40 @@ body {
 a:hover{cursor: pointer}
 h2{margin-top: 0}
 
-img {
+img{
   max-width: 100%;
   height: auto;
   -ms-interpolation-mode: bicubic;
   display: inline-block;
   vertical-align: middle
 }
+div,
+ul,
+li,
+h1,
+h3 {
+  margin: 0;
+  padding: 0;
+}
+a{
+  color: #999;
+  text-decoration: none;
+  line-height: inherit;
+  padding: 5px;
+}
+
 .caption{
   margin-bottom: 2px;
   margin-top: 40px;
   font-size: 1.2rem;
   font-style: italic;
 }
-.left {
-  float: left !important;
-}
+.left {float: left !important}
 
 .row {
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 0;
-  margin-bottom: 0;
-  max-width: 62.5rem;
+  margin: 0 auto;
+  max-width: 62.5rem
 }
 
 .row:before,
@@ -157,25 +165,8 @@ select::-ms-expand {
   display: block;
 }
 
-div,
-ul,
-li,
-h1,
-h3 {
-  margin: 0;
-  padding: 0;
-}
-
-a{
-  color: #999;
-  text-decoration: none;
-  line-height: inherit;
-  padding: 5px;
-}
 li.active, a.active {border-bottom: 5px solid #ffcd39}
-h1 a {
-  padding: 0;
-}
+h1 a {padding: 0}
 
 ::selection {
   background: #ffcd39;
@@ -396,7 +387,6 @@ input[type=number]::-webkit-outer-spin-button {
 .alert-box {
   border-style: solid;
   border-width: 1px;
-  display: block;
   font-weight: normal;
   margin-bottom: 1.25rem;
   position: relative;
@@ -440,6 +430,7 @@ input[type=number]::-webkit-outer-spin-button {
   .small-10 {width: 83.33333%}
   .small-11 {width: 91.66667%}
   .small-12 {width: 100%}
+  .date, .thumb {max-width: 90px;max-height: 90px}
 }
 
 @media only screen and (min-width: 46.5em) {
