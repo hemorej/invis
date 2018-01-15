@@ -83,6 +83,14 @@
     </div>
 </div>
 <div class="row">
+    <div class="small-10 medium-10 columns text-right low-contrast text-right">
+        <p>Approximately </p>
+    </div>
+    <div class="small-2 medium-2 columns low-contrast text-right" id="currencies">
+        <p><?= $currencies ?></p>
+    </div>
+</div>
+<div class="row">
     <div class="small-12 medium-12 columns text-right">
         <div class="low-contrast text-right">
         <p>By continuing to checkout, you agree to have read the general <a id="terms" href="#">terms.</a></p>

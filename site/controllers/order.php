@@ -13,11 +13,11 @@ return function($site, $pages, $page) {
 
 	// TODO: check if any of the get vars is empty (token, items, total, csrf)
 	if(empty($token)){
-		s::destroy();
 		if(s::get('state')){ // an order just went through
 			s::remove('state');
-			return [ 'state' => 'thanks for ordering !' ];
+			return [ 'state' => 'complete' ];
 		}else{ // direct page load
+			s::destroy();
 			return [ 'state' => 'no session' ];
 		}
 	}else{

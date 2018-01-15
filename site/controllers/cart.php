@@ -20,17 +20,28 @@ return function($site, $pages, $page) {
     }
     // Set txn object
     $txn = page(s::get('txn'));
-
     $total = cartSubtotal(getItems());
+    $currencies = estimateCurrency($total);
 
     return [
         'items' => getItems()->count(),
         'total' => $total,
+        'currencies' => $currencies,
         'content' => cartContents(getItems()),
         'txn' => $txn
     ];
   }
 };
+
+function estimateCurrency($total){
+  $rates = json_decode(file_get_contents('https://api.fixer.io/latest?base=CAD&symbols=USD,EUR,GBP'));
+
+  $estimate = round($total * $rates->rates->USD, 0) . 'USD/'
+            . round($total * $rates->rates->EUR, 0) . 'EUR/'
+            . round($total * $rates->rates->GBP, 0) . 'GBP';
+
+  return $estimate;
+}
 
 function cartContents($items){
   $types = array();
