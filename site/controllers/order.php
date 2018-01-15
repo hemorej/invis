@@ -69,7 +69,7 @@ return function($site, $pages, $page) {
 
 	        addToStructure(page($uri), 'variants', $updatedVariant);
 		}
-		$logger->info("inventory updated");
+		$logger->info("inventory updated after order ". $orderId);
 
 		$customer = array('name' => $token['card']['name'],
 						'email' => $token['email'],
@@ -80,7 +80,7 @@ return function($site, $pages, $page) {
 							"postal_code" => $token['card']['address_zip'],
 							"state" => $token['card']['address_state']),
 					);
-		$logger->info("customer information added to order");
+		$logger->info("customer information added to order ". $orderId);
 
 		page(s::get('txn'))->update(['status' => 'paid', 'order_id' => $orderId, 'customer' => yaml::encode($customer)]);
 		page(s::get('txn'))->move($orderId);

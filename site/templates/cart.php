@@ -17,7 +17,7 @@
 <?php if (!s::get('txn') or $txn->products()->toStructure()->count() === 0): ?>
     <section class="small-12 medium-8 columns">
         <article>
-            Your cart is empty. Would you like to look at some <a href="./">prints</a>?
+            Your cart is empty. Would you like to look at some<a href="./">prints</a>?
         </article>
     </section>
 

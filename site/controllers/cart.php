@@ -1,4 +1,5 @@
 <?php
+use \Gilbitron\Util\SimpleCache;
 s::start();
 
 return function($site, $pages, $page) {
@@ -33,8 +34,19 @@ return function($site, $pages, $page) {
   }
 };
 
-function estimateCurrency($total){
-  $rates = json_decode(file_get_contents('https://api.fixer.io/latest?base=CAD&symbols=USD,EUR,GBP'));
+function estimateCurrency($total)
+{
+  $cache = new SimpleCache();
+  $cache->cache_path = __DIR__ . '/../cache/';
+  $cache->cache_time = 86400; //24h
+
+  if($data = $cache->get_cache('rates')){
+    $rates = json_decode($data);
+  } else {
+    $data = $cache->do_curl('https://api.fixer.io/latest?base=CAD&symbols=USD,EUR,GBP');
+    $cache->set_cache('rates', $data);
+    $rates = json_decode($data);
+  }
 
   $estimate = round($total * $rates->rates->USD, 0) . 'USD/'
             . round($total * $rates->rates->EUR, 0) . 'EUR/'
