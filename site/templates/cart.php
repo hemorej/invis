@@ -28,30 +28,30 @@
 <div class="loading">Loading&#8230;</div>
 <!-- Cart items -->
 <div class="row">
-    <div class="small-2 medium-2 columns">&nbsp;</div>
-    <div class="small-6 medium-6 columns">description</div>
-    <div class="small-2 medium-2 columns text-right">quantity</div>
-    <div class="small-2 medium-2 columns"></div>
+    <div class="small-3 medium-2 columns">&nbsp;</div>
+    <div class="small-3 medium-6 columns">description</div>
+    <div class="small-3 medium-2 columns text-right">quantity</div>
+    <div class="small-3 medium-2 columns"></div>
 </div>
 
 <?php $first = true;
     foreach(getItems() as $i => $item): ?>
     <div class="row cart <?php ecco($first==true, 'medium-space-top') ?>">
-        <div class="small-2 medium-2 columns">
+        <div class="small-3 medium-2 columns">
             <?php $product = page($item->uri()) ?>
             <img src="<?= $product->images()->first()->thumb(['width'=>100, 'height'=>100, 'crop'=>true])->url() ?>" title="<?= $item->name() ?>">
         </div>
-        <div class="small-6 medium-6 columns">
+        <div class="small-3 medium-6 columns">
             <a class="cart-prod" href="<?= $product->url() ?>">
             <?= $item->name ?>&nbsp;&mdash;&nbsp;<?php e($item->variant()->isNotEmpty(), $item->variant()) ?>
             </a><br />
             <span class="meta"><?= $product->meta()->value() ?></span>
         </div>
-        <div class="small-2 medium-2 columns">
+        <div class="small-3 medium-2 columns">
             <input class="input-qty right" name="cart[<?=$item->sku() ?>]" id="<?= $item->uri() . '::' . $item->sku() ?>" value="<?= $item->quantity() ?>" min="0" max="<?= inStock($item->id()) ?>" data-variant="<?= $item->sku() ?>" type="number">
             <input id="input-csrf" type="hidden" name="csrf" value="<?= csrf() ?>">
         </div>
-        <div class="small-2 medium-2 columns">
+        <div class="small-3 medium-2 columns">
             <span class="right"><?= 'CAD'.$item->amount()->value * $item->quantity()->value ?>
                 <form action="" method="post">
                     <input type="hidden" name="csrf" value="<?= csrf() ?>">
@@ -66,34 +66,34 @@
     endforeach ?>
 
 <div class="row medium-space-top">
-    <div class="small-10 medium-10 columns text-right">
+    <div class="small-6 medium-10 columns text-right">
         <span>shipping</span>
     </div>
-    <div class="small-2 medium-2 columns">
+    <div class="small-6 medium-2 columns">
         <span class="right">included</span>
     </div>
 </div>
 
 <div class="row">
-    <div class="small-10 medium-10 columns text-right">
+    <div class="small-6 medium-10 columns text-right">
         <h2>total</h2>
     </div>
-    <div class="small-2 medium-2 columns">
+    <div class="small-6 medium-2 columns">
         <h2 class="right">CAD<?= $total ?></h2>
     </div>
 </div>
 <div class="row">
-    <div class="small-10 medium-10 columns text-right low-contrast text-right">
-        <p>Approximately </p>
+    <div class="small-6 medium-10 columns text-right low-contrast text-right">
+        <span>Approximately</span>
     </div>
-    <div class="small-2 medium-2 columns low-contrast text-right" id="currencies">
-        <p><?= $currencies ?></p>
+    <div class="small-6 medium-2 columns low-contrast text-right" id="currencies">
+        <span><?= $currencies ?></span>
     </div>
 </div>
 <div class="row">
     <div class="small-12 medium-12 columns text-right">
         <div class="low-contrast text-right">
-        <p>By continuing to checkout, you agree to have read the general <a id="terms" href="#">terms.</a></p>
+        <span>By continuing to checkout, you agree to have read the general <a id="terms" href="#">terms.</a></span>
         <p id="term-details"><?= $site->terms() ?></p>
         </div>
         <button class="right" id="checkoutButton">checkout</button>

@@ -46,17 +46,17 @@ if($page->parent()->title() != 'journal'){
 	<p class="medium-space-top"></p>
 
 	<?php if($page->hasPrev()): ?>
-		<span class="left">
+		<p class="left">
 			<a href="<?php echo $page->prev()->url() ?>">&laquo; Previous</a>
-		</span>
+		</p>
 	<?php endif ?>
 	<?php if($page->parent()->title() == 'journal'){ ?>
-		<span><a href="<?= $page->parent()->url() . '?all' ?>">| All posts</a></span>
+		<p class="left"><a href="<?= $page->parent()->url() . '?all' ?>">| All posts</a></p>
 	<?php } ?>
 	<?php if($page->hasNext()): ?>
-		<span class="right">
+		<p class="right">
 			<a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
-		</span>
+		</p>
 	<?php endif ?>
 
 <?php snippet('footer') ?>

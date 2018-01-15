@@ -48,9 +48,9 @@ function estimateCurrency($total)
     $rates = json_decode($data);
   }
 
-  $estimate = round($total * $rates->rates->USD, 0) . 'USD/'
-            . round($total * $rates->rates->EUR, 0) . 'EUR/'
-            . round($total * $rates->rates->GBP, 0) . 'GBP';
+  $estimate = round($total * $rates->rates->USD, 0) . '$/'
+            . round($total * $rates->rates->EUR, 0) . '€/'
+            . round($total * $rates->rates->GBP, 0) . '£';
 
   return $estimate;
 }

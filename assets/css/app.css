@@ -173,7 +173,6 @@ a{
   padding: 5px;
 }
 li.active, a.active {border-bottom: 5px solid #ffcd39}
-span a{font-size: 1.2rem}
 h1 a {
   padding: 0;
 }
@@ -251,7 +250,7 @@ ul {
 .sc{font-variant: small-caps}
 .high-contrast{color:#666;font-size:2.923rem;margin-right:1rem;padding-left:15px}
 .low-contrast{color: #bbb}
-.low-contrast > p {font-size: 0.8rem}
+.low-contrast > p, .low-contrast > span {font-size: 0.8rem}
 
 meta.foundation-mq-topbar {
   font-family: "/only screen and (min-width:46.5em)/";
