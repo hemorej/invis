@@ -44,6 +44,7 @@ c::set('ga_code', '');
 
 c::set('mailgun_domain', '');
 c::set('mailgun_key', '');
+c::set('alert_address', '');
 
 /*
 
