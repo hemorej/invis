@@ -71,7 +71,7 @@ class UidHandler
                 $email->send();
                 $logger->info("email shipping confirmation sent for order id " . $page->order_id()->value());
             }catch(\Error $e){
-                $logger->info(s::id() . "email error " . $e->getMessage());
+                $logger->error("email shipping confirmation error for order id " . $page->order_id()->value() . ": " $e->getMessage());
             }   
         }
     }

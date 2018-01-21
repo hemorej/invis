@@ -108,7 +108,7 @@
                         <div class="row">
                           <table class="row__table" width="100%" align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                             <tr class="row__row">
-                              <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top"> <img src="http://localhost/invis/assets/images/logo_email.png" alt="my image" border="0" class="img__block" style="margin: 0 auto 25px; display: block; max-width: 100%;"
+                              <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top"> <img src="https://the-invisible-cities.com/assets/images/logo_email.png" alt="my image" border="0" class="img__block" style="margin: 0 auto 25px; display: block; max-width: 100%;"
                                 /> </td>
                             </tr>
                           </table>
