@@ -143,7 +143,7 @@ function add($id, $quantity) {
     $timestamp = time();
     page('prints')->create('prints/orders/'.$txn_id, 'order', [
       'txn-id' => $txn_id,
-      'txn-date'  => date('d/m/Y', $timestamp),
+      'txn-date'  => date('m/d/Y', $timestamp),
       'status' => 'pending',
       'session-start' => $timestamp,
       'session-end' => $timestamp,
