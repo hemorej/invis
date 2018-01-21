@@ -56,7 +56,7 @@ return function($site, $pages, $page) {
 		    'domain' => \c::get('mailgun_domain')
 		  ),
 		  'body'    => snippet('order-confirm', 
-		  					array('name' => $token['card']['name'],
+		  					array(
 		  						 'order' => $orderId,
 		  						 'items' => $items,
 								 'fullName' => $token['card']['name'],
@@ -66,7 +66,10 @@ return function($site, $pages, $page) {
 								 'country' => $token['card']['address_country'],
 								 'postcode' => $token['card']['address_zip'],
 								 'email' => $token['email'],
-								 'total' => $total
+								 'total' => $total,
+               		             'title' => 'Your order from The Invisible Cities has been received',
+                                 'preview' => 'Order confirmation. We received your order and will prepare it for shipping soon. Below is your order information.',
+                                 'headline' => 'Thanks for ordering! We received your order and will prepare it for shipping soon. Below is your order information.'
 		  						), true)
 		));
 

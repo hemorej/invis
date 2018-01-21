@@ -21,6 +21,58 @@ class UidHandler
                     $this->update($page, $oldPage);
                     break;
             }
+        }elseif($page->parent() == 'prints/orders'){
+            if($type == 'panel.page.update')
+                $this->notify($page, $oldPage);
+        }
+    }
+
+    public function notify($page, $oldPage)
+    {
+        $this->logger->info("handler called notify");
+        if($page->status()->value() == 'shipped' && $oldPage->status()->value() != $page->status()->value())
+        {
+            $customer = $page->customer()->toStructure();
+
+            $items = array();
+            foreach(yaml::decode($page->products()) as $product)
+            {   
+                $items[] = array('variant' => $product['variant'], 'name' => $product['name'], 'quantity' => $product['quantity'], 'price' => $product['amount']);
+            }
+
+            $email = email(array(
+              'to'      => $customer->email()->value(),
+              'from'    => 'The Invisible Cities <info@the-invisible-cities.com>',
+              'subject' => 'Your order from The Invisible Cities has been shipped',
+              'service' => 'mailgun',
+              'options' => array(
+                'key'    => \c::get('mailgun_key'),
+                'domain' => \c::get('mailgun_domain')
+              ),
+              'body'    => snippet('order-confirm', 
+                                array(
+                                     'order' => $page->order_id()->value(),
+                                     'items' => $items,
+                                     'fullName' => $customer->name()->value(),
+                                     'street' => $customer->address()->street()->value(),
+                                     'city' => $customer->address()->city()->value(),
+                                     'province' => $customer->address()->state()->value(),
+                                     'country' => $customer->address()->country()->value(),
+                                     'postcode' => $customer->address()->postal_code()->value(),
+                                     'email' => $customer->email()->value(),
+                                     'total' => '20000',
+                                     'title' => 'Your order from The Invisible Cities has been shipped',
+                                     'preview' => 'Order shipping confirmation. Your order has been shipped.',
+                                     'headline' => 'Your order is on the way! Delivery is normally 5-10 business days to the US and Europe, but shipping times may vary.'
+                                    ), true)
+            ));
+
+            try{
+                $email->send();
+                $logger->info("email shipping confirmation sent for order id " . $page->order_id()->value());
+            }catch(\Error $e){
+                $logger->info(s::id() . "email error " . $e->getMessage());
+            }   
         }
     }
 
