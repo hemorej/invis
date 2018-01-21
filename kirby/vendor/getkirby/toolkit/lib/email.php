@@ -278,7 +278,7 @@ email::$services['mailgun'] = function($email) {
     'cc'         => $email->cc,
     'bcc'        => $email->bcc,
     'subject'    => $email->subject,
-    'text'       => $email->body,
+    'html'       => $email->body,
     'h:Reply-To' => $email->replyTo,
   );
 

@@ -42,6 +42,9 @@ c::set('ssl', true);
 
 c::set('ga_code', '');
 
+c::set('mailgun_domain', '');
+c::set('mailgun_key', '');
+
 /*
 
 ---------------------------------------

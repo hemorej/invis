@@ -14,10 +14,10 @@ return function($site, $pages, $page) {
 	// TODO: check if any of the get vars is empty (token, items, total, csrf)
 	if(empty($token)){
 		if(s::get('state')){ // an order just went through
-			s::remove('state');
-			return [ 'state' => 'complete' ];
-		}else{ // direct page load
+			$order = s::get('order');
 			s::destroy();
+			return [ 'state' => 'complete', 'order' => $order ];
+		}else{ // direct page load
 			return [ 'state' => 'no session' ];
 		}
 	}else{
@@ -48,15 +48,36 @@ return function($site, $pages, $page) {
 
 		$email = email(array(
 		  'to'      => $token['email'],
-		  'from'    => 'info@the-invisible-cities.com',
+		  'from'    => 'The Invisible Cities <info@the-invisible-cities.com>',
 		  'subject' => 'Your order from The Invisible Cities has been received',
-		  'body'    => snippet('order-confirm', array('name' => $token['card']['name'], 'order' => $orderId), true)
+		  'service' => 'mailgun',
+		  'options' => array(
+		    'key'    => \c::get('mailgun_key'),
+		    'domain' => \c::get('mailgun_domain')
+		  ),
+		  'body'    => snippet('order-confirm', 
+		  					array('name' => $token['card']['name'],
+		  						 'order' => $orderId,
+		  						 'items' => $items,
+								 'fullName' => $token['card']['name'],
+								 'street' => $token['card']['address_line1'],
+								 'city' => $token['card']['address_city'],
+								 'province' => $token['card']['address_state'],
+								 'country' => $token['card']['address_country'],
+								 'postcode' => $token['card']['address_zip'],
+								 'email' => $token['email'],
+								 'total' => $total
+		  						), true)
 		));
-		$email->send();
-		$logger->info(s::id() . ":email confirmation sent for order id " . $orderId);
+
+		if($email->send()){
+		  $logger->info(s::id() . ":email confirmation sent for order id " . $orderId);
+		}else{
+		  $logger->info(s::id() . "email error " . $email->error()->message());
+		}
 
 		foreach($items as $item){
-			$idParts = explode('::', $item['variant']);
+			$idParts = explode('::', $item['id']);
   			$uri = $idParts[0];
 
 			$variant = page($uri)->variants()->toStructure()->findBy('sku', $item['sku']);
@@ -89,6 +110,6 @@ return function($site, $pages, $page) {
 
 		$logger->info(s::id() . ":order processing done");
 
-		return [ 'state' => 'success' ];
+		return [ 'state' => 'success', 'order' => $orderId ];
 	}
 };

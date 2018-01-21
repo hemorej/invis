@@ -63,7 +63,7 @@ $( document ).ready(function(){
         var csrf = $("#input-csrf").val();
         var items = [];
         $(".input-qty.right").each(function(i, obj) {
-          var item = {"variant": obj.id, "sku": obj.getAttribute('data-variant'), "quantity": obj.value};
+          var item = {"id": obj.id, "sku": obj.getAttribute('data-sku'), "quantity": obj.value, "price": obj.getAttribute('data-amount'), "name": obj.getAttribute('data-name'), "variant": obj.getAttribute('data-variant')};
           items.push(item);
         });
         var total = parseInt($("#checkout-total").val());
