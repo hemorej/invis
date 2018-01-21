@@ -3,7 +3,7 @@
 function addToStructure($page, $field, $data = array())
 {
   $fieldData = $page->$field()->yaml();
-  $key = array_search($data['name'], array_column($fieldData, 'name'));
+  $key = array_search($data['sku'], array_column($fieldData, 'sku'));
   unset($fieldData[$key]);
 
   $fieldData[] = $data;
