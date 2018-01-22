@@ -35,9 +35,11 @@ class UidHandler
             $customer = $page->customer()->toStructure();
 
             $items = array();
+            $total = 0;
             foreach(yaml::decode($page->products()) as $product)
             {   
                 $items[] = array('variant' => $product['variant'], 'name' => $product['name'], 'quantity' => $product['quantity'], 'price' => $product['amount']);
+                $total += intval($product['quantity'] * $product['amount']);
             }
 
             $email = email(array(
@@ -60,7 +62,7 @@ class UidHandler
                                      'country' => $customer->address()->country()->value(),
                                      'postcode' => $customer->address()->postal_code()->value(),
                                      'email' => $customer->email()->value(),
-                                     'total' => '20000',
+                                     'total' => $total*100,
                                      'title' => 'Your order from The Invisible Cities has been shipped',
                                      'preview' => 'Order shipping confirmation. Your order has been shipped.',
                                      'headline' => 'Your order is on the way! Delivery is normally 5-10 business days to the US and Europe, but shipping times may vary.'
