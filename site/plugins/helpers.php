@@ -5,6 +5,7 @@ function addToStructure($page, $field, $data = array())
   $fieldData = $page->$field()->yaml();
   $key = array_search($data['sku'], array_column($fieldData, 'sku'));
   unset($fieldData[$key]);
+  $fieldData = array_values($fieldData);
 
   $fieldData[] = $data;
   $fieldData = yaml::encode($fieldData);

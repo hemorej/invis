@@ -50,13 +50,13 @@ return function($site, $pages, $page) {
 				$idParts = explode('::', $item['id']);
 	  			$uri = $idParts[0];
 
-				$variant = page($uri)->variants()->toStructure()->findBy('sku', $item['sku']);
+				$variant = page($uri)->variants()->toStructure()->findBy('sku', (string)$item['sku']);
 
 		        $updatedVariant = array();
-		        $updatedVariant['sku'] = $item['sku'];
+		        $updatedVariant['sku'] = $variant->sku->value();
 		        $updatedVariant['name'] = $variant->name->value();
 		        $updatedVariant['price'] = $variant->price->value();
-		        $updatedVariant['stock'] = $variant->stock->value() - $item['quantity'];
+		        $updatedVariant['stock'] = intval($variant->stock->value()) - intval($item['quantity']);
 
 		        addToStructure(page($uri), 'variants', $updatedVariant);
 			}
@@ -158,7 +158,7 @@ function sendAlert($sid, $orderId)
 	));
 
 	$email->send();
-	
+
 	$logger = new Logger('order');
     $logger->pushHandler(new RotatingFileHandler(__DIR__.'/../../logs/invis.log', Logger::DEBUG));
 	$logger->info("Alert sent for " . $orderId);
