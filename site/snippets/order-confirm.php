@@ -163,7 +163,7 @@
                                   </tr>
                                 </table>
                               </td>
-                              <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/> <?= $fullName ?><br/> <?= $street ?>, <?= $city ?><br/> <?= $province ?>, <?= $country ?><br/> <?= $postcode ?><br/> <?= $email ?><br/> </td>
+                              <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/> <?= $fullName ?><br/> <?= $street ?>, <?= $city ?><br/> <?= $province ?> <?= $country ?><br/> <?= $postcode ?><br/> <?= $email ?><br/> </td>
                             </tr>
                           </table>
                         </div> <br/>

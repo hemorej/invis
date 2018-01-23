@@ -33,7 +33,7 @@ if($page->parent()->title() != 'journal'){
 
 ?>
 
-<div class="row">
+<div class="row medium-space-top">
     <h3><span class="high-contrast"><?= $page->parent()->title()->lower() ?></span><a href="<?= $page->url() ?>"><?= strtolower($headline) ?></a></h3>
     <div class="small-12 medium-8 columns">
         <?php snippet('interchange', array('images' => $page->images())); ?>

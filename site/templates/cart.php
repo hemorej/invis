@@ -1,16 +1,17 @@
-<?php snippet('header') ?>
 <div class="alert-box row">
     <div class="medium-12 columns">
       <h3>Sorry, there's only <span id="stock-error"></span> left in stock</h3>
       <a href="#" class="close">&times;</a>
     </div>
 </div>
+<?php snippet('header') ?>
 <?php snippet('menu') ?>
 
 <div class="row medium-space-top">
-    <h1><span class="high-contrast">
+    <h3><span class="high-contrast">
         <?= $page->title()->html() ?>
-    </h1></span>
+    </h3></span>
+</div>
 
 <?= $page->text()->kirbytext() ?>
 
@@ -93,7 +94,7 @@
 <div class="row">
     <div class="small-12 medium-12 columns text-right">
         <div class="low-contrast text-right">
-        <span>By continuing to checkout, you agree to have read the general <a id="terms" href="#">terms.</a></span>
+        <span>By continuing to checkout, you agree to the general<a id="terms" href="#">terms.</a></span>
         <p id="term-details"><?= $site->terms() ?></p>
         </div>
         <button class="right" id="checkoutButton">checkout</button>
