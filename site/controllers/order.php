@@ -14,11 +14,11 @@ return function($site, $pages, $page) {
 
 	if(empty($token) || empty($total) || empty($items) || csrf($csrf) !== true){
 		if(s::get('state')){ // an order just went through
-			$order = s::get('order');
+			$order = page(s::get('order'));
 			s::destroy();
 			return [ 'state' => 'complete', 'order' => $order ];
 		}else{ // direct page load
-			return [ 'state' => 'no session' ];
+			return [ 'state' => 'no session'];
 		}
 	}else{
 		$logger->info(s::id() . ":order processing start");
