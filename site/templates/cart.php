@@ -11,7 +11,7 @@
     <h3><span class="high-contrast">
         <?= $page->title()->html() ?>
     </h3></span>
-</div>
+
 
 <?= $page->text()->kirbytext() ?>
 
