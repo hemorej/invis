@@ -78,6 +78,7 @@ return function($site, $pages, $page) {
 			page(s::get('txn'))->move($orderId);
 			s::remove('txn');
 			s::set('state', 'success');
+			s::set('order', 'prints/orders/' . str_replace('_', '-', $orderId));
 
 			$email = email(array(
 			  'to'      => $token['email'],
@@ -101,6 +102,7 @@ return function($site, $pages, $page) {
 									 'email' => $token['email'],
 									 'total' => $total,
 	               		             'title' => 'Your order from The Invisible Cities has been received',
+	               		             'subtitle' => 'Order confirmation',
 	                                 'preview' => 'Order confirmation. We received your order and will prepare it for shipping soon. Below is your order information.',
 	                                 'headline' => 'Thanks for ordering! We received your order and will prepare it for shipping soon. Below is your order information.'
 			  						), true)
@@ -139,7 +141,7 @@ return function($site, $pages, $page) {
 			sendAlert(s::id(), $orderId);
 		}
 
-		return [ 'state' => 'success', 'order' => $orderId ];
+		return [ 'state' => 'success'];
 	}
 };
 

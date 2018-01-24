@@ -117,7 +117,7 @@
                           <table class="row__table" width="100%" align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                             <tr class="row__row">
                               <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top">
-                                <h2 class="header h2" style="margin: 20px 0; line-height: 30px; color: #000000; font-family: Helvetica,Arial,sans-serif;">Order confirmation</h2>
+                                <h2 class="header h2" style="margin: 20px 0; line-height: 30px; color: #000000; font-family: Helvetica,Arial,sans-serif;"><?= $subtitle ?></h2>
                               </td>
                             </tr>
                           </table>
