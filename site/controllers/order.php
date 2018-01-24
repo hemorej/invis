@@ -17,6 +17,9 @@ return function($site, $pages, $page) {
 			$order = page(s::get('order'));
 			s::destroy();
 			return [ 'state' => 'complete', 'order' => $order ];
+		}elseif(s::get('error')){
+			s::remove('error');
+			return [ 'state' => 'error'];
 		}else{ // direct page load
 			return [ 'state' => 'no session'];
 		}
@@ -116,29 +119,37 @@ return function($site, $pages, $page) {
 			}
 
 			$logger->info(s::id() . ":order processing done");
+			
 		}catch(\Stripe\Error\Card $e) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
 
 			$logger->error(s::id() . ": charge declined, type: " . $err['type'] . ", code: " . $err['code'] . ", status: " . $e->getHttpStatus());
 			sendAlert(s::id(), $orderId);
+			s::set('error', 'error');
 		} catch (\Stripe\Error\RateLimit $e) {
 		  	$logger->error(s::id() . ": stripe rate limit error");
+		  	s::set('error', 'error');
 		} catch (\Stripe\Error\InvalidRequest $e) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
 
 			$logger->error(s::id() . ": invalid request, status: " . $e->getHttpStatus());
+		  	s::set('error', 'error');
 		} catch (\Stripe\Error\Authentication $e) {
 		  	$logger->error(s::id() . ": stripe auth error, check keys");
+		  	s::set('error', 'error');
 		} catch (\Stripe\Error\ApiConnection $e) {
 			$logger->error(s::id() . ": network communication error");
+		  	s::set('error', 'error');
 		} catch (\Stripe\Error\Base $e) {
 			$logger->error(s::id() . ": stripe general error");
 			sendAlert(s::id(), $orderId);
+		  	s::set('error', 'error');
 		} catch (Exception $e) {
 			$logger->error(s::id() . ": general error");
 			sendAlert(s::id(), $orderId);
+		  	s::set('error', 'error');
 		}
 
 		return [ 'state' => 'success'];
