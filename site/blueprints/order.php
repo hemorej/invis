@@ -8,17 +8,26 @@ fields:
   txn_id:
     label: txn_id
     type: text
-    width: 1/3
+    width: 1/2
     readonly: true
   txn_date:
     label: txn_date
-    type: date
-    format: MM/DD/YYYY
+    type: datetime
+    date:
+      format: MM/DD/YYYY
+    time: 
+      format: 24
+      interval: 1
     readonly: true
-    width: 1/3
+    width: 1/2
+  order_id:
+    label: order id
+    type: text
+    readonly: true
+    width: 1/2
   status:
     label: status
-    width: 1/3
+    width: 1/2
     type: select
     options:
         pending: pending
@@ -27,10 +36,6 @@ fields:
         canceled: canceled
         returned: returned
     required: true
-  order_id:
-    label: order id
-    type: text
-    readonly: true
   products:
     label: products
     readonly: true
