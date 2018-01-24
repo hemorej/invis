@@ -140,10 +140,11 @@ function add($id, $quantity) {
   // Create the transaction file if we don't have one yet
   if (!s::get('txn')) {
     $txn_id = s::id();
+    $timestamp = time();
     
     page('prints')->create('prints/orders/'.$txn_id, 'order', [
       'txn-id' => $txn_id,
-      'txn-date'  => date('m/d/Y H:i:s', time()),
+      'txn-date'  => date('m/d/Y H:i:s', $timestamp),
       'status' => 'pending',
       'session-start' => $timestamp,
       'session-end' => $timestamp,
