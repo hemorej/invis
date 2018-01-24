@@ -41,7 +41,12 @@ if($page->parent()->title() != 'journal'){
     </div>
         <section class="small-12 medium-4 columns variants">
         <?php $variants = $page->variants()->toStructure();
-        if(count($variants) == 0 || (count($variants) == 1 && !inStock($variants->first()))):
+        $stock = 0;
+        foreach($variants as $variant){
+            $stock += $variant->stock()->value();
+        }
+
+        if(count($variants) == 0 || $stock == 0):
             echo 'Out of stock';
         else: ?>
 
