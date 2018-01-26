@@ -72,10 +72,14 @@ class UidHandler
 
             try{
                 $email->send();
-                $logger->info("email shipping confirmation sent for order id " . $page->order_id()->value());
+                $this->logger->info("email shipping confirmation sent for order id " . $page->order_id()->value());
             }catch(\Error $e){
-                $logger->error("email shipping confirmation error for order id " . $page->order_id()->value() . ": " . $e->getMessage());
-            }   
+                $this->logger->error("email shipping confirmation error for order id " . $page->order_id()->value() . ": " . $e->getMessage());
+            }
+
+            $page->update(array(
+                'shipping_date' => date('m/d/Y H:i:s', time())
+            ));
         }
     }
 

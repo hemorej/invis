@@ -6,12 +6,12 @@ options:
   status: false
 fields:
   txn_id:
-    label: txn_id
+    label: transaction id
     type: text
     width: 1/2
     readonly: true
   txn_date:
-    label: txn_date
+    label: transaction date
     type: datetime
     date:
       format: MM/DD/YYYY
@@ -24,10 +24,20 @@ fields:
     label: order id
     type: text
     readonly: true
-    width: 1/2
+    width: 1/3
+  shipping_date:
+    label: date shipped
+    type: datetime
+    date:
+      format: MM/DD/YYYY
+    time: 
+      format: 24
+      interval: 1
+    readonly: true
+    width: 1/3
   status:
     label: status
-    width: 1/2
+    width: 1/3
     type: select
     options:
         pending: pending
