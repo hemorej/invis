@@ -53,12 +53,12 @@ if($page->parent()->title() != 'journal'){
         <ul class="inline-list">
         <?php $first = true;
         foreach ($variants as $variant): ?>
-            <li <?php ecco($first == true, 'class="active variant"', 'class="variant"') ?>>
-                <?php if(inStock($variant)): ?>
-                <a href="#" data-option-variant='<?= $variant->sku() ?>' data-option-price="<?= $variant->price ?>"><?= $variant->name() ?> &mdash; $<?= $variant->price ?></a>
-                <?php endif ?>
-            </li>&nbsp;
-        <?php $first = false;
+            <?php if(inStock($variant)): ?>
+                <li <?php ecco($first == true, 'class="active variant"', 'class="variant"') ?>>
+                    <a href="#" data-option-variant='<?= $variant->sku() ?>' data-option-price="<?= $variant->price ?>"><?= $variant->name() ?> &mdash; $<?= $variant->price ?></a>
+                </li>&nbsp;
+            <?php $first = false; ?>
+            <?php endif; 
         endforeach ?>
         </ul>
 
