@@ -11,7 +11,7 @@ License Setup
 c::set('license', '');
 
 // environment
-c::set('env', 'dev');
+c::set('env', 'prod');
 
 /*
 
@@ -22,15 +22,15 @@ Kirby Configuration
 */
 
 c::set('timezone', 'America/Montreal');
-c::set('debug', true);
-c::set('cache', false);
+c::set('debug', false);
+c::set('cache', true);
 c::set('cache.driver', 'file');
 c::set('cache.autoupdate', true);
 c::set('cache.ignore', array(
   'home',
   'feed'
 ));
-c::set('ssl', false);
+c::set('ssl', true);
 
 
 // google analytics

@@ -63,8 +63,6 @@ body {
   cursor: auto;
 }
 
-a:hover{cursor: pointer}
-h2{margin-top: 0}
 
 img{
   max-width: 100%;
@@ -86,6 +84,11 @@ a{
   text-decoration: none;
   line-height: inherit;
   padding: 5px;
+}
+a:hover{
+  cursor: pointer;
+  color: white;
+  background-color: #ffcd39;
 }
 
 .caption{
@@ -166,7 +169,6 @@ select::-ms-expand {
 }
 
 li.active, a.active {border-bottom: 5px solid #ffcd39}
-h1 a {padding: 0}
 
 ::selection {
   background: #ffcd39;
@@ -190,15 +192,14 @@ h1 a {padding: 0}
   width: 9.375rem
 }
 
+/* TYPOGRAPHY */
+
 small{font-style: italic}
+h1 a {padding: 0}
+h2{margin-top: 0}
 header h1 a {
   font-variant: small-caps;
   color: black;
-}
-
-a:hover{
-  color: white;
-  background-color: #ffcd39;
 }
 
 header h1 a:hover,
@@ -238,6 +239,8 @@ ul {
   font-family: inherit
 }
 
+.text-center {text-align: center !important}
+.text-right {text-align: right !important}
 .sc{font-variant: small-caps}
 .high-contrast{color:#666;font-size:2.923rem;margin-right:1rem;padding-left:15px}
 .low-contrast{color: #bbb}
@@ -254,6 +257,8 @@ p {
   margin-bottom: 1.25rem;
   text-rendering: optimizeLegibility;
 }
+
+/* TOP BAR */
 
 .contain-to-grid {
   width: 100%;
@@ -344,6 +349,7 @@ p {
 .top-bar-section ul li.active > a {background: #008cba;color: #333333;}
 .top-bar-section ul li.active > a:hover {background: #0078a0;color: #333333;}
   
+/* GRID */
 .large-space-top {margin-top: 6%}
 .medium-space-top {margin-top: 3%}
 .lazy {display: none}
@@ -381,8 +387,6 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none; 
   margin: 0; 
 }
-.text-center {text-align: center !important}
-.text-right {text-align: right !important}
 
 .alert-box {
   border-style: solid;

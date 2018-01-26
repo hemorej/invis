@@ -15,8 +15,12 @@
   <meta name="robots" content="index, follow" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-  <?php echo css('assets/css/app.css') ?>
-  
+  <?php if(c::get('env') == 'prod'): ?>
+    <?= css('assets/css/app.min.css') ?>
+  <?php else: ?>
+    <?= css('assets/css/app.css') ?>
+  <? endif ?>
+    
   <link rel="shortcut icon" type="image/x-icon"  href="<?php echo url('assets/images/favicon.ico') ?>">
   <link rel="apple-touch-icon" sizes="72x72" href="<?php echo url('assets/images/apple-touch-icon-72x72.png') ?>" />
   <link rel="apple-touch-icon" sizes="114x114" href="<?php echo url('assets/images/apple-touch-icon-114x114.png') ?>" />
