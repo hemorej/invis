@@ -59,7 +59,12 @@ return function($site, $pages, $page) {
 		        $updatedVariant['sku'] = $variant->sku->value();
 		        $updatedVariant['name'] = $variant->name->value();
 		        $updatedVariant['price'] = $variant->price->value();
-		        $updatedVariant['stock'] = intval($variant->stock->value()) - intval($item['quantity']);
+
+		        $remainingStock = intval($variant->stock->value()) - intval($item['quantity']);
+		        if($remainingStock < 0)
+		        	throw new Exception("Insufficient stock for product " . page($uri)->title()->value() . " (sku: " . $variant->sku->value() . ")");
+
+		        $updatedVariant['stock'] = $remainingStock;
 
 		        addToStructure(page($uri), 'variants', $updatedVariant);
 			}
@@ -119,7 +124,7 @@ return function($site, $pages, $page) {
 			}
 
 			$logger->info(s::id() . ":order processing done");
-			
+
 		}catch(\Stripe\Error\Card $e) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
@@ -147,7 +152,7 @@ return function($site, $pages, $page) {
 			sendAlert(s::id(), $orderId);
 		  	s::set('error', 'error');
 		} catch (Exception $e) {
-			$logger->error(s::id() . ": general error");
+			$logger->error(s::id() . ": general error", array('reason' => $e->getMessage()));
 			sendAlert(s::id(), $orderId);
 		  	s::set('error', 'error');
 		}
