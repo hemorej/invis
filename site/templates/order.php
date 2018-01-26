@@ -58,10 +58,8 @@
 	<span></span>
 	<div class="row">
 		<div class="small-12 medium-12 columns">
-			An error occurred,
-			<?php if(s::get('txn')): ?>
-				 please try again or
-			<?php endif ?> contact us with your session ID (<?= s::id() ?>) at &#105;&#110;&#102;&#111;&#064;&#116;&#104;&#101;&#045;&#105;&#110;&#118;&#105;&#115;&#098;&#108;&#101;&#045;&#099;&#105;&#116;&#105;&#101;&#115;&#046;&#099;&#111;&#109;
+			I'm sorry but there's a problem with your order. <?= $message ?><br />
+			Please contact me with your session ID (<?= s::id() ?>) at &#105;&#110;&#102;&#111;&#064;&#116;&#104;&#101;&#045;&#105;&#110;&#118;&#105;&#115;&#098;&#108;&#101;&#045;&#099;&#105;&#116;&#105;&#101;&#115;&#046;&#099;&#111;&#109; to resolve this issue. 
 		</div>
 	</div>
 <?php else:

@@ -18,8 +18,9 @@ return function($site, $pages, $page) {
 			s::destroy();
 			return [ 'state' => 'complete', 'order' => $order ];
 		}elseif(s::get('error')){
+			$message = s::get('error');
 			s::remove('error');
-			return [ 'state' => 'error'];
+			return [ 'state' => 'error', 'message' => $message];
 		}else{ // direct page load
 			return [ 'state' => 'no session'];
 		}
@@ -120,7 +121,9 @@ return function($site, $pages, $page) {
 				$email->send();
 			  	$logger->info(s::id() . ":email confirmation sent for order id " . $orderId);
 			}catch(Error $err){
-				$logger->error(s::id() . ":email confirmation error for order id " . $orderId . ": " . $e->getMessage());
+				$description = "email confirmation error for order id " . $orderId . ": " . $e->getMessage();
+				$logger->error(s::id() . ":" . $description);
+				sendAlert(s::id(), $orderId, $description);
 			}
 
 			$logger->info(s::id() . ":order processing done");
@@ -130,38 +133,39 @@ return function($site, $pages, $page) {
 			$err  = $body['error'];
 
 			$logger->error(s::id() . ": charge declined, type: " . $err['type'] . ", code: " . $err['code'] . ", status: " . $e->getHttpStatus());
-			sendAlert(s::id(), $orderId);
-			s::set('error', 'error');
+			sendAlert(s::id(), $orderId, "charge declined " . $e->getHttpStatus());
+			s::set('error', 'Unfortunately your card was declined, contact your financial institution.');
 		} catch (\Stripe\Error\RateLimit $e) {
 		  	$logger->error(s::id() . ": stripe rate limit error");
-		  	s::set('error', 'error');
+		  	sendAlert(s::id(), $orderId, "stripe rate limit error");
+		  	s::set('error', 'There was an error with the payment processing, you may try again later.');
 		} catch (\Stripe\Error\InvalidRequest $e) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
 
 			$logger->error(s::id() . ": invalid request, status: " . $e->getHttpStatus());
-		  	s::set('error', 'error');
+			s::set('error', 'There was an error with the payment processing, you may try again later.');
 		} catch (\Stripe\Error\Authentication $e) {
-		  	$logger->error(s::id() . ": stripe auth error, check keys");
-		  	s::set('error', 'error');
+		  	$logger->error(s::id() . ": stripe auth error, check keys", array('reason' => $e->getMessage()));
+		  	s::set('error', 'There was an error with the payment processing, I have been notified of the issue.');
 		} catch (\Stripe\Error\ApiConnection $e) {
-			$logger->error(s::id() . ": network communication error");
-		  	s::set('error', 'error');
+			$logger->error(s::id() . ": network communication error", array('reason' => $e->getMessage()));
+			s::set('error', 'There was an error with the payment processing, I have been notified of the issue.');
 		} catch (\Stripe\Error\Base $e) {
-			$logger->error(s::id() . ": stripe general error");
-			sendAlert(s::id(), $orderId);
-		  	s::set('error', 'error');
+			$logger->error(s::id() . ": stripe general error", array('reason' => $e->getMessage()));
+			sendAlert(s::id(), $orderId, $e->getMessage());
+			s::set('error', 'There was an unspecified error with the payment processing, I have been notified of this issue. You may try again later.');
 		} catch (Exception $e) {
 			$logger->error(s::id() . ": general error", array('reason' => $e->getMessage()));
-			sendAlert(s::id(), $orderId);
-		  	s::set('error', 'error');
+			sendAlert(s::id(), $orderId, $e->getMessage());
+			s::set('error', 'There was an unspecified error with the site, I have been notified of this issue. You may try again later');
 		}
 
 		return [ 'state' => 'success'];
 	}
 };
 
-function sendAlert($sid, $orderId)
+function sendAlert($sid, $orderId, $error = "Unknown reason")
 {
 	$email = email(array(
 	  'to'      => \c::get('alert_address'),
@@ -172,7 +176,8 @@ function sendAlert($sid, $orderId)
 	    'key'    => \c::get('mailgun_key'),
 	    'domain' => \c::get('mailgun_domain')
 	  ),
-	  'body'    => "A problem occurred while processing order " . $orderId . " during session " . $sid
+	  'body'    => "A problem occurred while processing order " . $orderId . " during session " . $sid . "<br />" .
+	  	"Error: " . $error
 	));
 
 	$email->send();
