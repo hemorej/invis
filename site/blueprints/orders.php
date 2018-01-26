@@ -1,6 +1,6 @@
 title: Orders
 pages: false
-	sort: txn_date desc
+	sort: session_start desc
 files: false
 fields:
   title:
