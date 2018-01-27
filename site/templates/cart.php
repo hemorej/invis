@@ -29,30 +29,30 @@
 <div class="loading">Loading&#8230;</div>
 <!-- Cart items -->
 <div class="row">
-    <div class="small-3 medium-2 columns">&nbsp;</div>
-    <div class="small-3 medium-6 columns">description</div>
-    <div class="small-3 medium-2 columns text-right">quantity</div>
-    <div class="small-3 medium-2 columns"></div>
+    <div class="hide-for-small medium-2 columns">&nbsp;</div>
+    <div class="small-2 medium-6 columns">description</div>
+    <div class="small-8 medium-2 columns text-right">quantity</div>
+    <div class="small-2 medium-2 columns"></div>
 </div>
 
 <?php $first = true;
     foreach(getItems() as $i => $item): ?>
     <div class="row cart <?php ecco($first==true, 'medium-space-top') ?>">
-        <div class="small-3 medium-2 columns">
+        <div class="hide-for-small medium-2 columns">
             <?php $product = page($item->uri()) ?>
             <img src="<?= $product->images()->first()->thumb(['width'=>100, 'height'=>100, 'crop'=>true])->url() ?>" title="<?= $item->name() ?>">
         </div>
-        <div class="small-3 medium-6 columns">
+        <div class="small-8 medium-6 columns">
             <a class="cart-prod" href="<?= $product->url() ?>">
             <?= $item->name ?>&nbsp;&mdash;&nbsp;<?php e($item->variant()->isNotEmpty(), $item->variant()) ?>
             </a><br />
-            <span class="meta"><?= $product->meta()->value() ?></span>
+            <span class="meta hide-for-small"><?= $product->meta()->value() ?></span>
         </div>
-        <div class="small-3 medium-2 columns">
+        <div class="small-2 medium-2 columns">
             <input class="input-qty right" data-variant="<?= esc($item->variant()) ?>" id="<?= $item->uri() . '::' . $item->sku() ?>" value="<?= $item->quantity() ?>" min="0" max="<?= inStock($item->id()) ?>" data-sku="<?= $item->sku() ?>" data-amount="<?= $item->amount()->value() ?>" data-name="<?= $item->name() ?>" type="number">
             <input id="input-csrf" type="hidden" name="csrf" value="<?= csrf() ?>">
         </div>
-        <div class="small-3 medium-2 columns">
+        <div class="small-2 medium-2 columns">
             <span class="right"><?= 'CAD'.$item->amount()->value * $item->quantity()->value ?>
                 <form action="" method="post">
                     <input type="hidden" name="csrf" value="<?= csrf() ?>">
@@ -70,7 +70,7 @@
     <div class="small-6 medium-10 columns text-right">
         <span>shipping</span>
     </div>
-    <div class="small-6 medium-2 columns">
+    <div class="small-2 medium-2 columns">
         <span class="right">included</span>
     </div>
 </div>
