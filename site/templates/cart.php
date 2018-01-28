@@ -28,46 +28,77 @@
 </style>
 <div class="loading">Loading&#8230;</div>
 <!-- Cart items -->
-<div class="row">
-    <div class="hide-for-small medium-2 columns">&nbsp;</div>
-    <div class="small-2 medium-6 columns">description</div>
-    <div class="small-8 medium-2 columns text-right">quantity</div>
-    <div class="small-2 medium-2 columns"></div>
+<div class="row show-for-landscape">
+    <div class="small-2 medium-2 columns">&nbsp;</div>
+    <div class="small-8 medium-8 columns">description</div>
+    <div class="small-2 medium-2 columns text-right">quantity</div>
 </div>
 
 <?php $first = true;
     foreach(getItems() as $i => $item): ?>
-    <div class="row cart <?php ecco($first==true, 'medium-space-top') ?>">
-        <div class="hide-for-small medium-2 columns">
-            <?php $product = page($item->uri()) ?>
-            <img src="<?= $product->images()->first()->thumb(['width'=>100, 'height'=>100, 'crop'=>true])->url() ?>" title="<?= $item->name() ?>">
+    <div class="show-for-landscape">
+        <div class="row cart <?php ecco($first==true, 'medium-space-top') ?>">
+            <div class="small-2 medium-2 columns">
+                <?php $product = page($item->uri()) ?>
+                <img src="<?= $product->images()->first()->thumb(['width'=>100, 'height'=>100, 'crop'=>true])->url() ?>" title="<?= $item->name() ?>">
+            </div>
+            <div class="small-8 medium-6 columns">
+                <a class="cart-prod" href="<?= $product->url() ?>">
+                <?= $item->name ?>&nbsp;&mdash;&nbsp;<?php e($item->variant()->isNotEmpty(), $item->variant()) ?>
+                </a><br />
+                <span class="meta"><?= $product->meta()->value() ?></span>
+            </div>
+            <div class="small-2 medium-4 columns">
+                <span class="right"><?= 'CAD'.$item->amount()->value * $item->quantity()->value ?></span>
+                <br class="show-for-small-only"/>
+                <form action="" method="post">
+                    <input type="hidden" name="csrf" value="<?= csrf() ?>">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="id" value="<?= $item->id() ?>">
+                    <button class="show-for-small-only" type="submit">x</button>
+                    <button class="hide-for-small" type="submit">delete</button>
+                </form>
+                <input class="input-qty" data-variant="<?= esc($item->variant()) ?>" id="<?= $item->uri() . '::' . $item->sku() ?>" value="<?= $item->quantity() ?>" min="0" max="<?= inStock($item->id()) ?>" data-sku="<?= $item->sku() ?>" data-amount="<?= $item->amount()->value() ?>" data-name="<?= $item->name() ?>" type="number">
+                <input id="input-csrf" type="hidden" name="csrf" value="<?= csrf() ?>">
+            </div>
         </div>
-        <div class="small-8 medium-6 columns">
-            <a class="cart-prod" href="<?= $product->url() ?>">
-            <?= $item->name ?>&nbsp;&mdash;&nbsp;<?php e($item->variant()->isNotEmpty(), $item->variant()) ?>
-            </a><br />
-            <span class="meta hide-for-small"><?= $product->meta()->value() ?></span>
+        <hr>
+    </div>
+    <div class="show-for-portrait">
+        <div class="row cart <?php ecco($first==true, 'medium-space-top') ?>">
+            <div class="small-2 medium-2 columns">
+                <?php $product = page($item->uri()) ?>
+                <img src="<?= $product->images()->first()->thumb(['width'=>100, 'height'=>100, 'crop'=>true])->url() ?>" title="<?= $item->name() ?>">
+            </div>
+            <div class="small-10 medium-10 columns">
+                <a class="cart-prod" href="<?= $product->url() ?>">
+                <?= $item->name ?>&nbsp;&mdash;&nbsp;<?php e($item->variant()->isNotEmpty(), $item->variant()) ?>
+                </a><br />
+                <span class="meta"><?= $product->meta()->value() ?></span>
+            </div>
         </div>
-        <div class="small-2 medium-2 columns">
-            <input class="input-qty right" data-variant="<?= esc($item->variant()) ?>" id="<?= $item->uri() . '::' . $item->sku() ?>" value="<?= $item->quantity() ?>" min="0" max="<?= inStock($item->id()) ?>" data-sku="<?= $item->sku() ?>" data-amount="<?= $item->amount()->value() ?>" data-name="<?= $item->name() ?>" type="number">
-            <input id="input-csrf" type="hidden" name="csrf" value="<?= csrf() ?>">
-        </div>
-        <div class="small-2 medium-2 columns">
-            <span class="right"><?= 'CAD'.$item->amount()->value * $item->quantity()->value ?>
+
+        <div class="row cart">
+            <div class="small-12 medium-12 columns text-right">
+                <input class="input-qty" data-variant="<?= esc($item->variant()) ?>" id="<?= $item->uri() . '::' . $item->sku() ?>" value="<?= $item->quantity() ?>" min="0" max="<?= inStock($item->id()) ?>" data-sku="<?= $item->sku() ?>" data-amount="<?= $item->amount()->value() ?>" data-name="<?= $item->name() ?>" type="number">
                 <form action="" method="post">
                     <input type="hidden" name="csrf" value="<?= csrf() ?>">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="<?= $item->id() ?>">
                     <button type="submit">delete</button> 
                 </form>
-            </span>
+                <input id="input-csrf" type="hidden" name="csrf" value="<?= csrf() ?>">
+                <span><?= 'CAD'.$item->amount()->value * $item->quantity()->value ?></span>
+            </div>
         </div>
+        <hr>
     </div>
+
 <?php $first = false;
     endforeach ?>
 
 <div class="row medium-space-top">
-    <div class="small-6 medium-10 columns text-right">
+    <div class="small-8 medium-10 columns text-right">
         <span>shipping</span>
     </div>
     <div class="small-2 medium-2 columns">
@@ -76,25 +107,22 @@
 </div>
 
 <div class="row">
-    <div class="small-6 medium-10 columns text-right">
+    <div class="small-8 medium-10 columns text-right">
         <h2>total</h2>
     </div>
-    <div class="small-6 medium-2 columns">
+    <div class="small-4 medium-2 columns text-right">
         <h2 class="right">CAD<?= $total ?></h2>
     </div>
 </div>
 <div class="row">
-    <div class="small-6 medium-10 columns text-right low-contrast text-right">
-        <span>Approximately</span>
-    </div>
-    <div class="small-6 medium-2 columns low-contrast text-right" id="currencies">
-        <span><?= $currencies ?></span>
+    <div class="small-12 medium-12 columns low-contrast text-right" id="currencies">
+        <span>Approximately <?= $currencies ?></span>
     </div>
 </div>
 <div class="row">
     <div class="small-12 medium-12 columns text-right">
         <div class="low-contrast text-right">
-        <span>By continuing to checkout, you agree to the general<a id="terms" href="#">terms.</a></span>
+        <span>By continuing to checkout, you agree to the general<a id="terms" href="#">terms</a>of the sale.</span>
         <p id="term-details"><?= $site->terms() ?></p>
         </div>
         <button class="right" id="checkoutButton">checkout</button>

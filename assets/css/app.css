@@ -378,8 +378,8 @@ input[type=number]{
   border-bottom-color: black;
   border-color: black;
   font-size: 13px;
-  height: 28px;
-  width: 30px;
+  height: 25px;
+  width: 25px;
   padding: 0;
   padding-top: 3px
 }
@@ -428,12 +428,9 @@ input[type=number]::-webkit-outer-spin-button {
   .alert-box h3{font-size:1rem}
   .hide-for-small {display: none !important}
   .small-2 {width: 16.66667%}
-  .small-3 {width: 25%}
-  .small-4 {width: 33.33333%}
-  .small-6 {width: 50%}
+  .small-4 {width:25%}
   .small-8 {width: 66.66667%}
   .small-10 {width: 83.33333%}
-  .small-11 {width: 91.66667%}
   .small-12 {width: 100%}
   .date, .thumb {max-width: 90px;max-height: 90px}
   .date{font-size:1rem}
@@ -476,18 +473,11 @@ input[type=number]::-webkit-outer-spin-button {
   }
   body > div:nth-child(3) {margin-top: 5%}
   .medium-2 {width: 16.66667%}
-  .medium-3 {width: 25%}
   .medium-4 {width: 33.33333%}
   .medium-6 {width: 50%}
   .medium-8 {width: 66.66667%}
   .medium-10 {width: 83.33333%}
-  .medium-11 {width: 91.66667%}
   .show-for-small-only {display: none !important}
-  .medium-push-2 {
-    position: relative;
-    left: 16.66667%;
-    right: auto;
-  }
   .columns {
     position: relative;
     padding-left: 0.9375rem;
@@ -522,15 +512,21 @@ input[type=number]::-webkit-outer-spin-button {
     position: relative;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
-    float: left;
+    float: left
   }
-  .large-offset-1 {margin-left: 8.33333% !important}
-  .large-offset-2 {margin-left: 16.66667% !important}
-  .fixed.large-offset-2:not(.expanded){margin-left:8.89%}
 }
 
 @media only screen and (min-width: 90.063em) {}
 @media only screen and (min-width: 120.063em) {}
-@media only screen and (orientation: landscape) {}
-@media only screen and (orientation: portrait) {}
+@media only screen and (orientation: landscape) {
+  .show-for-portrait{
+    display: none
+  }
+}
+@media only screen and (orientation: portrait) {
+  .show-for-landscape{
+    display: none
+  }
+}
+@media only screen and (orientation: portrait) and (max-width: 46.5em) {#checkoutButton{width: 100%}}
 @media print {}

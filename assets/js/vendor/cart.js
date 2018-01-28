@@ -15,7 +15,7 @@ $( document ).ready(function(){
         prevQty = $(this).val();
    });
 
-   $( ".input-qty.right" ).change(function() {
+   $( ".input-qty" ).change(function() {
         var id = $(this).attr("id");
         var variant = $(this).attr("data-variant");
         var qty = $(this).val();
