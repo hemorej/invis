@@ -47,7 +47,7 @@ if($page->parent()->title() != 'journal'){
 
 	<?php if($page->hasPrev()): ?>
 		<p class="left">
-			<a href="<?php echo $page->prev()->url() ?>">&laquo; Previous</a>
+			<a href="<?= $page->prev()->url() ?>">&laquo; <?= ecco($page->parent()->title() == 'journal', 'Previous', $page->prev()->title()) ?></a>
 		</p>
 	<?php endif ?>
 	<?php if($page->parent()->title() == 'journal'){ ?>
@@ -55,7 +55,7 @@ if($page->parent()->title() != 'journal'){
 	<?php } ?>
 	<?php if($page->hasNext()): ?>
 		<p class="right">
-			<a href="<?php echo $page->next()->url() ?>">Next &raquo;</a>
+			<a href="<?= $page->next()->url() ?>"><?= ecco($page->parent()->title() == 'journal', 'Previous', $page->next()->title()) ?> &raquo;</a>
 		</p>
 	<?php endif ?>
 
