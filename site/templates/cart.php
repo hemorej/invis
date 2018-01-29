@@ -55,7 +55,7 @@
                     <input type="hidden" name="csrf" value="<?= csrf() ?>">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="<?= $item->id() ?>">
-                    <button class="show-for-small-only" type="submit">x</button>
+                    <button class="right show-for-small-only" type="submit">x</button>
                     <button class="hide-for-small" type="submit">delete</button>
                 </form>
                 <input class="input-qty" data-variant="<?= esc($item->variant()) ?>" id="<?= $item->uri() . '::' . $item->sku() ?>" value="<?= $item->quantity() ?>" min="0" max="<?= inStock($item->id()) ?>" data-sku="<?= $item->sku() ?>" data-amount="<?= $item->amount()->value() ?>" data-name="<?= $item->name() ?>" type="number">

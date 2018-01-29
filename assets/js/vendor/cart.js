@@ -11,7 +11,7 @@ $( document ).ready(function(){
         $("input[name=price]").val(price);
    });
 
-   $( ".input-qty.right" ).focus(function() {
+   $( ".input-qty" ).focus(function() {
         prevQty = $(this).val();
    });
 
@@ -62,7 +62,7 @@ $( document ).ready(function(){
         $('.loading').show();
         var csrf = $("#input-csrf").val();
         var items = [];
-        $(".input-qty.right").each(function(i, obj) {
+        $(".input-qty:visible").each(function(i, obj) {
           var item = {"id": obj.id, "sku": obj.getAttribute('data-sku'), "quantity": obj.value, "price": obj.getAttribute('data-amount'), "name": obj.getAttribute('data-name'), "variant": obj.getAttribute('data-variant')};
           items.push(item);
         });
