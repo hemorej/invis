@@ -88,8 +88,18 @@ return function($site, $pages, $page) {
 			s::remove('txn');
 			s::set('state', 'success');
 			s::set('order', 'prints/orders/' . str_replace('_', '-', $orderId));
+			$order = array(	'order' => $orderId,
+	  						'items' => $items,
+							'fullName' => $token['card']['name'],
+							'street' => $token['card']['address_line1'],
+							'city' => $token['card']['address_city'],
+							'province' => $token['card']['address_state'],
+							'country' => $token['card']['address_country'],
+							'postcode' => $token['card']['address_zip'],
+							'email' => $token['email'],
+							'total' => $total);
 
-			$email = email(array(
+			$userNotification = email(array(
 			  'to'      => $token['email'],
 			  'from'    => 'The Invisible Cities <info@the-invisible-cities.com>',
 			  'subject' => 'Your order from The Invisible Cities has been received',
@@ -99,27 +109,40 @@ return function($site, $pages, $page) {
 			    'domain' => \c::get('mailgun_domain')
 			  ),
 			  'body'    => snippet('order-confirm', 
-			  					array(
-			  						 'order' => $orderId,
-			  						 'items' => $items,
-									 'fullName' => $token['card']['name'],
-									 'street' => $token['card']['address_line1'],
-									 'city' => $token['card']['address_city'],
-									 'province' => $token['card']['address_state'],
-									 'country' => $token['card']['address_country'],
-									 'postcode' => $token['card']['address_zip'],
-									 'email' => $token['email'],
-									 'total' => $total,
+			  					a::merge($order,
+			  						array(
 	               		             'title' => 'Your order from The Invisible Cities has been received',
 	               		             'subtitle' => 'Order confirmation',
 	                                 'preview' => 'Order confirmation. We received your order and will prepare it for shipping soon. Below is your order information.',
 	                                 'headline' => 'Thanks for ordering! We received your order and will prepare it for shipping soon. Below is your order information.'
-			  						), true)
+			  						)), true)
+			));
+
+			$selfNotification = email(array(
+			  'to'      => \c::get('alert_address'),
+			  'from'    => 'The Invisible Cities <info@the-invisible-cities.com>',
+			  'subject' => 'New order at The Invisible Cities!',
+			  'service' => 'mailgun',
+			  'options' => array(
+			    'key'    => \c::get('mailgun_key'),
+			    'domain' => \c::get('mailgun_domain')
+			  ),
+			  'body'    => snippet('order-confirm', 
+			  					a::merge($order,
+			  						array(
+	               		             'title' => 'A new order at the Invisible Cities has been received',
+	               		             'subtitle' => 'Order summary',
+	                                 'preview' => 'Order summary',
+	                                 'headline' => 'Below is the order information.'
+			  						)), true)
 			));
 
 			try{
-				$email->send();
+				$userNotification->send();
 			  	$logger->info(s::id() . ":email confirmation sent for order id " . $orderId);
+
+			  	$selfNotification->send();
+			  	$logger->info(s::id() . ":admin notification sent for order id " . $orderId);
 			}catch(Error $err){
 				$description = "email confirmation error for order id " . $orderId . ": " . $e->getMessage();
 				$logger->error(s::id() . ":" . $description);
