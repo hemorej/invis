@@ -395,7 +395,7 @@ input[type=number]::-webkit-outer-spin-button {
   font-weight: normal;
   margin-bottom: 1.25rem;
   position: relative;
-  padding: 0.875rem 1.5rem 0.875rem 0.875rem;
+  padding: 0.875rem 0.875rem 0 0.875rem;
   font-size: 0.8125rem;
   transition: opacity 300ms ease-out;
   background-color: #ffcd39;
@@ -413,7 +413,6 @@ input[type=number]::-webkit-outer-spin-button {
   color: #333333;
   opacity: 0.3}
 .alert-box .close:hover, .alert-box .close:focus {opacity: 0.5}
-.alert-box h3{font-size:1.3rem}
 
 .meta{color: #999;padding-left: 5px}
 .cart-prod{color: #000}

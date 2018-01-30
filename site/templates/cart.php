@@ -1,11 +1,19 @@
-<div class="alert-box row">
-    <div class="medium-12 columns">
-      <h3>Sorry, there's only <span id="stock-error"></span> left in stock</h3>
-      <a href="#" class="close">&times;</a>
-    </div>
-</div>
 <?php snippet('header') ?>
 <?php snippet('menu') ?>
+
+<div class="alert-box row">
+    <div class="medium-12 columns">
+      <h2>Sorry, there's only <span id="stock-error"></span> left in stock</h2><a href="#" class="close">&times;</a>
+    </div>
+</div>
+
+<noscript>
+<div class="alert-box row" style="display:block">
+    <div class="medium-12 columns">
+      <h2>This page requires Javascript, please enable it and try again</h2>
+    </div>
+</div>
+</noscript>
 
 <div class="row medium-space-top">
     <h3><span class="high-contrast">
@@ -119,6 +127,7 @@
         <span>Approximately <?= $currencies ?></span>
     </div>
 </div>
+
 <div class="row">
     <div class="small-12 medium-12 columns text-right">
         <div class="low-contrast text-right">

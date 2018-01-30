@@ -15,6 +15,14 @@ $extraHeaders = array(
 <?php snippet('header', array('extraHeaders' => $extraHeaders)) ?>
 <?php snippet('menu') ?>
 
+<noscript>
+<div class="alert-box row" style="display:block">
+    <div class="medium-12 columns">
+      <h2>This page requires Javascript, please enable it and try again</h2>
+    </div>
+</div>
+</noscript>
+
 <?php 
 if($page->parent()->title() != 'journal'){
     $headline = $page->title()->lower();
