@@ -45,7 +45,7 @@ if($page->parent()->title() != 'journal'){
 	</div>
 	<p class="medium-space-top"></p>
 
-	<?php if($page->hasPrev()): ?>
+	<?php if($page->hasPrevVisible()): ?>
 		<p class="left">
 			<a href="<?= $page->prev()->url() ?>">&laquo; <?= ecco($page->parent()->title() == 'journal', 'Previous', $page->prev()->title()) ?></a>
 		</p>
@@ -53,9 +53,9 @@ if($page->parent()->title() != 'journal'){
 	<?php if($page->parent()->title() == 'journal'){ ?>
 		<p class="left"><a href="<?= $page->parent()->url() . '?all' ?>">| All posts</a></p>
 	<?php } ?>
-	<?php if($page->hasNext()): ?>
+	<?php if($page->hasNextVisible()): ?>
 		<p class="right">
-			<a href="<?= $page->next()->url() ?>"><?= ecco($page->parent()->title() == 'journal', 'Previous', $page->next()->title()) ?> &raquo;</a>
+			<a href="<?= $page->next()->url() ?>"><?= ecco($page->parent()->title() == 'journal', 'Next', $page->next()->title()) ?> &raquo;</a>
 		</p>
 	<?php endif ?>
 
