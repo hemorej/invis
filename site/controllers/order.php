@@ -4,6 +4,7 @@ use \Monolog\Handler\RotatingFileHandler;
 
 return function($site, $pages, $page) {
 	$token = json_decode(get('token'), true);
+	$args = json_decode(get('args'), true);
 	$items = json_decode(get('items'), true);
 	$csrf = get('csrf');
 	$total = intval(get('total'));
@@ -12,7 +13,7 @@ return function($site, $pages, $page) {
 
 	\Stripe\Stripe::setApiKey(\c::get('stripe_key_prv'));
 
-	if(empty($token) || empty($total) || empty($items) || csrf($csrf) !== true){
+	if(empty($token) || empty($total) || empty($items) || empty($args) || csrf($csrf) !== true){
 		if(s::get('state')){ // an order just went through
 			$order = page(s::get('order'));
 			s::destroy();
@@ -37,18 +38,20 @@ return function($site, $pages, $page) {
 				"source" => $token['id'],
 				"description" => "Order ". $orderId ." for ". $token['email'],
 				"shipping" => array(
-					"name" => $token['card']['name'],
+					"name" => $args['shipping_name'],
 					"address" => array(
-						"line1" => $token['card']['address_line1'],
-						"city" => $token['card']['address_city'],
-						"country" => $token['card']['address_country'],
-						"postal_code" => $token['card']['address_zip'],
-						"state" => $token['card']['address_state']
+						"line1" => $args['shipping_address_line1'],
+						"city" => $args['shipping_address_city'],
+						"country" => $args['shipping_address_country'],
+						"postal_code" => $args['shipping_address_zip'],
+						"state" => $args['shipping_address_state']
 					)
 				),
 				"receipt_email" => $token['email']
 			));
 			$logger->info(s::id() . ":charge captured with id " . $charge->id);
+			$logger->info(s::id() . ":order billing info: " . $args['billing_name'] . ", " . $args['billing_address_line1'] . ", " . $args['billing_address_zip']);
+			$logger->info(s::id() . ":order shipping info: " . $args['shipping_name'] . ", " . $args['shipping_address_line1'] . ", " . $args['shipping_address_zip']);
 
 			foreach($items as $item){
 				$idParts = explode('::', $item['id']);
@@ -71,14 +74,14 @@ return function($site, $pages, $page) {
 			}
 			$logger->info("inventory updated after order ". $orderId);
 
-			$customer = array('name' => $token['card']['name'],
+			$customer = array('name' => $args['shipping_name'],
 							'email' => $token['email'],
 							'address' => array(
-								"street" => $token['card']['address_line1'],
-								"city" => $token['card']['address_city'],
-								"country" => $token['card']['address_country'],
-								"postal_code" => $token['card']['address_zip'],
-								"state" => $token['card']['address_state']),
+								"street" => $args['shipping_address_line1'],
+								"city" => $args['shipping_address_city'],
+								"country" => $args['shipping_address_country'],
+								"postal_code" => $args['shipping_address_zip'],
+								"state" => $args['shipping_address_state'])
 						);
 			$logger->info("customer information added to order ". $orderId);
 
@@ -90,12 +93,12 @@ return function($site, $pages, $page) {
 			s::set('order', 'prints/orders/' . str_replace('_', '-', $orderId));
 			$order = array(	'order' => $orderId,
 	  						'items' => $items,
-							'fullName' => $token['card']['name'],
-							'street' => $token['card']['address_line1'],
-							'city' => $token['card']['address_city'],
-							'province' => $token['card']['address_state'],
-							'country' => $token['card']['address_country'],
-							'postcode' => $token['card']['address_zip'],
+							'fullName' => $args['shipping_name'],
+							'street' => $args['shipping_address_line1'],
+							'city' => $args['shipping_address_city'],
+							'country' => $args['shipping_address_country'],
+							'postcode' => $args['shipping_address_zip'],
+							'province' => $args['shipping_address_state'],
 							'email' => $token['email'],
 							'total' => $total);
 

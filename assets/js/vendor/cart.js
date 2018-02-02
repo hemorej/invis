@@ -58,7 +58,7 @@ $( document ).ready(function(){
       key: $("#checkout-key").val(),
       image: '../assets/images/logo.png',
       locale: 'auto',
-      token: function(token) {
+      token: function(token, args) {
         $('.loading').show();
         var csrf = $("#input-csrf").val();
         var items = [];
@@ -68,7 +68,7 @@ $( document ).ready(function(){
         });
         var total = parseInt($("#checkout-total").val());
 
-        $.post( "order", { token: JSON.stringify(token), csrf: csrf, items: JSON.stringify(items), total: total } )
+        $.post( "order", { token: JSON.stringify(token), args: JSON.stringify(args), csrf: csrf, items: JSON.stringify(items), total: total } )
         .done(function( data ) {
             document.location.replace('order');
         });
