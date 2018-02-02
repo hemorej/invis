@@ -3,17 +3,38 @@
 <head>
 
   <?php
+  $image = page('projects/portfolio')->files()->first()->url();
+  $url = $site->url();
+  if(isset($meta)){
+    $image = $meta['image'];
+    $url = $meta['url'];
+  }
   $title = $page->published()->toString();
   if(!empty($page->title()) && $page->title() != $page->uid())
     $title = $page->title();
   ?>
 
-  <title><?php echo html($site->title()) . ' - ' . html(strtolower($title)) ?></title>
+  <title><?= html($site->title()) . ' - ' . html(strtolower($title)) ?></title>
   <meta charset="utf-8" />
-  <meta name="description" content="<?php echo html($site->description()) ?>" />
-  <meta name="keywords" content="<?php echo html($site->keywords()) ?>" />
+  <meta name="description" content="<?= html($site->description()) ?>" />
+  <meta name="keywords" content="<?= html($site->keywords()) ?>" />
   <meta name="robots" content="index, follow" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <meta itemprop="name" content="<?= $site->title() ?>">
+  <meta itemprop="description" content="<?= html($site->description()) ?>">
+  <meta itemprop="image" content="<?= $image ?>">
+
+  <meta property="og:url" content="<?= $url ?>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<?= $site->title() ?>">
+  <meta property="og:description" content="<?= html($site->description()) ?>">
+  <meta property="og:image" content="<?= $image ?>">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<?= $site->title() ?>">
+  <meta name="twitter:description" content="<?= html($site->description()) ?>">
+  <meta name="twitter:image" content="<?= $image ?>">
 
   <?php if(c::get('env') == 'prod'): ?>
     <?= css('assets/css/app.min.css') ?>
@@ -26,11 +47,4 @@
   <link rel="apple-touch-icon" sizes="114x114" href="<?php echo url('assets/images/apple-touch-icon-114x114.png') ?>" />
 
   <link rel="alternate" type="application/rss+xml" href="<?php echo url('feed') ?>" title="Feed | <?php echo html($site->title()) ?>" />
-
-  <? if(isset($extraHeaders)){
-    foreach($extraHeaders as $header){
-      echo $header."\n";
-    }
-  }
-  ?>
 </head>
