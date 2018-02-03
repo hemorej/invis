@@ -9,7 +9,7 @@
 	<div class="row">
 		<div class="small-12 medium-12 columns">
 			<h2>Thank you for your order</h2>
-			Your order number is <?= $order->order_id() ?>. You will receive an email confirmation shortly. If you have questions about your order or would like to make changes contact us at &#105;&#110;&#102;&#111;&#064;&#116;&#104;&#101;&#045;&#105;&#110;&#118;&#105;&#115;&#098;&#108;&#101;&#045;&#099;&#105;&#116;&#105;&#101;&#115;&#046;&#099;&#111;&#109;
+			Your order number is <?= $order->order_id() ?>. You will receive an email confirmation shortly. If you have questions about your order or would like to make changes contact us at &#x6A;&#x65;&#x72;&#x6F;&#x6D;&#x65;&#x40;&#x74;&#x68;&#x65;&#x2D;&#x69;&#x6E;&#x76;&#x69;&#x73;&#x69;&#x62;&#x6C;&#x65;&#x2D;&#x63;&#x69;&#x74;&#x69;&#x65;&#x73;&#x2E;&#x63;&#x6F;&#x6D;
 		</div>
 	</div>
 

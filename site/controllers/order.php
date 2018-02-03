@@ -104,7 +104,7 @@ return function($site, $pages, $page) {
 
 			$userNotification = email(array(
 			  'to'      => $token['email'],
-			  'from'    => 'The Invisible Cities <info@the-invisible-cities.com>',
+			  'from'    => 'The Invisible Cities <jerome@the-invisible-cities.com>',
 			  'subject' => 'Your order from The Invisible Cities has been received',
 			  'service' => 'mailgun',
 			  'options' => array(
@@ -123,7 +123,7 @@ return function($site, $pages, $page) {
 
 			$selfNotification = email(array(
 			  'to'      => \c::get('alert_address'),
-			  'from'    => 'The Invisible Cities <info@the-invisible-cities.com>',
+			  'from'    => 'The Invisible Cities <jerome@the-invisible-cities.com>',
 			  'subject' => 'New order at The Invisible Cities!',
 			  'service' => 'mailgun',
 			  'options' => array(
@@ -195,7 +195,7 @@ function sendAlert($sid, $orderId, $error = "Unknown reason")
 {
 	$email = email(array(
 	  'to'      => \c::get('alert_address'),
-	  'from'    => 'The Invisible Cities Store <info@the-invisible-cities.com>',
+	  'from'    => 'The Invisible Cities Store <jerome@the-invisible-cities.com>',
 	  'subject' => 'Order exception alert',
 	  'service' => 'mailgun',
 	  'options' => array(

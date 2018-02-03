@@ -184,7 +184,7 @@
                               <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top"> Order number <?= $order ?> </td>
 							</tr>
 							<tr class="row__row">
-                              <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top"> If you have any questions about this order, contact us at info@the-invisible-cities.com </td>
+                              <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top"> If you have any questions about this order, contact us at jerome@the-invisible-cities.com </td>
                             </tr>
                           </table>
                         </div>

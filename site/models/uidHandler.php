@@ -44,7 +44,7 @@ class UidHandler
 
             $email = email(array(
               'to'      => $customer->email()->value(),
-              'from'    => 'The Invisible Cities <info@the-invisible-cities.com>',
+              'from'    => 'The Invisible Cities <jerome@the-invisible-cities.com>',
               'subject' => 'Your order from The Invisible Cities has been shipped',
               'service' => 'mailgun',
               'options' => array(
