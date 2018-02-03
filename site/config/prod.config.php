@@ -28,7 +28,8 @@ c::set('cache.driver', 'file');
 c::set('cache.autoupdate', true);
 c::set('cache.ignore', array(
   'home',
-  'feed'
+  'feed',
+  'prints/*'
 ));
 c::set('ssl', true);
 
