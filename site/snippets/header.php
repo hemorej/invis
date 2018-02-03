@@ -3,7 +3,7 @@
 <head>
 
   <?php
-  $image = page('projects/portfolio')->files()->first()->url();
+  $image = thumb(page('projects/portfolio')->files()->first(), array('height' => 600))->url();
   $url = $site->url();
   if(isset($meta)){
     $image = $meta['image'];
