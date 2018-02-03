@@ -105,7 +105,7 @@ function getItems() {
 
 function add($id, $quantity) {
  
-  if($quantity <= 0)
+  if(!empty($quantity) && $quantity <= 0)
     return;
   
   $quantityToAdd = $quantity ? intval($quantity) : 1;
