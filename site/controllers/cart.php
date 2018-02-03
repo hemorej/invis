@@ -104,8 +104,11 @@ function getItems() {
 }
 
 function add($id, $quantity) {
-
-  $quantityToAdd = $quantity ? (int) $quantity : 1;
+ 
+  if($quantity <= 0)
+    return;
+  
+  $quantityToAdd = $quantity ? intval($quantity) : 1;
   $idParts = explode('::',$id); // $id is formatted uri::sku
   $uri = $idParts[0];
   $sku = $idParts[1];
@@ -174,6 +177,9 @@ function updateQty($id, $newQty) {
 
   foreach (page($uri)->variants()->toStructure() as $variant) {
       // Store the stock in a variable for quicker processing
+      if(!inStock($variant))
+        continue;
+
       $stock = inStock($variant);
 
       if ($siblingsQty === 0) {
