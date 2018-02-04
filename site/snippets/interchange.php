@@ -37,10 +37,18 @@ foreach($images as $image):
         <div class="row large-space-top"></div>
     <?php endif ?>
 
-    <img class="lazy" <?php echo "alt='$alt' title='$title'" ?> data-original="[<?= $small; ?>, (small)],
-     [<?= $medium; ?>, (only screen and (min-width: 800px))], 
-     [<?= $large; ?>, (only screen and (min-width: 1200px))]" 
-     src="<?= $placeholder ?>" >
-    <noscript><img src="<?= $medium; ?>"></noscript>
-<?php $loop++;
-endforeach ?>
+    <?php if($loop == 0): ?>
+        <img <?= "alt='$alt' title='$title'" ?> data-original="[<?= $small; ?>, (small)],
+         [<?= $medium; ?>, (only screen and (min-width: 800px))], 
+         [<?= $large; ?>, (only screen and (min-width: 1200px))]" 
+         src="<?= $large ?>" >
+        <noscript><img src="<?= $medium; ?>"></noscript>
+    <?php else: ?>
+        <img class="lazy" <?= "alt='$alt' title='$title'" ?> data-original="[<?= $small; ?>, (small)],
+         [<?= $medium; ?>, (only screen and (min-width: 800px))], 
+         [<?= $large; ?>, (only screen and (min-width: 1200px))]" 
+         src="<?= $placeholder ?>" >
+        <noscript><img src="<?= $medium; ?>"></noscript>
+    <?php $loop++;?>
+    <?php endif ?>
+<?php endforeach ?>
