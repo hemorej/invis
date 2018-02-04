@@ -1,5 +1,8 @@
 <?php snippet('header') ?>
 <?php snippet('menu') ?>
+<script>
+	sessionStorage.removeItem('cart');
+</script>
 
 <?php if($state == 'complete'): ?>
 	<div class="row medium-space-top">
