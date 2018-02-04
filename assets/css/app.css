@@ -133,7 +133,7 @@ a:hover{
     padding-right: 10px
 }
 .date.centre{line-height: 9.375rem}
-.date.centre.title a{color:#ffcd39}
+.date.centre.title a{color:#ffcd39; font-weight: normal}
 .date.centre.title a:hover{color:#000; background-color: transparent}
 
 ul > li:first-child > h3 > a{
