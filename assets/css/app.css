@@ -369,7 +369,9 @@ form{display: inline}
   border: 5px solid #000;
   font-size: 1rem;
   padding: 10px;
-  background-color: white
+  background-color: white;
+  width: 7.5rem;
+  text-align: center
 }
 
 input[type=number]{

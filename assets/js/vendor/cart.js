@@ -42,6 +42,8 @@ $( document ).ready(function(){
 
    $("#add-cart").click(function(e){
         e.preventDefault();
+        $(this).html('adding...');
+        $(this).attr('disabled','disabled');
 
         var uri = $("[name=uri]").val();
         var variant = $("[name=variant]").val();
