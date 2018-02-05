@@ -56,3 +56,54 @@ function getUniqueId($type = 'sku')
 
   return $prefix . $hex;
 }
+
+function getPreview($image){
+
+    if($image->isLandscape()){
+        $preview = thumb($image, array('width' => 600))->url();
+    }else{
+        $preview = thumb($image, array('height' => 600))->url();
+    }
+    return $preview;
+}
+
+function archiveDate($string){
+  $month = date('F', strtotime($string));
+  $day = date('j', strtotime($string));
+  $year = '\'' . date('y', strtotime($string));
+
+  $textualNumbers = array(
+  'first',
+  'second',
+  'third',
+  'fourth',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+  'ten',
+  'eleven',
+  'twelve',
+  'thirteen',
+  'fourteen',
+  'fifteen',
+  'sixteen',
+  'seventeen',
+  'eighteen',
+  'nineteen',
+  'twenty',
+  'twenty-one',
+  'twenty-two',
+  'twenty-three',
+  'twenty-four',
+  'twenty-five',
+  'twenty-six',
+  'twenty-seven',
+  'twenty-eight',
+  'twenty-nine',
+  'thirty',
+  'thirty-one');
+
+  return implode(' ', array($month, $textualNumbers[$day-1], $year));
+}

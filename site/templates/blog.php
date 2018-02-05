@@ -1,45 +1,32 @@
 <?php
 
-if(isset($_GET['all'])){
+if(get('all')){
 
     snippet('header');
     snippet('menu');
 
     $archive = array();
-    $articles = $page->children()->visible()->sortBy('publishDate', 'desc')->paginate(80);
-    
-    foreach($articles as $article){
-        $key = date('M/y', strtotime($article->published()->toString()));
-        if(array_key_exists($key, $archive)) {
-            array_push($archive[$key], $article);
-        }
-        else{
-            $archive[$key] = array($article);
-        }
-    }
-    ?>
+    $articles = $page->children()->visible()->sortBy('publishDate', 'desc')->paginate(12); ?>
+
     <div class="row">
     <div class="small-12 medium-12 columns">
-        <h3><span class="high-contrast"><?= $page->title()->lower() ?></span><a href="<?= $page->url() . '?archive' ?>">archives</a></h3>
+        <h3><span class="high-contrast"><?= $page->title()->lower() ?></span><a href="<?= $page->url() . '?all=1' ?>">all posts</a></h3>
     </div>
 
-    <div class="row medium-space-top">
-        <div class="medium-12 columns">
-            <ul class="inline-list">
-        <?php 
-        foreach (array_keys($archive) as $key): 
-            $value = $archive[$key]; ?>
-
-            <li class="date centre"><?php echo html($key) ?></small></li>
-            <?php foreach($value as $link): ?>
-                <li>
-                    <a class="thumb" style="background-image:url(<?php echo thumb($link->images()->first(), array('height' => 150, 'width' => 150, 'crop' => true))->url(); ?>)" href="<?php echo $link->url(); ?>"></a>
-                </li>
+    <div class="row large-space-top">
+    <div class="small-12 medium-12 columns">
+        <?php foreach($articles as $article): ?>
+        <div class="row">
+            <div class="small-12 medium-4 medium-text-right columns">
+                <h3><a data-preview="<?= getPreview($article->images()->first()) ?>" class="cover" href="<?= $article->url() ?>"><?= archiveDate($article->published()->toString())  ?></a></h3>
+            </div>
+        </div>
         <?php endforeach ?>
-    <?php endforeach ?>
-            </ul>
+        <div class="preview hide-for-small">
+            <img id="cover" src="<?= getPreview($articles->first()->images()->first()) ?>" >
         </div>
     </div>
+</div>
 
     <?php if($articles->pagination()->hasPages()): ?>
     <div class="row medium-space-top">       

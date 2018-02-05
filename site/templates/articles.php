@@ -18,15 +18,4 @@
     </div>
 </div>
 
-<?php function getPreview($image){
-
-    if($image->isLandscape()){
-        $preview = thumb($image, array('width' => 600))->url();
-    }else{
-        $preview = thumb($image, array('height' => 600))->url();
-    }
-    return $preview;
-}
-?>
-
 <?php snippet('footer', array('noCopyright'=>true)) ?>
