@@ -3,23 +3,30 @@
 
 <?php $articles = $page->children()->visible()->sortBy('publishDate', 'desc'); ?>
 
-<div class="row medium-space-top">
+<div class="row large-space-top">
     <div class="small-12 medium-12 columns">
-        <ul class="inline-list">
-            <?php foreach($articles as $article): ?>
-                <?php if(strtolower($page->title()->value()) == 'prints'): ?>
-                    <li class="date"><?= $article->title()->lower() ?></li>
-                <?php else: ?>
-                    <li class="date centre title"><a href="<?= $article->url() ?>"><?= $article->title()->lower() ?></a></li>
-                <?php endif ?>
-                <?php foreach($article->images()->slice(0, rand(2,4)) as $image): ?>
-                <li>
-                    <a class="thumb" style="background-image:url(<?= thumb($image, array('height' => 150, 'width' => 150, 'crop' => true))->url(); ?>)"  href="<?= $article->url() ?>"></a>
-                </li>
-                <?php endforeach ?>
-            <?php endforeach ?>
-        </ul>
+        <?php foreach($articles as $article): ?>
+        <div class="row">
+            <div class="small-12 medium-4 medium-text-right columns">
+                <h3><a data-preview="<?= getPreview($article->images()->first()) ?>" class="cover" href="<?= $article->url() ?>"><?= html($article->title()->lower()) ?></a></h3>
+            </div>
+        </div>
+    <?php endforeach ?>
+        <div class="preview hide-for-small">
+            <img id="cover" src="<?= getPreview($articles->first()->images()->first()) ?>" >
+        </div>
     </div>
 </div>
 
-<?php snippet('footer') ?>
+<?php function getPreview($image){
+
+    if($image->isLandscape()){
+        $preview = thumb($image, array('width' => 600))->url();
+    }else{
+        $preview = thumb($image, array('height' => 600))->url();
+    }
+    return $preview;
+}
+?>
+
+<?php snippet('footer', array('noCopyright'=>true)) ?>

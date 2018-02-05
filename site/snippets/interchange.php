@@ -33,8 +33,6 @@ foreach($images as $image):
 
     <?php if(!empty($caption->value)): ?>
         <div class="caption"><?php echo $caption->value ?></div>
-    <?php elseif(empty($caption->value) && $loop != 0): ?>
-        <div class="row large-space-top"></div>
     <?php endif ?>
 
     <?php if($loop == 0): ?>
@@ -49,6 +47,6 @@ foreach($images as $image):
          [<?= $large; ?>, (only screen and (min-width: 1200px))]" 
          src="<?= $placeholder ?>" >
         <noscript><img src="<?= $medium; ?>"></noscript>
-    <?php $loop++;?>
     <?php endif ?>
+    <?php $loop++;?>
 <?php endforeach ?>

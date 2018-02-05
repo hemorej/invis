@@ -65,6 +65,7 @@ body {
 
 
 img{
+  margin:0 2% 2% 0;
   max-width: 100%;
   height: auto;
   -ms-interpolation-mode: bicubic;
@@ -123,19 +124,6 @@ a:hover{
 [class*="column"] + [class*="column"]:last-child{float: right}
 [class*="column"] + [class*="column"].end{float: left}
 
-.date{
-    width: 9.375rem;
-    height: 9.375rem;
-    text-align: right;
-    font-weight: bolder;
-    font-size: 1.442rem;
-    color: #ffcd39;
-    padding-right: 10px
-}
-.date.centre{line-height: 9.375rem}
-.date.centre.title a{color:#ffcd39; font-weight: normal}
-.date.centre.title a:hover{color:#000; background-color: transparent}
-
 ul > li:first-child > h3 > a{
   color: #000;
   font-size: 2.75rem;
@@ -178,18 +166,6 @@ li.active, a.active {border-bottom: 5px solid #ffcd39}
 ::-moz-selection {
   background: #ffcd39;
   color: #999;
-}
-
-.thumb:hover,
-.thumb:focus {
-  background-color: #FFE085;
-  background-blend-mode: multiply;
-  width: 9.375rem;
-  height: 9.375rem;
-}
-.thumb {
-  height: 9.375rem;
-  width: 9.375rem
 }
 
 /* TYPOGRAPHY */
@@ -433,8 +409,6 @@ input[type=number]::-webkit-outer-spin-button {
   .small-8 {width: 66.66667%}
   .small-10 {width: 83.33333%}
   .small-12 {width: 100%}
-  .date, .thumb {max-width: 90px;max-height: 90px}
-  .date{font-size:1rem}
 }
 
 @media only screen and (min-width: 46.5em) {
@@ -491,6 +465,14 @@ input[type=number]::-webkit-outer-spin-button {
   h3 {line-height: 1.4}
   h1 {font-size: 2.923rem}
   h3 {font-size: 2.053rem}
+  .preview{
+    position: fixed;
+    top: 30%;
+    left: 40%;
+    max-width: 600px;
+    margin-left: 2%
+  }
+  .medium-text-right{text-align: right}
 }
 @media only screen and (max-width: 53.75em){
   ul{font-size: 1rem}

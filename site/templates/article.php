@@ -26,10 +26,14 @@ if($page->parent()->title() != 'journal'){
 }
 
 ?>
+<?php $pull = true;
+if(count($page->images()) == 1 && $page->images()->first()->isPortrait())
+	$pull = false;
+?>
 
 <div class="row medium-space-top">
 	<h3><span class="high-contrast"><?= $page->parent()->title()->lower() ?></span><a href="<?= $page->url() ?>"><?= strtolower($headline) ?></a></h3>
-	<div class="small-12 medium-12 <?= ecco($page->images()->first()->isLandscape(), 'medium-overflow pull-2') ?> columns">
+	<div class="small-12 medium-12 <?= ecco($pull == true, 'medium-overflow pull-2') ?> columns">
 		<?php 
 
 		echo kirbytext($page->text()) ;
