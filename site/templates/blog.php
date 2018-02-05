@@ -8,25 +8,17 @@ if(get('all')){
     $archive = array();
     $articles = $page->children()->visible()->sortBy('publishDate', 'desc')->paginate(12); ?>
 
+    <div class="row large-space-top"></div>
+    <?php foreach($articles as $article): ?>
     <div class="row">
-    <div class="small-12 medium-12 columns">
-        <h3><span class="high-contrast"><?= $page->title()->lower() ?></span><a href="<?= $page->url() . '?all=1' ?>">all posts</a></h3>
-    </div>
-
-    <div class="row large-space-top">
-    <div class="small-12 medium-12 columns">
-        <?php foreach($articles as $article): ?>
-        <div class="row">
-            <div class="small-12 medium-4 medium-text-right columns">
-                <h3><a data-preview="<?= getPreview($article->images()->first()) ?>" class="cover" href="<?= $article->url() ?>"><?= archiveDate($article->published()->toString())  ?></a></h3>
-            </div>
-        </div>
-        <?php endforeach ?>
-        <div class="preview hide-for-small">
-            <img id="cover" src="<?= getPreview($articles->first()->images()->first()) ?>" >
+        <div class="small-12 medium-4 medium-text-right columns">
+            <h3><a data-preview="<?= getPreview($article->images()->first()) ?>" class="cover" href="<?= $article->url() ?>"><?= archiveDate($article->published()->toString())  ?></a></h3>
         </div>
     </div>
-</div>
+    <?php endforeach ?>
+    <div class="preview hide-for-small">
+        <img id="cover" src="<?= getPreview($articles->first()->images()->first()) ?>" >
+    </div>
 
     <?php if($articles->pagination()->hasPages()): ?>
     <div class="row medium-space-top">       
