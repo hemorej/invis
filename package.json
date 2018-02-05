@@ -1,0 +1,21 @@
+{
+  "name": "the-invisible-cities",
+  "version": "1.0.0",
+  "description": "The Invisible Cities",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt-contrib-cssmin": "^2.2.1",
+    "grunt-convert": "^0.1.12",
+    "grunt-uncss": "^0.8.0"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:hemorej/invis.git"
+  },
+  "author": "Jerome Arfouche",
+  "license": "MIT"
+}
