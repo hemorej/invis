@@ -147,7 +147,7 @@ return function($site, $pages, $page) {
 			  	$selfNotification->send();
 			  	$logger->info(s::id() . ":admin notification sent for order id " . $orderId);
 			}catch(Error $err){
-				$description = "email confirmation error for order id " . $orderId . ": " . $e->getMessage();
+				$description = "email confirmation error for order id " . $orderId . ": " . $err->getMessage();
 				$logger->error(s::id() . ":" . $description);
 				sendAlert(s::id(), $orderId, $description);
 			}
