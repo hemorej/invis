@@ -397,7 +397,7 @@ input[type=number]::-webkit-outer-spin-button {
 #term-details{display: none}
 
 @media only screen and (max-width: 40.063em) {
-  header h1 a {font-size:2.053rem}
+  header h1 a {font-size:2.053rem; padding-left: 3vw}
   .top-bar-section h2 {margin-left:1rem}
 }
 @media only screen and (max-width: 46.5em){
