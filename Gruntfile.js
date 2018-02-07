@@ -20,7 +20,7 @@ module.exports = function (grunt) {
         uncss: {
           dist: {
             options: {
-              ignore: ['.contain-to-grid', '.alert-box']
+              ignore: ['.contain-to-grid', '.alert-box', '.top-bar']
             }
           },
         },
