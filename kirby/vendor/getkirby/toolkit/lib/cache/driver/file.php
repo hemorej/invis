@@ -69,7 +69,7 @@ class File extends Driver {
    * @param  int     $minutes
    * @return void
    */
-  public function set($key, $value, $minutes = null) {
+  public function set($key, $value, $minutes = 43200) {
     return f::write($this->file($key), serialize($this->value($value, $minutes)));
   }
 
