@@ -1,5 +1,7 @@
 <?php
 
+use \Gilbitron\Util\SimpleCache;
+
 function addToStructure($page, $field, $data = array())
 {
   $fieldData = $page->$field()->yaml();
@@ -106,4 +108,27 @@ function archiveDate($string){
   'thirty-one');
 
   return implode(' ', array($month, $textualNumbers[$day-1], $year));
+}
+
+function getHomeImage(){
+
+  $cache = new SimpleCache();
+  $cache->cache_path = __DIR__ . '/../cache/';
+  $cache->cache_time = 2592000; //30d
+
+  $images = array();
+  if($data = $cache->get_cache('images')){
+    $images = json_decode($data);
+  }else{
+    foreach(page('projects/portfolio')->files() as $image){
+      if($image->isLandscape())
+        $images[] = $image->filename();
+    }
+    $cache->set_cache('images', json_encode($images));
+  }
+
+  $file = $images[array_rand($images)];
+  $image = page("projects/portfolio/")->file($file);
+
+  return array('images' => $image);
 }
