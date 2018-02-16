@@ -101,4 +101,49 @@ $( document ).ready(function(){
         e.preventDefault();
         $("#term-details").toggle();
     });
+
+    paypal.Button.render({
+        env: 'sandbox',
+        client: {
+            sandbox:    'ASO_SHn9QO_q19onBL4mniATSkbBCcj6IQGYCLeOaBytBPHoUmjyWAFjq6osEy41PagHqW3pBmvE2q2e',
+            production: $("#checkout-pp-key").val()
+        },
+        commit: true,
+        style: {
+            color: 'silver',
+            size: 'small',
+            shape: 'rect',
+            tagline: 'false'
+        },
+        payment: function(data, actions) {
+            return actions.payment.create({
+                payment: {
+                    transactions: [
+                        {
+                            amount: { total: parseInt($("#checkout-total").val())/100, currency: 'CAD' }
+                        }
+                    ]
+                }
+            });
+        },
+        onAuthorize: function(data, actions) {
+            return actions.payment.execute().then(function() {
+              
+              $('.loading').show();
+              var csrf = $("#input-csrf").val();
+              var items = [];
+              $(".input-qty:visible").each(function(i, obj) {
+                var item = {"id": obj.id, "sku": obj.getAttribute('data-sku'), "quantity": obj.value, "price": obj.getAttribute('data-amount'), "name": obj.getAttribute('data-name'), "variant": obj.getAttribute('data-variant')};
+                items.push(item);
+              });
+              var total = parseInt($("#checkout-total").val());
+
+              $.post( "order", { args: JSON.stringify(args), csrf: csrf, items: JSON.stringify(items), total: total } )
+              .done(function( data ) {
+                  document.location.replace('order');
+              });
+            });
+        }
+    }, '#paypal-button-container');
 });
+
