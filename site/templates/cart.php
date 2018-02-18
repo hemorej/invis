@@ -143,7 +143,7 @@
 <?= js('https://www.paypalobjects.com/api/checkout.js') ?>
 
 <input id="checkout-key" type="hidden" name="key" value="<?= c::get("stripe_key_pub") ?>">
-<input id="checkout-pp-key" type="hidden" name="key" value="<?= c::get("paypal_key") ?>">
+<input id="checkout-pp-key" type="hidden" name="key" value="<?= c::get("paypal_client_id") ?>">
 <input id="checkout-total" type="hidden" name="total" value="<?= $total*100 ?>">
 <input id="checkout-content" type="hidden" name="content" value="<?= $content ?>">
 

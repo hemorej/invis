@@ -127,43 +127,36 @@ $( document ).ready(function(){
             });
         },
         onAuthorize: function(data, actions) {
-          return actions.payment.get().then(function(data) {
-            
-            var shipping = data.payer.payer_info.shipping_address;
-            console.log(shipping);
+          return actions.payment.execute().then(function(data) {
 
-            document.querySelector('#recipient').innerText = shipping.recipient_name;
-            document.querySelector('#line1').innerText     = shipping.line1;
-            document.querySelector('#city').innerText      = shipping.city;
-            document.querySelector('#state').innerText     = shipping.state;
-            document.querySelector('#zip').innerText       = shipping.postal_code;
-            document.querySelector('#country').innerText   = shipping.country_code;
-
-            document.querySelector('#paypal-button-container').style.display = 'none';
-            document.querySelector('#confirm').style.display = 'block';
-
-            // Listen for click on confirm button
-
-            document.querySelector('#confirmButton').addEventListener('click', function() {
-
-                // Disable the button and show a loading message
-
-                document.querySelector('#confirm').innerText = 'Loading...';
-                document.querySelector('#confirm').disabled = true;
-
-                // Execute the payment
-
-                return actions.payment.execute().then(function() {
-
-                    // Show a thank-you note
-
-                    document.querySelector('#thanksname').innerText = shipping.recipient_name;
-
-                    document.querySelector('#confirm').style.display = 'none';
-                    document.querySelector('#thanks').style.display = 'block';
-                });
+            var csrf = $("#input-csrf").val();
+            var items = [];
+            $(".input-qty:visible").each(function(i, obj) {
+              var item = {"id": obj.id, "sku": obj.getAttribute('data-sku'), "quantity": obj.value, "price": obj.getAttribute('data-amount'), "name": obj.getAttribute('data-name'), "variant": obj.getAttribute('data-variant')};
+              items.push(item);
             });
-          });
+            var total = parseInt($("#checkout-total").val());
+           
+            var args = {};
+            var token = {};
+
+            args.shipping_name = data.payer.payer_info.shipping_address.recipient_name;
+            args.shipping_address_line1 = data.payer.payer_info.shipping_address.line1;
+            args.shipping_address_city = data.payer.payer_info.shipping_address.city;
+            args.shipping_address_country = data.payer.payer_info.shipping_address.country_code;
+            args.shipping_address_zip = data.payer.payer_info.shipping_address.postal_code;
+            args.shipping_address_state = data.payer.payer_info.shipping_address.state;
+            args.billing_name = data.payer.payer_info.shipping_address.recipient_name;
+            args.billing_address_line1 = data.payer.payer_info.shipping_address.line1;
+            args.billing_address_zip = data.payer.payer_info.shipping_address.postal_code;
+            token.email = data.payer.payer_info.email;
+            token.id = data.id;
+
+            $.post( "order", { token: JSON.stringify(token), args: JSON.stringify(args), csrf: csrf, items: JSON.stringify(items), total: total } )
+              .done(function( data ) {
+                  document.location.replace('order');
+              });
+            });
         }
     }, '#paypal-button-container');
 });
