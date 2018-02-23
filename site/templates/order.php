@@ -62,7 +62,7 @@
 	<div class="row">
 		<div class="small-12 medium-12 columns">
 			I'm sorry but there's a problem with your order. <?= $message ?><br />
-			Please contact me with your session ID (<?= s::id() ?>) at &#105;&#110;&#102;&#111;&#064;&#116;&#104;&#101;&#045;&#105;&#110;&#118;&#105;&#115;&#098;&#108;&#101;&#045;&#099;&#105;&#116;&#105;&#101;&#115;&#046;&#099;&#111;&#109; to resolve this issue. 
+			Please contact me with your session ID (<?= s::id() ?>) at &#x6A;&#x65;&#x72;&#x6F;&#x6D;&#x65;&#x40;&#x74;&#x68;&#x65;&#x2D;&#x69;&#x6E;&#x76;&#x69;&#x73;&#x69;&#x62;&#x6C;&#x65;&#x2D;&#x63;&#x69;&#x74;&#x69;&#x65;&#x73;&#x2E;&#x63;&#x6F;&#x6D; to resolve this issue. 
 		</div>
 	</div>
 <?php else:

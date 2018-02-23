@@ -346,7 +346,7 @@ form{display: inline}
   font-size: 1rem;
   padding: 10px;
   background-color: white;
-  width: 7.5rem;
+  width: 100%;
   text-align: center
 }
 
@@ -523,6 +523,6 @@ input[type=number]::-webkit-outer-spin-button {
     display: none
   }
 }
-@media only screen and (orientation: portrait) and (max-width: 46.5em) {#add-cart, #checkoutButton{width: 100%}}
-@media only screen and (orientation: landscape) and (max-width: 46.5em) {.preview{left: 25vw;max-width: 44vh}}
+@media only screen and (orientation: portrait) and (max-width: 46.5em) {#add-cart{width: 100%}}
+@media only screen and (orientation: landscape) and (max-width: 46.5em) {.preview{left: 25vw;max-width: 44vh}.low-contrast > p, .low-contrast > span {font-size: 0.5rem}}
 @media print {}

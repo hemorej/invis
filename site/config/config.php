@@ -28,7 +28,8 @@ c::set('cache.driver', 'file');
 c::set('cache.autoupdate', true);
 c::set('cache.ignore', array(
   'home',
-  'feed'
+  'feed',
+  'prints/*'
 ));
 c::set('ssl', false);
 
@@ -54,7 +55,8 @@ require_once(__DIR__ . '/../../site/models/uidHandler.php');
 
 c::set('stripe_key_prv', '');
 c::set('stripe_key_pub', '');
-
+c::set('paypal_client_id', '');
+c::set('paypal_client_secret', '');
 
 kirby()->hook('panel.page.*', function($page, $oldPage = null) {
 	$stripeHandler = new \UidHandler();

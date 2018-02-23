@@ -11,7 +11,6 @@ return function($site, $pages, $page) {
 	$logger = new Logger('order');
     $logger->pushHandler(new RotatingFileHandler(__DIR__.'/../../logs/invis.log', Logger::DEBUG));
 
-	\Stripe\Stripe::setApiKey(\c::get('stripe_key_prv'));
 
 	if(empty($token) || empty($total) || empty($items) || empty($args) || csrf($csrf) !== true){
 		if(s::get('state')){ // an order just went through
@@ -32,24 +31,45 @@ return function($site, $pages, $page) {
 		$logger->info(s::id() . ":order created with id " . $orderId);
 
 		try{
-			$charge = \Stripe\Charge::create(array(
-				"amount" => $total,
-				"currency" => "cad",
-				"source" => $token['id'],
-				"description" => "Order ". $orderId ." for ". $token['email'],
-				"shipping" => array(
-					"name" => $args['shipping_name'],
-					"address" => array(
-						"line1" => $args['shipping_address_line1'],
-						"city" => $args['shipping_address_city'],
-						"country" => $args['shipping_address_country'],
-						"postal_code" => $args['shipping_address_zip'],
-						"state" => $args['shipping_address_state']
+			if(preg_match('/^PAY-/', $token['id']) == 1){
+
+				$apiContext = new \PayPal\Rest\ApiContext(
+					new \PayPal\Auth\OAuthTokenCredential(
+						\c::get('paypal_client_id'),
+						\c::get('paypal_client_secret')
 					)
-				),
-				"receipt_email" => $token['email']
-			));
-			$logger->info(s::id() . ":charge captured with id " . $charge->id);
+				);
+
+				$payment = PayPal\Api\Payment::get($token['id'], $apiContext);
+
+				if($payment->getState() != 'approved' || (time() - strtotime($payment->getCreateTime()) > 90))
+					throw new Exception("Paypal transaction not approved");
+
+				$logger->info(s::id() . ":paypal captured with id " . $payment->getId());
+
+			}else{
+				\Stripe\Stripe::setApiKey(\c::get('stripe_key_prv'));
+				$charge = \Stripe\Charge::create(array(
+					"amount" => $total,
+					"currency" => "cad",
+					"source" => $token['id'],
+					"description" => "Order ". $orderId ." for ". $token['email'],
+					"shipping" => array(
+						"name" => $args['shipping_name'],
+						"address" => array(
+							"line1" => $args['shipping_address_line1'],
+							"city" => $args['shipping_address_city'],
+							"country" => $args['shipping_address_country'],
+							"postal_code" => $args['shipping_address_zip'],
+							"state" => $args['shipping_address_state']
+						)
+					),
+					"receipt_email" => $token['email']
+				));
+
+				$logger->info(s::id() . ":charge captured with id " . $charge->id);
+			}
+
 			$logger->info(s::id() . ":order billing info: " . $args['billing_name'] . ", " . $args['billing_address_line1'] . ", " . $args['billing_address_zip']);
 			$logger->info(s::id() . ":order shipping info: " . $args['shipping_name'] . ", " . $args['shipping_address_line1'] . ", " . $args['shipping_address_zip']);
 
