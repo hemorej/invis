@@ -124,19 +124,17 @@
 </div>
 <div class="row">
     <div class="small-12 medium-12 columns low-contrast text-right" id="currencies">
-        <span>Approximately <?= $currencies ?></span>
+        <span>Approximately <?= $currencies ?></span><br />
+        <span>By continuing to checkout, you agree to the general<a id="terms" href="#">terms</a>of the sale.</span>
+        <p id="term-details"><?= $site->terms() ?></p>
     </div>
 </div>
 
 <div class="row">
-    <div class="small-12 medium-12 columns text-right">
-        <div class="low-contrast text-right">
-        <span>By continuing to checkout, you agree to the general<a id="terms" href="#">terms</a>of the sale.</span>
-        <p id="term-details"><?= $site->terms() ?></p>
-        </div>
+    <div class="small-6 medium-6 columns text-right">
         <button class="right" id="checkoutButton">checkout</button>
-        <div id="paypal-button-container"></div>
     </div>
+    <div class="small-6 medium-6 columns"><div id="paypal-button-container"></div></div>
 </div>
 
 <?= js('https://checkout.stripe.com/checkout.js') ?>

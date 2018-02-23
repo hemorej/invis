@@ -111,7 +111,7 @@ $( document ).ready(function(){
         commit: true,
         style: {
             color: 'silver',
-            size: 'small',
+            size: 'responsive',
             shape: 'rect',
             tagline: 'false'
         },
