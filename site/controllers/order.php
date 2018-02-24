@@ -42,7 +42,7 @@ return function($site, $pages, $page) {
 
 				$payment = PayPal\Api\Payment::get($token['id'], $apiContext);
 
-				if($payment->getState() != 'approved' || (time() - strtotime($payment->getCreateTime()) > 90))
+				if($payment->getState() != 'approved' || (time() - strtotime($payment->getCreateTime()) > 300))
 					throw new Exception("Paypal transaction not approved");
 
 				$logger->info(s::id() . ":paypal captured with id " . $payment->getId());
