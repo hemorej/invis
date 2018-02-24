@@ -132,7 +132,7 @@
 
 <div class="row">
     <div class="small-6 medium-6 columns text-right">
-        <button class="right" id="checkoutButton">checkout</button>
+        <button class="right" id="checkoutButton">checkout with stripe</button>
     </div>
     <div class="small-6 medium-6 columns"><div id="paypal-button-container"></div></div>
 </div>

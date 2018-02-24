@@ -103,7 +103,7 @@ $( document ).ready(function(){
     });
 
     paypal.Button.render({
-        env: 'sandbox',
+        env: 'production',
         client: {
             sandbox:    'ASO_SHn9QO_q19onBL4mniATSkbBCcj6IQGYCLeOaBytBPHoUmjyWAFjq6osEy41PagHqW3pBmvE2q2e',
             production: $("#checkout-pp-key").val()
