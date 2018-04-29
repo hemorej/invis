@@ -1,3 +1,6 @@
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick-theme.css"/>
+
 <?php 
 $image = thumb($page->images()->first(), array('height' => 600));
 $title = $page->title();
@@ -38,8 +41,11 @@ if($page->parent()->title() != 'journal'){
 <div class="row medium-space-top">
     <h3><span class="high-contrast"><?= $page->parent()->title()->lower() ?></span><a href="<?= $page->url() ?>"><?= strtolower($headline) ?></a></h3>
     <div class="small-12 medium-8 columns">
-        <?php snippet('interchange', array('images' => $page->images())); ?>
-        <p class="medium-space-top"></p>
+        <div class="slick">
+            <?php foreach($page->images() as $image): ?>
+                <div><img src="<?= $image->url() ?>"></div>
+            <?php endforeach ?>
+        </div>
     </div>
         <section class="small-12 medium-4 columns variants">
         <?php $variants = $page->variants()->toStructure();
@@ -99,6 +105,7 @@ if($page->parent()->title() != 'journal'){
     </div>  
 </div>
 <?php snippet('footer') ?>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick.min.js"></script>
 <?php if(c::get('env') == 'prod'): ?>
     <?= js('assets/js/vendor/cart.min.js') ?>
 <?php else: ?>
