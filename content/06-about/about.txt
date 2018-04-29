@@ -36,7 +36,6 @@ Links:
 (link: http://www.peterlindbergh.com/essay/ text: peter lindbergh popup: yes)
 (link: http://www.ralphgibson.com/gallery.html text: ralph gibson popup: yes)
 (link: http://www.renatodagostin.com/renato-d-agostin/home text: renato d'agostin  popup: yes)
-(link: http://www.lensculture.com/klein.html text: william klein popup: yes)
 (link: http://www.magnumphotos.com/PaoloPellegrin text: paolo pellegrin popup: yes)
 (link: http://www.magnumphotos.com/JosefKoudelka text: josef koudelka popup: yes)
 (link: http://www.magnumphotos.com/RaymondDepardon text: raymond depardon popup: yes)
