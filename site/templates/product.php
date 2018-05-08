@@ -106,6 +106,16 @@ if($page->parent()->title() != 'journal'){
 </div>
 <?php snippet('footer') ?>
 <script type="text/javascript" src="//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick.min.js"></script>
+<script type="text/javascript">
+    $('.slick').slick({
+      dots: true,
+      arrows: true,
+      infinite: true,
+      speed: 300,
+      slidesToShow: 1,
+      adaptiveHeight: true
+    });
+</script>
 <?php if(c::get('env') == 'prod'): ?>
     <?= js('assets/js/vendor/cart.min.js') ?>
 <?php else: ?>
