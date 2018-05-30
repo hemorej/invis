@@ -107,6 +107,7 @@ if($page->parent()->title() != 'journal'){
 <?php snippet('footer') ?>
 <script type="text/javascript" src="//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick.min.js"></script>
 <script type="text/javascript">
+$( document ).ready(function() {
     $('.slick').slick({
       dots: true,
       arrows: true,
@@ -115,6 +116,7 @@ if($page->parent()->title() != 'journal'){
       slidesToShow: 1,
       adaptiveHeight: true
     });
+});
 </script>
 <?php if(c::get('env') == 'prod'): ?>
     <?= js('assets/js/vendor/cart.min.js') ?>
