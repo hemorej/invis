@@ -53,6 +53,25 @@ function estimateCurrency($total)
             . round($total * $rates->rates->GBP, 0) . '£';
 
   return $estimate;
+
+    if($data = $cache->get_cache('rates')){
+    $rates = json_decode($data);
+  } else {
+    $access_key = c::get('fixer_key');
+    $data = $cache->do_curl('http://data.fixer.io/api/latest?access_key=' . $access_key . '&symbols=USD,CAD,GBP');
+    $cache->set_cache('rates', $data);
+    $rates = json_decode($data);
+  }
+
+  $eurBase = $total / $rates->rates->CAD;
+  $usd = $eurBase * $rates->rates->USD;
+  $gbp = $eurBase * $rates->rates->GBP;
+
+  $estimate = round($usd, 0) . '$/'
+            . round($eurBase, 0) . '€/'
+            . round($gbp, 0) . '£';
+
+  return $estimate;
 }
 
 function cartContents($items){
