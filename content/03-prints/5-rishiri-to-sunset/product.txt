@@ -1,0 +1,42 @@
+Title: Rishiri-to sunset
+
+----
+
+Published: 2018-02-23
+
+----
+
+Description: 
+
+This is taken from the last ferry back to the mainland from Rishiri-to, one of Japan's most remote islands in Hokkaido. The nearest town, Wakkanai, is so far north many of the street signs read in Russian as well. Light was falling fast and we were moving, I held my breath, leaned against the rail and took a couple of frames.
+Wakkanai, 2015
+
+— 
+This is a print from black and white negative on Ilford FB paper, all development and printing handmade by myself.
+
+----
+
+Meta: Signed, unmounted print on Ilford Multigrade FB Classic paper.
+
+----
+
+Type: print
+
+----
+
+Variants: 
+
+- 
+  sku: sku_250ff778d30b0870374e2b74b545
+  name: 11x14in (28x35cm)
+  price: "80"
+  stock: "1"
+- 
+  sku: sku_8893583f1a62125efb324a605103
+  name: 8x10in (20x25cm)
+  price: "50"
+  stock: "6"
+
+----
+
+Product-id: prd_ba50faaeaa355362f0b5e116b995

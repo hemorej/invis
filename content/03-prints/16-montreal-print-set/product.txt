@@ -1,0 +1,36 @@
+Title: Montreal print set
+
+----
+
+Published: 2018-06-23
+
+----
+
+Description: 
+
+This is a collection of four postcard sized prints from my hometown Montreal. This is the result of hours and hours of walking around with my camera, waiting, observing for moments unnoticed.
+Montreal 2015-2017
+—
+These are archival quality digital prints from black and white silver gelatin prints.
+
+----
+
+Meta: Set of digital prints based on a scan of silver gelatin print
+
+----
+
+Type: print
+
+----
+
+Variants: 
+
+- 
+  sku: sku_c56b8ced1260106f9d09e1fb0462
+  name: 4x6in (10x15cm)
+  price: "25"
+  stock: "4"
+
+----
+
+Product-id: prd_f101aa5286049fa6ef5a0594f13d

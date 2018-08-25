@@ -1,0 +1,36 @@
+Title: Paris print set
+
+----
+
+Published: 2018-06-23
+
+----
+
+Description: 
+
+Here I've collected five postcard sized prints from Paris, to share or to hang at home
+Paris 2015
+—
+These are archival quality digital prints from black and white silver gelatin prints.
+
+----
+
+Meta: Set of digital prints based on a scan of silver gelatin print
+
+----
+
+Type: print
+
+----
+
+Variants: 
+
+- 
+  sku: sku_a6dfdd45c61f67731c5acff05c0e
+  name: 4x6in (10x15cm)
+  price: "25"
+  stock: "4"
+
+----
+
+Product-id: prd_6822966a1b427a42bc006af34ecf

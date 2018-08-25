@@ -1,0 +1,42 @@
+Title: Brooklyn from the train
+
+----
+
+Published: 2018-05-17
+
+----
+
+Description: 
+
+We don't have elevated subway lines where I live so I rode the subway all day that day back and forth between Brooklyn and Manhattan just looking out as the sun moved west and the city sped by. 
+NYC, 2014
+
+—
+This is a print from black and white negative on Ilford FB paper, all development and printing handmade by myself.
+
+----
+
+Meta: Signed, unmounted print on Ilford Multigrade FB Classic paper.
+
+----
+
+Type: print
+
+----
+
+Variants: 
+
+- 
+  sku: sku_cb4e08b84e6430e052b7d6ea2bd7
+  name: 5x7
+  price: "7"
+  stock: "10"
+- 
+  sku: sku_ebbbf6b90cbc6a4a1abe9369b387
+  name: 8x10
+  price: "50"
+  stock: "1"
+
+----
+
+Product-id: prd_14939796c4373cef9fb418156661

@@ -1,0 +1,42 @@
+Title: Ikebukuro
+
+----
+
+Published: 2018-02-23
+
+----
+
+Description: 
+
+I knew nothing about Ikebukuro except the name of this Tokyo neighbourhood, a place where someone I knew had taken an interesting photograph. When I got out of the subway stop I discovered there was a full festival taking place outside.
+Tokyo, 2015
+
+— 
+This is a print from black and white negative on Ilford FB paper, all development and printing handmade by myself.
+
+----
+
+Meta: Signed, unmounted print on Ilford Multigrade FB Classic paper.
+
+----
+
+Type: print
+
+----
+
+Variants: 
+
+- 
+  sku: sku_d23f7e2b7c56df6682c25bb82024
+  name: 11x14in (28x35cm)
+  price: "80"
+  stock: "2"
+- 
+  sku: sku_b15c85b006c8d15afd9c22481530
+  name: 8x10in (20x25cm)
+  price: "50"
+  stock: "6"
+
+----
+
+Product-id: prd_fcd39f63722896ac50f6b557eff9
