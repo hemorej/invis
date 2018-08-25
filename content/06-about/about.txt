@@ -33,27 +33,30 @@ Links:
 (link: http://kityoung.co.uk/ text: kit young popup:yes)
 (link: http://www.magnumphotos.com/TrentParke text: trent parke popup: yes )
 (link: http://www.gracielaiturbide.org/en/ text: graciela iturbide popup: yes)
-(link: http://www.peterlindbergh.com/essay/ text: peter lindbergh popup: yes)
 (link: http://www.ralphgibson.com/gallery.html text: ralph gibson popup: yes)
+(link: https://www.sfmoma.org/artist/Miyako_Ishiuchi text: miyako ishiuchi popup: yes)
 (link: http://www.renatodagostin.com/renato-d-agostin/home text: renato d'agostin  popup: yes)
 (link: http://www.magnumphotos.com/PaoloPellegrin text: paolo pellegrin popup: yes)
 (link: http://www.magnumphotos.com/JosefKoudelka text: josef koudelka popup: yes)
+(link: http://rinkokawauchi.com text: rinko kawauchi popup: yes)
+(link: http://www.vanessawinship.com/projects.php text: vanessa winship popup: yes)
+(link: https://carolyndrake.com/ text: carolyn drake popup: yes)
 (link: http://www.magnumphotos.com/RaymondDepardon text: raymond depardon popup: yes)
 (link: http://www.christopheagou.com text: christophe agou popup: yes)
 (link: http://www.magnumphotos.com/larrytowell text: larry towell popup: yes)
-(link: http://www.magnumphotos.com/alexwebb text: alex webb popup: ye)
-(link: http://www.magnumphotos.com/thomasdworzak text: thomas dworzak popup: ye)
+(link: http://www.magnumphotos.com/alexwebb text: alex webb popup: yes)
+(link: http://www.lynseyaddario.com text: lynsey addario popup: yes
+(link: http://www.magnumphotos.com/thomasdworzak text: thomas dworzak popup: yes)
 (link: http://www.flickr.com/photos/62915814@N02/ text: elhacedor popup: yes)
 (link: http://www.mikaelsiirila.fi/ text: mikael siirila popup: yes)
 (link: https://www.instagram.com/randall_fm/ text: randall macneil popup: yes)
 (link: http://www.gueorgui.net/ text: gueorgui tcherednitchenko popup: yes)
 (link: http://www.tatianaplotnikova.com/ text: tatiana plotnikova popup: yes)
 (link: http://www.lasthein.se/ text: jens olof lasthein popup: yes)
-(link: http://www.moriyamadaido.com/english/ text: daido moriyama popup: yes)
-(link: http://klarayoon.com/ text: klara yoon popup: yes)
+(link: https://www.magnumphotos.com/photographer/olivia-arthur/ text: olivia arthur popup: yes)
 
 ----
 
 Contact: 
 
-### contact (link: http://flickr.com/photos/jerome88 text: flickr popup: yes) (link: http://instagram.com/jerome_a_ text: instagram popup: yes) (link: https://the-invisible-cities.com/feed text: rss popup: yes) (email: jerome@the-invisible-cities.com text: email)
+### contact (link: https://ello.co/jerome_a_ text: ello popup: yes) (link: http://instagram.com/jerome_a_ text: instagram popup: yes) (link: https://the-invisible-cities.com/feed text: rss popup: yes) (email: jerome@the-invisible-cities.com text: email)
