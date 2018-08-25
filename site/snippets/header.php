@@ -41,7 +41,7 @@
   <?php else: ?>
     <?= css('assets/css/app.css') ?>
   <? endif ?>
-    
+   
   <link rel="shortcut icon" type="image/x-icon"  href="<?= url('assets/images/favicon.ico') ?>" />
   <link rel="apple-touch-icon" sizes="72x72" href="<?= url('assets/images/apple-touch-icon-72x72.png') ?>" />
   <link rel="apple-touch-icon" sizes="114x114" href="<?= url('assets/images/apple-touch-icon-114x114.png') ?>" />

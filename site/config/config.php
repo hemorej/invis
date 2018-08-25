@@ -58,6 +58,7 @@ c::set('stripe_key_pub', '');
 c::set('paypal_client_id', '');
 c::set('paypal_client_secret', '');
 c::set('fixer_key', '');
+c::set('ipstack_key', '');
 
 kirby()->hook('panel.page.*', function($page, $oldPage = null) {
 	$stripeHandler = new \UidHandler();
