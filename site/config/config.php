@@ -53,10 +53,10 @@ Stripe Configuration
 require_once(__DIR__ . '/../../vendor/autoload.php');
 require_once(__DIR__ . '/../../site/models/uidHandler.php');
 
-c::set('stripe_key_prv', '');
-c::set('stripe_key_pub', '');
-c::set('paypal_client_id', '');
-c::set('paypal_client_secret', '');
+c::set('stripe_key_pub', ''); 
+c::set('stripe_key_prv', ''); 
+c::set('paypal_client_id', ''); 
+c::set('paypal_client_secret', ''); 
 c::set('fixer_key', '');
 c::set('ipstack_key', '');
 
