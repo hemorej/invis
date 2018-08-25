@@ -21,7 +21,7 @@ window.cookieconsent.initialise({
   "content": {
     "message": "This site uses cookies",
     "link": "(read more)",
-    "href": "//cookies"
+    "href": "https://the-invisible-cities.com/cookies"
   },
   onInitialise: function (status) {
     var didConsent = this.hasConsented();
