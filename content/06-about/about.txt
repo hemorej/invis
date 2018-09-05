@@ -28,6 +28,7 @@ Links:
 (link: http://www.in-public.com/SaulLeiter/gallery/104 text: saul leiter popup: yes)
 (link: https://www.shashasha.co/en/artist/kazuo-kitai text: kazuo kitai popup: yes)
 (link: http://jasoneskenazi.com/ text: jason eskenazi popup: yes)
+(link: https://www.onakakoji.com/works/ text: koji onaka popup: yes)
 
 ###people I follow
 (link: http://kityoung.co.uk/ text: kit young popup:yes)
