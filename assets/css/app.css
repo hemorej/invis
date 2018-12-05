@@ -400,6 +400,8 @@ input[type=number]::-webkit-outer-spin-button {
 .cc-window.cc-banner.cc-type-opt-in.cc-theme-block.cc-bottom.cc-color-override-1153348989{height: 50px}
 .cc-banner .cc-message{font-family:'ff-meta-serif'}
 
+#card{background-image: url('/assets/images/card.svg'); width:20px;height:13px;background-size:20px;display:inline-block;margin-left:10px}
+
 @media only screen and (max-width: 40.063em) {
   header h1 a {font-size:2.053rem; padding-left: 3vw}
   .top-bar-section h2 {margin-left:1rem}
