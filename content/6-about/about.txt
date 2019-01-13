@@ -27,6 +27,7 @@ Links:
 (link: https://www.shashasha.co/en/artist/kazuo-kitai text: kazuo kitai popup: yes)
 (link: http://jasoneskenazi.com/ text: jason eskenazi popup: yes)
 (link: https://www.onakakoji.com/works/ text: koji onaka popup: yes)
+(link: http://www.jungjinlee.com text: jungjin lee popup: yes)
 
 ###people I follow
 (link: http://kityoung.co.uk/ text: kit young popup:yes)
