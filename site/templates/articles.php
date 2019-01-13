@@ -1,12 +1,16 @@
 <?php snippet('header') ?>
 <?php snippet('menu') ?>
 
-<?php $articles = $page->children()->visible()->sortBy('publishDate', 'desc'); ?>
+<?php if($page->title() == 'process'):
+	$articles = $page->children()->visible();
+else:
+	$articles = $page->children()->visible()->sortBy('publishDate', 'desc');
+endif ?>
 
 <div class="row large-space-top"></div>
 <?php foreach($articles as $article): ?>
 <div class="row">
-    <div class="small-5 medium-4 text-right columns">
+    <div class="small-6 medium-4 medium-text-right columns">
         <h3><a data-preview="<?= getPreview($article->images()->first()) ?>" class="cover" href="<?= $article->url() ?>"><?= html($article->title()->lower()) ?></a></h3>
     </div>
 </div>

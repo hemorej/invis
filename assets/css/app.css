@@ -103,7 +103,7 @@ a:hover{
 .row {
   width: 100%;
   margin: 0 auto;
-  max-width: 62.5rem
+  max-width: 72.5rem
 }
 
 .row:before,
@@ -428,6 +428,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 @media only screen and (min-width: 46.5em) {
+  .contain-to-grid{width : 110%}
   .menu-large-space-top {margin-top: 6%}
   .distribute{column-count: 4}
   header h1 a {font-size:2.923rem}
@@ -443,8 +444,8 @@ input[type=number]::-webkit-outer-spin-button {
   .top-bar:after {clear: both}
   .top-bar .toggle-topbar {display: none}
   .top-bar .title-area {float: left}
-  .contain-to-grid .top-bar {
-    max-width: 62.5rem;
+  .contain-to-grid.fixed .top-bar {
+    max-width: 83rem;
     margin: 0 auto;
   }
 
@@ -481,11 +482,11 @@ input[type=number]::-webkit-outer-spin-button {
   h1,
   h3 {line-height: 1.4}
   h1 {font-size: 2.923rem}
-  h3 {font-size: 2.053rem}
+  h3 {font-size: 1.825rem}
   .preview{
     position: fixed;
-    top: 30vh;
-    left: 40vw;
+    top: 20vh;
+    left: 35vw;
     max-width: 600px;
     margin-left: 2%
   }
@@ -501,6 +502,7 @@ input[type=number]::-webkit-outer-spin-button {
 @media only screen and (min-width: 64.063em) {
   p{font-size: 1.44rem}
   ul{font-size: 1.44rem}
+  h3{font-size: 2.053rem}
   .pull-2 {
     position: relative;
     right: 16.66667%;
@@ -514,6 +516,7 @@ input[type=number]::-webkit-outer-spin-button {
     padding-right: 0.9375rem;
     float: left
   }
+  .preview{top: 30vh;left: 40vw}
 }
 
 @media only screen and (min-width: 90.063em) {}
