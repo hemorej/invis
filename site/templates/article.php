@@ -45,11 +45,11 @@ if(count($page->images()) == 1 && $page->images()->first()->isPortrait())
 
 	<?php if($page->hasPrevVisible()): ?>
 		<p class="left">
-			<a href="<?= $page->prev()->url() ?>">&laquo; <?= ecco($page->parent()->title() == 'journal', 'Previous', $page->prev()->title()) ?></a>
+			<a href="<?= $page->prev()->url() ?>">&laquo; <?= ecco($page->parent()->title() == 'journal', 'Previous', $page->prev()->title()) ?> | </a>
 		</p>
 	<?php endif ?>
 	<?php if($page->parent()->title() == 'journal'){ ?>
-		<p class="left"><a href="<?= $page->parent()->url() . '?all=1' ?>">| All posts</a></p>
+		<p class="left"><a href="<?= $page->parent()->url() . '?all=1' ?>">All posts</a></p>
 	<?php } ?>
 	<?php if($page->hasNextVisible()): ?>
 		<p class="right">

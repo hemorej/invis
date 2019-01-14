@@ -1,0 +1,29 @@
+Title: Some technical notes
+
+----
+
+Published: 2019-01-12
+
+----
+
+Text: 
+
+This is a short article of the technical choices I usually follow in my work. I've arrived at these decisions after a lot of experimentation over the years and they're directly informed by my printing. 
+
+## Bulk loading
+
+I shoot Ilford HP5+ almost exclusively. A few months ago I decided to start bulk loading my own film, mostly to try to save some money. Like most popular 400 speed films, it comes in 100' rolls. Other films I've tried that I like are Rollei RPX 400 (which I shot at 800), Ilford FP4+ (which I shot at 400), the defunct Fuji Neopan 1600 (shot at 800) as well as Ilford Delta 3200 and Kodak TMax 3200 (shot at 1600). HP5+ at 800 gives me a bit more contrast, some margin to shoot when there's less light and the ability to shoot quickly at hyperfocal during the day.
+
+My volume varies, but I shoot about 40-50 rolls a year, more if I travel. 
+
+## Development 
+
+Ilford Microphen is my favourite developer, it's specifically formulated for pushing which I do almost all the time. It gives beautiful rich grays in the midtones, doesn't blow up the highlights and a lot of detail in shadows with a nice grain that's visible but not too overwhelming. 
+
+I usually wait until I have a small backlog of films and then develop them all at once, 6-18 rolls per session usually.
+
+## Printing
+
+I print almost always on Ilford Multigrade FB Classic Matt paper. I like the soft look of matt paper and the size of 8x10" paper. It's big enough to hold and to see detail, but small enough that you have to get a big closer to see it when framed. Often I print using the split grade method, other times I'll print with a high grade if I'm looking for a specific look. 
+
+I usually make about 10 new prints per session of 5-6 hours. 
