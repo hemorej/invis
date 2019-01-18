@@ -103,8 +103,9 @@ a:hover{
 .row {
   width: 100%;
   margin: 0 auto;
-  max-width: 72.5rem
+  max-width: 62.5rem
 }
+.row.menu-large-space-top {max-width: 70rem}
 
 .row:before,
 .row:after {
