@@ -10,7 +10,7 @@ if(get('all')){
 
     <div class="row large-space-top"></div>
     <?php foreach($articles as $article): ?>
-    <div class="row">
+    <div class="row article-list">
         <div class="small-6 medium-4 medium-text-right columns">
             <h3><a data-preview="<?= getPreview($article->images()->first()) ?>" class="cover" href="<?= $article->url() ?>"><?= archiveDate($article->published()->toString())  ?></a></h3>
         </div>

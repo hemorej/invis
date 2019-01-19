@@ -106,6 +106,7 @@ a:hover{
   max-width: 62.5rem
 }
 .row.menu-large-space-top {max-width: 70rem}
+.row.article-list {max-width: 72.5rem}
 
 .row:before,
 .row:after {
