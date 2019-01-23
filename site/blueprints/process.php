@@ -1,4 +1,4 @@
-title: Article
+title: Process
 pages: false
 files: true
 fields:
