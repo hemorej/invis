@@ -23,13 +23,13 @@ Links:
 
 ###influences
 (link: http://www.sluban.com/ text: klavdij sluban popup: yes)
-(link: http://www.in-public.com/SaulLeiter/gallery/104 text: saul leiter popup: yes)
-(link: https://www.shashasha.co/en/artist/kazuo-kitai text: kazuo kitai popup: yes)
+(link: https://in-public.com/photographers/saul-leiter/ text: saul leiter popup: yes)
 (link: http://jasoneskenazi.com/ text: jason eskenazi popup: yes)
 (link: https://www.onakakoji.com/works/ text: koji onaka popup: yes)
 (link: http://www.jungjinlee.com text: jungjin lee popup: yes)
 
-###people I follow
+###photographers I like
+(link: https://www.shashasha.co/en/artist/kazuo-kitai text: kazuo kitai popup: yes)
 (link: http://kityoung.co.uk/ text: kit young popup:yes)
 (link: http://www.magnumphotos.com/TrentParke text: trent parke popup: yes )
 (link: http://www.gracielaiturbide.org/en/ text: graciela iturbide popup: yes)
@@ -45,15 +45,24 @@ Links:
 (link: http://www.christopheagou.com text: christophe agou popup: yes)
 (link: http://www.magnumphotos.com/larrytowell text: larry towell popup: yes)
 (link: http://www.magnumphotos.com/alexwebb text: alex webb popup: yes)
-(link: http://www.lynseyaddario.com text: lynsey addario popup: yes
+(link: https://www.magnumphotos.com/photographer/newsha-tavakolian/ text: newsha tavakolian popup: yes)
+(link: http://www.chloedewemathews.com/home/ text: chloe dewe mathews popup: yes)
+(link: https://www.claudinedoury.com/ text: claudine doury popup: yes)
+(link: https://pixyliao.com/ text: pixy liao popup: yes)
+(link: http://www.luoyangphoto.com/ text: luo yang popup: yes)
+(link: https://www.shashasha.co/en/artist/masako-tomiya text: masako tomiya popup: yes)
+(link: http://www.dianamarkosian.com/pages/projects text: diana markosian popup: yes)
+(link: https://www.webbnorriswebb.co/ text: rebecca norris webb popup: yes)
 (link: http://www.magnumphotos.com/thomasdworzak text: thomas dworzak popup: yes)
-(link: http://www.flickr.com/photos/62915814@N02/ text: elhacedor popup: yes)
 (link: http://www.mikaelsiirila.fi/ text: mikael siirila popup: yes)
 (link: https://www.instagram.com/randall_fm/ text: randall macneil popup: yes)
 (link: http://www.gueorgui.net/ text: gueorgui tcherednitchenko popup: yes)
 (link: http://www.tatianaplotnikova.com/ text: tatiana plotnikova popup: yes)
 (link: http://www.lasthein.se/ text: jens olof lasthein popup: yes)
 (link: https://www.magnumphotos.com/photographer/olivia-arthur/ text: olivia arthur popup: yes)
+(link: https://ekaterinasolovieva.com/ text: ekaterina solovieva popup: yes)
+(link: http://www.darosulakauri.com/ text: daro sulakauri popup: yes)
+(link: http://yurienagashima.com/ text: yurie nagashima popup: yes)
 
 ----
 
