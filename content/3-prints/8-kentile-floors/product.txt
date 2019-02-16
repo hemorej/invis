@@ -12,7 +12,8 @@ We don't have elevated subway lines where I live so I rode the subway all day th
 NYC, 2014
 
 —
-This is a print from black and white negative on Ilford FB paper, all development and printing handmade by myself.
+The 8x10" is a print from black and white negative on Ilford FB paper, all development and printing handmade by myself.
+The 5x7" and 9.5x12" are digital prints from silver gelatin scan on Matt 14pt paper.
 
 ----
 
@@ -27,15 +28,20 @@ Type: print
 Variants: 
 
 - 
-  sku: sku_cb4e08b84e6430e052b7d6ea2bd7
-  name: 5x7
+  sku: sku_a55fcc0686acf6755fbb1616f9ab
+  name: 5x7in (12x17cm)
   price: "7"
   stock: "10"
 - 
-  sku: sku_ebbbf6b90cbc6a4a1abe9369b387
-  name: 8x10
+  sku: sku_66db93aa6602bee1b788fe70a4bf
+  name: 8x10in (20x25cm)
   price: "50"
   stock: "1"
+- 
+  sku: sku_865f1bfdbdc572455dcc5ff0d71f
+  name: 9.5x12in (24x30cm)
+  price: "25"
+  stock: "5"
 
 ----
 

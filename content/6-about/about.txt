@@ -66,4 +66,4 @@ Links:
 
 ----
 
-Contact: ### contact (link: http://instagram.com/jerome_a_ text: instagram popup: yes) (link: https://the-invisible-cities.com/feed text: rss popup: yes) (email: jerome@the-invisible-cities.com text: email) (link: http://eepurl.com/gej-tX text: newsletter popup: yes)
+Contact: ### contact (link: http://instagram.com/jerome_a_ text: instagram popup: yes) (link: https://the-invisible-cities.com/feed text: rss popup: yes) (email: jerome@the-invisible-cities.com text: email) (link: https://tinyletter.com/the-invisible-cities text: newsletter popup: yes)

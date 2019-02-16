@@ -1,15 +1,15 @@
-Title: Venice beach
+Title: The road home
 
 ----
 
-Published: 2018-02-23
+Published: 2019-02-15
 
 ----
 
 Description: 
 
-I was walking with a friend along Venice Beach when we saw these people playing against the walls drenched with California sun. They were moving fast, I shot nearly a whole roll before I could catch this movement.
-Los Angeles, 2016
+I had been driving all day and was nearly home when I spotted this building on the side of the road. Mine was the only car on the highway that afternoon. I pulled over, walked out and took a few different frames before getting back in and continuing home.
+Montreal, 2014
 
 — 
 The 8x10" is a print from black and white negative on Ilford FB paper, all development and printing handmade by myself.
@@ -28,16 +28,16 @@ Type: print
 Variants: 
 
 - 
-  sku: sku_86a0861d2dd0fb6706acb37bc547
+  sku: sku_484af74b0d9c9736e474e68e0d41
   name: 8x10in (20x25cm)
   price: "50"
-  stock: "2"
+  stock: "1"
 - 
-  sku: sku_e33ee8d7c61ba8a921dc42fac425
+  sku: sku_9432c5cb4737919ad8ccafe749d4
   name: 9.5x12in (24x30cm)
   price: "25"
   stock: "5"
 
 ----
 
-Product-id: prd_36e10d06725afa7df5abc4fa25bd
+Product-id: prd_ff33aafec63e755072ce9f589a9a

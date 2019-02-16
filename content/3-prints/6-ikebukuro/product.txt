@@ -27,15 +27,15 @@ Type: print
 Variants: 
 
 - 
-  sku: sku_d23f7e2b7c56df6682c25bb82024
-  name: 11x14in (28x35cm)
-  price: "80"
-  stock: "2"
-- 
-  sku: sku_b15c85b006c8d15afd9c22481530
+  sku: sku_75c8199e4153c624b49bcd96c415
   name: 8x10in (20x25cm)
   price: "50"
   stock: "6"
+- 
+  sku: sku_1be7b174fcf15a38682372a0192b
+  name: 11x14in (28x35cm)
+  price: "80"
+  stock: "2"
 
 ----
 
