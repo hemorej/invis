@@ -12,7 +12,7 @@ Tags:
 
 Text: 
 
-edit always requires the longest time of any step in the process. Very few photographs I know will make the series as soon as I see them, most will stay there indecisively, shuffling around, getting cut out and brought back. Shuffling the order is important, it forces me to see new sequences and connections where before I didn't. Some new photographs make their way in the selection like this. 
+Editing always requires the longest time of any step in the process. There are very few photographs that I know will make the series as soon as I see them, most will stay there indecisively, shuffling around, getting cut out and brought back. Shuffling the order is important, it forces me to see new sequences and connections where before I didn't. Some new photographs make their way in the selection like this. 
 If I feel I'm getting stuck, I'll leave the selection for some time, to let it sit while I work on something else. This affords me more perspective and a bit more of an objective eye. I tend to leave some pictures in the set which I'm more emotionally attached to that might otherwise not really belong there.
 
 The idea is to arrive at the most interesting set through successive iterations of selections
@@ -25,7 +25,3 @@ If it sounds like I'm mostly discarding photographs, it's essentially that for t
 ## Sequencing
 ## on cropping
 cropping is a contentious issue among photographers.
-
-----
-
-Category: technical
