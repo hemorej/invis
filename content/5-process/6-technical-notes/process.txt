@@ -10,11 +10,11 @@ Text:
 
 ## Some technical notes
 
-This is a short article about the technical choices I usually follow in my work. I've arrived at these decisions after a lot of experimentation over the years and they're directly informed by my printing. 
+This is a short article about the technical choices I usually make in my work. I've arrived at these decisions after a lot of experimentation over the years and they're directly informed by my printing, however they're not inflexible rules and are subject to change anytime.
 
 ## Film
 
-I shoot Ilford HP5+ almost exclusively. A few months ago I decided to start bulk loading my own film, mostly to save some money. Like most popular 400 speed films, HP5+ comes in 100' rolls. Other films I've tried that I like are Rollei RPX 400 (which I shot at 800), Ilford FP4+ (which I shot at 400), the defunct Fuji Neopan 1600 (shot at 800) as well as Ilford Delta 3200 and Kodak TMax 3200 (shot at 1600). HP5+ at 800 gives me a bit more contrast, more margin to shoot when there's less light and the ability to shoot quickly at hyperfocal during the day.
+I shoot Ilford HP5+ almost exclusively. A few months ago I decided to start bulk loading my own film, mostly to save money. Like most popular 400 speed films, HP5+ comes in 100' rolls. Other films I've tried that I like are Rollei RPX 400 (which I shot at 800), Ilford FP4+ (which I shot at 400), the defunct Fuji Neopan 1600 (shot at 800) as well as Ilford Delta 3200 and Kodak TMax 3200 (shot at 1600). HP5+ at 800 gives me a bit more contrast, more margin to shoot when there's less light and the ability to shoot quickly at hyperfocal during the day.
 
 My volume varies, but I shoot about 40-50 rolls a year (more if I travel), the vast majority of which with a 35mm lens.
 
@@ -28,6 +28,6 @@ I follow a straightforward serial numbering method for my negatives. Different c
 
 ## Printing
 
-I print on Ilford Multigrade FB Classic Matt paper. I like the softer look of matt paper and the size of 8x10" paper. It's big enough to hold and to see detail, but small enough that you have to get a big closer to see it when framed. Often I print using the split grade method, other times I'll print with a high grade if I'm looking for a specific look. 
+I print on Ilford Multigrade FB Classic Matt paper. I like the softer look of matt paper and the size of 8x10" paper. It's big enough to hold and to see detail, but small enough that you have to get a bit closer to see it when framed. Most of the time I print with a medium-high grade filter for contrast and grain. Other times, depending on the negative, I'll use the split grade method or a high contrast filter. I usually make about 10-14 new prints per session of 5-7 hours.
 
-I usually make about 10-14 new prints per session of 5-6 hours.
+I use 9.5x12" RC paper for contact sheets, and 5x7" RC paper for test and work prints.
