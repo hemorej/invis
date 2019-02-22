@@ -10,7 +10,7 @@ Text:
 
 ## Some technical notes
 
-This is a short article about the technical choices I usually make in my work. I've arrived at these decisions after a lot of experimentation over the years and they're directly informed by my printing, however they're not inflexible rules and are subject to change anytime.
+This is a short article about the technical choices I make in my work. I've arrived at these decisions after a lot of experimentation over the years and they're directly informed by my printing, however they're not inflexible rules and can change anytime.
 
 ## Film
 
@@ -22,9 +22,9 @@ My volume varies, but I shoot about 40-50 rolls a year (more if I travel), the v
 
 Ilford Microphen is my favourite developer, it's specifically formulated for pushing which I do almost all the time. It gives rich grays in the midtones, a lot of detail in shadows and doesn't blow up the highlights and has a smooth, sandy grain that's visible but not overpowering. Other developers I've tried are Rodinal and D76
 
-I usually wait until I have a small backlog of films and then develop them all at once, 6-18 rolls per session usually.
+I usually wait until I have a small backlog of films and then develop them all at once, 10-20 rolls per session usually.
 
-I follow a straightforward serial numbering method for my negatives. Different cameras have their own series, so the numbers tell me which camera was used for a given frame. I don't have a dating method for negatives as I don't need to know exactly when each negative was shot, but I do mark the first negative of the year to give me an idea of how many rolls I shot in a given year.
+I follow a straightforward serial numbering method for my negatives. Each camera have its own sequence, so the numbers tell me which camera (and focal length) was used for a given frame. I don't have a dating method for negatives as I don't need to know exactly when each negative was shot, but I do mark the first negative of the year to keep track of how many rolls I shot in a given year.
 
 ## Printing
 
