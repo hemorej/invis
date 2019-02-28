@@ -6,7 +6,7 @@ Published: 2019-01-12
 
 ----
 
-Text: 
+Text:
 
 ## Some technical notes
 
@@ -18,9 +18,9 @@ I shoot Ilford HP5+ almost exclusively. A few months ago I decided to start bulk
 
 My volume varies, but I shoot about 40-50 rolls a year (more if I travel), the vast majority of which with a 35mm lens.
 
-## Development 
+## Development
 
-Ilford Microphen is my favourite developer, it's specifically formulated for pushing which I do almost all the time. It gives rich grays in the midtones, a lot of detail in shadows and doesn't blow up the highlights and has a smooth, sandy grain that's visible but not overpowering. Other developers I've tried are Rodinal and D76
+Ilford Microphen is my favourite developer, it's specifically formulated for pushing which I do all the time. It gives rich grays in the midtones, a lot of detail in shadows and doesn't blow up the highlights and has a smooth, sandy grain that's visible but not overpowering. Other developers I've tried are Rodinal, D76 and Xtol.
 
 I usually wait until I have a small backlog of films and then develop them all at once, 10-20 rolls per session usually.
 
