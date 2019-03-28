@@ -72,6 +72,7 @@ img{
   display: inline-block;
   vertical-align: middle
 }
+figure{ margin: 0 }
 div,
 ul,
 li,
@@ -103,7 +104,8 @@ a:hover{
 .row {
   width: 100%;
   margin: 0 auto;
-  max-width: 62.5rem
+  max-width: 70.5rem
+  /*max-width: 62.5rem*/
 }
 .row.menu-large-space-top {max-width: 70rem}
 .row.article-list {max-width: 72.5rem}

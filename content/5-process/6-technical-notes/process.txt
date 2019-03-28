@@ -8,13 +8,15 @@ Published: 2019-01-12
 
 Text:
 
+(image: IMG_6384.JPG)
+
 ## Some technical notes
 
 This is a short article about the technical choices I make in my work. I've arrived at these decisions after a lot of experimentation over the years and they're directly informed by my printing, however they're not inflexible rules and can change anytime.
 
 ## Film
 
-I shoot Ilford HP5+ almost exclusively. A few months ago I decided to start bulk loading my own film, mostly to save money. Like most popular 400 speed films, HP5+ comes in 100' rolls. Other films I've tried that I like are Rollei RPX 400 (which I shot at 800), Ilford FP4+ (which I shot at 400), the defunct Fuji Neopan 1600 (shot at 800) as well as Ilford Delta 3200 and Kodak TMax 3200 (shot at 1600). HP5+ at 800 gives me a bit more contrast, more margin to shoot when there's less light and the ability to shoot quickly at hyperfocal during the day.
+I shoot Ilford HP5+ almost exclusively. Last year I decided to start bulk loading my own film, mostly to save money. Like most popular 400 speed films, HP5+ comes in 100' rolls. Other films I've tried that I like are Rollei RPX 400 (which I shot at 800), Ilford FP4+ (which I shot at 400), the defunct Fuji Neopan 1600 (shot at 800) as well as Ilford Delta 3200 and Kodak TMax 3200 (shot at 1600). HP5+ at 800 gives me slightly more contrast, more margin to shoot when there's less light and the ability to shoot quickly at hyperfocal during the day.
 
 My volume varies, but I shoot about 40-50 rolls a year (more if I travel), the vast majority of which with a 35mm lens.
 

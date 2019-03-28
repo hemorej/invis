@@ -20,10 +20,10 @@ $meta = array('url' => $page->url(), 'image' => $image->url());
 	<div class="small-12 medium-10 columns">
 	<?php if($page->hasPrevVisible()): ?>
 		<p class="left">
-			<a href="<?= $page->prev()->url() ?>">&laquo; <?= $page->prev()->title() ?></a>
+			<a href="<?= $page->prev()->url() ?>">&laquo; <?= $page->prev()->title() ?></a>|
 		</p>
 	<?php endif ?>
-	<p class="left"> |<a href="<?= $page->parent()->url() ?>"> All posts</a></p>
+	<p class="left"><a href="<?= $page->parent()->url() ?>">All posts</a></p>
 	<?php if($page->hasNextVisible()): ?>
 		<p class="right">
 			<a href="<?= $page->next()->url() ?>"><?= $page->next()->title() ?> &raquo;</a>
