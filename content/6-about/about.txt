@@ -24,6 +24,7 @@ Links:
 ###influences
 (link: http://www.sluban.com/ text: klavdij sluban popup: yes)
 (link: http://www.jungjinlee.com text: jungjin lee popup: yes)
+(link: https://www.shashasha.co/en/artist/tamiko-nishimura text: tamiko nishimura popup: yes)
 (link: https://www.onakakoji.com/works/ text: koji onaka popup: yes)
 (link: https://in-public.com/photographers/saul-leiter/ text: saul leiter popup: yes)
 
@@ -31,7 +32,6 @@ Links:
 (link: https://www.shashasha.co/en/artist/kazuo-kitai text: kazuo kitai popup: yes)
 (link: http://kityoung.co.uk/ text: kit young popup: yes)
 (link: http://jasoneskenazi.com/ text: jason eskenazi popup: yes)
-(link: http://www.magnumphotos.com/TrentParke text: trent parke popup: yes)
 (link: http://www.gracielaiturbide.org/en/ text: graciela iturbide popup: yes)
 (link: http://www.ralphgibson.com/gallery.html text: ralph gibson popup: yes)
 (link: http://www.renatodagostin.com/renato-d-agostin/home text: renato dagostin popup: yes)
@@ -60,6 +60,7 @@ Links:
 (link: http://yurienagashima.com/ text: yurie nagashima popup: yes)
 (link: https://www.artsy.net/artist/william-eggleston text: william eggleston popup: yes)
 (link: https://www.magnumphotos.com/photographer/newsha-tavakolian/ text: newsha tavakolian popup: yes)
+(link: https://www.artsy.net/artist/lee-gap-chul text: gap-chul lee popup: yes)
 
 ----
 
