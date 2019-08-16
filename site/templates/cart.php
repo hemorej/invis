@@ -152,4 +152,4 @@
     <?= js('assets/js/vendor/cart.min.js') ?>
 <?php else: ?>
     <?= js('assets/js/vendor/cart.js') ?>
-<? endif ?>
+<?php endif ?>
