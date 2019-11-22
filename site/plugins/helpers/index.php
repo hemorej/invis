@@ -112,7 +112,7 @@ function archiveDate($string){
 
 function getHomeImage(){
   $cache = new SimpleCache();
-  $cache->cache_path = env('CACHE_PATH');
+  $cache->cache_path = option('cache_path');
   $cache->cache_time = 2592000; //30d
 
   $images = array();
@@ -134,7 +134,7 @@ function getHomeImage(){
 
 function location(){
   $cache = new SimpleCache();
-  $cache->cache_path = env('CACHE_PATH');
+  $cache->cache_path = option('cache_path');
   $cache->cache_time = 86400; //24h
 
   $remote = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
@@ -144,7 +144,7 @@ function location(){
   if($data = $cache->get_cache($remote)){
     $loc = json_decode($data);
   }else{
-    $access_key = env('IPSTACK_KEY');
+    $access_key = option('ipstack_key');
     $requestURL = "http://api.ipstack.com/$remote?access_key=$access_key&fields=country_code,location.is_eu&language=en&output=json";
 
     $data = $cache->do_curl($requestURL);

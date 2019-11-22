@@ -1,11 +1,11 @@
 <?php
 
 return [
-	'env' => function(){ return env('APP_ENV');},
+	'env' => 'dev',
 
 	'timezone' => 'America/Montreal',
 	'debug' => true,
-	'cache' => function(){ return env('APP_CACHE');},
+	'cache' => false,
 	'cache.driver' => 'file',
 	'cache.autoupdate' => true,
 	'cache.ignore' => array(
@@ -13,18 +13,18 @@ return [
 	  'feed',
 	  'prints/*'
 	),
-	'cache_path' => function(){ return env('CACHE_PATH');},
+	'cache_path' => __DIR__ . '/../../cache/',
 
-	'ga_code' => function(){ return env('GA_CODE');},
+	'ga_code' => '',
 
-	'mailgun_domain' => function(){ return env('MAILGUN_DOMAIN');},
-	'mailgun_key' => function(){ return env('MAILGUN_KEY');},
-	'alert_address' => function(){ return env('NOTIF_ADDRESS');},
+	'mailgun_domain' => '',
+	'mailgun_key' => '',
+	'alert_address' => '',
 
-	'stripe_key_pub' => function(){ return env('STRIPE_PUB_KEY');},
-	'stripe_key_prv' => function(){ return env('STRIPE_PRV_KEY');},
-	'paypal_client_id' => function(){ return env('PAYPAL_CLIENT_ID');},
-	'paypal_client_secret' => function(){ return env('PAYPAL_CLIENT_SECRET');},
-	'fixer_key' => function(){ return env('FIXER_KEY');},
-	'ipstack_key' => function(){ return env('IPSTACK_KEY'); }
+	'stripe_key_pub' => '',
+	'stripe_key_prv' => '',
+	'paypal_client_id' => '',
+	'paypal_client_secret' => '',
+	'fixer_key' => '',
+	'ipstack_key' => ''
 ];

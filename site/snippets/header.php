@@ -36,7 +36,7 @@
   <meta name="twitter:description" content="<?= html($site->description()) ?>">
   <meta name="twitter:image" content="<?= $image ?>">
 
-  <?php if(env('APP_ENV') == 'prod'): ?>
+  <?php if(option('env') == 'prod'): ?>
     <?= css('assets/css/app.min.css') ?>
   <?php else: ?>
     <?= css('assets/css/app.css') ?>

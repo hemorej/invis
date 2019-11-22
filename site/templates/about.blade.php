@@ -1,26 +1,26 @@
-<?php snippet('header') ?>
-<?php snippet('menu') ?>
+@snippet('header')
+@snippet('menu')
 
 <div class="row medium-space-top">
 	<section class="small-12 medium-12 columns">
-  		<?php foreach($page->images() as $image): ?>
+  		@foreach($page->images() as $image):
 			<img srcset="<?= $image->srcset([600, 800, 1200]) ?>">
-		<?php endforeach ?>
+		@endforeach
 	  <p class="medium-space-top">&nbsp;</p>
-	  <?= $page->text()->kirbytext() ?>
+	  @kirbytext($page->text())
 	</section>
 </div>
 
 <div class="row medium-space-top distribute">
 	<section class="small-12 medium-12 columns">
-		<?= $page->links()->kirbytext() ?>
+		@kirbytext($page->links())
 	</section>
 </div>
 
 <div class="row medium-space-top">
 	<section class="small-12 medium-12 columns">
-	    <?= $page->contact()->kirbytext() ?>
+	    @kirbytext($page->contact())
 	</section>
 </div>
 
-<?php snippet('footer') ?>
+@snippet('footer')

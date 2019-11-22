@@ -1,6 +1,4 @@
 title: Product
-pages: false
-files: true
 fields:
   title:
     label: Title
@@ -32,8 +30,7 @@ fields:
     default: print
   variants:
     label: Variants
-    type: snippetfield
-    snippet: variant
+    type: structure
     fields:
       name:
         label: Variant name
