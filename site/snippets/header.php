@@ -3,7 +3,7 @@
 <head>
 
   <?php
-  $image = thumb(page('projects/portfolio')->files()->first(), array('height' => 600))->url();
+  $image = page('projects/portfolio')->images()->first()->resize(600)->url();
   $url = $site->url();
   if(isset($meta)){
     $image = $meta['image'];
@@ -36,7 +36,7 @@
   <meta name="twitter:description" content="<?= html($site->description()) ?>">
   <meta name="twitter:image" content="<?= $image ?>">
 
-  <?php if(c::get('env') == 'prod'): ?>
+  <?php if(env('APP_ENV') == 'prod'): ?>
     <?= css('assets/css/app.min.css') ?>
   <?php else: ?>
     <?= css('assets/css/app.css') ?>
@@ -46,5 +46,5 @@
   <link rel="apple-touch-icon" sizes="72x72" href="<?= url('assets/images/apple-touch-icon-72x72.png') ?>" />
   <link rel="apple-touch-icon" sizes="114x114" href="<?= url('assets/images/apple-touch-icon-114x114.png') ?>" />
 
-  <link rel="alternate" type="application/rss+xml" href="<?= url('feed') ?>" title="Feed | <?= html($site->title()) ?>" />
+  <link rel="alternate" type="application/rss+xml" title="Feed | <?= html($site->title()) ?>" href="<?= site()->url() ?>/feed"/>
 </head>

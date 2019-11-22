@@ -1,66 +1,30 @@
 <?php
 
-/*
+return [
+	'env' => function(){ return env('APP_ENV');},
 
----------------------------------------
-License Setup
----------------------------------------
+	'timezone' => 'America/Montreal',
+	'debug' => true,
+	'cache' => function(){ return env('APP_CACHE');},
+	'cache.driver' => 'file',
+	'cache.autoupdate' => true,
+	'cache.ignore' => array(
+	  'home',
+	  'feed',
+	  'prints/*'
+	),
+	'cache_path' => function(){ return env('CACHE_PATH');},
 
-*/
+	'ga_code' => function(){ return env('GA_CODE');},
 
-c::set('license', '');
+	'mailgun_domain' => function(){ return env('MAILGUN_DOMAIN');},
+	'mailgun_key' => function(){ return env('MAILGUN_KEY');},
+	'alert_address' => function(){ return env('NOTIF_ADDRESS');},
 
-// environment
-c::set('env', 'dev');
-
-/*
-
----------------------------------------
-Kirby Configuration
----------------------------------------
-
-*/
-
-c::set('timezone', 'America/Montreal');
-c::set('debug', true);
-c::set('cache', false);
-c::set('cache.driver', 'file');
-c::set('cache.autoupdate', true);
-c::set('cache.ignore', array(
-  'home',
-  'feed',
-  'prints/*'
-));
-c::set('ssl', false);
-
-
-// google analytics
-c::set('ga_code', '');
-
-// mailgun
-c::set('mailgun_domain', '');
-c::set('mailgun_key', '');
-c::set('alert_address', '');
-
-/*
-
----------------------------------------
-Stripe Configuration
----------------------------------------
-
-*/
-
-require_once(__DIR__ . '/../../vendor/autoload.php');
-require_once(__DIR__ . '/../../site/models/uidHandler.php');
-
-c::set('stripe_key_pub', ''); 
-c::set('stripe_key_prv', ''); 
-c::set('paypal_client_id', ''); 
-c::set('paypal_client_secret', ''); 
-c::set('fixer_key', '');
-c::set('ipstack_key', '');
-
-kirby()->hook('panel.page.*', function($page, $oldPage = null) {
-	$stripeHandler = new \UidHandler();
-	$stripeHandler->handle($page, $oldPage, $this->type());
-});
+	'stripe_key_pub' => function(){ return env('STRIPE_PUB_KEY');},
+	'stripe_key_prv' => function(){ return env('STRIPE_PRV_KEY');},
+	'paypal_client_id' => function(){ return env('PAYPAL_CLIENT_ID');},
+	'paypal_client_secret' => function(){ return env('PAYPAL_CLIENT_SECRET');},
+	'fixer_key' => function(){ return env('FIXER_KEY');},
+	'ipstack_key' => function(){ return env('IPSTACK_KEY'); }
+];

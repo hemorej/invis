@@ -2,9 +2,9 @@
 <?php snippet('menu') ?>
 
 <?php if($page->title() == 'process'):
-	$articles = $page->children()->visible();
+	$articles = $page->children()->listed();
 else:
-	$articles = $page->children()->visible()->sortBy('publishDate', 'desc');
+	$articles = $page->children()->listed()->sortBy('publishDate', 'desc');
 endif ?>
 
 <div class="row large-space-top"></div>

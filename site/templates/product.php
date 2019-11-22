@@ -85,18 +85,18 @@ if($page->parent()->title() != 'journal'){
                 <button id="add-cart" type="submit">add to cart</button>
             </div>
         </form>
-        <?= kirbytext($page->description()); ?>
+        <?= $page->description()->kirbytext() ?>
         <?php endif ?>
         </section>
     </div>
     <div class="row medium-space-top">
         <div class="small-12 medium-12 columns">
-        <?php if($page->hasPrevVisible()): ?>
+        <?php if($page->hasPrevListed()): ?>
             <span class="left">
                 <a href="<?= $page->prev()->url() ?>">&laquo; <?= $page->prev()->title() ?></a>
             </span>
         <?php endif ?>
-        <?php if($page->hasNextVisible()): ?>
+        <?php if($page->hasNextListed()): ?>
             <span class="right">
                 <a href="<?= $page->next()->url() ?>"><?= $page->next()->title() ?> &raquo;</a>
             </span>

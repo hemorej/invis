@@ -11,8 +11,8 @@
 				<section class="top-bar-section">
 					<ul>
 						<li class="hide-for-small"><h3><a href="<?= url() ?>"> <?= html($site->title()) ?> </a></h3></li>
-						<?php foreach($pages->visible() as $p): ?>
-							<li><h3><a<?php ecco($p->isOpen() && $page->title() != 'cart', ' class="active"') ?> href="<?= $p->url() ?>"><?= $p->title()->lower() ?></a></h3></li>
+						<?php foreach($pages->listed() as $p): ?>
+							<li><h3><a<?= $p->isOpen() && $page->title() != 'cart' ?? ' class="active"' ?> href="<?= $p->url() ?>"><?= $p->title()->lower() ?></a></h3></li>
 						<?php endforeach ?>
 					</ul>
 				</section>

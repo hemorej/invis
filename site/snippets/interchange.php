@@ -1,4 +1,7 @@
 <?php
+
+trigger_error("Deprecated function called.", E_USER_DEPRECATED);
+
 $thumbDirectory = '/thumbs';
 $placeholder = $site->url() . '/assets/images/ph.svg';
 
@@ -12,7 +15,7 @@ foreach($images as $image):
     if(!isset($title) || $title == ''){$title = $alt;}
 
     $options = array() ;
-    if($page->isVisible()){
+    if($page->isListed()){
         $destination = $image->dir() . $thumbDirectory;
         $url = $page->url() . $thumbDirectory ;
         $options = array('root' => $destination, 'url' => $url);

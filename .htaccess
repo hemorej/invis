@@ -1,94 +1,96 @@
 # Kirby .htaccess
+
 AddType application/font-woff .woff
 
 # rewrite rules
 <IfModule mod_rewrite.c>
 
-# enable awesome urls. i.e.:
-# http://yourdomain.com/about-us/team
-RewriteEngine on
+  # enable awesome urls. i.e.:
+  # http://yourdomain.com/about-us/team
+  RewriteEngine on
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE] 
 
-# make sure to set the RewriteBase correctly
-# if you are running the site in a subfolder.
-# Otherwise links or the entire site will break.
-#
-# If your homepage is http://yourdomain.com/mysite
-# Set the RewriteBase to:
-#
-# RewriteBase /mysite
+  # make sure to set the RewriteBase correctly
+  # if you are running the site in a subfolder.
+  # Otherwise links or the entire site will break.
+  #
+  # If your homepage is http://yourdomain.com/mysite
+  # Set the RewriteBase to:
+  #
+  # RewriteBase /mysite
 
-# In some enviroments it's necessary to
-# set the RewriteBase to:
-#
-# RewriteBase /
+  # In some environments it's necessary to
+  # set the RewriteBase to:
+  #
+  # RewriteBase /
 
-# block text files in the content folder from being accessed directly
-RewriteRule ^content/(.*)\.(txt|md|mdown)$ index.php [L]
+  # block files and folders beginning with a dot, such as .git
+  # except for the .well-known folder, which is used for Let's Encrypt and security.txt
+  RewriteRule (^|/)\.(?!well-known\/) index.php [L]
 
-# block all files in the site folder from being accessed directly
-# except for requests to plugin assets files
-#RewriteRule ^assets/plugins/([a-zA-Z0-9\.\-_%=]+)/(.*)$ site/plugins/$1/assets/$2 [L,N]
-#RewriteCond $1 !^plugins/[a-zA-Z0-9\.\-_%=]+/assets/.*
-RewriteRule ^site/(.*) index.php [L]
+  # block text files in the content folder from being accessed directly
+  RewriteRule ^content/(.*)\.(txt|md|mdown)$ index.php [L]
 
-# block direct access to kirby and the panel sources
-RewriteRule ^(kirby|panel\/app|panel\/tests)/(.*) index.php [L]
+  # block all files in the site folder from being accessed directly
+  # except for requests to plugin assets files
+  RewriteRule ^site/(.*) index.php [L]
 
-# make panel links work
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^panel/(.*) panel/index.php [L]
+  # Enable authentication header
+  SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 
-# make site links work
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*) index.php [L]
+  # block direct access to kirby and the panel sources
+  RewriteRule ^kirby/(.*) index.php [L]
 
+  # make site links work
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*) index.php [L]
+
+</IfModule>
+
+# compress text file responses
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/x-javascript
 </IfModule>
 
 <IfModule mod_expires.c>
   ExpiresActive on
 
-# Perhaps better to whitelist expires rules? Perhaps.
+  # Perhaps better to whitelist expires rules? Perhaps.
   ExpiresDefault                          "access plus 1 day"
 
-# Feed
+  # Feed
   ExpiresByType application/rss+xml       "access plus 1 hour"
 
-# Favicon (cannot be renamed)
+  # Favicon (cannot be renamed)
   ExpiresByType image/x-icon              "access plus 1 year" 
 
-# Media: images, video, audio
+  # Media: images, video, audio
   ExpiresByType image/gif                 "access plus 1 month"
   ExpiresByType image/png                 "access plus 1 month"
   ExpiresByType image/jpg                 "access plus 1 month"
   ExpiresByType image/jpeg                "access plus 1 month"
-  
-# Webfonts
+
+  # Webfonts
   ExpiresByType font/truetype             "access plus 1 year"
   ExpiresByType font/opentype             "access plus 1 year"
   ExpiresByType application/font-woff     "access plus 1 year"
   ExpiresByType image/svg+xml             "access plus 1 year"
-    
-# CSS and JavaScript
+
+  # CSS and JavaScript
   ExpiresByType text/css                  "access plus 1 year"
   ExpiresByType application/javascript    "access plus 1 year"
-  
-  <IfModule mod_headers.c>
-    Header append Cache-Control "public"
-    Header set Strict-Transport-Security "max-age=31536000" env=HTTPS
-  </IfModule>
-  
 </IfModule>
-
-<ifModule mod_deflate.c>
-AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css application/x-javascript application/javascript text/javascript
-</ifModule>
-
-
-# Additional recommended values
-# Remove comments for those you want to use.
-#
-# AddDefaultCharset UTF-8
-#
-# php_flag short_open_tag on
+  
+<IfModule mod_headers.c>
+  Header append Cache-Control "public"
+  Header set Strict-Transport-Security "max-age=31536000" env=HTTPS
+</IfModule>

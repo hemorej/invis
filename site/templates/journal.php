@@ -6,7 +6,7 @@ if(get('all')){
     snippet('menu');
 
     $archive = array();
-    $articles = $page->children()->visible()->sortBy('publishDate', 'desc')->paginate(12); ?>
+    $articles = $page->children()->listed()->sortBy('publishDate', 'desc')->paginate(12); ?>
 
     <div class="row large-space-top"></div>
     <?php foreach($articles as $article): ?>
