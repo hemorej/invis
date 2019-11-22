@@ -1,9 +1,6 @@
 [submodule "kirby"]
 	path = kirby
 	url = https://github.com/getkirby/kirby.git
-[submodule "site/plugins/kirby3-field-ecco"]
-	path = site/plugins/kirby3-field-ecco
-	url = https://github.com/bnomei/kirby3-field-ecco.git
-[submodule "site/plugins/kirby3-dotenv"]
-	path = site/plugins/kirby3-dotenv
-	url = https://github.com/bnomei/kirby3-dotenv.git
+[submodule "site/plugins/kirby-blade"]
+	path = site/plugins/kirby-blade
+	url = https://github.com/afbora/kirby-blade.git
