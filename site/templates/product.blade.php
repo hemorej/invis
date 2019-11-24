@@ -1,5 +1,6 @@
-
 @php 
+    use \Cart\Cart;
+    
     $image = $page->images()->first()->resize(null, 600);
     $title = $page->title();
     if( $page->title() == $page->uid())
@@ -67,7 +68,7 @@
                     $activeSku = 0;
                 @endphp
                 @foreach ($variants as $variant)
-                    @if(inStock($variant))
+                    @if(Cart::inStock($variant))
                         <li {{ $first === true ? 'class=active variant' : 'class=variant' }}>
                             <a href="#" data-option-variant='{{ $variant->sku() }}' data-option-price="{{ $variant->price() }}">{{ $variant->name() }} &mdash; ${{ $variant->price() }}</a>
                         </li>&nbsp;

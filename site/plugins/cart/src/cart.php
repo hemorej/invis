@@ -116,8 +116,8 @@ class Cart
 	  $idParts = explode('::', $id); // $id is formatted uri::sku
 	  $uri = $idParts[0];
 	  $sku = $idParts[1];
-	  $item = empty($this->cartPageName) ? null : $this->cartPageName->products()->toStructure()->findBy('sku', $sku);
-	  $items = empty($this->cartPageName) ? array() : $this->cartPageName->products()->yaml();
+	  $item = empty($this->cartPage) ? null : $this->cartPage->products()->toStructure()->findBy('sku', $sku);
+	  $items = empty($this->cartPage) ? array() : $this->cartPage->products()->yaml();
 	  $product = $this->site->page($uri);
 	  $variant = $this->site->page($uri)->variants()->toStructure()->findBy('sku', $sku);
 
@@ -150,7 +150,7 @@ class Cart
 	    $timestamp = time();
 	    
 	    $page = new Page([
-	        'dirname' => "3_$this->cartPageName",
+	        'dirname' => "3_$this->cartPage",
 	        'slug' => $txn_id,
 	        'template' => 'order',
 	        'content' => [
@@ -166,7 +166,7 @@ class Cart
 	    $session->set('txn', $txn_id);
 
 	  }else{
-	    $site->page($this->cartPageName)->update(['products' => \Yaml::encode($items)]);
+	    $this->site->page($this->cartPage)->update(['products' => \Yaml::encode($items)]);
 	  }
 
 	}

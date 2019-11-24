@@ -8,7 +8,7 @@ return function($site, $page, $kirby) {
 	$items = json_decode(get('items'), true);
 	$csrf = get('csrf');
 	$total = intval(get('total'));
-	$session = $kirby->session();
+	$session = kirby()->session();
 	$logger = new Logger('order');
 
 	if(empty($token) || empty($total) || empty($items) || empty($args) || csrf($csrf) !== true){

@@ -6,7 +6,14 @@ columns:
           title:
             label: Title
             type: text
-            help: The title of your product.
+            help: The title of your product
+            required: true
+            width: 1/2
+          autoid:
+            label: Product ID
+            width: 1/2
+            readonly: true
+            translate: false 
           description:
             label: Description
             help: Details for the product page

@@ -20,11 +20,11 @@ fields:
       interval: 1
     disabled: true
     width: 1/2
-  order_id:
-    label: order id
-    type: text
-    disabled: true
+  autoid:
+    label: Order ID
     width: 1/3
+    readonly: true
+    translate: false 
   shipping_date:
     label: date shipped
     type: date
