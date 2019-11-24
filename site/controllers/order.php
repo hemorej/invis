@@ -9,6 +9,7 @@ return function($site, $page, $kirby) {
 	$csrf = get('csrf');
 	$total = intval(get('total'));
 	$session = kirby()->session();
+	$sessionToken = $session->get('txn');
 	$logger = new Logger('order');
 
 	if(empty($token) || empty($total) || empty($items) || empty($args) || csrf($csrf) !== true){
@@ -24,10 +25,10 @@ return function($site, $page, $kirby) {
 			return [ 'state' => 'no session'];
 		}
 	}else{
-		$logger->info($session->token() . ":order processing start");
+		$logger->info($sessionToken . ":order processing start");
 
 		$orderId = getUniqueId('order');
-		$logger->info($s->token() . ":order created with id " . $orderId);
+		$logger->info($sessionToken . ":order created with id " . $orderId);
 
 		try{
 			if(preg_match('/^PAY-/', $token['id']) == 1){
@@ -44,7 +45,7 @@ return function($site, $page, $kirby) {
 				if($payment->getState() != 'approved' || (time() - strtotime($payment->getCreateTime()) > 300))
 					throw new Exception("Paypal transaction not approved");
 
-				$logger->info($s->token() . ":paypal captured with id " . $payment->getId());
+				$logger->info($sessionToken . ":paypal captured with id " . $payment->getId());
 
 			}else{
 				\Stripe\Stripe::setApiKey($kirby->option('stripe_key_prv'));
@@ -66,11 +67,11 @@ return function($site, $page, $kirby) {
 					"receipt_email" => $token['email']
 				));
 
-				$logger->info($s->token() . ":charge captured with id " . $charge->id);
+				$logger->info($sessionToken . ":charge captured with id " . $charge->id);
 			}
 
-			$logger->info($s->token() . ":order billing info: " . $args['billing_name'] . ", " . $args['billing_address_line1'] . ", " . $args['billing_address_zip']);
-			// $logger->info($s->token() . ":order shipping info: " . $args['shipping_name'] . ", " . $args['shipping_address_line1'] . ", " . $args['shipping_address_zip']);
+			$logger->info($sessionToken . ":order billing info: " . $args['billing_name'] . ", " . $args['billing_address_line1'] . ", " . $args['billing_address_zip']);
+			$logger->info($sessionToken . ":order shipping info: " . $args['shipping_name'] . ", " . $args['shipping_address_line1'] . ", " . $args['shipping_address_zip']);
 
 			foreach($items as $item){
 				$idParts = explode('::', $item['id']);
@@ -121,88 +122,86 @@ return function($site, $page, $kirby) {
 							'email' => $token['email'],
 							'total' => $total);
 
-			$userNotification = email(array(
-			  'to'      => $token['email'],
-			  'from'    => 'The Invisible Cities <jerome@the-invisible-cities.com>',
-			  'subject' => 'Your order from The Invisible Cities has been received',
-			  'service' => 'mailgun',
-			  'options' => array(
-			    'key'    => $kirby->option('mailgun_key'),
-			    'domain' => $kirby->option('mailgun_domain')
-			  ),
-			  'body'    => snippet('order-confirm', 
-			  					a::merge($order,
-			  						array(
-	               		             'title' => 'Your order from The Invisible Cities has been received',
-	               		             'subtitle' => 'Order confirmation',
-	                                 'preview' => 'Order confirmation. We received your order and will prepare it for shipping soon. Below is your order information.',
-	                                 'headline' => 'Thanks for ordering! We received your order and will prepare it for shipping soon. Below is your order information.'
-			  						)), true)
-			));
-
-			$selfNotification = email(array(
-			  'to'      => $kirby->option('alert_address'),
-			  'from'    => 'The Invisible Cities <jerome@the-invisible-cities.com>',
-			  'subject' => 'New order at The Invisible Cities!',
-			  'service' => 'mailgun',
-			  'options' => array(
-			    'key'    => $kirby->option('mailgun_key'),
-			    'domain' => $kirby->option('mailgun_domain')
-			  ),
-			  'body'    => snippet('order-confirm', 
-			  					a::merge($order,
-			  						array(
-	               		             'title' => 'A new order at the Invisible Cities has been received',
-	               		             'subtitle' => 'Order summary',
-	                                 'preview' => 'Order summary',
-	                                 'headline' => 'Below is the order information.'
-			  						)), true)
-			));
-
 			try{
-				$userNotification->send();
-			  	$logger->info($s->token() . ":email confirmation sent for order id " . $orderId);
+				$kirby->email(array(
+				  'to'      => $token['email'],
+				  'from'    => 'The Invisible Cities <jerome@the-invisible-cities.com>',
+				  'subject' => 'Your order from The Invisible Cities has been received',
+				  'service' => 'mailgun',
+				  'options' => array(
+				    'key'    => $kirby->option('mailgun_key'),
+				    'domain' => $kirby->option('mailgun_domain')
+				  ),
+				  'template' => 'confirm',
+				  'data'    => A::merge($order,
+		  						array(
+	               		            'title' => 'Your order from The Invisible Cities has been received',
+	               		            'subtitle' => 'Order confirmation',
+	                                'preview' => 'Order confirmation. We received your order and will prepare it for shipping soon. Below is your order information.',
+	                                'headline' => 'Thanks for ordering! We received your order and will prepare it for shipping soon. Below is your order information.'
+			  					))
+				));
+			  	$logger->info($sessionToken . ":email confirmation sent for order id " . $orderId);
 
-			  	$selfNotification->send();
-			  	$logger->info($s->token() . ":admin notification sent for order id " . $orderId);
+				$kirby->email(array(
+				  'to'      => $kirby->option('alert_address'),
+				  'from'    => 'The Invisible Cities <jerome@the-invisible-cities.com>',
+				  'subject' => 'New order at The Invisible Cities!',
+				  'service' => 'mailgun',
+				  'options' => array(
+				    'key'    => $kirby->option('mailgun_key'),
+				    'domain' => $kirby->option('mailgun_domain')
+				  ),
+				  'template' => 'confirm',
+				  'data'    => A::merge($order,
+		  						array(
+               		            	'title' => 'A new order at the Invisible Cities has been received',
+		               		        'subtitle' => 'Order summary',
+		                            'preview' => 'Order summary',
+		                            'headline' => 'Below is the order information.'
+				  				))
+				));
+
+			  	$logger->info($sessionToken . ":admin notification sent for order id " . $orderId);
+
 			}catch(Error $err){
 				$description = "email confirmation error for order id " . $orderId . ": " . $err->getMessage();
-				$logger->error($s->token() . ":" . $description);
-				sendAlert($s->token(), $orderId, $description);
+				$logger->error($sessionToken . ":" . $description);
+				sendAlert($sessionToken, $orderId, $description);
 			}
 
-			$logger->info($s->token() . ":order processing done");
+			$logger->info($sessionToken . ":order processing done");
 
 		}catch(\Stripe\Error\Card $e) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
 
-			$logger->error($s->token() . ": charge declined, type: " . $err['type'] . ", code: " . $err['code'] . ", status: " . $e->getHttpStatus());
-			sendAlert($s->token(), $orderId, "charge declined " . $e->getHttpStatus());
+			$logger->error($sessionToken . ": charge declined, type: " . $err['type'] . ", code: " . $err['code'] . ", status: " . $e->getHttpStatus());
+			sendAlert($sessionToken, $orderId, "charge declined " . $e->getHttpStatus());
 			$session->set('error', 'Unfortunately your card was declined, contact your financial institution.');
 		} catch (\Stripe\Error\RateLimit $e) {
-		  	$logger->error($s->token() . ": stripe rate limit error");
-		  	sendAlert($s->token(), $orderId, "stripe rate limit error");
+		  	$logger->error($sessionToken . ": stripe rate limit error");
+		  	sendAlert($sessionToken, $orderId, "stripe rate limit error");
 		  	$session->set('error', 'There was an error with the payment processing, you may try again later.');
 		} catch (\Stripe\Error\InvalidRequest $e) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
 
-			$logger->error($s->token() . ": invalid request, status: " . $e->getHttpStatus());
+			$logger->error($sessionToken . ": invalid request, status: " . $e->getHttpStatus());
 			$session->set('error', 'There was an error with the payment processing, you may try again later.');
 		} catch (\Stripe\Error\Authentication $e) {
-		  	$logger->error($s->token() . ": stripe auth error, check keys", array('reason' => $e->getMessage()));
+		  	$logger->error($sessionToken . ": stripe auth error, check keys", array('reason' => $e->getMessage()));
 		  	$session->set('error', 'There was an error with the payment processing, I have been notified of the issue.');
 		} catch (\Stripe\Error\ApiConnection $e) {
-			$logger->error($s->token() . ": network communication error", array('reason' => $e->getMessage()));
+			$logger->error($sessionToken . ": network communication error", array('reason' => $e->getMessage()));
 			$session->set('error', 'There was an error with the payment processing, I have been notified of the issue.');
 		} catch (\Stripe\Error\Base $e) {
-			$logger->error($s->token() . ": stripe general error", array('reason' => $e->getMessage()));
-			sendAlert($s->token(), $orderId, $e->getMessage());
+			$logger->error($sessionToken . ": stripe general error", array('reason' => $e->getMessage()));
+			sendAlert($sessionToken, $orderId, $e->getMessage());
 			$session->set('error', 'There was an unspecified error with the payment processing, I have been notified of this issue. You may try again later.');
 		} catch (Exception $e) {
-			$logger->error($s->token() . ": general error", array('reason' => $e->getMessage()));
-			sendAlert($s->token(), $orderId, $e->getMessage());
+			$logger->error($sessionToken . ": general error", array('reason' => $e->getMessage()));
+			sendAlert($sessionToken, $orderId, $e->getMessage());
 			$session->set('error', 'There was an unspecified error with the site, I have been notified of this issue. You may try again later');
 		}
 
@@ -212,7 +211,7 @@ return function($site, $page, $kirby) {
 
 function sendAlert($sid, $orderId, $error = "Unknown reason")
 {
-	$email = email(array(
+	$kirby->email(array(
 	  'to'      => $kirby->option('alert_address'),
 	  'from'    => 'The Invisible Cities Store <jerome@the-invisible-cities.com>',
 	  'subject' => 'Order exception alert',
@@ -224,8 +223,6 @@ function sendAlert($sid, $orderId, $error = "Unknown reason")
 	  'body'    => "A problem occurred while processing order " . $orderId . " during session " . $sid . "<br />" .
 	  	"Error: " . $error
 	));
-
-	$email->send();
 
 	$logger = new Logger('order');
 	$logger->info("Alert sent for " . $orderId);
