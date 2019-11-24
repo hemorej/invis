@@ -1,5 +1,5 @@
 <?php
-return function($site, $pages, $page) {
+return function($site, $page, $kirby) {
     
     $user = $site->user();
 
@@ -17,7 +17,7 @@ return function($site, $pages, $page) {
         $orders = $page->children()->sortBy('txn_date','desc')->filterBy('txn_id',get('txn_id'));
 
         // Empty the cart by setting a new txn id (successful payment gateway callbacks will end up here)
-        s::destroy();
+        $kirby->session()->destroy();
     } else if ($user and $user->role() == 'admin') {
         // If admin, show all orders except abandoned
         $orders = $page->children()->sortBy('txn_date','desc');

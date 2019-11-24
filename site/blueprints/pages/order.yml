@@ -1,39 +1,39 @@
 title: Order
+type: page
 pages: false
 files: false
 options:
-  delete: false
-  status: false
+  update: true
 fields:
   txn_id:
     label: transaction id
     type: text
     width: 1/2
-    readonly: true
+    disabled: true
   txn_date:
     label: transaction date
-    type: datetime
+    type: date
     date:
       format: MM/DD/YYYY
     time: 
       format: 24
       interval: 1
-    readonly: true
+    disabled: true
     width: 1/2
   order_id:
     label: order id
     type: text
-    readonly: true
+    disabled: true
     width: 1/3
   shipping_date:
     label: date shipped
-    type: datetime
+    type: date
     date:
       format: MM/DD/YYYY
     time: 
       format: 24
       interval: 1
-    readonly: true
+    disabled: true
     width: 1/3
   status:
     label: status
@@ -48,7 +48,7 @@ fields:
     required: true
   products:
     label: products
-    readonly: true
+    disabled: true
     type: structure
     entry: >
       <a href="/{{uri}}" target="_blank">{{name}} ({{variant}})</a><br />
@@ -69,11 +69,11 @@ fields:
         type: text
       quantity:
         label: quantity
-        type: int
+        type: number
       amount:
         label: amount
-        type: int
+        type: number
   customer:
     label: customer
-    readonly: true
+    disabled: true
     type: textarea

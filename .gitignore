@@ -2,6 +2,7 @@
 *.woff
 *.eot
 content/4_journal/*
+content/orders/*
 site/accounts/*
 vendor/*
 sitemap.json
@@ -18,3 +19,4 @@ Icon
 !/site/sessions/index.html
 /site/config/.license
 cache/
+

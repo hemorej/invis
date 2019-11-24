@@ -2,16 +2,16 @@ Title: Los Angeles print set
 
 ----
 
-Published: 2018-06-23
-
-----
-
-Description: 
+Description:
 
 Here I've collected four prints from my first trip to Los Angeles. The light in that city is something beautiful and quite different from what I'm used to. 
 Los Angeles 2016
 —
 These are archival quality digital prints from black and white silver gelatin prints.
+
+----
+
+Published: 2018-06-23
 
 ----
 
@@ -23,13 +23,21 @@ Type: print
 
 ----
 
-Variants: 
+Variants:
 
 - 
-  sku: sku_2eb2ac50262497d2f29c4e83f8f2
   name: 4x6in (10x15cm)
   price: "25"
-  stock: "4"
+  stock: "5"
+  sku: sku_2eb2ac50262497d2f29c4e83f8f2
+
+----
+
+Uploads:
+
+- 12022013-033.jpg
+- IMG_6596.jpg
+- IMG_6597.jpg
 
 ----
 

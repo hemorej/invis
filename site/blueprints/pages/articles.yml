@@ -1,5 +1,4 @@
-title: Journal
-
+title: Articles
 columns:
   - width: 1/4
     sections:
@@ -7,7 +6,10 @@ columns:
         type: pages
         headline: Hidden
         status: unlisted
-        
+        templates:
+          - article
+          - product
+
   - width: 1/4
     sections:
       drafts:
@@ -16,6 +18,7 @@ columns:
         status: draft
         create: 
           - article
+          - product
 
   - width: 1/2
     sections:

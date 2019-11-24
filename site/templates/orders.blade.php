@@ -1,1 +1,3 @@
-<?php if(!$site->user()) go('/prints') ?>
+@if(!$site->user()) 
+	@go('/prints')
+@endif

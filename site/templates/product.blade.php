@@ -1,5 +1,3 @@
-@css("//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick.css")
-@css("//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick-theme.css")
 
 @php 
     $image = $page->images()->first()->resize(null, 600);
@@ -12,6 +10,9 @@
 
 @snippet('header', array('meta' => $meta))
 @snippet('menu')
+
+@css("//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick.css")
+@css("//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick-theme.css")
 
 <noscript>
 <div class="alert-box row" style="display:block">
@@ -50,11 +51,12 @@
         <section class="small-12 medium-4 columns variants">
             @php
                 $variants = $page->variants()->toStructure();
-
+                
                 $stock = 0;
                 foreach($variants as $variant){
                     $stock += $variant->stock()->value();
                 }
+
             @endphp
             @if(count($variants) == 0 || $stock == 0):
                 'Out of stock'
@@ -66,8 +68,8 @@
                 @endphp
                 @foreach ($variants as $variant)
                     @if(inStock($variant))
-                        <li {{ $first == true ? 'class="active variant"' : 'class="variant"' }}>
-                            <a href="#" data-option-variant='{{ $variant->sku() }}' data-option-price="{{ $variant->price }}">{{ $variant->name() }} &mdash; ${{ $variant->price }}</a>
+                        <li {{ $first === true ? 'class=active variant' : 'class=variant' }}>
+                            <a href="#" data-option-variant='{{ $variant->sku() }}' data-option-price="{{ $variant->price() }}">{{ $variant->name() }} &mdash; ${{ $variant->price() }}</a>
                         </li>&nbsp;
                         @php 
                             if($first == true){

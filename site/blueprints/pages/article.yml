@@ -1,6 +1,6 @@
 title: Article
+preset: page
 pages: false
-files: true
 fields:
 	title:
 		label: Title

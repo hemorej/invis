@@ -1,8 +1,20 @@
 title: Orders
-pages: false
-	sort: session_start desc
-files: false
-fields:
-  title:
-    label: Title
-    type:  text
+
+columns:
+  - width: 1/2
+    sections:
+      shipped:
+        type: pages
+        headline: Shipped orders
+        template: order
+        create: false
+        sortBy: txn_id desc shipping_date desc
+
+  - width: 1/2
+    sections:
+      unshipped:
+        type: pages
+        headline: Unshipped orders
+        template: order
+        create: false
+        sortBy: txn_id asc txn_date desc

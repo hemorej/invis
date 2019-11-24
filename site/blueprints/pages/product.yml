@@ -1,56 +1,73 @@
 title: Product
-fields:
-  title:
-    label: Title
-    type: text
-    help: The title of your product.
-    required: true
-  published:
-    label: Published
-    type: date
-    help: Publishing date (December 21, 2017).
-    required: true
-    default: today
-  description:
-    label: Description
-    help: Details for the product page
-    type: textarea
-  meta:
-    label: Meta
-    help: Small text for the cart
-    type: text
-  type:
-    label: Attribute
-    help: Product attribute (print, zine...)
-    type: select
-    options:
-        print: print
-        zine: zine
-    required: true
-    default: print
-  variants:
-    label: Variants
-    type: structure
-    fields:
-      name:
-        label: Variant name
-        type:  text
-        help: Describe variant
-        required: true
-      price:
-        label: Price
-        type:  text
-        width: 1/3
-        help: Numbers only
-        required: true
-      stock:
-        label: Quantity in stock
-        type: text
-        validate: integer
-        width: 1/3
-        help: Leave blank for unlimited stock
-      sku:
-        label: SKU
-        type: text
-        width: 1/3
-        readonly: true
+type: fields
+columns:
+    - width: 2/3
+        fields:
+          title:
+            label: Title
+            type: text
+            help: The title of your product.
+          description:
+            label: Description
+            help: Details for the product page
+            type: textarea
+            required: true
+          published:
+            label: Published
+            type: date
+            help: Publishing date (December 21, 2017).
+            required: true
+            default: today
+            width: 1/3
+          meta:
+            width: 1/3
+            label: Meta
+            help: Small text for the cart
+            type: text
+            default: 'Signed, unmounted print on Ilford Multigrade FB Classic paper.'
+          type:
+            width: 1/3
+            label: Attribute
+            help: Product attribute (print, zine...)
+            type: select
+            options:
+                print: print
+                zine: zine
+            required: true
+            default: print
+          variants:
+            label: Variants
+            type: structure
+            fields:
+              name:
+                label: Variant name
+                type:  text
+                help: Describe variant
+                required: true
+              price:
+                label: Price
+                type:  text
+                width: 1/3
+                help: Numbers only
+                required: true
+                min: 0
+              stock:
+                label: Quantity in stock
+                type: text
+                width: 1/3
+                help: Leave blank for unlimited stock
+                min: 0
+              sku:
+                label: SKU
+                type: text
+                width: 1/3
+                readonly: true
+
+    - width: 1/3
+        fields:
+          uploads:
+            label: Images
+            type: files
+            query: page.images
+            layout: list
+            multiple: true

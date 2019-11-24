@@ -13,6 +13,6 @@ fields:
 		size: large
 		required: true
 	contact:
-		label: Your content
+		label: Contact info
 		type: textarea
 		size: large

@@ -3,7 +3,6 @@
 return [
 	'env' => 'dev',
 
-	'timezone' => 'America/Montreal',
 	'debug' => true,
 	'cache' => false,
 	'cache.driver' => 'file',
@@ -13,7 +12,7 @@ return [
 	  'feed',
 	  'prints/*'
 	),
-	'cache_path' => __DIR__ . '/../../cache/',
+	'cache.backend' => true,
 
 	'ga_code' => '',
 

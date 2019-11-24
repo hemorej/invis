@@ -1,6 +1,5 @@
 title: Process
-pages: false
-files: true
+type: fields
 fields:
 	title:
 		label: Title
