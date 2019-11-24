@@ -3,7 +3,6 @@
 
 return function($site, $page, $kirby)
 {
-  // $kirby->session()->destroy();exit;
   $session = $kirby->session(['long' => true]);
 
   if (!$session->get('txn') && get('action') != 'add')

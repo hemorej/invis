@@ -25,5 +25,7 @@ return [
 	'paypal_client_id' => '',
 	'paypal_client_secret' => '',
 	'fixer_key' => '',
-	'ipstack_key' => ''
+	'ipstack_key' => '',
+
+	'bnomei.autoid.generator' => function(){ return Bnomei\AutoID::getToken(15, true, true, true); }
 ];

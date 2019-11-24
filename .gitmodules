@@ -4,3 +4,6 @@
 [submodule "site/plugins/kirby-blade"]
 	path = site/plugins/kirby-blade
 	url = https://github.com/afbora/kirby-blade.git
+[submodule "site/plugins/kirby3-autoid"]
+	path = site/plugins/kirby3-autoid
+	url = https://github.com/bnomei/kirby3-autoid.git

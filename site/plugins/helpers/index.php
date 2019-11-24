@@ -43,28 +43,6 @@ function inStock($variant)
   return false;
 }
 
-function getUniqueId($type = 'sku')
-{
-  $prefix = 'pre_';
-
-  switch($type){
-    case 'sku':
-      $prefix = 'sku_';
-      break;
-    case 'product':
-      $prefix = 'prd_';
-      break;
-    case 'order':
-      $prefix = 'ord_';
-      break;
-  }
-
-  $bytes = openssl_random_pseudo_bytes(14, $cstrong);
-  $hex   = bin2hex($bytes);
-
-  return $prefix . $hex;
-}
-
 function getPreview($image){
 
     if($image->isLandscape())

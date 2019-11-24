@@ -57,11 +57,11 @@ columns:
                 width: 1/3
                 help: Leave blank for unlimited stock
                 min: 0
-              sku:
+              autoid:
                 label: SKU
-                type: text
                 width: 1/3
                 readonly: true
+                translate: false 
 
     - width: 1/3
         fields:
