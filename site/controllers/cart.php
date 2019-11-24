@@ -1,9 +1,11 @@
 <?php
 
+use \Cart\Cart;
 
 return function($site, $page, $kirby)
 {
   $session = $kirby->session(['long' => true]);
+  $cart = new Cart();
 
   if (!$session->get('txn') && get('action') != 'add')
     return true;
@@ -15,20 +17,21 @@ return function($site, $page, $kirby)
       $id = get('id', implode('::', array(get('uri', ''), get('variant', ''))));
       $quantity = intval(get('quantity'));
       $variant = get('variant');
-      if ($action == 'add') add($id, $quantity);
-      if ($action == 'delete') delete($id);
+      if ($action == 'add') $cart->add($id, $quantity);
+      if ($action == 'delete') $cart->delete($id);
     }
   }
   // Set txn object
   $txn = $site->page("prints/cart/" . $session->get('txn'));
-  $total = cartSubtotal(getItems());
-  $currencies = estimateCurrency($total);
+  $total = $cart->subtotal($cart->items());
+  $currencies = $cart->estimateCurrency($total);
 
   return [
-      'items' => getItems()->count(),
+      'items' => $cart->items()->count(),
       'total' => $total,
       'currencies' => $currencies,
-      'content' => cartContents(getItems()),
+      'content' => $cart->contents($cart->items()),
+      'cartItems' => $cart->items(),
       'txn' => $txn
   ];
 };

@@ -1,13 +1,11 @@
 <?php
-use \Monolog\Logger;
-use \Monolog\Handler\RotatingFileHandler;
+use \Logger\Logger;
 
 class UidHandler
 {
     protected $logger;
     function __construct(){
         $this->logger = new Logger('uid');
-        $this->logger->pushHandler(new RotatingFileHandler(__DIR__.'/../../logs/invis.log', Logger::DEBUG));
     }
 
     public function handle($page, $oldPage, $type){
@@ -36,7 +34,7 @@ class UidHandler
 
             $items = array();
             $total = 0;
-            foreach(yaml::decode($page->products()) as $product)
+            foreach(Yaml::decode($page->products()) as $product)
             {   
                 $items[] = array('variant' => $product['variant'], 'name' => $product['name'], 'quantity' => $product['quantity'], 'price' => $product['amount']);
                 $total += intval($product['quantity'] * $product['amount']);

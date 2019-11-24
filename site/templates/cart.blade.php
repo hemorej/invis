@@ -1,5 +1,6 @@
 @snippet('header')
 @snippet('menu')
+@php use \Cart\Cart; @endphp
 
 <div class="alert-box row">
     <div class="medium-12 columns">
@@ -41,7 +42,7 @@
     </div>
 
     @php $first = true; @endphp
-        @foreach(getItems() as $i => $item)
+        @foreach($cartItems as $i => $item)
         <div class="show-for-landscape">
             <div class="row cart {{ e($first==true, 'medium-space-top') }}">
                 <div class="small-2 medium-2 columns">
@@ -64,7 +65,7 @@
                         <button class="right show-for-small-only" type="submit">x</button>
                         <button class="hide-for-small" type="submit">delete</button>
                     </form>
-                    <input class="input-qty" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->sku() }}" value="{{ $item->quantity() }}" min="0" max="{{ inStock($item->id()) }}" data-sku="{{ $item->sku() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
+                    <input class="input-qty" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->sku() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->id()) }}" data-sku="{{ $item->sku() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
                     <input id="input-csrf" type="hidden" name="csrf" value="@csrf()">
                 </div>
             </div>
@@ -86,7 +87,7 @@
 
             <div class="row cart">
                 <div class="small-12 medium-12 columns text-right">
-                    <input class="input-qty" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->sku() }}" value="{{ $item->quantity() }}" min="0" max="{{ inStock($item->id()) }}" data-sku="{{ $item->sku() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
+                    <input class="input-qty" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->sku() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->id()) }}" data-sku="{{ $item->sku() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
                     <form action="" method="post">
                         <input type="hidden" name="csrf" value="@csrf()">
                         <input type="hidden" name="action" value="delete">

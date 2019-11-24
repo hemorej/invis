@@ -1,5 +1,7 @@
 <?php
 
+use Logger\Logger;
+
 return function($site, $page, $kirby) {
 	$token = json_decode(get('token'), true);
 	$args = json_decode(get('args'), true);
@@ -7,9 +9,7 @@ return function($site, $page, $kirby) {
 	$csrf = get('csrf');
 	$total = intval(get('total'));
 	$session = $kirby->session();
-	// // $logger = new Logger('order');
- //    // $logger->pushHandler(new RotatingFileHandler(__DIR__.'/../../logs/invis.log', Logger::DEBUG));
-
+	$logger = new Logger('order');
 
 	if(empty($token) || empty($total) || empty($items) || empty($args) || csrf($csrf) !== true){
 		if($session->get('state')){ // an order just went through
@@ -24,10 +24,10 @@ return function($site, $page, $kirby) {
 			return [ 'state' => 'no session'];
 		}
 	}else{
-		// $logger->info($session->token() . ":order processing start");
+		$logger->info($session->token() . ":order processing start");
 
 		$orderId = getUniqueId('order');
-		// // $logger->info($s->token() . ":order created with id " . $orderId);
+		$logger->info($s->token() . ":order created with id " . $orderId);
 
 		try{
 			if(preg_match('/^PAY-/', $token['id']) == 1){
@@ -44,7 +44,7 @@ return function($site, $page, $kirby) {
 				if($payment->getState() != 'approved' || (time() - strtotime($payment->getCreateTime()) > 300))
 					throw new Exception("Paypal transaction not approved");
 
-				// $logger->info($s->token() . ":paypal captured with id " . $payment->getId());
+				$logger->info($s->token() . ":paypal captured with id " . $payment->getId());
 
 			}else{
 				\Stripe\Stripe::setApiKey($kirby->option('stripe_key_prv'));
@@ -66,10 +66,10 @@ return function($site, $page, $kirby) {
 					"receipt_email" => $token['email']
 				));
 
-				// $logger->info($s->token() . ":charge captured with id " . $charge->id);
+				$logger->info($s->token() . ":charge captured with id " . $charge->id);
 			}
 
-			// $logger->info($s->token() . ":order billing info: " . $args['billing_name'] . ", " . $args['billing_address_line1'] . ", " . $args['billing_address_zip']);
+			$logger->info($s->token() . ":order billing info: " . $args['billing_name'] . ", " . $args['billing_address_line1'] . ", " . $args['billing_address_zip']);
 			// $logger->info($s->token() . ":order shipping info: " . $args['shipping_name'] . ", " . $args['shipping_address_line1'] . ", " . $args['shipping_address_zip']);
 
 			foreach($items as $item){
@@ -91,7 +91,7 @@ return function($site, $page, $kirby) {
 
 		        addToStructure(page($uri), 'variants', $updatedVariant);
 			}
-			// $logger->info("inventory updated after order ". $orderId);
+			$logger->info("inventory updated after order ". $orderId);
 
 			$customer = array('name' => $args['shipping_name'],
 							'email' => $token['email'],
@@ -102,7 +102,7 @@ return function($site, $page, $kirby) {
 								"postal_code" => $args['shipping_address_zip'],
 								"state" => $args['shipping_address_state'])
 						);
-			// $logger->info("customer information added to order ". $orderId);
+			$logger->info("customer information added to order ". $orderId);
 
 
 			page($session->get('txn'))->update(['status' => 'paid', 'order_id' => $orderId, 'customer' => yaml::encode($customer)]);
@@ -161,47 +161,47 @@ return function($site, $page, $kirby) {
 
 			try{
 				$userNotification->send();
-			  	// $logger->info($s->token() . ":email confirmation sent for order id " . $orderId);
+			  	$logger->info($s->token() . ":email confirmation sent for order id " . $orderId);
 
 			  	$selfNotification->send();
-			  	// $logger->info($s->token() . ":admin notification sent for order id " . $orderId);
+			  	$logger->info($s->token() . ":admin notification sent for order id " . $orderId);
 			}catch(Error $err){
 				$description = "email confirmation error for order id " . $orderId . ": " . $err->getMessage();
-				// $logger->error($s->token() . ":" . $description);
+				$logger->error($s->token() . ":" . $description);
 				sendAlert($s->token(), $orderId, $description);
 			}
 
-			// $logger->info($s->token() . ":order processing done");
+			$logger->info($s->token() . ":order processing done");
 
 		}catch(\Stripe\Error\Card $e) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
 
-			// $logger->error($s->token() . ": charge declined, type: " . $err['type'] . ", code: " . $err['code'] . ", status: " . $e->getHttpStatus());
+			$logger->error($s->token() . ": charge declined, type: " . $err['type'] . ", code: " . $err['code'] . ", status: " . $e->getHttpStatus());
 			sendAlert($s->token(), $orderId, "charge declined " . $e->getHttpStatus());
 			$session->set('error', 'Unfortunately your card was declined, contact your financial institution.');
 		} catch (\Stripe\Error\RateLimit $e) {
-		  	// $logger->error($s->token() . ": stripe rate limit error");
+		  	$logger->error($s->token() . ": stripe rate limit error");
 		  	sendAlert($s->token(), $orderId, "stripe rate limit error");
 		  	$session->set('error', 'There was an error with the payment processing, you may try again later.');
 		} catch (\Stripe\Error\InvalidRequest $e) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
 
-			// $logger->error($s->token() . ": invalid request, status: " . $e->getHttpStatus());
+			$logger->error($s->token() . ": invalid request, status: " . $e->getHttpStatus());
 			$session->set('error', 'There was an error with the payment processing, you may try again later.');
 		} catch (\Stripe\Error\Authentication $e) {
-		  	// $logger->error($s->token() . ": stripe auth error, check keys", array('reason' => $e->getMessage()));
+		  	$logger->error($s->token() . ": stripe auth error, check keys", array('reason' => $e->getMessage()));
 		  	$session->set('error', 'There was an error with the payment processing, I have been notified of the issue.');
 		} catch (\Stripe\Error\ApiConnection $e) {
-			// $logger->error($s->token() . ": network communication error", array('reason' => $e->getMessage()));
+			$logger->error($s->token() . ": network communication error", array('reason' => $e->getMessage()));
 			$session->set('error', 'There was an error with the payment processing, I have been notified of the issue.');
 		} catch (\Stripe\Error\Base $e) {
-			// $logger->error($s->token() . ": stripe general error", array('reason' => $e->getMessage()));
+			$logger->error($s->token() . ": stripe general error", array('reason' => $e->getMessage()));
 			sendAlert($s->token(), $orderId, $e->getMessage());
 			$session->set('error', 'There was an unspecified error with the payment processing, I have been notified of this issue. You may try again later.');
 		} catch (Exception $e) {
-			// $logger->error($s->token() . ": general error", array('reason' => $e->getMessage()));
+			$logger->error($s->token() . ": general error", array('reason' => $e->getMessage()));
 			sendAlert($s->token(), $orderId, $e->getMessage());
 			$session->set('error', 'There was an unspecified error with the site, I have been notified of this issue. You may try again later');
 		}
@@ -227,7 +227,6 @@ function sendAlert($sid, $orderId, $error = "Unknown reason")
 
 	$email->send();
 
-	// // $logger = new Logger('order');
- //    // $logger->pushHandler(new RotatingFileHandler(__DIR__.'/../../logs/invis.log', Logger::DEBUG));
-	// // $logger->info("Alert sent for " . $orderId);
+	$logger = new Logger('order');
+	$logger->info("Alert sent for " . $orderId);
 }

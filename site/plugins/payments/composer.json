@@ -1,0 +1,11 @@
+{
+    "require": {
+        "stripe/stripe-php": "^7.13",
+        "paypal/rest-api-sdk-php": "^1.14"
+    },
+	"autoload": {
+		"psr-4": {
+		  "Payments\\": "src/"
+		}
+	}
+}
