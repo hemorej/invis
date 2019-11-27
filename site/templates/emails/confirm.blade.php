@@ -145,12 +145,12 @@
                             <tr class="row__row">
                               <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Order information</b><br/>
                                 <table class="table">
-                                  @foreach($items as $item)
+                                  @foreach($items as $i => $item)
                                     <tr class="tr">
-                                      <td class="td">{{ $item['name'] }}<br />
-                                      	<em>{{ $item['variant'] }} x{{ $item['quantity'] }}</em>
+                                      <td class="td">{{ $item->name() }}<br />
+                                      	<em>{{ $item->variant() }} x{{ $item->quantity() }}</em>
                                       </td>
-                                      <td class="td">— ${{ $item['price']*$item['quantity'] }}</td>
+                                      <td class="td">— ${{ intval($item->price()->value) * intval($item->quantity()->value) }}</td>
                                     </tr>
                                   @endforeach
                                   <tr class="tr">
@@ -159,7 +159,7 @@
                                   </tr>
                                   <tr class="tr">
                                     <td class="td"><b>Total</b></td>
-                                    <td class="td">— <b>${{ intval($total)/100 }}</b></td>
+                                    <td class="td">— <b>${{ $total }}</b></td>
                                   </tr>
                                 </table>
                               </td>

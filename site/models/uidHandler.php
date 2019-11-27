@@ -11,7 +11,7 @@ class UidHandler
     public function handle($page, $oldPage, $type)
     {
         if($page->parent() == 'prints/orders'){
-            if($type == 'panel.page.update')
+            if($type == 'page.update:after')
                 $this->notify($page, $oldPage);
         }
     }

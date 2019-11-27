@@ -63,18 +63,15 @@
                 'Out of stock'
             @else
                 <ul class="inline-list">
-                @php
-                    $first = true;
-                    $activeSku = 0;
-                @endphp
+                @php $first = true; $activeVariant = 0; @endphp
                 @foreach ($variants as $variant)
                     @if(Cart::inStock($variant))
-                        <li {{ $first === true ? 'class=active variant' : 'class=variant' }}>
-                            <a href="#" data-option-variant='{{ $variant->sku() }}' data-option-price="{{ $variant->price() }}">{{ $variant->name() }} &mdash; ${{ $variant->price() }}</a>
+                        <li {{ e($first == true, 'class=active variant', 'class=variant') }}>
+                            <a href="#" data-option-variant='{{ $variant->autoid() }}' data-option-price="{{ $variant->price() }}">{{ $variant->name() }} &mdash; ${{ $variant->price() }}</a>
                         </li>&nbsp;
                         @php 
                             if($first == true){
-                                $activeSku = $variant->sku();
+                                $activeVariant = $variant->autoid();
                                 $first = false;
                             }
                         @endphp
@@ -87,7 +84,7 @@
                         <input type="hidden" name="csrf" value="@csrf()">
                         <input type="hidden" name="action" value="add">
                         <input type="hidden" name="uri" value="{{ $page->uri() }}">
-                        <input type="hidden" name="variant" value='{{ $activeSku }}'>
+                        <input type="hidden" name="variant" value='{{ $activeVariant }}'>
                     </div>
 
                     <div class="action">
@@ -130,7 +127,7 @@ $( document ).ready(function() {
 });
 </script>
 @if(@option('env') == 'prod')
-    @js('assets/js/vendor/cart.min.js')
+    @js('assets/js/cart.min.js')
 @else
-    @js('assets/js/vendor/cart.js')
+    @js('assets/js/cart.js')
 @endif

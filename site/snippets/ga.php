@@ -1,9 +1,9 @@
 <?php 
 $loc = location();
-if($loc !== false): ?>
+if($loc->location->is_eu == true): ?>
 	<?= css('//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css') ?>
 	<?= js('//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js') ?>
-	<?= js('assets/js/vendor/consent.js', ['id' => 'consent', 'data-loc' => $loc, 'data-ga' => option('ga_code')]) ?>
+	<?= js('assets/js/consent.js', ['id' => 'consent', 'data-loc' => $loc, 'data-ga' => option('ga_code')]) ?>
 <?php else: ?>
 	<?php if(!empty(option('ga_code'))): ?>
 		<script>

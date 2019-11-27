@@ -1,6 +1,7 @@
 <?php
 
 use \Cart\Cart;
+use \Payments\StripeConnector as Stripe;
 
 return function($site, $page, $kirby)
 {
@@ -22,9 +23,15 @@ return function($site, $page, $kirby)
     }
   }
   // Set txn object
-  $txn = $site->page("prints/cart/" . $session->get('txn'));
+  $txn = $cart->getCartPage();
   $total = $cart->subtotal($cart->items());
   $currencies = $cart->estimateCurrency($total);
+
+  $lineItems = $cart->getLineItems();
+  $stripeSession = null;
+  if(!empty($lineItems))
+    $stripeSession = (new Stripe())->createSession($lineItems)->id;
+
 
   return [
       'items' => $cart->items()->count(),
@@ -32,6 +39,8 @@ return function($site, $page, $kirby)
       'currencies' => $currencies,
       'content' => $cart->contents($cart->items()),
       'cartItems' => $cart->items(),
-      'txn' => $txn
+      'txn' => $txn,
+      'checkoutSessionId' => $stripeSession,
+      'currentLocation' => location()->country_name
   ];
 };

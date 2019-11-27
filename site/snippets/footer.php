@@ -6,7 +6,7 @@
     </div>
 <?php endif; ?>
 
-<?= js('assets/js/vendor/min.js') ?>
+<?= js('assets/js/min.js') ?>
 <?php snippet('ga') ?>
 </body>
 

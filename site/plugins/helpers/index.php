@@ -11,16 +11,17 @@ Kirby::plugin('helpers/helpers', [
 function addToStructure($page, $field, $data = array())
 {
   $fieldData = $page->$field()->yaml();
-  $key = array_search($data['sku'], array_column($fieldData, 'sku'));
+  $key = array_search($data['autoid'], array_column($fieldData, 'autoid'));
   unset($fieldData[$key]);
   $fieldData = array_values($fieldData);
 
   $fieldData[] = $data;
-  $fieldData = Yaml::encode($fieldData);
+  $fieldData = \Yaml::encode($fieldData);
   try {
+    kirby()->impersonate('kirby');
     $page->update(array($field => $fieldData));
     return true;
-  } catch(Exception $e) {
+  } catch(\Exception $e) {
     return $e->getMessage();
   }
 }
@@ -105,16 +106,239 @@ function location(){
     $loc = json_decode($data);
   }else{
     $access_key = kirby()->option('ipstack_key');
-    $requestURL = "http://api.ipstack.com/$remote?access_key=$access_key&fields=country_code,location.is_eu&language=en&output=json";
+    $requestURL = "http://api.ipstack.com/$remote?access_key=$access_key&fields=country_code,country_name,location.is_eu&language=en&output=json";
 
-    $data = Remote::get($requestURL);
+    $data = \Remote::get($requestURL);
     $cache->set($remote, $data);
     $loc = json_decode($data->content());
   }
 
-  if($loc->location->is_eu == true)
-      return $loc->country_code;
-
-    return false;
+  return $loc;
 }
 
+function sendAlert($sid, $orderId, $error = "Unknown reason")
+{
+  kirby()->email(array(
+    'to'      => kirby()->option('alert_address'),
+    'from'    => kirby()->option('from_address'),
+    'subject' => 'Order exception alert',
+    'service' => 'mailgun',
+    'options' => array(
+      'key'    => kirby()->option('mailgun_key'),
+      'domain' => kirby()->option('mailgun_domain')
+    ),
+    'body'    => "A problem occurred while processing order " . $orderId . " during session " . $sid . "<br />" .
+      "Error: " . $error
+  ));
+
+  $logger = (new Logger\Logger('order'))->getLogger();
+  $logger->info("Alert sent for " . $orderId);
+}
+
+function countryList(){
+  return array(
+    "Afghanistan",
+    "Aland Islands",
+    "Albania",
+    "Algeria",
+    "Andorra",
+    "Angola",
+    "Antigua and Barbuda",
+    "Argentina",
+    "Armenia",
+    "Australia",
+    "Austria",
+    "Azerbaijan",
+    "Bahamas",
+    "Bahrain",
+    "Bangladesh",
+    "Barbados",
+    "Belarus",
+    "Belgium",
+    "Belize",
+    "Benin",
+    "Bhutan",
+    "Bolivia",
+    "Bosnia and Herzegovina",
+    "Botswana",
+    "Brazil",
+    "Brunei Darussalam",
+    "Bulgaria",
+    "Burkina Faso",
+    "Burma",
+    "Burundi",
+    "Cambodia",
+    "Cameroon",
+    "Canada",
+    "Cape Verde",
+    "Cayman Islands",
+    "Central African Republic",
+    "Chad",
+    "Chile",
+    "China",
+    "Colombia",
+    "Comoros",
+    "Congo-Kinshasa",
+    "Congo, Republic of",
+    "Costa Rica",
+    "Cote d'Ivoire",
+    "Croatia",
+    "Cuba",
+    "Cyprus",
+    "Czech Republic",
+    "Denmark",
+    "Djibouti",
+    "Dominica",
+    "Dominican Republic",
+    "Ecuador",
+    "Egypt",
+    "El Salvador",
+    "Equatorial Guinea",
+    "Eritrea",
+    "Estonia",
+    "Ethiopia",
+    "Fiji",
+    "Finland",
+    "France",
+    "Gabon",
+    "Gambia",
+    "Georgia",
+    "Germany",
+    "Ghana",
+    "Gibraltar",
+    "Greece",
+    "Greenland",
+    "Grenada",
+    "Guam",
+    "Guatemala",
+    "Guinea",
+    "Guinea-Bissau",
+    "Guyana",
+    "Haiti",
+    "Honduras",
+    "Hong Kong",
+    "Hungary",
+    "Iceland",
+    "India",
+    "Indonesia",
+    "Iran",
+    "Iraq",
+    "Ireland",
+    "Israel",
+    "Italy",
+    "Jamaica",
+    "Jordan",
+    "Kazakhstan",
+    "Kenya",
+    "Kiribati",
+    "Korea, Republic of",
+    "Kuwait",
+    "Kyrgyz Republic",
+    "Laos",
+    "Latvia",
+    "Lebanon",
+    "Lesotho",
+    "Liberia",
+    "Libya",
+    "Liechtenstein",
+    "Lithuania",
+    "Luxembourg",
+    "Macao",
+    "Macedonia",
+    "Madagascar",
+    "Malawi",
+    "Malaysia",
+    "Maldives",
+    "Mali",
+    "Malta",
+    "Marshall Islands",
+    "Mauritania",
+    "Mauritius",
+    "Mexico",
+    "Micronesia",
+    "Moldova",
+    "Monaco",
+    "Mongolia",
+    "Montenegro",
+    "Morocco",
+    "Mozambique",
+    "Namibia",
+    "Nauru",
+    "Nepal",
+    "Netherlands",
+    "New Caledonia",
+    "New Zealand",
+    "Nicaragua",
+    "Niger",
+    "Nigeria",
+    "Norway",
+    "Oman",
+    "Pakistan",
+    "Palau",
+    "Palestinian Territory",
+    "Panama",
+    "Papua New Guinea",
+    "Paraguay",
+    "Peru",
+    "Philippines",
+    "Poland",
+    "Portugal",
+    "Puerto Rico",
+    "Qatar",
+    "Romania",
+    "Russian Federation",
+    "Rwanda",
+    "Saint Kitts and Nevis",
+    "Saint Lucia",
+    "Saint Vincent",
+    "Samoa",
+    "San Marino",
+    "Sao Tome and Principe",
+    "Saudi Arabia",
+    "Senegal",
+    "Serbia",
+    "Seychelles",
+    "Sierra Leone",
+    "Singapore",
+    "Slovakia",
+    "Slovenia",
+    "Solomon Islands",
+    "Somalia",
+    "South Africa",
+    "South Sudan",
+    "Spain",
+    "Sri Lanka",
+    "Sudan",
+    "Suriname",
+    "Swaziland",
+    "Sweden",
+    "Switzerland",
+    "Syrian Arab Republic",
+    "Taiwan",
+    "Tajikistan",
+    "Tanzania",
+    "Thailand",
+    "Timor-Leste",
+    "Togo",
+    "Tonga",
+    "Trinidad and Tobago",
+    "Tunisia",
+    "Turkey",
+    "Turkmenistan",
+    "Tuvalu",
+    "Uganda",
+    "Ukraine",
+    "United Arab Emirates",
+    "United Kingdom",
+    "United States",
+    "Uruguay",
+    "Uzbekistan",
+    "Vanuatu",
+    "Vatican City",
+    "Venezuela",
+    "Vietnam",
+    "Western Sahara",
+    "Yemen",
+    "Zambia",
+    "Zimbabwe");
+}

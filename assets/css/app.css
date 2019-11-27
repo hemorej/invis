@@ -539,3 +539,13 @@ input[type=number]::-webkit-outer-spin-button {
 @media only screen and (orientation: portrait) and (max-width: 46.5em) {#add-cart{width: 100%}}
 @media only screen and (orientation: landscape) and (max-width: 46.5em) {.preview{left: 25vw;max-width: 44vh}.low-contrast > p, .low-contrast > span {font-size: 0.5rem}}
 @media print {}
+
+
+/*Vue styles*/
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}

@@ -1,20 +1,24 @@
 <?php
 
 namespace Cart;
+use \Payments\StripeConnector as Stripe;
+use \Logger\Logger;
 
 class Cart
 {
 	protected $cache;
 	protected $site;
 	protected $session;
-	protected $cartPage;
+	protected $txnId;
+	protected $logger;
 
 	function __construct()
 	{
 		$this->cache = kirby()->cache('backend');
 		$this->site = kirby()->site();
 		$this->session = kirby()->session();
-		$this->cartPage = $this->site->page('prints/cart/' . $this->session->get('txn'));
+		$instance = new Logger('cart');
+		$this->logger = $instance->getLogger();
 	}
 
 	public function estimateCurrency($total)
@@ -44,9 +48,9 @@ class Cart
 	  if(strstr($variant, '::')){
 	    $idParts = explode('::',$variant);
 	    $uri = $idParts[0];
-	    $sku = $idParts[1];
+	    $autoid = $idParts[1];
 
-	    $variant = page($uri)->variants()->toStructure()->findBy('sku', $sku);
+	    $variant = page($uri)->variants()->toStructure()->findBy('autoid', $autoid);
 	    return $variant->stock()->value();
 	  }
 
@@ -89,14 +93,39 @@ class Cart
 	  return $subtotal;
 	}
 
+	public function getCartPage()
+	{
+		return $this->site->page($this->session->get('txn'));
+	}
+
+	public function getLineItems()
+	{
+		$lineItems = array();
+		$products = $this->getCartPage()->products()->toStructure();
+
+		foreach($products as $product)
+		{
+			$preview = $this->site->page($product->uri()->value)->images()->first()->url();
+			$lineItems[] = array(    
+				'name' => $product->variant()->value,
+			    'description' => $product->name()->value,
+			    'amount' => $product->amount()->value * 100,
+			    'images' => [$preview],
+			    'currency' => 'CAD',
+			    'quantity' => $product->quantity()->value);
+		}
+
+		return $lineItems;
+	}
+
 	public function items()
 	{
 	  $return = new \Collection();
 
-	  if(empty($this->cartPage))
+	  if(empty($this->getCartPage()))
 	    return $return;
 
-	  $items = $this->cartPage->products()->toStructure();
+	  $items = $this->getCartPage()->products()->toStructure();
 
 	  // Return the empty collection if there are no items
 	  if (empty($items)) return $return;
@@ -113,13 +142,13 @@ class Cart
 	    return;
 
 	  $quantityToAdd = $quantity ? intval($quantity) : 1;
-	  $idParts = explode('::', $id); // $id is formatted uri::sku
+	  $idParts = explode('::', $id); // $id is formatted uri::autoid
 	  $uri = $idParts[0];
-	  $sku = $idParts[1];
-	  $item = empty($this->cartPage) ? null : $this->cartPage->products()->toStructure()->findBy('sku', $sku);
-	  $items = empty($this->cartPage) ? array() : $this->cartPage->products()->yaml();
+	  $autoid = $idParts[1];
+	  $item = empty($this->getCartPage()) ? null : $this->getCartPage()->products()->toStructure()->findBy('autoid', $autoid);
+	  $items = empty($this->getCartPage()) ? array() : $this->getCartPage()->products()->yaml();
 	  $product = $this->site->page($uri);
-	  $variant = $this->site->page($uri)->variants()->toStructure()->findBy('sku', $sku);
+	  $variant = $this->site->page($uri)->variants()->toStructure()->findBy('autoid', $autoid);
 
 	  if (empty($item)) {
 	    // Add a new item
@@ -130,7 +159,7 @@ class Cart
 	      'name' => $product->title()->value(),
 	      'amount' => $variant->price()->value(),
 	      'type' => $product->type()->value(),
-	      'sku' => $sku,
+	      'autoid' => $autoid,
 	      'quantity' => $this->updateQty($id, $quantityToAdd),
 	    ];
 	  } else {
@@ -145,28 +174,30 @@ class Cart
 	  }
 
 	  // Create the transaction file if we don't have one yet
-	  if (!$this->session->get('txn')) {
-	    $txn_id = $this->session->startTime() . $this->session->expiryTime();
+	  if (empty($this->session->get('txn'))) {
+	  	$this->txnId = $this->session->startTime() . $this->session->expiryTime();
 	    $timestamp = time();
 	    
-	    $page = new Page([
-	        'dirname' => "3_$this->cartPage",
-	        'slug' => $txn_id,
+	    $page = new \Page([
+	        'dirname' => "3_prints/orders/$this->txnId",
+	        'slug' => $this->txnId,
+	        'draft' => true,
 	        'template' => 'order',
 	        'content' => [
-	          'txn-id' => $txn_id,
-	          'txn-date'  => date('m/d/Y H:i:s', time()),
+	          'txn-id' => $this->txnId,
+	          'txn-date'  => date('m/d/Y H:i:s', $timestamp),
 	          'status' => 'pending',
-	          'session-start' => time(),
-	          'session-end' => time(),
+	          'session-start' => $timestamp,
+	          'session-end' => $timestamp,
 	          'products' => \Yaml::encode($items)
 	        ]
 	      ]);
 	    $page->save();
-	    $session->set('txn', $txn_id);
+	    $this->session->set('txn', "prints/orders/$this->txnId");
 
 	  }else{
-	    $this->site->page($this->cartPage)->update(['products' => \Yaml::encode($items)]);
+	  	kirby()->impersonate('kirby');
+	    $this->getCartPage()->update(['products' => \Yaml::encode($items)]);
 	  }
 
 	}
@@ -180,8 +211,8 @@ class Cart
 
 	  // Get combined quantity of this option's siblings
 	  $siblingsQty = 0;
-	  if(!empty($this->cartPage)){
-	    foreach($this->cartPage->products()->toStructure() as $item) {
+	  if(!empty($this->getCartPage())){
+	    foreach($this->getCartPage()->products()->toStructure() as $item) {
 	      if (strpos($item->id(), $uri.'::'.$variantSlug) === 0) {
 	        $siblingsQty += $item->quantity()->value;
 	      }
@@ -228,12 +259,188 @@ class Cart
 
 	public function delete($id)
 	{
-	  $items = $this->site->page($this->cartPage)->products()->yaml();
+	  $items = $this->getCartPage()->products()->yaml();
 	  foreach ($items as $key => $i) {
 	    if ($i['id'] == $id) {
 	      unset($items[$key]);
 	    }
 	  }
-	  $this->site->page($this->cartPage)->update(['products' => \Yaml::encode($items)]);
+
+	  kirby()->impersonate('kirby');
+	  $this->getCartPage()->update(['products' => \Yaml::encode($items)]);
 	}
+
+	public function processStripe()
+	{
+		try{
+			// request must come from stripe with a valid SID
+			// following a successful store session
+			if(empty(get('sid')) || empty($this->session->get('txn')))
+				return false;
+
+			$stripe = new Stripe();
+			$sid = $stripe->retrieveSession(get('sid'));
+			$pi = $stripe->retrievePaymentIntent($sid->payment_intent);
+
+			// stripe checkout went well
+			if($pi->status == 'succeeded' && $pi->charges->data[0]->paid == true)
+			{
+				// order still pending, finalize details
+				// check status to avoid repeat processing if client reloads page
+				if($this->getCartPage()->content()->get('status') == 'pending'){
+					$this->updateInventory();
+					$this->sendNotifications();
+					$this->updateOrder();
+				}
+			}else{
+				$this->logger->error($this->session->get('txn') . ": Stripe checkout returned a non-captured transaction", [$sid->id, $pi->id]);
+				$this->session->set('error', 'There was an error with the payment processing, I have been notified of the issue.');
+				return false;
+			}
+		}catch(\Exception $e) {
+			$this->logger->error($this->session->get('txn') . ": general error", array('reason' => $e->getMessage()));
+			sendAlert($this->session->get('txn'), $this->getCartPage()->autoid()->value, $e->getMessage());
+			$this->session->set('error', 'There was an unspecified error with the site, I have been notified of this issue. You may try again later');
+			return false;
+		}
+
+		return true;
+
+	}
+
+	public function processPaypal()
+	{
+		// $csrf = get('csrf');
+		// $token = json_decode(get('token'), true);
+		// if(preg_match('/^PAY-/', $token['id']) == 1){
+
+		// 	$apiContext = new \PayPal\Rest\ApiContext(
+		// 		new \PayPal\Auth\OAuthTokenCredential(
+		// 			kirby()->option('paypal_client_id'),
+		// 			kirby()->option('paypal_client_secret')
+		// 		)
+		// 	);
+
+		// 	$payment = PayPal\Api\Payment::get($token['id'], $apiContext);
+
+		// 	if($payment->getState() != 'approved' || (time() - strtotime($payment->getCreateTime()) > 300))
+		// 		throw new Exception("Paypal transaction not approved");
+
+		// 	$logger->info($sessionToken . ":paypal captured with id " . $payment->getId());
+
+		// }
+
+		return true;
+	}
+
+	private function updateInventory()
+	{
+		$orderId = $this->getCartPage()->autoid()->value;
+		
+		foreach($this->items() as $item)
+		{
+  			$uri = $item->uri()->value;
+			$variantStructure = $this->site->page($uri)->variants()->findBy('autoid', $item->autoid()->value);
+			$variant = \Yaml::decode($variantStructure)[0];
+
+	        $updatedVariant = array();
+	        $updatedVariant['autoid'] = $variant['autoid'];
+	        $updatedVariant['name'] = $variant['name'];
+	        $updatedVariant['price'] = $variant['price'];
+
+	        $remainingStock = intval($variant['stock']) - intval($item->quantity()->value);
+	        if($remainingStock < 0)
+	        	throw new \Exception("Insufficient stock for product " . page($uri)->title()->value() . " (autoid: " . $variant['autoid'] . ")");
+
+	        $updatedVariant['stock'] = $remainingStock;
+
+	        addToStructure(page($uri), 'variants', $updatedVariant);
+		}
+		$this->logger->info("inventory updated after order ". $orderId);
+	}
+
+	private function updateOrder()
+	{
+		$orderId = $this->getCartPage()->autoid()->value;
+
+		kirby()->impersonate('kirby');
+		$this->getCartPage()->update(['title' => "ord-$orderId", 'status' => 'paid']);
+		$this->logger->info($this->session->get('txn') . ": order status updated");
+
+		$this->session->set('state', 'success');
+		$this->session->set('order', $this->session->get('txn'));
+		$this->session->remove('txn');
+	}
+
+	private function sendNotifications()
+	{
+		$orderId = $this->getCartPage()->autoid()->value;
+		$customer = \Yaml::decode($this->getCartPage()->customer());
+		$products = $this->getCartPage()->products();
+
+		$order = array(	
+			'order' => $orderId,
+			'items' => $this->items(),
+			'fullName' => $customer['name'],
+			'street' => $customer['address']['address_line_1'] . $customer['address']['address_line_2'],
+			'city' => $customer['address']['city'],
+			'country' => $customer['address']['country'],
+			'postcode' => $customer['address']['postal_code'],
+			'province' => $customer['address']['state'],
+			'email' => $customer['email'],
+			'total' => $this->subtotal($this->items())
+		);
+
+		try{
+			kirby()->email(array(
+			  'to'      => $customer['email'],
+			  'from'    => kirby()->option('from_address'),
+			  'subject' => 'Your order from The Invisible Cities has been received',
+			  'service' => 'mailgun',
+			  'options' => array(
+			    'key'    => kirby()->option('mailgun_key'),
+			    'domain' => kirby()->option('mailgun_domain')
+			  ),
+			  'template' => 'confirm',
+			  'data'    => \A::merge($order,
+				array(
+   		            'title' => 'Your order from The Invisible Cities has been received',
+   		            'subtitle' => 'Order confirmation',
+                    'preview' => 'Order confirmation. We received your order and will prepare it for shipping soon. Below is your order information.',
+                    'headline' => 'Thanks for ordering! We received your order and will prepare it for shipping soon. Below is your order information.'
+				))
+			));
+		  	$this->logger->info($this->session->get('txn') . ":email confirmation sent for order id " . $orderId);
+
+			kirby()->email(array(
+			  'to'      => kirby()->option('alert_address'),
+			  'from'    => kirby()->option('from_address'),
+			  'subject' => 'New order at The Invisible Cities!',
+			  'service' => 'mailgun',
+			  'options' => array(
+			    'key'    => kirby()->option('mailgun_key'),
+			    'domain' => kirby()->option('mailgun_domain')
+			  ),
+			  'template' => 'confirm',
+			  'data'    => \A::merge($order,
+					array(
+	            	'title' => 'A new order at the Invisible Cities has been received',
+	   		        'subtitle' => 'Order summary',
+	                'preview' => 'Order summary',
+	                'headline' => 'Below is the order information.'
+				))
+			));
+
+		  	$this->logger->info($this->session->get('txn') . ":admin notification sent for order id " . $orderId);
+		  }catch(\Error $err){
+			$description = "email confirmation error for order id " . $orderId . ": " . $err->getMessage();
+			$this->logger->error($this->session->get('txn') . ":" . $description);
+			sendAlert($this->session->get('txn'), $orderId, $description);
+		}catch(\Exception $e){
+			$description = "email confirmation error for order id " . $orderId . ": " . $e->getMessage();
+			$this->logger->error($this->session->get('txn') . ":" . $description);
+			sendAlert($this->session->get('txn'), $orderId, $description);
+		}
+	}
+
 }
