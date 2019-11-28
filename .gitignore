@@ -1,7 +1,7 @@
 *.jpg
 *.woff
 *.eot
-content/4_journal/*
+# content/4_journal/*
 content/orders/*
 site/accounts/*
 vendor/*

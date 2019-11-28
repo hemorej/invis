@@ -23,3 +23,4 @@ columns:
         type: pages
         headline: Published
         status: listed
+        flip: true
