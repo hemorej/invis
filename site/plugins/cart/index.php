@@ -27,6 +27,10 @@ Kirby::plugin('cart/cart', [
 
 				kirby()->impersonate('kirby');
 				page(kirby()->session()->get('txn'))->update(['customer' => Yaml::encode($customer)]);
+
+				return [
+			      'status' => 'ok'
+			    ]
 			}
 		}
 	  ],[
