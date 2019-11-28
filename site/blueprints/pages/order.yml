@@ -52,7 +52,7 @@ fields:
     type: structure
     entry: >
       <a href="/{{uri}}" target="_blank">{{name}} ({{variant}})</a><br />
-      sku: {{sku}}<br />
+      sku: {{autoid}}<br />
       qty: {{quantity}} total: {{amount}}
     fields:
       uri:
@@ -63,9 +63,6 @@ fields:
         type: text
       variant:
         label: variant
-        type: text
-      sku:
-        label: sku
         type: text
       quantity:
         label: quantity

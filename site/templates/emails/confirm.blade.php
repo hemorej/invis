@@ -150,7 +150,7 @@
                                       <td class="td">{{ $item->name() }}<br />
                                       	<em>{{ $item->variant() }} x{{ $item->quantity() }}</em>
                                       </td>
-                                      <td class="td">— ${{ intval($item->price()->value) * intval($item->quantity()->value) }}</td>
+                                      <td class="td">— ${{ intval($item->amount()->value) * intval($item->quantity()->value) }}</td>
                                     </tr>
                                   @endforeach
                                   <tr class="tr">
