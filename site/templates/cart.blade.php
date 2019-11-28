@@ -50,7 +50,7 @@
                     <div class="row cart {{ e($loop->first, 'medium-space-top') }}">
                         <div class="small-2 medium-2 columns">
                             @php $product = page($item->uri()) @endphp
-                            <img src="{{ $product->images()->first()->resize(100, 100, true)->url() }}" title="{{ $item->name() }}">
+                            <img src="{{ $product->images()->first()->resize(100, 100, 90)->url() }}" title="{{ $item->name() }}">
                         </div>
                         <div class="small-8 medium-6 columns">
                             <a class="cart-prod" href="{{ $product->url() }}">
