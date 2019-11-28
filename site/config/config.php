@@ -19,6 +19,7 @@ return [
 	'mailgun_domain' => '',
 	'mailgun_key' => '',
 	'alert_address' => '',
+	'from_address' => '',
 
 	'stripe_key_pub' => '',
 	'stripe_key_prv' => '',
@@ -26,6 +27,8 @@ return [
 	'paypal_client_secret' => '',
 	'fixer_key' => '',
 	'ipstack_key' => '',
+
+	'cacheTTL' => '',
 
 	'bnomei.autoid.generator' => function(){ return Bnomei\AutoID::getToken(15, true, true, true); }
 ];

@@ -7,3 +7,6 @@
 [submodule "site/plugins/kirby3-autoid"]
 	path = site/plugins/kirby3-autoid
 	url = https://github.com/bnomei/kirby3-autoid.git
+[submodule "site/plugins/kirby3-xmlsitemap"]
+	path = site/plugins/kirby3-xmlsitemap
+	url = https://github.com/omz13/kirby3-xmlsitemap.git
