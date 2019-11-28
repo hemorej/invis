@@ -1,9 +1,9 @@
 <?php
-include_once(__DIR__ . '/../models/uidHandler.php');
+include_once(__DIR__ . '/../models/shippingHandler.php');
 
 return [
-  'panel.page.*' => function ($page, $oldPage = null) {
-  	$stripeHandler = new \UidHandler();
-	$stripeHandler->handle($page, $oldPage, $this->type());
+  'page.update:after' => function ($page, $oldPage = null) {
+  	$stripeHandler = new \ShippingHandler();
+	$stripeHandler->handle($page, $oldPage);
   }
 ];

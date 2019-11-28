@@ -3,6 +3,7 @@
 namespace Cart;
 use \Payments\StripeConnector as Stripe;
 use \Logger\Logger;
+use \Mailbun\Mailbun;
 
 class Cart
 {
@@ -392,44 +393,30 @@ class Cart
 		);
 
 		try{
-			kirby()->email(array(
-			  'to'      => $customer['email'],
-			  'from'    => kirby()->option('from_address'),
-			  'subject' => 'Your order from The Invisible Cities has been received',
-			  'service' => 'mailgun',
-			  'options' => array(
-			    'key'    => kirby()->option('mailgun_key'),
-			    'domain' => kirby()->option('mailgun_domain')
-			  ),
-			  'template' => 'confirm',
-			  'data'    => \A::merge($order,
-				array(
-   		            'title' => 'Your order from The Invisible Cities has been received',
-   		            'subtitle' => 'Order confirmation',
-                    'preview' => 'Order confirmation. We received your order and will prepare it for shipping soon. Below is your order information.',
-                    'headline' => 'Thanks for ordering! We received your order and will prepare it for shipping soon. Below is your order information.'
-				))
-			));
+			$mailbun = new Mailbun();
+            $mailbun->send(
+            	$customer['email'],
+            	'Your order from The Invisible Cities has been received',
+            	'confirm', 
+            	\A::merge($order, array(
+		            'title' => 'Your order from The Invisible Cities has been received',
+		            'subtitle' => 'Order confirmation',
+	                'preview' => 'Order confirmation. We received your order and will prepare it for shipping soon. Below is your order information.',
+	                'headline' => 'Thanks for ordering! We received your order and will prepare it for shipping soon. Below is your order information.'
+			)));
+
 		  	$this->logger->info($this->session->get('txn') . ":email confirmation sent for order id " . $orderId);
 
-			kirby()->email(array(
-			  'to'      => kirby()->option('alert_address'),
-			  'from'    => kirby()->option('from_address'),
-			  'subject' => 'New order at The Invisible Cities!',
-			  'service' => 'mailgun',
-			  'options' => array(
-			    'key'    => kirby()->option('mailgun_key'),
-			    'domain' => kirby()->option('mailgun_domain')
-			  ),
-			  'template' => 'confirm',
-			  'data'    => \A::merge($order,
-					array(
+            $mailbun->send(
+            	kirby()->option('alert_address'),
+            	'New order at The Invisible Cities!',
+            	'confirm', 
+            	\A::merge($order, array(
 	            	'title' => 'A new order at the Invisible Cities has been received',
 	   		        'subtitle' => 'Order summary',
 	                'preview' => 'Order summary',
 	                'headline' => 'Below is the order information.'
-				))
-			));
+			)));
 
 		  	$this->logger->info($this->session->get('txn') . ":admin notification sent for order id " . $orderId);
 		  }catch(\Error $err){

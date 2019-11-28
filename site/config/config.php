@@ -28,7 +28,9 @@ return [
 	'fixer_key' => '',
 	'ipstack_key' => '',
 
-	'cacheTTL' => '',
+	'cacheTTL' => '14400',
 
-	'bnomei.autoid.generator' => function(){ return Bnomei\AutoID::getToken(15, true, true, true); }
+	'bnomei.autoid.generator' => function(){ return Bnomei\AutoID::getToken(15, true, true, true); },
+
+	'hooks' => require_once 'hooks.php'
 ];
