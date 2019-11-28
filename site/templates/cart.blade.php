@@ -173,4 +173,4 @@
     @js('assets/js/cart.js')
 @endif
 @js('https://js.stripe.com/v3/')
-@js('https://www.paypalobjects.com/api/checkout.js')
+@js('https://www.paypal.com/sdk/js?client-id='.option('paypal_client_id'), ['async' => true])

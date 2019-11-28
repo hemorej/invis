@@ -30,7 +30,7 @@ Kirby::plugin('cart/cart', [
 
 				return [
 			      'status' => 'ok'
-			    ]
+			    ];
 			}
 		}
 	  ],[
