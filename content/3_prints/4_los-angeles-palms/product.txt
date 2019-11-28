@@ -1,0 +1,43 @@
+Title: Los Angeles, 2017
+
+----
+
+Autoid: nGjMVFlJLXwCGL8
+
+----
+
+Description:
+
+— 
+This is a print from black and white negative on Ilford RC paper, all development and printing handmade by myself.
+
+----
+
+Published: 2019-04-21
+
+----
+
+Meta: Signed, unmounted print on Ilford Multigrade RC Classic paper.
+
+----
+
+Type: print
+
+----
+
+Variants:
+
+- 
+  name: 5x7in (12x17cm)
+  price: "12"
+  stock: "1"
+  autoid: 1BV16JEpt5niXbC
+
+----
+
+Uploads:
+
+- img_6598.jpg
+- img_6599.jpg
+- m6-38_29a.jpg
+

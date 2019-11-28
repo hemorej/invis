@@ -1,0 +1,53 @@
+Title: 5th arrondissement
+
+----
+
+Autoid: DMWJScgLX9446v2
+
+----
+
+Description:
+
+I was hungry and was looking for a place to eat and had just turned the corner to come across this interesting display. Once again, I had just a second to frame and the person was gone.
+Paris, 2015
+
+— 
+This is a print from black and white negative on Ilford FB paper, all development and printing handmade by myself.
+
+----
+
+Published: 2018-02-23
+
+----
+
+Meta: Signed, unmounted print on Ilford Multigrade FB Classic paper.
+
+----
+
+Type: print
+
+----
+
+Variants:
+
+- 
+  name: 8x10in (20x25cm)
+  price: "50"
+  stock: "8"
+  autoid: iv0Aoe0G3HHZ7Kc
+- 
+  name: 4x6in (10x15cm)
+  price: "7"
+  stock: "10"
+  autoid: h0rPkHVjYdHN1Jr
+
+----
+
+Uploads:
+
+- mp149_32.jpg
+- x0_img_4766.jpg
+- x2_img_4755.jpg
+- x1_img_4759.jpg
+- zimg_5190.jpg
+

@@ -1,0 +1,43 @@
+Title: Kuelap, Peru, 2016
+
+----
+
+Autoid: GgjBvz1j0VCf71I
+
+----
+
+Description:
+
+—
+This is a print from black and white negative on Ilford FB paper, all development and printing handmade by myself.
+
+----
+
+Published: 2019-04-21
+
+----
+
+Meta: Signed, unmounted print on Ilford Multigrade FB Classic paper.
+
+----
+
+Type: print
+
+----
+
+Variants:
+
+- 
+  name: 8x10in (20x25cm)
+  price: "50"
+  stock: "1"
+  autoid: TvNCpslQ1tclPt9
+
+----
+
+Uploads:
+
+- img_6608.jpg
+- img_6609.jpg
+- pentax5_16.jpg
+

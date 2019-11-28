@@ -1,0 +1,43 @@
+Title: Swans, Berlin, 2017
+
+----
+
+Autoid: ftsslOX7w3TSZEO
+
+----
+
+Description:
+
+—
+This is a print from black and white negative on Ilford FB paper, all development and printing handmade by myself.
+
+----
+
+Published: 2019-04-21
+
+----
+
+Meta: Signed, unmounted print on Ilford Multigrade FB Classic paper.
+
+----
+
+Type: print
+
+----
+
+Variants:
+
+- 
+  name: 8x10in (20x25cm)
+  price: "50"
+  stock: "1"
+  autoid: OaNo4rQ78OaLUTH
+
+----
+
+Uploads:
+
+- img_6606.jpg
+- img_6607.jpg
+- mp235_19.jpg
+

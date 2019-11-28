@@ -1,0 +1,42 @@
+Title: Lima, 2018
+
+----
+
+Autoid: R9HeZ81ZLidlaY6
+
+----
+
+Description:
+
+—
+This is a print from black and white negative on Ilford FB paper, all development and printing handmade by myself.
+
+----
+
+Published: 2019-04-21
+
+----
+
+Meta: Signed, unmounted print on Ilford Multigrade FB Classic paper.
+
+----
+
+Type: print
+
+----
+
+Variants:
+
+- 
+  name: 8x10in (20x25cm)
+  price: "50"
+  stock: "1"
+  autoid: G54YrdtVpxzeL4r
+
+----
+
+Uploads:
+
+- fm2-07_27.jpg
+- img_6610.jpg
+- img_6611.jpg
