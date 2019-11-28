@@ -63,18 +63,17 @@
                 'Out of stock'
             @else
                 <ul class="inline-list">
-                @php $first = true; $activeVariant = 0; @endphp
+                @php $activeVariant = 0; @endphp
                 @foreach ($variants as $variant)
                     @if(Cart::inStock($variant))
-                        <li {{ e($first == true, 'class=active variant', 'class=variant') }}>
+                        @if($loop->first)
+                            @php $activeVariant = $variant->autoid() @endphp
+                            <li class='active variant'>
+                        @else
+                            <li class='variant'>
+                        @endif
                             <a href="#" data-option-variant='{{ $variant->autoid() }}' data-option-price="{{ $variant->price() }}">{{ $variant->name() }} &mdash; ${{ $variant->price() }}</a>
                         </li>&nbsp;
-                        @php 
-                            if($first == true){
-                                $activeVariant = $variant->autoid();
-                                $first = false;
-                            }
-                        @endphp
                     @endif
                 @endforeach
                 </ul>
