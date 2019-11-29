@@ -1,5 +1,5 @@
-@snippet('header')
-@snippet('menu')
+@include('partials.header')
+@include('partials.menu')
 
 <div class="row medium-space-top">
 	<section class="small-12 medium-10 columns">
@@ -9,4 +9,4 @@
 	</section>
 </div>
 
-@snippet('footer')
+@include('partials.footer')

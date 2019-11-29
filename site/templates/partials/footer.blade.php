@@ -1,13 +1,13 @@
-<?php if (!isset($noCopyright)): ?>
+@if(!isset($noCopyright))
     <div class="row large-space-top">
       <footer class="small-12 small-centered medium-12 medium-centered columns low-contrast">
-        <p><?= html::decode($site->copyright()->kirbytext()) ?></p>
+        @kirbytext(@html($site->copyright()))
       </footer>
     </div>
-<?php endif; ?>
+@endif
 
-<?= js('assets/js/min.js') ?>
-<?php snippet('ga') ?>
+@js('assets/js/min.js')
+@include('partials.ga')
 </body>
 
 </html>

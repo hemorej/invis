@@ -1,6 +1,6 @@
 @if(@get('all'))
-    @snippet('header')
-    @snippet('menu')
+    @include("partials.header")
+    @include("partials.menu")
 
     @php
         $archive = array();
@@ -37,7 +37,7 @@
         </div>
     @endif
 
-    @snippet('footer')
+    @include('partials.footer')
 @else
     {{ @go($page->children()->last()->url()) }}
 @endif

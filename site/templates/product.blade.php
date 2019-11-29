@@ -9,8 +9,8 @@
     $meta = array('url' => $page->url(), 'image' => $image->url());
 @endphp
 
-@snippet('header', array('meta' => $meta))
-@snippet('menu')
+@include('partials.header', ['meta' => $meta])
+@include('partials.menu')
 
 @css("//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick.css")
 @css("//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick-theme.css")
@@ -110,7 +110,7 @@
     </div>  
 </div>
 
-@snippet('footer')
+@include('partials.footer')
 
 @js("//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick.min.js")
 <script type="text/javascript">

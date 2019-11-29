@@ -1,5 +1,5 @@
-@snippet('header')
-@snippet('menu')
+@include('partials.header')
+@include('partials.menu')
 @php use \Cart\Cart; @endphp
 
 <div class="alert-box row">
@@ -159,7 +159,7 @@
 
 @endif
 
-@snippet('footer')
+@include('partials.footer')
 @js('https://unpkg.com/axios/dist/axios.min.js')
 @if(@option('env') == 'prod')
     @js('https://cdn.jsdelivr.net/npm/vue')

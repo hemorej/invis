@@ -1,11 +1,11 @@
-<?php 
-$loc = location();
-if($loc->location->is_eu == true): ?>
-	<?= css('//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css') ?>
-	<?= js('//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js') ?>
-	<?= js('assets/js/consent.js', ['id' => 'consent', 'data-loc' => $loc, 'data-ga' => option('ga_code')]) ?>
-<?php else: ?>
-	<?php if(!empty(option('ga_code'))): ?>
+@php $loc = location(); @endphp
+
+@if($loc->location->is_eu == true)
+	@css('//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css')
+	@js('//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js')
+	@js('assets/js/consent.js', ['id' => 'consent', 'data-loc' => $loc, 'data-ga' => option('ga_code')])
+@else
+	@if(!empty(@option('ga_code')))
 		<script>
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -16,5 +16,5 @@ if($loc->location->is_eu == true): ?>
 		  ga('send', 'pageview');
 
 		</script>
-	<?php endif ?>
-<?php endif ?>
+	@endif
+@endif

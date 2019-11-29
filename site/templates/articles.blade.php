@@ -1,5 +1,5 @@
-@snippet('header')
-@snippet('menu')
+@include('partials.header')
+@include('partials.menu')
 
 @php
 	if($page->title() == 'process'){
@@ -22,4 +22,4 @@
     <img id="cover" src="{{ getPreview($articles->first()->images()->first()) }}" >
 </div>
 
-@snippet('footer', array('noCopyright'=>true))
+@include('partials.footer')

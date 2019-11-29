@@ -7,8 +7,8 @@
 	$meta = array('url' => $page->url(), 'image' => $image->url());
 @endphp
 
-@snippet('header', array('meta' => $meta))
-@snippet('menu')
+@include('partials.header', ['meta' => $meta])
+@include('partials.menu')
 
 <div class="row medium-space-top">
 	<div class="small-12 medium-10 columns">
@@ -32,4 +32,4 @@
 		@endif
 	</div>
 </div>
-@snippet('footer')
+@include('partials.footer')

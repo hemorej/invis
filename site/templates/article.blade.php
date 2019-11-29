@@ -6,8 +6,8 @@
 	$meta = array('url' => $page->url(), 'image' => $image->url());
 @endphp
 
-@snippet('header', array('meta' => $meta))
-@snippet('menu')
+@include('partials.header', ['meta' => $meta])
+@include('partials.menu')
 
 @php 
 	if($page->parent()->title() != 'journal'){
@@ -48,13 +48,13 @@ if(count($page->images()) == 1 && $page->images()->first()->isPortrait())
 	@endif
 
 	@if($page->parent()->title() == 'journal')
-		<p class="left"> |<a href="<?= $page->parent()->url() . '?all=1' ?>">All posts</a></p>
+		<p class="left"> |<a href="{{ $page->parent()->url() }}?all=1">All posts</a></p>
 	@endif
 	
 	@if($page->hasNextListed())
 		<p class="right">
-			<a href="<?= $page->next()->url() ?>">{{ $page->parent()->title() == 'journal' ? 'Next' : $page->next()->title() }} &raquo;</a>
+			<a href="{{ $page->next()->url() }}">{{ $page->parent()->title() == 'journal' ? 'Next' : $page->next()->title() }} &raquo;</a>
 		</p>
 	@endif
 
-@snippet('footer')
+@include('partials.footer')

@@ -1,5 +1,5 @@
 <?php
-
+/*
 trigger_error("Deprecated function called.", E_USER_DEPRECATED);
 
 $thumbDirectory = '/thumbs';
@@ -53,3 +53,4 @@ foreach($images as $image):
     <?php endif ?>
     <?php $loop++;?>
 <?php endforeach ?>
+*/

@@ -13,6 +13,7 @@ return [
 	  'prints/*'
 	),
 	'cache.backend' => true,
+	'afbora.blade.minify.enabled' => true,
 
 	'ga_code' => '',
 

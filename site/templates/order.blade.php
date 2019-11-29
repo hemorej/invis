@@ -1,5 +1,5 @@
-@snippet('header')
-@snippet('menu')
+@include('partials.header')
+@include('partials.menu')
 <script>
 	sessionStorage.removeItem('cart');
 </script>
@@ -57,7 +57,7 @@
 		</div>
 	</div>
 	
-@snippet('footer')
+@include('partials.footer')
 @elseif($state == 'error')
 	<div class="row medium-space-top">
     	<span class="high-contrast">Order error</span>
