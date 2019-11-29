@@ -10,11 +10,16 @@ class ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07
         'S' => 
         array (
             'Stripe\\' => 7,
+            'Sample\\' => 7,
         ),
         'P' => 
         array (
-            'Psr\\Log\\' => 8,
             'Payments\\' => 9,
+            'PayPalCheckoutSdk\\' => 18,
+        ),
+        'B' => 
+        array (
+            'BraintreeHttp\\' => 14,
         ),
     );
 
@@ -23,23 +28,21 @@ class ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07
         array (
             0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
         ),
-        'Psr\\Log\\' => 
+        'Sample\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+            0 => __DIR__ . '/..' . '/paypal/paypal-checkout-sdk/samples',
         ),
         'Payments\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-    );
-
-    public static $prefixesPsr0 = array (
-        'P' => 
+        'PayPalCheckoutSdk\\' => 
         array (
-            'PayPal' => 
-            array (
-                0 => __DIR__ . '/..' . '/paypal/rest-api-sdk-php/lib',
-            ),
+            0 => __DIR__ . '/..' . '/paypal/paypal-checkout-sdk/lib/PayPalCheckoutSdk',
+        ),
+        'BraintreeHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/braintree/braintreehttp/lib/BraintreeHttp',
         ),
     );
 
@@ -48,7 +51,6 @@ class ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

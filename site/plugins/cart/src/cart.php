@@ -2,6 +2,7 @@
 
 namespace Cart;
 use \Payments\StripeConnector as Stripe;
+use \Payments\PaypalConnector as Paypal;
 use \Logger\Logger;
 use \Mailbun\Mailbun;
 
@@ -311,25 +312,30 @@ class Cart
 
 	public function processPaypal()
 	{
-		// $csrf = get('csrf');
-		// $token = json_decode(get('token'), true);
-		// if(preg_match('/^PAY-/', $token['id']) == 1){
+		try{
+			$paypal = new Paypal();
+			$response = $paypal->getOrder(get('token'));
 
-		// 	$apiContext = new \PayPal\Rest\ApiContext(
-		// 		new \PayPal\Auth\OAuthTokenCredential(
-		// 			kirby()->option('paypal_client_id'),
-		// 			kirby()->option('paypal_client_secret')
-		// 		)
-		// 	);
+			if($response->statusCode == 200 && $response->result->status == 'COMPLETED')
+			{
+				if($this->getCartPage()->content()->get('status') == 'pending'){
+						$this->updateInventory();
+						$this->sendNotifications();
+						$this->updateOrder();
+				}else{
+					$this->logger->error($this->session->get('txn') . ": Paypal checkout returned a failed transaction", [get('token')]);
+					$this->session->set('error', 'There was an error with the payment processing, I have been notified of the issue.');
+					return false;
+				}
+			}
 
-		// 	$payment = PayPal\Api\Payment::get($token['id'], $apiContext);
-
-		// 	if($payment->getState() != 'approved' || (time() - strtotime($payment->getCreateTime()) > 300))
-		// 		throw new Exception("Paypal transaction not approved");
-
-		// 	$logger->info($sessionToken . ":paypal captured with id " . $payment->getId());
-
-		// }
+			$logger->info($sessionToken . ":paypal captured with id " . $payment->getId());
+		}catch(\Exception $e) {
+			$this->logger->error($this->session->get('txn') . ": general error", array('reason' => $e->getMessage()));
+			sendAlert($this->session->get('txn'), $this->getCartPage()->autoid()->value, $e->getMessage());
+			$this->session->set('error', 'There was an unspecified error with the site, I have been notified of this issue. You may try again later');
+			return false;
+		}
 
 		return true;
 	}

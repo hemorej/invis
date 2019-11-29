@@ -1,6 +1,7 @@
 <?php
 
 @include_once __DIR__ . '/vendor/autoload.php';
+use \Mailbun\Mailbun;
 
 Kirby::plugin('helpers/helpers', [
   'options' => [
@@ -118,18 +119,13 @@ function location(){
 
 function sendAlert($sid, $orderId, $error = "Unknown reason")
 {
-  kirby()->email(array(
-    'to'      => kirby()->option('alert_address'),
-    'from'    => kirby()->option('from_address'),
-    'subject' => 'Order exception alert',
-    'service' => 'mailgun',
-    'options' => array(
-      'key'    => kirby()->option('mailgun_key'),
-      'domain' => kirby()->option('mailgun_domain')
-    ),
-    'body'    => "A problem occurred while processing order " . $orderId . " during session " . $sid . "<br />" .
-      "Error: " . $error
-  ));
+  $mailbun = new Mailbun();
+  $mailbun->send(
+      kirby()->option('alert_address'),
+        'Order exception alert',
+        'error', 
+        array('orderId' => $orderId, 'sid' => $sid, 'error' => $error)
+  );
 
   $logger = (new Logger\Logger('order'))->getLogger();
   $logger->info("Alert sent for " . $orderId);
@@ -227,6 +223,7 @@ function countryList(){
     "Israel",
     "Italy",
     "Jamaica",
+    "Japan",
     "Jordan",
     "Kazakhstan",
     "Kenya",

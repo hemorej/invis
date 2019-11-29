@@ -25,6 +25,7 @@ return [
 	'stripe_key_prv' => '',
 	'paypal_client_id' => '',
 	'paypal_client_secret' => '',
+	'paypal_environment' => '',
 	'fixer_key' => '',
 	'ipstack_key' => '',
 

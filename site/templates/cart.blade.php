@@ -30,15 +30,9 @@
         </article>
     </section>
 @else
-    <style>
-    .loading{display:none;position:fixed;z-index:999;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0}.loading:before{content:'';display:block;position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.3)}.loading:not(:required){font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0}.loading:not(:required):after{content:'';display:block;font-size:10px;width:.5em;height:.5em;margin-top:-.5em;-webkit-animation:spinner 1500ms infinite linear;-moz-animation:spinner 1500ms infinite linear;-ms-animation:spinner 1500ms infinite linear;-o-animation:spinner 1500ms infinite linear;animation:spinner 1500ms infinite linear;border-radius:.5em;-webkit-box-shadow:rgba(0,0,0,0.75) 1.5em 0 0 0,rgba(0,0,0,0.75) 1.1em 1.1em 0 0,rgba(0,0,0,0.75) 0 1.5em 0 0,rgba(0,0,0,0.75) -1.1em 1.1em 0 0,rgba(0,0,0,0.5) -1.5em 0 0 0,rgba(0,0,0,0.5) -1.1em -1.1em 0 0,rgba(0,0,0,0.75) 0 -1.5em 0 0,rgba(0,0,0,0.75) 1.1em -1.1em 0 0;box-shadow:rgba(0,0,0,0.75) 1.5em 0 0 0,rgba(0,0,0,0.75) 1.1em 1.1em 0 0,rgba(0,0,0,0.75) 0 1.5em 0 0,rgba(0,0,0,0.75) -1.1em 1.1em 0 0,rgba(0,0,0,0.75) -1.5em 0 0 0,rgba(0,0,0,0.75) -1.1em -1.1em 0 0,rgba(0,0,0,0.75) 0 -1.5em 0 0,rgba(0,0,0,0.75) 1.1em -1.1em 0 0}@-webkit-keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}@-moz-keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}@-o-keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
-    </style>
-    <div class="loading">Loading&#8230;</div>
-    <!-- Cart items -->
-
     <div id="cart">
         <input type="hidden" ref="userLocation" value="{{ $currentLocation }}" />
-        <transition name="fade" mode="out-in">
+        <transition name="fade" mode="out-in" v-on:after-enter="initPaypal">
         <div v-if="inCart == true" key="cart">
             <div class="row show-for-landscape">
                 <div class="small-2 medium-2 columns">&nbsp;</div>
@@ -155,11 +149,13 @@
         </transition>
     </div>
 
-    <input id="checkout-key" type="hidden" name="key" value="@option("stripe_key_pub")">
-    <input id="checkout-pp-key" type="hidden" name="key" value="@option("paypal_client_id")">
+    <input id="checkout-key" type="hidden" name="key" value="@option('stripe_key_pub')">
+    <input id="checkout-pp-key" type="hidden" name="key" value="@option('paypal_client_id')">
     <input id="checkout-session-id" type="hidden" name="key" value="{{ $checkoutSessionId }}">
-    <input id="checkout-total" type="hidden" name="total" value="{{ $total*100 }}">
+    <input id="checkout-total" type="hidden" name="total" value="{{ $total }}">
     <input id="checkout-content" type="hidden" name="content" value="{{ $content }}">
+    <input id="pp-csrf" type="hidden" name="csrf" value="@csrf()">
+    <input id="pp-env" type="hidden" name="csrf" value="@option('paypal_environment')">
 
 @endif
 
@@ -173,4 +169,4 @@
     @js('assets/js/cart.js')
 @endif
 @js('https://js.stripe.com/v3/')
-@js('https://www.paypal.com/sdk/js?client-id='.option('paypal_client_id'), ['async' => true])
+@js('https://www.paypal.com/sdk/js?currency=CAD&client-id='.option('paypal_client_id'), ['async' => true])
