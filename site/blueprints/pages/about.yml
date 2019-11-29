@@ -9,10 +9,28 @@ fields:
 		required: true    
 	links:
 		label: Links
-		type: textarea
-		size: large
+		type: structure
+		fields:
+			link: 
+				label: Link
+				type: url
+			text:
+				label: Text
+				type: text
+			separator:
+				label: Section
+				type: text
 		required: true
 	contact:
 		label: Contact info
-		type: textarea
-		size: large
+		type: structure
+		fields:
+			link:
+				label: Link
+				type: url
+			text:
+				label: Text
+				type: text
+			email:
+				label: Email
+				type: email

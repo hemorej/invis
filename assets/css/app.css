@@ -22,7 +22,6 @@ body {font-size: 100%}
 
 body {
   background: white;
-  color: #555555;
   font-family: 'ff-meta-serif', sans-serif;
   cursor: auto;
 }
@@ -31,7 +30,27 @@ body {
   font-family: 'meta-cd', sans-serif;
 }
 
+::selection {
+  background: #ffb700;
+  color: #fff;
+}
 
+::-moz-selection {
+  background: #ffb700;
+  color: #fff;
+}
+
+.cc1 { column-count: 1 }
+/*.cc2 { column-count: 2 }*/
+@media screen and (min-width: 30em) {
+  .cc3-ns { column-count: 3 }
+}
+@media screen and (min-width: 30em) and (max-width: 60em) {
+  .cc2-m { column-count: 2 }
+}
+@media screen and (min-width: 60em) {
+  .cc3-l { column-count: 3 }
+}
 /*Vue styles*/
 
 .fade-enter-active, .fade-leave-active {

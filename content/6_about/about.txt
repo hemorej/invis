@@ -20,48 +20,132 @@ The name of the website is from an Italo Calvino book, its layered, poetic and s
 ----
 
 Links: 
-
-###influences
-(link: http://www.sluban.com/ text: klavdij sluban target: _blank)
-(link: http://www.jungjinlee.com text: jungjin lee target: _blank)
-(link: https://www.shashasha.co/en/artist/tamiko-nishimura text: tamiko nishimura target: _blank)
-(link: https://www.onakakoji.com/works/ text: koji onaka target: _blank)
-(link: https://in-public.com/photographers/saul-leiter/ text: saul leiter target: _blank)
-
-###photographers I like
-(link: https://www.shashasha.co/en/artist/kazuo-kitai text: kazuo kitai target: _blank)
-(link: http://kityoung.co.uk/ text: kit young target: _blank)
-(link: http://jasoneskenazi.com/ text: jason eskenazi target: _blank)
-(link: http://www.gracielaiturbide.org/en/ text: graciela iturbide target: _blank)
-(link: http://www.ralphgibson.com/gallery.html text: ralph gibson target: _blank)
-(link: http://www.renatodagostin.com/renato-d-agostin/home text: renato dagostin target: _blank)
-(link: http://www.magnumphotos.com/JosefKoudelka text: josef koudelka target: _blank)
-(link: https://carolyndrake.com/ text: carolyn drake target: _blank)
-(link: http://www.magnumphotos.com/RaymondDepardon text: raymond depardon target: _blank)
-(link: http://www.christopheagou.com text: christophe agou target: _blank)
-(link: http://www.magnumphotos.com/larrytowell text: larry towell target: _blank)
-(link: http://www.magnumphotos.com/alexwebb text: alex webb target: _blank)
-(link: http://www.chloedewemathews.com/home/ text: chloe dewe mathews target: _blank)
-(link: https://www.claudinedoury.com/ text: claudine doury target: _blank)
-(link: https://pixyliao.com/ text: pixy liao target: _blank)
-(link: http://www.luoyangphoto.com/ text: luo yang target: _blank)
-(link: https://www.shashasha.co/en/artist/masako-tomiya text: masako tomiya target: _blank)
-(link: http://www.dianamarkosian.com/pages/projects text: diana markosian target: _blank)
-(link: https://www.webbnorriswebb.co/ text: rebecca norris webb target: _blank)
-(link: http://www.magnumphotos.com/thomasdworzak text: thomas dworzak target: _blank)
-(link: https://www.instagram.com/randall_fm/ text: randall macneil target: _blank)
-(link: http://www.gueorgui.net/ text: gueorgui tcherednitchenko target: _blank)
-(link: http://www.tatianaplotnikova.com/ text: tatiana plotnikova target: _blank)
-(link: http://www.lasthein.se/ text: jens olof lasthein target: _blank)
-(link: https://www.magnumphotos.com/photographer/olivia-arthur/ text: olivia arthur target: _blank)
-(link: http://fukuyamaemi.com/ text: emi fukuyama target: _blank)
-(link: http://www.akikotakizawa.com/ text: akiko takizawa target: _blank)
-(link: https://ekaterinasolovieva.com/ text: ekaterina solovieva target: _blank)
-(link: http://yurienagashima.com/ text: yurie nagashima target: _blank)
-(link: https://www.artsy.net/artist/william-eggleston text: william eggleston target: _blank)
-(link: https://www.magnumphotos.com/photographer/newsha-tavakolian/ text: newsha tavakolian target: _blank)
-(link: https://www.artsy.net/artist/lee-gap-chul text: gap-chul lee target: _blank)
+- 
+  separator: influences
+  link: http://www.sluban.com/ 
+  text: klavdij sluban 
+-
+  link: http://www.jungjinlee.com 
+  text: jungjin lee 
+-
+  link: https://www.shashasha.co/en/artist/tamiko-nishimura 
+  text: tamiko nishimura 
+-
+  link: https://www.onakakoji.com/works/ 
+  text: koji onaka 
+-
+  link: https://in-public.com/photographers/saul-leiter/ 
+  text: saul leiter 
+-
+  link: https://www.shashasha.co/en/artist/kazuo-kitai 
+  text: kazuo kitai 
+-
+  separator: photographers i follow
+  link: http://kityoung.co.uk/ 
+  text: kit young 
+-
+  link: http://jasoneskenazi.com/ 
+  text: jason eskenazi 
+-
+  link: http://www.gracielaiturbide.org/en/ 
+  text: graciela iturbide 
+-
+  link: http://www.ralphgibson.com/gallery.html 
+  text: ralph gibson 
+-
+  link: http://www.renatodagostin.com/renato-d-agostin/home 
+  text: renato dagostin 
+-
+  link: http://www.magnumphotos.com/JosefKoudelka 
+  text: josef koudelka 
+-
+  link: https://carolyndrake.com/ 
+  text: carolyn drake 
+-
+  link: http://www.magnumphotos.com/RaymondDepardon 
+  text: raymond depardon 
+-
+  link: http://www.christopheagou.com 
+  text: christophe agou 
+-
+  link: http://www.magnumphotos.com/larrytowell 
+  text: larry towell 
+-
+  link: http://www.magnumphotos.com/alexwebb 
+  text: alex webb 
+-
+  link: http://www.chloedewemathews.com/home/ 
+  text: chloe dewe mathews 
+-
+  link: https://www.claudinedoury.com/ 
+  text: claudine doury 
+-
+  link: https://pixyliao.com/ 
+  text: pixy liao 
+-
+  link: http://www.luoyangphoto.com/ 
+  text: luo yang 
+-
+  link: https://www.shashasha.co/en/artist/masako-tomiya 
+  text: masako tomiya 
+-
+  link: http://www.dianamarkosian.com/pages/projects 
+  text: diana markosian 
+-
+  link: https://www.webbnorriswebb.co/ 
+  text: rebecca norris webb 
+-
+  link: http://www.magnumphotos.com/thomasdworzak 
+  text: thomas dworzak 
+-
+  link: https://www.instagram.com/randall_fm/ 
+  text: randall macneil 
+-
+  link: http://www.gueorgui.net/ 
+  text: gueorgui tcherednitchenko 
+-
+  link: http://www.tatianaplotnikova.com/ 
+  text: tatiana plotnikova 
+-
+  link: http://www.lasthein.se/ 
+  text: jens olof lasthein 
+-
+  link: https://www.magnumphotos.com/photographer/olivia-arthur/ 
+  text: olivia arthur 
+-
+  link: http://fukuyamaemi.com/ 
+  text: emi fukuyama 
+-
+  link: http://www.akikotakizawa.com/ 
+  text: akiko takizawa 
+-
+  link: https://ekaterinasolovieva.com/ 
+  text: ekaterina solovieva 
+-
+  link: http://yurienagashima.com/ 
+  text: yurie nagashima 
+-
+  link: https://www.artsy.net/artist/william-eggleston 
+  text: william eggleston 
+-
+  link: https://www.magnumphotos.com/photographer/newsha-tavakolian/ 
+  text: newsha tavakolian 
+-
+  link: https://www.artsy.net/artist/lee-gap-chul 
+  text: gap-chul lee 
 
 ----
 
-Contact: ### contact (link: http://instagram.com/jerome_a_ text: instagram target: _blank) (link: https://the-invisible-cities.com/feed text: rss target: _blank) (email: jerome@the-invisible-cities.com text: email) (link: https://tinyletter.com/the-invisible-cities text: newsletter target: _blank)
+Contact: 
+-
+	link: http://instagram.com/jerome_a_ 
+	text: instagram
+-
+	link: https://the-invisible-cities.com/feed
+	text: rss
+-
+	email: jerome@the-invisible-cities.com
+	text: email
+-
+	link: https://tinyletter.com/the-invisible-cities
+	text: newsletter
