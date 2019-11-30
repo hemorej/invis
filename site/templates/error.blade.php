@@ -1,12 +1,10 @@
 @include('partials.header')
 @include('partials.menu')
 
-<div class="row medium-space-top">
-    <section class="small-12 small-centered medium-12 columns">
-      <article>
-        @kirbytext($page->text())
-      </article>
-    </section>
-</div>
+<section class="measure black-70 ma3 ma4-ns f3-ns f4-m f4">
+  <article>
+    @kirbytext($page->text())
+  </article>
+</section>
 
 @include('partials.footer')

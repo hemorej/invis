@@ -2,7 +2,7 @@
 @include('partials.menu')
 
 
-<section class="ml3 ml4-ns">
+<section class="ml3 ml4-ns w-80">
 	@foreach($page->images() as $image)
 		<img srcset="{{ $image->srcset([600, 800, 1200]) }}">
 	@endforeach
@@ -16,7 +16,7 @@
 		@if(!empty($item->separator()->value))
 			<span class="f4 f3-ns black db">{{ $item->separator() }}</span><span class='db mb2'></span>
 		@endif
-		<a href="{{ $item->url() }}" target='_blank' class='f4 f3-ns link black-60 hover-white pa2 hover-bg-gold' >
+		<a href="{{ $item->url() }}" target='_blank' class='f4 f3-ns link black-60 hover-white hover-bg-gold' >
 			{{ $item->text() }}
 		</a>
 		<span class='db mb2'></span>

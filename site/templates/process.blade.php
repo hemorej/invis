@@ -10,13 +10,11 @@
 @include('partials.header', ['meta' => $meta])
 @include('partials.menu')
 
-<div class="row medium-space-top">
-	<div class="small-12 medium-10 columns">
-		<h3><span class="high-contrast">{{ $page->parent()->title() | lower }}</span></h3>
+<section class="measure black-70 ma3 ma4-ns f3-ns f4-m f4">
+	<h3><span class="high-contrast">{{ $page->parent()->title() | lower }}</span></h3>
 		@kirbytext($page->text())
-	</div>
 	<p class="medium-space-top"></p>
-</div>
+</section>
 <div class="row medium-space-top">
 	<div class="small-12 medium-10 columns">
 		@if($page->hasPrevListed())
