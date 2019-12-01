@@ -17,6 +17,14 @@ return [
 
 	'ga_code' => '',
 
+	'thumbs' => [
+    	'quality'   => 90,
+    	'srcsets' => [
+            'default' => [600, 800, 1200],
+            'vertical' => [ '400w' => ['height' => 600], '600w' => ['height' => 600], '800w' => ['height' => 600]]
+        ]
+    ],
+
 	'mailgun_domain' => '',
 	'mailgun_key' => '',
 	'alert_address' => '',

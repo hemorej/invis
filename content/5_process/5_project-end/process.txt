@@ -10,7 +10,7 @@ Text:
 
 (image: z_img_4764.jpg)
 
-## project end
+#### project end
 
 In the final editing stages, I'll keep coming back to a set if I see changes in it, things I want to update, sequence, or reprint, exclude or include more photographs. The set will keep changing between editing iterations and cycles of shooting and editing which bring new material to the set. Those cycles then slow down until there are almost no changes left to make. I'm satisfied with the printing, the sequencing and the set selection as a whole. This might change in the future again, but for now it's an indication that it's ready for the next step.
 
@@ -20,7 +20,7 @@ The end of a project means no more active shooting for it, but perhaps a minor r
 
 The end of a project sometimes brings a sense of relief, if it's been a particularly difficult edit. Other times it brings a certain sadness that often comes with wrapping up any kind of long project.
 
-## book
+#### book
 
 After I decide to stop working on the project, I'll typically publish it on my website and share it online.
 

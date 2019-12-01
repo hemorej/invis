@@ -24,37 +24,54 @@
 			$headline = "_".$page->title()->lower();
 		}
 	}
-
-$pull = true;
-if(count($page->images()) == 1 && $page->images()->first()->isPortrait())
-	$pull = false;
-
 @endphp
 
-<div class="row medium-space-top">
-	<h3><span class="high-contrast">{{ $page->parent()->title() | lower }}</span><a href="{{ $page->url() }}">{{ $headline | lower }}</a></h3>
-	<div class="small-12 medium-12 {{ $pull == true ?? 'medium-overflow pull-2' }} columns">
+<section class="black-70 ph2">
+	<span class="f5 f4-m f3-ns black-70 db">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold" href="{{ $page->url() }}">{{ $headline | lower }}</a></span>
 		@kirbytext($page->text())
-		@foreach($page->images() as $image)
-			<img srcset="{{ $image->srcset([600, 800, 1200]) }}">
+		<span class='db mb3'></span>
+		@php $skip = false @endphp
+		@foreach($page->images() as $current)
+			@php if($skip == true){ $skip = false; continue;} @endphp
+			@php $next = $page->images()->nth($loop->index + 1); @endphp
+			@if($current->isPortrait() && $next->isPortrait())
+				<div class="mw7">
+					<section class="fl w-100 w-50-ns pr1">
+						<img alt="{{$headline}}" srcset="{{ $current->srcset('vertical') }}">
+					</section>
+					<section class="fl w-100 w-50-ns pl1">
+						<img alt="{{$headline}}" srcset="{{ $next->srcset('vertical') }}">
+					</section>
+				</div>
+				@php $skip = true @endphp
+			@else
+				<section class="{{e($current->isPortrait(), 'mw6 dib', 'aspect-ratio aspect-ratio--6x4')}}">
+					@if($current->isPortrait())
+						<img alt="{{$headline}}" srcset="{{ $current->srcset('vertical') }}">
+					@else
+						<img alt="{{$headline}}" srcset="{{ $current->srcset() }}">
+					@endif
+				</section>
+			@endif
+			<span class='cf db mb3'></span>
 		@endforeach
-	</div>
-	<p class="medium-space-top"></p>
+</section>
 
+<nav class="mt4 ph2">
 	@if($page->hasPrevListed())
-		<p class="left">
-			<a href="{{ $page->prev()->url() }}">&laquo; {{ $page->parent()->title() == 'journal' ? 'Previous' : $page->prev()->title() }}</a>
+		<p class="fl">
+			<a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->prev()->url() }}">&laquo; {{ $page->parent()->title() == 'journal' ? 'previous' : $page->prev()->title() }}</a>
 		</p>
 	@endif
-
 	@if($page->parent()->title() == 'journal')
-		<p class="left"> |<a href="{{ $page->parent()->url() }}?all=1">All posts</a></p>
+		<p class="fl">&nbsp;&vert;&nbsp;<a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->parent()->url() }}?all=1">all posts</a></p>
 	@endif
-	
 	@if($page->hasNextListed())
-		<p class="right">
-			<a href="{{ $page->next()->url() }}">{{ $page->parent()->title() == 'journal' ? 'Next' : $page->next()->title() }} &raquo;</a>
+		<p class="fr">
+			<a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->next()->url() }}">{{ $page->parent()->title() == 'journal' ? 'next' : $page->next()->title() }} &raquo;</a>
 		</p>
 	@endif
+</nav>
+<span class="cf"></span>
 
 @include('partials.footer')

@@ -10,17 +10,17 @@ Text:
 
 (image: IMG_6384.JPG)
 
-## Some technical notes
+#### some technical notes
 
 This is a short article about the technical choices I make in my work. I've arrived at these decisions after a lot of experimentation over the years and they're directly informed by my printing, however they're not inflexible rules and can change anytime.
 
-## Film
+#### film
 
 I shoot Ilford HP5+ almost exclusively. Last year I decided to start bulk loading my own film, mostly to save money. Like most popular 400 speed films, HP5+ comes in 100' rolls. Other films I've tried that I like are Rollei RPX 400 (which I shot at 800), Ilford FP4+ (which I shot at 400), the defunct Fuji Neopan 1600 (shot at 800) as well as Ilford Delta 3200 and Kodak TMax 3200 (shot at 1600). HP5+ at 800 gives me slightly more contrast, more margin to shoot when there's less light and the ability to shoot quickly at hyperfocal during the day.
 
 My volume varies, but I shoot about 40-50 rolls a year (more if I travel), the vast majority of which with a 35mm lens.
 
-## Development
+#### development
 
 Ilford Microphen is my favourite developer, it's specifically formulated for pushing which I do all the time. It gives rich grays in the midtones, a lot of detail in shadows and doesn't blow up the highlights and has a smooth, sandy grain that's visible but not overpowering. Other developers I've tried are Rodinal, D76 and Xtol.
 
@@ -28,7 +28,7 @@ I usually wait until I have a small backlog of films and then develop them all a
 
 I follow a straightforward serial numbering method for my negatives. Each camera have its own sequence, so the numbers tell me which camera (and focal length) was used for a given frame. I don't have a dating method for negatives as I don't need to know exactly when each negative was shot, but I do mark the first negative of the year to keep track of how many rolls I shot in a given year.
 
-## Printing
+#### printing
 
 I print on Ilford Multigrade FB Classic Matt paper. I like the softer look of matt paper and the size of 8x10" paper. It's big enough to hold and to see detail, but small enough that you have to get a bit closer to see it when framed. Most of the time I print with a medium-high grade filter for contrast and grain. Other times, depending on the negative, I'll use the split grade method or a high contrast filter. I usually make about 10-14 new prints per session of 5-7 hours.
 

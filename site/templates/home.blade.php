@@ -1,9 +1,9 @@
 @include('partials.header')
 @include('partials.menu')
 
-<article class="ml3 ml4-ns w-70">
+<article class="aspect-ratio aspect-ratio--6x4">
 	@foreach(getHomeImage() as $image)
-		<img srcset="{{ $image->srcset([600, 800, 1200]) }}">
+		<img alt="black and white photograph" srcset="{{ $image->srcset([600, 800, 1200]) }}">
 	@endforeach
 </article>
 

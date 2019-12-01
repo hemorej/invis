@@ -21,10 +21,10 @@ html,
 body {font-size: 100%}
 
 body {
-  background: white;
   font-family: 'ff-meta-serif', sans-serif;
   cursor: auto;
 }
+.bg-lightest-gray {background-color: #fefefe}
 
 .meta-cd{
   font-family: 'meta-cd', sans-serif;
