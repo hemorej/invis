@@ -43,7 +43,9 @@ var app = new Vue({
         postcode: null,
         country: null,
         prevQty: 0,
-        showTerms: false
+        showTerms: false,
+        error: false,
+        leftInStock: 10
     },
     mounted() {
         this.country = this.$refs.userLocation.value

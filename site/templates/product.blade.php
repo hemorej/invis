@@ -13,24 +13,20 @@
 @include('partials.menu')
 
 <noscript>
-    <div class="db measure lh-copy">
+    <div class="db measure lh-copy ph2">
         <h2>This page requires Javascript, please enable it and try again</h2>
     </div>
 </noscript>
 
-@php 
-    $headline = $page->title()->lower();
-@endphp
-
 <div id="prod" class="black-70 ph2">
-    <span class="f5 f4-m f3-ns black-70 db mb3">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold pa2" href="{{ $page->url() }}">{{ $headline | lower }}</a></span>
+    <span class="f5 f4-m f3-ns black-70 db mb3">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold pa2" href="{{ $page->url() }}">{{ $page->title() | lower }}</a></span>
 
     <div class="mw9 center">
         <div class="cf">
             <div class="fl w-100 w-60-ns">
                 <carousel :per-page="1" :pagination-size="4" :adjustable-height="true" :loop="true">
                     @foreach($page->images() as $image)
-                        <slide><img alt="product pictures for {{ $headline }}" srcset="{{ $image->srcset([600, 800, 1200]) }}"></slide>
+                        <slide><img alt="product pictures for {{ $page->title() }}" srcset="{{ $image->srcset([600, 800, 1200]) }}"></slide>
                     @endforeach
                 </carousel>
             </div>
