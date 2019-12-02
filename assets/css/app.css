@@ -41,14 +41,19 @@ body {
 }
 
 .cc1 { column-count: 1 }
-/*.cc2 { column-count: 2 }*/
+@media screen and (max-width: 30em) {
+  .o-30-s {opacity: 0.3}
+}
 @media screen and (min-width: 30em) {
+  .o-100-ns {opacity: 1}
   .cc3-ns { column-count: 3 }
 }
 @media screen and (min-width: 30em) and (max-width: 60em) {
+  .o-100-m {opacity: 1}
   .cc2-m { column-count: 2 }
 }
 @media screen and (min-width: 60em) {
+  .o-100-l {opacity: 1}
   .cc3-l { column-count: 3 }
 }
 /*Vue styles*/

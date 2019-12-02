@@ -4,7 +4,6 @@
 	</footer>
 @endif
 
-@js('assets/js/min.js')
 @include('partials.ga')
 </body>
 

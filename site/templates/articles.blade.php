@@ -9,17 +9,29 @@
 	}
 @endphp
 
-<div class="row large-space-top"></div>
-@foreach($articles as $article)
-	<div class="row article-list">
-	    <div class="small-6 medium-4 medium-text-right columns">
-	        <h3><a data-preview="{{ getPreview($article->images()->first()) }}" class="cover" href="{{ $article->url() }}">@html($article->title()->lower())</a></h3>
-	    </div>
+<section class="cf mt5-ns mt3 center">
+	<nav class="fl w-100 w-30-ns pr3 tr-ns tl">
+		@foreach($articles as $article)
+			<a data-preview="{{ getPreview($article->images()->first()) }}" class="cover ttl link black gray-ns f3 meta-cd db pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">@html($article->title()->lower())</a>
+		@endforeach
+	</nav>
+	<div class="fl db-ns w-70-ns tl o-30-s o-100-ns fixed static-ns">
+		<img id="cover" src="{{ getPreview($articles->first()->images()->first()) }}" >
 	</div>
-@endforeach
+</section>
 
-<div class="preview">
-    <img id="cover" src="{{ getPreview($articles->first()->images()->first()) }}" >
-</div>
+<div class="db mt4"></div>
 
 @include('partials.footer')
+
+<script>
+	var classname = document.getElementsByClassName("cover");
+
+	for (var i = 0; i < classname.length; i++) {
+	    classname[i].addEventListener('mouseover', setPreview, false);
+	}
+
+	function setPreview(){
+		document.getElementById('cover').setAttribute("src", this.getAttribute('data-preview'))
+	}
+</script>
