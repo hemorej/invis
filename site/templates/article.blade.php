@@ -27,7 +27,7 @@
 @endphp
 
 <section class="black-70 ph2">
-	<span class="f5 f4-m f3-ns black-70 db">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold" href="{{ $page->url() }}">{{ $headline | lower }}</a></span>
+	<span class="f5 f4-m f3-ns black-70 db">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold pa2" href="{{ $page->url() }}">{{ $headline | lower }}</a></span>
 		@kirbytext($page->text())
 		<span class='db mb3'></span>
 		@php $skip = false @endphp

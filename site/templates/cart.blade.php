@@ -31,7 +31,15 @@
     </section>
 @else
     <div id="cart">
-        <input type="hidden" ref="userLocation" value="{{ $currentLocation }}" />
+        <input ref="userLocation" type="hidden" value="{{ $currentLocation }}" />
+        <input ref="checkoutKey" type="hidden" name="key" value="@option('stripe_key_pub')">
+        <input ref="checkoutPPKey" type="hidden" name="key" value="@option('paypal_client_id')">
+        <input ref="checkoutSessionID" type="hidden" name="key" value="{{ $checkoutSessionId }}">
+        <input ref="checkoutTotal" type="hidden" name="total" value="{{ $total }}">
+        <input ref="checkoutContent" type="hidden" name="content" value="{{ $content }}">
+        <input ref="ppCsrf" type="hidden" name="csrf" value="@csrf()">
+        <input ref="ppEnv" type="hidden" name="csrf" value="@option('paypal_environment')">
+
         <transition name="fade" mode="out-in" v-on:after-enter="initPaypal">
         <div v-if="inCart == true" key="cart">
             <div class="row show-for-landscape">
@@ -89,7 +97,7 @@
                 </div>
             </div>
             
-            <button @click="showShipping()">Begin checkout</button>
+            <button v-on:click.prevent="showShipping">Begin checkout</button>
         </div>
 
         <div v-else-if="inCart == false && inShipping == true" key="address">
@@ -124,7 +132,7 @@
                     </select>
                 </label>
             </fieldset>
-            <button :disabled="shippingIncomplete" @click="showCheckout()">Finish checkout</button>
+            <button :disabled="shippingIncomplete" v-on:click.prevent="showCheckout">Finish checkout</button>
             <input type="hidden" ref="checkoutCSRF" value="@csrf()">
         </div>
 
@@ -132,14 +140,14 @@
             <div class="row">
                 <div class="small-12 medium-12 columns low-contrast text-right" id="currencies">
                     <span>Approximately {{ $currencies }}</span><br />
-                    <span>By continuing to checkout, you agree to the general<a id="terms" href="#">terms</a>of the sale.</span>
-                    <p id="term-details">{{ $site->terms() }}</p>
+                    <span>By continuing to checkout, you agree to the general<a v-on:click.prevent="showTerms = !showTerms">terms</a>of the sale.</span>
+                    <p v-show="showTerms == true">{{ $site->terms() }}</p>
                 </div>
 
                 <div>
                     <div class="row">
                         <div class="small-6 medium-6 columns text-right">
-                            <button class="right" @click="redirectStripe">credit card checkout <div id="card"></div></button>
+                            <button class="right" v-on:click.prevent="redirectStripe">credit card checkout <div id="card"></div></button>
                         </div>
                         <div class="small-6 medium-6 columns"><div id="paypal-button-container"></div></div>
                     </div>
@@ -149,24 +157,16 @@
         </transition>
     </div>
 
-    <input id="checkout-key" type="hidden" name="key" value="@option('stripe_key_pub')">
-    <input id="checkout-pp-key" type="hidden" name="key" value="@option('paypal_client_id')">
-    <input id="checkout-session-id" type="hidden" name="key" value="{{ $checkoutSessionId }}">
-    <input id="checkout-total" type="hidden" name="total" value="{{ $total }}">
-    <input id="checkout-content" type="hidden" name="content" value="{{ $content }}">
-    <input id="pp-csrf" type="hidden" name="csrf" value="@csrf()">
-    <input id="pp-env" type="hidden" name="csrf" value="@option('paypal_environment')">
 
 @endif
 
 @include('partials.footer')
-@js('https://unpkg.com/axios/dist/axios.min.js')
 @if(@option('env') == 'prod')
-    @js('https://cdn.jsdelivr.net/npm/vue')
-    @js('assets/js/cart.min.js')
+    @js('assets/js/prod/cart.min.js')
 @else
+    @js('https://unpkg.com/axios/dist/axios.min.js')
     @js('https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
     @js('assets/js/cart.js')
 @endif
-@js('https://js.stripe.com/v3/')
+@js('https://js.stripe.com/v3/', ['async' => true])
 @js('https://www.paypal.com/sdk/js?currency=CAD&client-id='.option('paypal_client_id'), ['async' => true])

@@ -12,121 +12,108 @@
 @include('partials.header', ['meta' => $meta])
 @include('partials.menu')
 
-@css("//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick.css")
-@css("//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick-theme.css")
-
 <noscript>
-<div class="alert-box row" style="display:block">
-    <div class="medium-12 columns">
-      <h2>This page requires Javascript, please enable it and try again</h2>
+    <div class="db measure lh-copy">
+        <h2>This page requires Javascript, please enable it and try again</h2>
     </div>
-</div>
 </noscript>
 
 @php 
-    if($page->parent()->title() != 'journal'){
-        $headline = $page->title()->lower();
-    }else{
-        $published = $page->published()->toString();
-        if(!empty($published)){
-           if(strpos($published, ',') != false){
-                $headline = $published ;
-            }else{
-                $headline = date('F d, Y', strtotime($published));
-            }
-        }else if( $page->title() != $page->uid()){
-            $headline = "_".$page->title()->lower();
-        }
-    }
+    $headline = $page->title()->lower();
 @endphp
 
-<div class="row medium-space-top">
-    <h3><span class="high-contrast">{{ $page->parent()->title() | lower }}</span><a href="{{ $page->url() }}">{{ $headline | lower }}</a></h3>
-    <div class="small-12 medium-8 columns">
-        <div class="slick">
-            @foreach($page->images() as $image)
-                <div><img src="{{ $image->url() }}"></div>
-            @endforeach
-        </div>
-    </div>
-        <section class="small-12 medium-4 columns variants">
-            @php
-                $variants = $page->variants()->toStructure();
-                
-                $stock = 0;
-                foreach($variants as $variant){
-                    $stock += $variant->stock()->value();
-                }
+<div id="prod" class="black-70 ph2">
+    <span class="f5 f4-m f3-ns black-70 db mb3">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold pa2" href="{{ $page->url() }}">{{ $headline | lower }}</a></span>
 
-            @endphp
-            @if(count($variants) == 0 || $stock == 0):
-                'Out of stock'
-            @else
-                <ul class="inline-list">
-                @php $activeVariant = 0; @endphp
-                @foreach ($variants as $variant)
-                    @if(Cart::inStock($variant))
-                        @if($loop->first)
-                            @php $activeVariant = $variant->autoid() @endphp
-                            <li class='active variant'>
-                        @else
-                            <li class='variant'>
-                        @endif
-                            <a href="#" data-option-variant='{{ $variant->autoid() }}' data-option-price="{{ $variant->price() }}">{{ $variant->name() }} &mdash; ${{ $variant->price() }}</a>
-                        </li>&nbsp;
+    <div class="mw9 center">
+        <div class="cf">
+            <div class="fl w-100 w-60-ns">
+                <carousel :per-page="1" :pagination-size="4" :adjustable-height="true" :loop="true">
+                    @foreach($page->images() as $image)
+                        <slide><img alt="product pictures for {{ $headline }}" srcset="{{ $image->srcset([600, 800, 1200]) }}"></slide>
+                    @endforeach
+                </carousel>
+            </div>
+        
+            <div class="fl w-100 w-40-ns pa4-ns">
+                <section class="variants">
+                    @php
+                    $variants = $page->variants()->toStructure();
+
+                    $stock = 0;
+                    foreach($variants as $variant)
+                        $stock += $variant->stock()->value();
+
+                    @endphp
+                    @if(count($variants) == 0 || $stock == 0):
+                        'Out of stock'
+                    @else
+                        <ul class="list pv2 pl0">
+                            @foreach($variants as $variant)
+                                @if(Cart::inStock($variant))
+                                    <li class='{{ e($loop->first, 'dib pl0') }}'>
+                                    <a {{ e($loop->first, 'ref="active"') }} 
+                                    class="f4 link black-60 hover-white hover-bg-gold pa2-l {{ e($loop->first, 'bb b--gold bw2')}}"
+                                    data-option-variant='{{ $variant->autoid() }}'
+                                    v-on:click.prevent='makeActive'>
+                                        {{ $variant->name() }} &mdash; ${{ $variant->price() }}
+                                    </a>
+                                    </li>&nbsp;
+                                @endif
+                            @endforeach
+                        </ul>
+
+                        <form id="cart-form" method="post" action="">
+                            <div class="description">
+                                <input type="hidden" name="csrf" ref="csrf" value="@csrf()">
+                                <input type="hidden" name="action" value="add">
+                                <input type="hidden" name="uri" ref="uri" value="{{ $page->uri() }}">
+                            </div>
+
+                            <div class="action mb4">
+                                <button 
+                                    :disabled="submitting == true"
+                                    v-on:click.prevent='addToCart'
+                                    class="bg-white f5 no-underline" 
+                                    :class="[submitting == true ? 'gray b--gray pa2 pa3-l' : 'black bg-animate b--gold pa2 pa3-l ba border-box']">
+                                    <span v-if="submitting == true">adding&ensp;&hellip;</span>
+                                    <span v-else>add to cart</span>
+                                </button>
+                            </div>
+                        </form>
+                        <span class="measure-narrow lh-copy black-70 f4">
+                            {{ $page->description() }}
+                        </span>
                     @endif
-                @endforeach
-                </ul>
-
-                <form id="cart-form" method="post" action="">
-                    <div class="description">
-                        <input type="hidden" name="csrf" value="@csrf()">
-                        <input type="hidden" name="action" value="add">
-                        <input type="hidden" name="uri" value="{{ $page->uri() }}">
-                        <input type="hidden" name="variant" value='{{ $activeVariant }}'>
-                    </div>
-
-                    <div class="action">
-                        <button id="add-cart" type="submit">add to cart</button>
-                    </div>
-                </form>
-                @kirbytext($page->description())
-            @endif
-        </section>
-    </div>
-    <div class="row medium-space-top">
-        <div class="small-12 medium-12 columns">
-        @if($page->hasPrevListed())
-            <span class="left">
-                <a href="<?= $page->prev()->url() ?>">&laquo; <?= $page->prev()->title() ?></a>
-            </span>
-        @endif
-        @if($page->hasNextListed())
-            <span class="right">
-                <a href="<?= $page->next()->url() ?>"><?= $page->next()->title() ?> &raquo;</a>
-            </span>
-        @endif
+                </section>
+            </div>
         </div>
-    </div>  
+    </div>
 </div>
+
+<span class="cf db mt4"></span>
+
+<nav class="cf mt4 ph2">
+    @if($page->hasPrevListed())
+        <p class="fl">
+            <a class="pa2-l f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->prev()->url() }}">&laquo; {{ $page->prev()->title() }}</a>
+        </p>
+    @endif
+
+    @if($page->hasNextListed())
+        <p class="fr">
+            <a class="pa2-l f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->next()->url() }}">{{ $page->next()->title() }} &raquo;</a>
+        </p>
+    @endif
+</nav>
 
 @include('partials.footer')
 
-@js("//cdn.jsdelivr.net/gh/kenwheeler/slick/slick/slick.min.js")
-<script type="text/javascript">
-$( document ).ready(function() {
-    $('.slick').slick({
-      dots: true,
-      arrows: true,
-      infinite: true,
-      speed: 300,
-      slidesToShow: 1,
-      adaptiveHeight: true
-    });
-});
-</script>
 @if(@option('env') == 'prod')
-    @js('assets/js/cart.min.js')
+    @js('assets/js/prod/product.min.js')
 @else
-    @js('assets/js/cart.js')
+    @js('https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
+    @js('https://cdn.jsdelivr.net/npm/vue-carousel@0.18.0/dist/vue-carousel.min.js')
+    @js('https://unpkg.com/axios/dist/axios.min.js')
+    @js('assets/js/product.js')
 @endif

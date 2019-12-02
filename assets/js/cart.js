@@ -1,67 +1,31 @@
-$( document ).ready(function(){
+   // $( ".input-qty" ).focus(function() {
+   //      prevQty = $(this).val();
+   // });
 
-    var prevQty = 0;
+   // $( ".input-qty" ).change(function() {
+   //      var id = $(this).attr("id");
+   //      var variant = $(this).attr("data-variant");
+   //      var qty = $(this).val();
+   //      var max = $(this).attr("max");
+   //      var csrf = $("#input-csrf").val();
 
-   $( ".variant" ).click(function(e) {
-        e.preventDefault();
-        $(this).addClass('active').siblings().removeClass('active');
-        
-        var variant = $(this).children('a').attr('data-option-variant');
-        var price = $(this).children('a').attr('data-option-price');
-        $("input[name=variant]").val(variant);
-        $("input[name=price]").val(price);
-   });
+   //      if(parseInt(qty) > parseInt(max)){
+   //          $('[data-variant="'+variant+'"]').val(prevQty);
+   //          $('#stock-error').html(parseInt(max));
+   //          $('.alert-box').show();
+   //          return false;
+   //      }else{
+   //          $.post( "cart", { id: id, action: "add", quantity: qty, csrf: csrf})
+   //          .done(function( data ) {
+   //              location.reload(true);
+   //          });
+   //      }
+   //  });
 
-   $( ".input-qty" ).focus(function() {
-        prevQty = $(this).val();
-   });
-
-   $( ".input-qty" ).change(function() {
-        var id = $(this).attr("id");
-        var variant = $(this).attr("data-variant");
-        var qty = $(this).val();
-        var max = $(this).attr("max");
-        var csrf = $("#input-csrf").val();
-
-        if(parseInt(qty) > parseInt(max)){
-            $('[data-variant="'+variant+'"]').val(prevQty);
-            $('#stock-error').html(parseInt(max));
-            $('.alert-box').show();
-            return false;
-        }else{
-            $.post( "cart", { id: id, action: "add", quantity: qty, csrf: csrf})
-            .done(function( data ) {
-                location.reload(true);
-            });
-        }
-    });
-
-   $(".close").click(function(e){
-        e.preventDefault();
-        $('.alert-box').hide();
-    });
-
-   $("#add-cart").click(function(e){
-        e.preventDefault();
-        $(this).html('adding...');
-        $(this).attr('disabled','disabled');
-        sessionStorage.setItem('cart', 'true');
-
-        var uri = $("[name=uri]").val();
-        var variant = $("[name=variant]").val();
-        var csrf = $("[name=csrf]").val();
-
-        $.post( "cart", { uri: uri, variant: variant, action: "add", csrf: csrf})
-        .done(function( data ) {
-            document.location.replace('cart');
-        });
-   });
-
-    $("#terms").click(function(e){
-        e.preventDefault();
-        $("#term-details").toggle();
-    });
-});
+   // $(".close").click(function(e){
+   //      e.preventDefault();
+   //      $('.alert-box').hide();
+   //  });
 
 var app = new Vue({
     el: '#cart',
@@ -77,7 +41,9 @@ var app = new Vue({
         city: null,
         province: null,
         postcode: null,
-        country: null
+        country: null,
+        prevQty: 0,
+        showTerms: false
     },
     mounted() {
         this.country = this.$refs.userLocation.value
@@ -99,7 +65,7 @@ var app = new Vue({
             this.inShipping = false;
 
             // init stripe button
-            this.stripe = Stripe($("#checkout-key").val());
+            this.stripe = Stripe(this.$refs.checkoutKey.value);
             axios.post('/address', {
                 name: this.name,
                 email: this.email,
@@ -119,10 +85,10 @@ var app = new Vue({
             }
 
             paypal.Buttons({
-                env: $("#pp-env").val(),
+                env: this.$refs.ppEnv.value,
                 client: {
-                    sandbox:    $("#checkout-pp-key").val(),
-                    production: $("#checkout-pp-key").val()
+                    sandbox:    this.$refs.checkoutPPKey.value,
+                    production: this.$refs.checkoutPPKey.value
                 },
                 commit: true,
                 style: {
@@ -136,7 +102,7 @@ var app = new Vue({
                     return actions.order.create({
                         purchase_units: [{
                           amount: {
-                            value: parseInt($("#checkout-total").val())
+                            value: parseInt(this.$refs.checkoutTotal.value)
                           }
                         }]
                     });
@@ -144,7 +110,7 @@ var app = new Vue({
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
 
-                    var csrf = $("#pp-csrf").val();
+                    var csrf = this.$refs.ppCsrf.value;
                     var token = data.orderID;
 
                     axios.post( "/order/success/paypal", { token: token, csrf: csrf } )
@@ -157,7 +123,7 @@ var app = new Vue({
         },
         redirectStripe: function(){
             this.stripe.redirectToCheckout({
-                sessionId: $("#checkout-session-id").val()
+                sessionId: this.$refs.checkoutSessionID.value
             }).then(function (result) {
                 alert(result.error.message);
             });

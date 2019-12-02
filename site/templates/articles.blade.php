@@ -23,7 +23,7 @@
 <div class="db mt4"></div>
 
 @if(option('env') == 'prod')
-	@js('assets/js/app.min.js')
+	@js('assets/js/prod/app.min.js')
 @else
 	@js('assets/js/app.js')
 @endif
