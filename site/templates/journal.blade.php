@@ -7,37 +7,39 @@
         $articles = $page->children()->listed()->sortBy('publishDate', 'desc')->paginate(12);
     @endphp
 
-    <div class="row large-space-top"></div>
-    @foreach($articles as $article)
-        <div class="row article-list">
-            <div class="small-6 medium-4 medium-text-right columns">
-                <h3><a data-preview="{{ getPreview($article->images()->first()) }}" class="cover" href="{{$article->url()}}">{{ archiveDate($article->published()->toString()) }}</a></h3>
-            </div>
+    <section class="cf mt5-ns mt3 center">
+        <nav class="fl w-100 w-30-ns pr3 tr-ns tl">
+            @foreach($articles as $article)
+                <a data-preview="{{ getPreview($article->images()->first()) }}" class="cover ttl link black-70 f3 meta-cd db pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">{{ archiveDate($article->published()->toString()) }}</a>
+            @endforeach
+        </nav>
+        <div class="fl db-ns w-70-ns tl o-30-s o-100-ns fixed static-ns">
+            <img id="cover" src="{{ getPreview($articles->first()->images()->first()) }}" >
         </div>
-    @endforeach
-    <div class="preview">
-        <img id="cover" src="{{ getPreview($articles->first()->images()->first()) }}" >
-    </div>
+    </section>
 
     @if($articles->pagination()->hasPages())
-        <div class="row medium-space-top">       
-            <div class="small-12 small-centered medium-12 columns">
-                @if($articles->pagination()->hasNextPage())
-                    <span class="left">
-                        <a href="{{ $articles->pagination()->nextPageURL() }}">&laquo; older</a>
-                    </span>
-                @endif
+        @if($articles->pagination()->hasNextPage())
+            <p class="fl">
+                <a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $articles->pagination()->nextPageURL() }}">&laquo;&nbsp;older</a>
+            </p>
+        @endif
                 
-                @if($articles->pagination()->hasPrevPage())
-                    <span class="right">
-                        <a href="{{ $articles->pagination()->prevPageURL() }}">newer  &raquo;</a>
-                    </span>
-                @endif
-            </div>
-        </div>
+        @if($articles->pagination()->hasPrevPage())
+            <p class="fr">
+                <a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $articles->pagination()->prevPageURL() }}">newer&nbsp;&raquo;</a>
+            </p>
+        @endif
     @endif
 
+    <span class="cf"></span>
+
     @include('partials.footer')
+    @if(option('env') == 'prod')
+        @js('assets/js/app.min.js')
+    @else
+        @js('assets/js/app.js')
+    @endif
 @else
     {{ @go($page->children()->last()->url()) }}
 @endif
