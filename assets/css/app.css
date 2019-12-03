@@ -25,7 +25,7 @@ body {
   cursor: auto;
 }
 .bg-lightest-gray {background-color: #fefefe}
-button:focus {outline:0}
+button:focus, input:focus {outline:0}
 .meta-cd{ font-family: 'meta-cd', sans-serif }
 
 ::selection {

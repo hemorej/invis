@@ -45,7 +45,8 @@ var app = new Vue({
         prevQty: 0,
         showTerms: false,
         error: false,
-        leftInStock: 10
+        leftInStock: 10,
+        step: 'cart'
     },
     mounted() {
         this.country = this.$refs.userLocation.value
@@ -60,6 +61,7 @@ var app = new Vue({
             this.inCart = false;
             this.inShipping = true;
             this.inCheckout = false;
+            this.step = 'shipping address';
         },
         showCheckout: function(){
             this.inCart = false;

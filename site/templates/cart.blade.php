@@ -14,7 +14,7 @@
     </section>
 @else
     <div id="cart" class="black-70 ph2">
-        <span class="f5 f4-m f3-ns black-70 db">{{ $page->title()->html() }}</span>
+        <span class="f5 f4-m f3-ns black-70 db">@{{ step }}</span>
         <span class='db mb3'></span>
 
         <div v-if="error == true" class="black-70">
@@ -35,11 +35,11 @@
             <div class="mw9 center">
                 <div class="cf ph2-ns">
                     <div class="fl w-100 w-10-ns db">&nbsp;</div>
-                    <div class="fl f3 w-100 w-60-ns pl3">
+                    <div class="fl f3 w-100 w-60-ns pl3 tracked-tight">
                         description
                     </div>
                     <div class="fl w-100 w-10-ns db">&nbsp;</div>
-                    <div class="fl f3 w-100 w-20-ns tr">
+                    <div class="fl f3 w-100 w-20-ns tr tracked-tight">
                         quantity
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                 <div class="cf {{ e($loop->first, 'mt4') }}">
                     <div class="fl w-100 w-10-ns">
                         @php $product = page($item->uri()) @endphp
-                        <img src="{{ $product->images()->first()->resize(100, 100, 90)->url() }}" title="{{ $item->name() }}">
+                        <img src="{{ $product->images()->first()->crop(100)->url() }}" title="{{ $item->name() }}">
                     </div>
                     <div class="fl w-100 w-60-ns pl3">
                         <a class="f4 link black-80 hover-white hover-bg-gold db" href="{{ $product->url() }}">
@@ -65,10 +65,10 @@
                             <input type="hidden" name="csrf" value="@csrf()">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="{{ $item->id() }}">
-                            <button type="submit">delete</button>
+                            <button class="bg-white f5 no-underline black bg-animate b--gray pa2 pa1-l ba border-box" type="submit">delete</button>
                         </form>
 
-                        <input class="dib" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->autoid() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->id()) }}" data-sku="{{ $item->autoid() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
+                        <input class="b--black-20 di input-reset w-20 f5 mr0 ba tc" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->autoid() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->id()) }}" data-sku="{{ $item->autoid() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
                         <input ref="inputCsrf" type="hidden" name="csrf" value="@csrf()">
                     </div>
                 </div>
@@ -77,8 +77,8 @@
             @endforeach
 
             <div class="mw9 center">
-                <div class="cf tr f4">
-                    <div class="fl w-100 w-10-ns"></div>
+                <div class="cf tr f5">
+                    <div class="fl w-100 w-10-ns">&nbsp;</div>
                     <div class="fl w-100 w-80-ns">
                         <span>shipping</span>
                     </div>
@@ -90,7 +90,7 @@
 
             <div class="mw9 center">
                 <div class="cf tr f4">
-                    <div class="fl w-100 w-10-ns"></div>
+                    <div class="fl w-100 w-10-ns">&nbsp;</div>
                     <div class="fl w-100 w-80-ns">
                         <span>total</span>
                     </div>
@@ -100,42 +100,60 @@
                 </div>
             </div>
             
-            <button v-on:click.prevent="showShipping">Begin checkout</button>
+            <button class="bg-white f5 no-underline hover-bg-gold hover-white black bg-animate b--gold pa2 pa3-l ba border-box" v-on:click.prevent="showShipping">Begin checkout</button>
         </div>
 
         <div v-else-if="inCart == false && inShipping == true" key="address">
-            <label>Full name
-                <input v-model="name" type="text" required/>
-            </label>
-            <label>Email
-                <input v-model="email" type="email" required/>
-            </label>
-            <fieldset>
-                <legend>Address</legend>
-                <label>Address line 1
-                    <input v-model="line1" type="text" required/>
-                </label>
-                <label>Address line 2
-                    <input v-model="line2" type="text" />
-                </label>
-                <label>City
-                    <input v-model="city" type="text" required/>
-                </label>
-                <label>Province / State
-                    <input v-model="province" type="text" required/>
-                </label>
-                <label>Postal Code
-                    <input v-model="postcode" type="text" required/>
-                </label>
-                <label>Country
-                    <select v-model="country" name="country">
-                        @foreach(countryList() as $countryName)
-                            <option value="{{ $countryName }}">{{ $countryName }}</option>
-                        @endforeach
-                    </select>
-                </label>
-            </fieldset>
-            <button :disabled="shippingIncomplete" v-on:click.prevent="showCheckout">Finish checkout</button>
+            <section class="mw9 center">
+                <div class="cf">
+                    <label>Full name
+                        <input class="measure input-reset ba b--black-20 pa2 mb2 dib w-40" v-model="name" type="text" required/>
+                    </label>
+                    <label>Email
+                        <input class="measure input-reset ba b--black-20 pa2 mb2 dib w-40" v-model="email" type="email" required/>
+                    </label>
+                </div>
+            </section>
+            <section class="mw9 center">
+                <div class="cf">
+                    <fieldset>
+                        <legend class="pb2">Address</legend>
+                        <div class="pt2 db">
+                            <label>Address line 1
+                                <input class="input-reset ba b--black-20 pa2 mb2 dib w-100" v-model="line1" type="text" required/>
+                            </label>
+                            <label>Address line 2
+                                <input class="input-reset ba b--black-20 pa2 mb2 dib w-100" v-model="line2" type="text" />
+                            </label>
+                        </div>
+                        <div class="pt2 db">
+                            <label>City
+                                <input class="input-reset ba b--black-20 pa2 mb2 dib w-20" v-model="city" type="text" required/>
+                            </label>
+                            <label class="pl2-ns">Province/State
+                                <input class="input-reset ba b--black-20 pa2 mb2 dib w-20" v-model="province" type="text" required/>
+                            </label>
+                            <label class="pl2-ns">Postal Code
+                                <input class="input-reset ba b--black-20 pa2 mb2 dib w-20" v-model="postcode" type="text" required/>
+                            </label>
+                        </div>
+                        <div class="pt2 db">
+                            <label>Country
+                                <select class="input-reset ba b--black-20 pa2 mb2 dib w-40" v-model="country" name="country">
+                                    @foreach(countryList() as $countryName)
+                                        <option value="{{ $countryName }}">{{ $countryName }}</option>
+                                    @endforeach
+                                </select>
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+            </section>
+            <button 
+                class="mt3 bg-white f5 no-underline" 
+                :class="[shippingIncomplete == true ? 'gray b--gray pa2 pa3-l' : 'black bg-animate b--gold hover-bg-gold hover-white pa2 pa3-l ba border-box']"
+                :disabled="shippingIncomplete" 
+                v-on:click.prevent="showCheckout">Finish checkout</button>
             <input type="hidden" ref="checkoutCSRF" value="@csrf()">
         </div>
 
