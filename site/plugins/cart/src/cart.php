@@ -292,7 +292,7 @@ class Cart
 				if($this->getCartPage()->content()->get('status') == 'pending'){
 					$this->updateInventory();
 					$this->sendNotifications();
-					$this->updateOrder();
+					$this->updateOrder('stripe');
 				}
 			}else{
 				$this->logger->error($this->session->get('txn') . ": Stripe checkout returned a non-captured transaction", [$sid->id, $pi->id]);
@@ -321,7 +321,7 @@ class Cart
 				if($this->getCartPage()->content()->get('status') == 'pending'){
 						$this->updateInventory();
 						$this->sendNotifications();
-						$this->updateOrder();
+						$this->updateOrder('paypal');
 				}else{
 					$this->logger->error($this->session->get('txn') . ": Paypal checkout returned a failed transaction", [get('token')]);
 					$this->session->set('error', 'There was an error with the payment processing, I have been notified of the issue.');
@@ -366,12 +366,12 @@ class Cart
 		$this->logger->info("inventory updated after order ". $orderId);
 	}
 
-	private function updateOrder()
+	private function updateOrder($paymentMethod)
 	{
 		$orderId = $this->getCartPage()->autoid()->value;
 
 		kirby()->impersonate('kirby');
-		$this->getCartPage()->update(['title' => "ord-$orderId", 'status' => 'paid']);
+		$this->getCartPage()->update(['title' => "ord-$orderId", 'status' => 'paid', 'payment' => $paymentMethod]);
 		$this->logger->info($this->session->get('txn') . ": order status updated");
 
 		$this->session->set('state', 'success');
