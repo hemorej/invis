@@ -26,7 +26,7 @@
             <div class="fl w-100 w-60-ns">
                 <carousel :per-page="1" :pagination-size="4" :adjustable-height="true" :loop="true">
                     @foreach($page->images() as $image)
-                        <slide><img alt="product pictures for {{ $page->title() }}" srcset="{{ $image->srcset([600, 800, 1200]) }}"></slide>
+                        <slide><img class="db" alt="product pictures for {{ $page->title() }}" srcset="{{ $image->srcset([600, 800, 1200]) }}"></slide>
                     @endforeach
                 </carousel>
             </div>

@@ -17,7 +17,7 @@
         <span class="f4 f4-m f3-ns black-70 db">@{{ step }}</span>
         <span class='db mb3'></span>
 
-        <span  v-if="error == true" class="gold b--gold f4 f3-ns lh-copy measure pa2 ba border-box db mb3 tc">Sorry, there's only @{{ leftInStock }} left in stock&nbsp;<a class="ml3 link gold" href="#" v-on:click.prevent="error = false">&times;</a></span>
+        <span  v-if="error == true" class="gold b--gold f4 f4-ns lh-copy pa2 ba border-box db mb3 tc">Sorry, there's only @{{ leftInStock }} left in stock&nbsp;<a class="ml3 link gold" href="#" v-on:click.prevent="error = false">&times;</a></span>
 
         <input ref="userLocation" type="hidden" value="{{ $currentLocation }}" />
         <input ref="checkoutKey" type="hidden" name="key" value="@option('stripe_key_pub')">

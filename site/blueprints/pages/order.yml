@@ -50,6 +50,7 @@ fields:
     label: Payment methpd
     type: select
     width: 1/4
+    disabled: true
     options:
       paypal: paypal
       stripe: stripe
