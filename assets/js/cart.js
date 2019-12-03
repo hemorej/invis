@@ -1,32 +1,3 @@
-   // $( ".input-qty" ).focus(function() {
-   //      prevQty = $(this).val();
-   // });
-
-   // $( ".input-qty" ).change(function() {
-   //      var id = $(this).attr("id");
-   //      var variant = $(this).attr("data-variant");
-   //      var qty = $(this).val();
-   //      var max = $(this).attr("max");
-   //      var csrf = $("#input-csrf").val();
-
-   //      if(parseInt(qty) > parseInt(max)){
-   //          $('[data-variant="'+variant+'"]').val(prevQty);
-   //          $('#stock-error').html(parseInt(max));
-   //          $('.alert-box').show();
-   //          return false;
-   //      }else{
-   //          $.post( "cart", { id: id, action: "add", quantity: qty, csrf: csrf})
-   //          .done(function( data ) {
-   //              location.reload(true);
-   //          });
-   //      }
-   //  });
-
-   // $(".close").click(function(e){
-   //      e.preventDefault();
-   //      $('.alert-box').hide();
-   //  });
-
 var app = new Vue({
     el: '#cart',
     data: {
@@ -46,7 +17,7 @@ var app = new Vue({
         showTerms: false,
         error: false,
         leftInStock: 10,
-        step: 'cart'
+        step: '1. cart'
     },
     mounted() {
         this.country = this.$refs.userLocation.value
@@ -61,12 +32,12 @@ var app = new Vue({
             this.inCart = false;
             this.inShipping = true;
             this.inCheckout = false;
-            this.step = 'shipping address';
+            this.step = '1. cart   2. shipping address';
         },
         showCheckout: function(){
             this.inCart = false;
             this.inCheckout = true;
-            this.inShipping = false;
+            this.step = '1. cart   2. shipping address   3. payment';
 
             // init stripe button
             this.stripe = Stripe(this.$refs.checkoutKey.value);
@@ -106,7 +77,7 @@ var app = new Vue({
                     return actions.order.create({
                         purchase_units: [{
                           amount: {
-                            value: parseInt(this.$refs.checkoutTotal.value)
+                            value: parseInt(document.getElementById('checkoutTotal').value)
                           }
                         }]
                     });
@@ -114,12 +85,12 @@ var app = new Vue({
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
 
-                    var csrf = this.$refs.ppCsrf.value;
+                    var csrf = document.getElementById('ppCsrf').value
                     var token = data.orderID;
 
                     axios.post( "/order/success/paypal", { token: token, csrf: csrf } )
                       .then(function( data ) {
-                          document.location.replace('order');
+                          document.location.replace('/prints/order');
                       });
                     });
                 }
@@ -131,6 +102,29 @@ var app = new Vue({
             }).then(function (result) {
                 alert(result.error.message);
             });
+        },
+        updateCart: function(event){
+            var id = event.target.id
+            var variant = event.target.getAttribute('data-variant')
+            var qty = event.target.value
+            var max = event.target.getAttribute('max')
+
+            if(parseInt(qty) > parseInt(max)){
+                event.target.value = max
+                this.leftInStock = max
+                this.error = true
+                return false;
+            }else{
+                axios.post('/prints/cart', {
+                    id: id,
+                    action: "add",
+                    quantity: qty,
+                    csrf: this.$refs.inputCsrf.value
+                  })
+                  .then(function (response) {
+                    location.reload(true);
+                  })
+            }
         },
         validEmail: function (email) {
           var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

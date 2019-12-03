@@ -329,7 +329,7 @@ class Cart
 				}
 			}
 
-			$logger->info($sessionToken . ":paypal captured with id " . $payment->getId());
+			$this->logger->info($this->session->get('txn') . ":paypal captured with id " . get('token'));
 		}catch(\Exception $e) {
 			$this->logger->error($this->session->get('txn') . ": general error", array('reason' => $e->getMessage()));
 			sendAlert($this->session->get('txn'), $this->getCartPage()->autoid()->value, $e->getMessage());

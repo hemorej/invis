@@ -41,8 +41,8 @@
                         $stock += $variant->stock()->value();
 
                     @endphp
-                    @if(count($variants) == 0 || $stock == 0):
-                        'Out of stock'
+                    @if(count($variants) == 0 || $stock == 0)
+                        Out of stock
                     @else
                         <ul class="list pv2 pl0">
                             @foreach($variants as $variant)
