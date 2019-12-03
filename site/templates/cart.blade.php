@@ -14,7 +14,7 @@
     </section>
 @else
     <div id="cart" class="black-70 ph2">
-        <span class="f5 f4-m f3-ns black-70 db">@{{ step }}</span>
+        <span class="f4 f4-m f3-ns black-70 db">@{{ step }}</span>
         <span class='db mb3'></span>
 
         <div v-if="error == true" class="black-70">
@@ -32,14 +32,14 @@
 
         <transition name="fade" mode="out-in" v-on:after-enter="initPaypal">
         <div v-if="inCart == true" key="cart">
-            <div class="mw9 center">
+            <div class="mw9 center dn db-ns">
                 <div class="cf ph2-ns">
-                    <div class="fl w-100 w-10-ns db">&nbsp;</div>
-                    <div class="fl f3 w-100 w-60-ns pl3 tracked-tight">
+                    <div class="fl dn ds-ns w-10-ns db-ns">&nbsp;</div>
+                    <div class="fl f3 w-50 w-60-ns pl3-ns tracked-tight">
                         description
                     </div>
-                    <div class="fl w-100 w-10-ns db">&nbsp;</div>
-                    <div class="fl f3 w-100 w-20-ns tr tracked-tight">
+                    <div class="fl dn ds-ns w-10-ns db-ns">&nbsp;</div>
+                    <div class="fl f3 w-50 w-20-ns tr tracked-tight">
                         quantity
                     </div>
                 </div>
@@ -47,25 +47,25 @@
             @foreach($cartItems as $i => $item)
             <div class="mw9 center">
                 <div class="cf {{ e($loop->first, 'mt4') }}">
-                    <div class="fl w-100 w-10-ns">
+                    <div class="fl w-20 w-10-ns">
                         @php $product = page($item->uri()) @endphp
                         <img src="{{ $product->images()->first()->crop(100)->url() }}" title="{{ $item->name() }}">
                     </div>
-                    <div class="fl w-100 w-60-ns pl3">
-                        <a class="f4 link black-80 hover-white hover-bg-gold db" href="{{ $product->url() }}">
+                    <div class="fl w-80 w-60-ns pl3">
+                        <a class="black-80 pv2 f4 hover-bg-gold hover-white link" href="{{ $product->url() }}">
                         {{ $item->name() }}&nbsp;&mdash;&nbsp;{{ e($item->variant()->isNotEmpty(), $item->variant()) }}
                         </a>
-                        <span class="f6 gray">{{ $product->meta()->value() }}</span>
+                        <span class="db pt2 f6 gray">{{ $product->meta()->value() }}</span>
                     </div>
-                    <div class="fl w-100 w-10-ns">
+                    <div class="fl w-80 pt0-ns pt1 w-10-ns">
                         <span class="dib">CAD{{ $item->amount()->value * $item->quantity()->value }}</span>
                     </div>
-                    <div class="fl w-100 w-20-ns tr">
+                    <div class="fl w-20 w-20-ns tr-ns tc">
                         <form action="" method="post" class="dib">
                             <input type="hidden" name="csrf" value="@csrf()">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="{{ $item->id() }}">
-                            <button class="bg-white f5 no-underline black bg-animate b--gray pa2 pa1-l ba border-box" type="submit">delete</button>
+                            <button class="b--silver ba bg-animate bg-white silver border-box f5 no-underline br-100" type="submit">x</button>
                         </form>
 
                         <input class="b--black-20 di input-reset w-20 f5 mr0 ba tc" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->autoid() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->id()) }}" data-sku="{{ $item->autoid() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
@@ -78,24 +78,24 @@
 
             <div class="mw9 center">
                 <div class="cf tr f5">
-                    <div class="fl w-100 w-10-ns">&nbsp;</div>
-                    <div class="fl w-100 w-80-ns">
+                    <div class="fl w-100 w-10-ns dn ds-ns">&nbsp;</div>
+                    <div class="fl w-80 w-90-ns">
                         <span>shipping</span>
                     </div>
-                    <div class="fl w-100 w-10-ns">
+                    <div class="fl w-20 w-10-ns">
                         <span class="tr">included</span>
                     </div>
                 </div>
             </div>
 
             <div class="mw9 center">
-                <div class="cf tr f4">
+                <div class="cf tr f4 pt2">
                     <div class="fl w-100 w-10-ns">&nbsp;</div>
                     <div class="fl w-100 w-80-ns">
                         <span>total</span>
                     </div>
                     <div class="fl w-100 w-10-ns tr">
-                        <span class="right">CAD{{ $total }}</span>
+                        <span>CAD{{ $total }}</span>
                     </div>
                 </div>
             </div>

@@ -21,7 +21,6 @@ var app = new Vue({
         },
         addToCart: function(event){
             this.submitting = true
-            sessionStorage.setItem('cart', 'true');
 
             axios.post('/prints/cart', {
                 uri: this.$refs.uri.value,
