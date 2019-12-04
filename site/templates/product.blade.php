@@ -103,13 +103,14 @@
     @endif
 </nav>
 
-@include('partials.footer')
-
-@if(@option('env') == 'prod')
-    @js('assets/js/prod/product.min.js')
-@else
-    @js('https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
-    @js('https://cdn.jsdelivr.net/npm/vue-carousel@0.18.0/dist/vue-carousel.min.js')
-    @js('https://unpkg.com/axios/dist/axios.min.js')
-    @js('assets/js/product.js')
-@endif
+@extends('partials.footer')
+@section('scripts')
+    @if(@option('env') == 'prod')
+        @js('assets/dist/product.min.js')
+    @else
+        @js('https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
+        @js('https://cdn.jsdelivr.net/npm/vue-carousel@0.18.0/dist/vue-carousel.min.js')
+        @js('https://unpkg.com/axios/dist/axios.min.js')
+        @js('assets/js/product.js')
+    @endif
+@endsection

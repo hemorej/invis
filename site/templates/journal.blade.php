@@ -34,12 +34,14 @@
 
     <span class="cf"></span>
 
-    @include('partials.footer')
-    @if(option('env') == 'prod')
-        @js('assets/js/prod/app.min.js')
-    @else
-        @js('assets/js/app.js')
-    @endif
+    @extends('partials.footer')
+    @section('scripts')
+        @if(option('env') == 'prod')
+            @js('assets/dist/app.min.js')
+        @else
+            @js('assets/js/app.js')
+        @endif
+    @endsection
 @else
     {{ @go($page->children()->last()->url()) }}
 @endif

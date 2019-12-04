@@ -44,11 +44,11 @@
   <meta name="twitter:image:alt" content="@html($site->description())">
 
   @if(option('env') == 'prod')
-    @css('assets/css/app.min.css')
+    @css('assets/dist/app.min.css')
   @else
     @css('assets/css/app.css')
+    @css('assets/css/vendor/tachyons.css')
   @endif
-  @css('assets/css/tachyons.css')
    
   <link rel="shortcut icon" type="image/x-icon"  href="@url('assets/images/favicon.ico')" />
   <link rel="apple-touch-icon" sizes="72x72" href="@url('assets/images/apple-touch-icon-72x72.png')" />

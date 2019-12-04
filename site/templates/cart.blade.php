@@ -174,13 +174,15 @@
     </div>
 @endif
 
-@include('partials.footer')
-@if(@option('env') == 'prod')
-    @js('assets/js/prod/cart.min.js')
-@else
-    @js('https://unpkg.com/axios/dist/axios.min.js')
-    @js('https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
-    @js('assets/js/cart.js')
-@endif
-@js('https://js.stripe.com/v3/', ['async' => true])
-@js('https://www.paypal.com/sdk/js?currency=CAD&client-id='.option('paypal_client_id'), ['async' => true])
+@extends('partials.footer')
+@section('scripts')
+    @if(@option('env') == 'prod')
+        @js('assets/dist/cart.min.js')
+    @else
+        @js('https://unpkg.com/axios/dist/axios.min.js')
+        @js('https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
+        @js('assets/js/cart.js')
+    @endif
+    @js('https://js.stripe.com/v3/', ['async' => true])
+    @js('https://www.paypal.com/sdk/js?currency=CAD&client-id='.option('paypal_client_id'), ['async' => true])
+@endsection

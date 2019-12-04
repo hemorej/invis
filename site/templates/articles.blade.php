@@ -22,9 +22,11 @@
 
 <div class="db mt4"></div>
 
-@if(option('env') == 'prod')
-	@js('assets/js/prod/app.min.js')
-@else
-	@js('assets/js/app.js')
-@endif
-@include('partials.footer')
+@extends('partials.footer')
+@section('scripts')
+	@if(option('env') == 'prod')
+		@js('assets/dist/app.min.js')
+	@else
+		@js('assets/js/app.js')
+	@endif
+@endsection
