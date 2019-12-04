@@ -37,19 +37,19 @@
 			@if($current->isPortrait() && $next->isPortrait())
 				<div class="mw7">
 					<section class="fl w-100 w-50-ns pr1">
-						<img alt="{{$headline}}" srcset="{{ $current->srcset('vertical') }}">
+						<img alt="{{$headline}}" class="lazy" data-srcset="{{ $current->srcset('vertical') }}">
 					</section>
 					<section class="fl w-100 w-50-ns pl1">
-						<img alt="{{$headline}}" srcset="{{ $next->srcset('vertical') }}">
+						<img alt="{{$headline}}" class="lazy" data-srcset="{{ $next->srcset('vertical') }}">
 					</section>
 				</div>
 				@php $skip = true @endphp
 			@else
 				<section class="{{e($current->isPortrait(), 'mw6 dib', 'aspect-ratio aspect-ratio--6x4')}}">
 					@if($current->isPortrait())
-						<img alt="{{$headline}}" srcset="{{ $current->srcset('vertical') }}">
+						<img alt="{{$headline}}" class="lazy" data-srcset="{{ $current->srcset('vertical') }}">
 					@else
-						<img alt="{{$headline}}" srcset="{{ $current->srcset() }}">
+						<img alt="{{$headline}}" class="lazy" data-srcset="{{ $current->srcset() }}">
 					@endif
 				</section>
 			@endif
@@ -75,3 +75,13 @@
 <span class="cf"></span>
 
 @include('partials.footer')
+@if(@option('env') == 'prod')
+    @js('assets/js/prod/app.min.js')
+@else
+	@js('https://cdn.jsdelivr.net/npm/vanilla-lazyload@12.4.0/dist/lazyload.min.js')
+@endif
+<script>
+	var lazyLoadInstance = new LazyLoad({
+    elements_selector: ".lazy"
+});
+</script>
