@@ -13,11 +13,11 @@ var app = new Vue({
         province: null,
         postcode: null,
         country: null,
-        prevQty: 0,
         showTerms: false,
         error: false,
-        leftInStock: 10,
-        step: '1. cart'
+        leftInStock: 1,
+        step: '1. cart',
+        orderWaiting: false
     },
     mounted() {
         this.country = this.$refs.userLocation.value
@@ -59,6 +59,7 @@ var app = new Vue({
                 return;
             }
 
+            var that = this
             paypal.Buttons({
                 env: this.$refs.ppEnv.value,
                 client: {
@@ -74,18 +75,19 @@ var app = new Vue({
                     tagline: 'false'
                 },
                 createOrder: function(data, actions) {
+                    that.orderWaiting = true
                     return actions.order.create({
                         purchase_units: [{
                           amount: {
-                            value: parseInt(document.getElementById('checkoutTotal').value)
+                            value: parseInt(that.$refs.checkoutTotal.value)
                           }
                         }]
                     });
-                },
+                }.bind(that),
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
 
-                    var csrf = document.getElementById('ppCsrf').value
+                    var csrf = that.$refs.ppCsrf.value
                     var token = data.orderID;
 
                     axios.post( "/order/success/paypal", { token: token, csrf: csrf } )
@@ -93,7 +95,7 @@ var app = new Vue({
                           document.location.replace('/prints/order');
                       });
                     });
-                }
+                }.bind(that)
             }).render('#paypal-button-container');
         },
         redirectStripe: function(){

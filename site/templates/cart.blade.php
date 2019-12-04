@@ -1,6 +1,9 @@
 @include('partials.header')
 @include('partials.menu')
 @php use \Cart\Cart; @endphp
+<style>
+.loading{margin:auto}.loading:before{content:'';display:block;position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.3)}.loading:not(:required){font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0}.loading:not(:required):after{content:'';display:block;font-size:10px;width:.5em;height:.5em;margin-top:-.5em;-webkit-animation:spinner 1500ms infinite linear;-moz-animation:spinner 1500ms infinite linear;-ms-animation:spinner 1500ms infinite linear;-o-animation:spinner 1500ms infinite linear;animation:spinner 1500ms infinite linear;border-radius:.5em;-webkit-box-shadow:rgba(0,0,0,0.75) 1.5em 0 0 0,rgba(0,0,0,0.75) 1.1em 1.1em 0 0,rgba(0,0,0,0.75) 0 1.5em 0 0,rgba(0,0,0,0.75) -1.1em 1.1em 0 0,rgba(0,0,0,0.5) -1.5em 0 0 0,rgba(0,0,0,0.5) -1.1em -1.1em 0 0,rgba(0,0,0,0.75) 0 -1.5em 0 0,rgba(0,0,0,0.75) 1.1em -1.1em 0 0;box-shadow:rgba(0,0,0,0.75) 1.5em 0 0 0,rgba(0,0,0,0.75) 1.1em 1.1em 0 0,rgba(0,0,0,0.75) 0 1.5em 0 0,rgba(0,0,0,0.75) -1.1em 1.1em 0 0,rgba(0,0,0,0.75) -1.5em 0 0 0,rgba(0,0,0,0.75) -1.1em -1.1em 0 0,rgba(0,0,0,0.75) 0 -1.5em 0 0,rgba(0,0,0,0.75) 1.1em -1.1em 0 0}@-webkit-keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}@-moz-keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}@-o-keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
+</style>
 
 <noscript>
     <div class="db measure lh-copy ph2 f3">
@@ -14,6 +17,7 @@
     </section>
 @else
     <div id="cart" class="black-70 ph2">
+        <div :class="[orderWaiting == true ? 'ds' : 'dn']" class="loading fixed z-999 h2 w2 overflow-visible top-0 left-0 bottom-0 right-0">Loading&#8230;</div>
         <span class="f4 f4-m f3-ns black-70 db">@{{ step }}</span>
         <span class='db mb3'></span>
 
@@ -23,9 +27,9 @@
         <input ref="checkoutKey" type="hidden" name="key" value="@option('stripe_key_pub')">
         <input ref="checkoutPPKey" type="hidden" name="key" value="@option('paypal_client_id')">
         <input ref="checkoutSessionID" type="hidden" name="key" value="{{ $checkoutSessionId }}">
-        <input id="checkoutTotal" type="hidden" name="total" value="{{ $total }}">
+        <input ref="checkoutTotal" type="hidden" name="total" value="{{ $total }}">
         <input ref="checkoutContent" type="hidden" name="content" value="{{ $content }}">
-        <input id="ppCsrf" type="hidden" name="csrf" value="@csrf()">
+        <input ref="ppCsrf" type="hidden" name="csrf" value="@csrf()">
         <input ref="ppEnv" type="hidden" name="csrf" value="@option('paypal_environment')">
 
         <transition name="fade" mode="out-in">

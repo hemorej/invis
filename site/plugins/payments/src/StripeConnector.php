@@ -23,8 +23,8 @@ class StripeConnector
 		$session = \Stripe\Checkout\Session::create([
 		  'payment_method_types' => ['card'],
 		  'line_items' => [ $lineItems ],
-		  'success_url' => 'https://invis.app/order/success/stripe?sid={CHECKOUT_SESSION_ID}',
-		  'cancel_url' => 'https://invis.app/prints/cart',
+		  'success_url' => kirby()->site()->url() . '/order/success/stripe?sid={CHECKOUT_SESSION_ID}',
+		  'cancel_url' => kirby()->site()->url() . '/prints/cart',
 		]);
 
 		return $session;
