@@ -5,7 +5,7 @@
 content/orders/*
 site/accounts/*
 vendor/*
-sitemap.json
+node_modules/*
 .env
 Icon
 .DS_Store

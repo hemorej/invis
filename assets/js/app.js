@@ -7,3 +7,7 @@ for (var i = 0; i < classname.length; i++) {
 function setPreview(){
     document.getElementById('cover').setAttribute("src", this.getAttribute('data-preview'))
 }
+
+var lazyLoadInstance = new LazyLoad({
+    elements_selector: ".lazy"
+});

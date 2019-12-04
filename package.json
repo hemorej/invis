@@ -1,0 +1,21 @@
+{
+  "name": "invis",
+  "version": "1.0.0",
+  "description": "The Invisible Cities",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hemorej/invis.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hemorej/invis/issues"
+  },
+  "homepage": "https://github.com/hemorej/invis#readme",
+  "devDependencies": {
+    "laravel-mix": "^5.0.0",
+    "vue-template-compiler": "^2.6.10"
+  }
+}
