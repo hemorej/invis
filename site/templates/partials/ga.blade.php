@@ -2,8 +2,12 @@
 
 @if($loc->location->is_eu == true)
 	@css('//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css')
-	@js('//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js')
-	@js('assets/js/consent.js', ['id' => 'consent', 'data-loc' => $loc->country_code, 'data-ga' => option('ga_code')])
+	@if(@option('env') == 'prod')
+		@js('assets/dist/consent.min.js', ['id' => 'consent', 'data-loc' => $loc->country_code, 'data-ga' => option('ga_code')])
+	@else
+		@js('//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js')
+		@js('assets/js/consent.js', ['id' => 'consent', 'data-loc' => $loc->country_code, 'data-ga' => option('ga_code')])
+	@endif
 @else 
 	@if(!empty(option('ga_code')))
 		<script>

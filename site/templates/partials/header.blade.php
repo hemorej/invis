@@ -9,9 +9,14 @@
       $image = $meta['image'];
       $url = $meta['url'];
     }
-    $title = $page->published()->toString();
-    if(!empty($page->title()) && $page->title() != $page->uid())
+
+    if(!empty($page->title()) && $page->title() != $page->uid()){
       $title = $page->title();
+    }elseif($site->page()->title() == 'cart'){
+      $title = 'Cart';
+    }else{
+      $title = $page->published()->toString();
+    }
   @endphp
 
   <title>@html($site->title()) - @html(strtolower($title))</title>

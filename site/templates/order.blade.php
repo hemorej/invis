@@ -9,8 +9,8 @@
     	<h4>Order confirmation</h4>
 	</div>
 	<span class='db mb2'></span>
-	<div class="black-70 f4 f4-ns f3-ns ph2">
-		<span class="measure lh-copy db">Thank you for your order</span>
+	<div class="black-70 f4 f4-ns f3-ns ph2 measure-wide lh-copy">
+		<span class="db">Thank you for your order</span>
 		Your order number is {{ $order->autoid() }}. You will receive an email confirmation shortly. If you have questions about your order or would like to make changes contact us at &#x6A;&#x65;&#x72;&#x6F;&#x6D;&#x65;&#x40;&#x74;&#x68;&#x65;&#x2D;&#x69;&#x6E;&#x76;&#x69;&#x73;&#x69;&#x62;&#x6C;&#x65;&#x2D;&#x63;&#x69;&#x74;&#x69;&#x65;&#x73;&#x2E;&#x63;&#x6F;&#x6D;
 	</div>
 

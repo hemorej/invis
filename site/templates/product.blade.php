@@ -47,7 +47,7 @@
                         <ul class="list pv2 pl0">
                             @foreach($variants as $variant)
                                 @if(Cart::inStock($variant))
-                                    <li class='{{ e($loop->first, 'dib pl0') }}'>
+                                    <li class='{{ e($loop->first, 'dib pl0', 'dib pt3') }}'>
                                     <a {{ e($loop->first, 'ref="active"') }} 
                                     class="f4 link black-60 hover-white hover-bg-gold pa2-l {{ e($loop->first, 'bb b--gold bw2')}}"
                                     data-option-variant='{{ $variant->autoid() }}'
