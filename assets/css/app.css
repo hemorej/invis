@@ -1,18 +1,15 @@
 @font-face {
-  font-family: 'ff-meta-serif';
-  src: url('../font/MetaWeb-Normal.eot'),
-       url('../font/MetaWeb-Normal.eot?#iefix') format('embedded-opentype'),
-       url('../font/MetaWeb-Normal.woff') format('woff');
+  font-family: 'ff-meta-sans';
+  src:url("../font/ff7aa537-8e40-4f5e-9c8f-c5bd078c58db.eot?#iefix");
+  src:url("../font/ff7aa537-8e40-4f5e-9c8f-c5bd078c58db.eot?#iefix") format("eot"),url("../font/4ce43a49-0d61-4c34-8054-465d5981fd0b.woff2") format("woff2"),url("../font/d7b73a86-9fc7-41b4-a367-cbbd20039787.woff") format("woff"),url("../font/7fc1eb11-127b-4452-9067-a7e4b1b321d6.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'meta-cd';
-  src: url('../font/MetaWeb-CondNormal.eot'),
-       url('../font/MetaWeb-CondNormal.eot?#iefix') format('embedded-opentype'),
-       url('../font/MetaWeb-CondNormal.woff') format('woff'),
-       url('../font/MetaWeb-CondNormal.svg#webfont') format('svg');
+  font-family: 'swiss721-cd-light';
+  src:url("../font/ea7b43c8-e86c-401d-9d91-66806de49029.eot?#iefix");
+  src:url("../font/ea7b43c8-e86c-401d-9d91-66806de49029.eot?#iefix") format("eot"),url("../font/0c5598c6-3ae9-4a24-a8a4-ca2054a96710.woff2") format("woff2"),url("../font/159799e2-a429-4419-a67a-0fa0ba3600e8.woff") format("woff"),url("../font/026eb06c-bcbb-4ef9-86a3-da25f5a41174.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -21,12 +18,12 @@ html,
 body {font-size: 100%}
 
 body {
-  font-family: 'ff-meta-serif', sans-serif;
+  font-family: 'ff-meta-sans', sans-serif;
   cursor: auto;
 }
 .bg-lightest-gray {background-color: #fefefe}
 button:focus, input:focus, select:focus {outline:0}
-.meta-cd{ font-family: 'meta-cd', sans-serif }
+.s721-cd{ font-family: 'swiss721-cd-light', sans-serif }
 
 ::selection {
   background: #ffb700;

@@ -10,7 +10,7 @@
     <section class="cf mt5-ns mt3 center">
         <nav class="fl w-100 w-30-ns pr3 tr-ns tl">
             @foreach($articles as $article)
-                <a data-preview="{{ getPreview($article->images()->first()) }}" class="cover ttl link black-70 f3 meta-cd db pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">{{ archiveDate($article->published()->toString()) }}</a>
+                <a data-preview="{{ getPreview($article->images()->first()) }}" class="cover ttl link black-70 f3 s721-cd db pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">{{ archiveDate($article->published()->toString()) }}</a>
             @endforeach
         </nav>
         <div class="fl db-ns w-70-ns tl o-30-s o-100-ns fixed static-ns">
