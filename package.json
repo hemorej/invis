@@ -17,5 +17,8 @@
   "devDependencies": {
     "laravel-mix": "^5.0.0",
     "vue-template-compiler": "^2.6.10"
+  },
+  "scripts": {
+    "prod": "export NODE_ENV=production; node_modules/.bin/webpack --config=node_modules/laravel-mix/setup/webpack.config.js"
   }
 }
