@@ -30,7 +30,7 @@ class Cart
 	  } else {
 	    $access_key = kirby()->option('fixer_key');
 	    $data = \Remote::get('http://data.fixer.io/api/latest?access_key=' . $access_key . '&symbols=USD,CAD,GBP');
-	    $this->cache->set('rates', $data, 1440);
+	    $this->cache->set('rates', $data->content(), 1440);
 	    $rates = json_decode($data->content());
 	  }
 

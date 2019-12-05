@@ -45,12 +45,12 @@ function archiveDate($string){
   'second',
   'third',
   'fourth',
-  'five',
-  'six',
-  'seven',
-  'eight',
-  'nine',
-  'ten',
+  'fifth',
+  'sixth',
+  'seventh',
+  'eighth',
+  'ninth',
+  'tenth',
   'eleven',
   'twelve',
   'thirteen',
@@ -110,7 +110,7 @@ function location(){
     $requestURL = "http://api.ipstack.com/$remote?access_key=$access_key&fields=country_code,country_name,location.is_eu&language=en&output=json";
 
     $data = \Remote::get($requestURL);
-    $cache->set($remote, $data);
+    $cache->set($remote, $data->content());
     $loc = json_decode($data->content());
   }
 
