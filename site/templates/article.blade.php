@@ -45,7 +45,7 @@
 				</div>
 				@php $skip = true @endphp
 			@else
-				<section class="{{e($current->isPortrait(), 'mw6 dib', 'aspect-ratio aspect-ratio--6x4')}}">
+				<section class="{{e($current->isPortrait(), 'mw6 db center', 'aspect-ratio aspect-ratio--6x4')}}">
 					@if($current->isPortrait())
 						<img alt="{{$headline}}" class="lazy" data-srcset="{{ $current->srcset('vertical') }}">
 					@else
