@@ -21,13 +21,13 @@
     @if($articles->pagination()->hasPages())
         @if($articles->pagination()->hasNextPage())
             <p class="fl">
-                <a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $articles->pagination()->nextPageURL() }}">&laquo;&nbsp;older</a>
+                <a class="f5 f4-m f4-ns link pa1-ns black-60 hover-white hover-bg-gold" href="{{ $articles->pagination()->nextPageURL() }}">&laquo;&nbsp;older</a>
             </p>
         @endif
                 
         @if($articles->pagination()->hasPrevPage())
             <p class="fr">
-                <a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $articles->pagination()->prevPageURL() }}">newer&nbsp;&raquo;</a>
+                <a class="f5 f4-m f4-ns link pa1-ns black-60 hover-white hover-bg-gold" href="{{ $articles->pagination()->prevPageURL() }}">newer&nbsp;&raquo;</a>
             </p>
         @endif
     @endif

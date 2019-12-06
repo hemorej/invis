@@ -19,7 +19,7 @@
 </noscript>
 
 <div id="prod" class="black-70 ph2">
-    <span class="f5 f4-m f3-ns black-70 db mb3">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold pa2" href="{{ $page->url() }}">{{ $page->title() | lower }}</a></span>
+    <span class="f5 f4-m f3-ns black-70 db mb3">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold pa1" href="{{ $page->url() }}">{{ $page->title() | lower }}</a></span>
 
     <div class="mw9 center">
         <div class="cf">
@@ -49,7 +49,7 @@
                                 @if(Cart::inStock($variant))
                                     <li class='{{ e($loop->first, 'dib pl0', 'dib pt3') }}'>
                                     <a {{ e($loop->first, 'ref="active"') }} 
-                                    class="f4 link black-60 hover-white hover-bg-gold pa2-l {{ e($loop->first, 'bb b--gold bw2')}}"
+                                    class="f4 link black-60 hover-white hover-bg-gold pa1-l {{ e($loop->first, 'bb b--gold bw2')}}"
                                     data-option-variant='{{ $variant->autoid() }}'
                                     v-on:click.prevent='makeActive'>
                                         {{ $variant->name() }} &mdash; ${{ $variant->price() }}
@@ -92,13 +92,13 @@
 <nav class="cf mt4 ph2">
     @if($page->hasPrevListed())
         <p class="fl">
-            <a class="pa2-l f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->prev()->url() }}">&laquo; {{ $page->prev()->title() }}</a>
+            <a class="pa1-l f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->prev()->url() }}">&laquo; {{ $page->prev()->title() }}</a>
         </p>
     @endif
 
     @if($page->hasNextListed())
         <p class="fr">
-            <a class="pa2-l f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->next()->url() }}">{{ $page->next()->title() }} &raquo;</a>
+            <a class="pa1-l f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->next()->url() }}">{{ $page->next()->title() }} &raquo;</a>
         </p>
     @endif
 </nav>

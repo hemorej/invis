@@ -27,7 +27,7 @@
 @endphp
 
 <section class="black-70 ph2">
-	<span class="f5 f4-m f3-ns black-70 db">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold pa2" href="{{ $page->url() }}">{{ $headline | lower }}</a></span>
+	<span class="f5 f4-m f3-ns black-70 db">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold pa1" href="{{ $page->url() }}">{{ $headline | lower }}</a></span>
 		@kirbytext($page->text())
 		<span class='db mb3'></span>
 		@php $skip = false @endphp
@@ -60,15 +60,15 @@
 <nav class="mt4 ph2">
 	@if($page->hasPrevListed())
 		<p class="fl">
-			<a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->prev()->url() }}">&laquo; {{ $page->parent()->title() == 'journal' ? 'previous' : $page->prev()->title() }}</a>
+			<a class="f5 f4-m f4-ns pa1-l link black-60 hover-white hover-bg-gold" href="{{ $page->prev()->url() }}">&laquo; {{ $page->parent()->title() == 'journal' ? 'previous' : $page->prev()->title() }}</a>
 		</p>
 	@endif
 	@if($page->parent()->title() == 'journal')
-		<p class="fl">&nbsp;&vert;&nbsp;<a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->parent()->url() }}?all=1">all posts</a></p>
+		<p class="fl">&nbsp;&vert;&nbsp;<a class="f5 f4-m f4-ns link pa1-l black-60 hover-white hover-bg-gold" href="{{ $page->parent()->url() }}?all=1">all posts</a></p>
 	@endif
 	@if($page->hasNextListed())
 		<p class="fr">
-			<a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->next()->url() }}">{{ $page->parent()->title() == 'journal' ? 'next' : $page->next()->title() }} &raquo;</a>
+			<a class="f5 f4-m f4-ns link pa1-l black-60 hover-white hover-bg-gold" href="{{ $page->next()->url() }}">{{ $page->parent()->title() == 'journal' ? 'next' : $page->next()->title() }} &raquo;</a>
 		</p>
 	@endif
 </nav>
