@@ -14,6 +14,14 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'swiss721-cd';
+  src:url("../font/479af9aa-4f26-46f2-86bd-a7a402857682.eot?#iefix");
+  src:url("../font/479af9aa-4f26-46f2-86bd-a7a402857682.eot?#iefix") format("eot"),url("../font/07dbf4b2-500a-4628-be01-d6da6696606d.woff2") format("woff2"),url("../font/6c757807-f8ca-46ea-a7ec-bf318188880a.woff") format("woff"),url("../font/ed06709b-3985-4b1e-b045-e173e224060a.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 html,
 body {font-size: 100%}
 
@@ -23,7 +31,8 @@ body {
 }
 .bg-lightest-gray {background-color: #fefefe}
 button:focus, input:focus, select:focus {outline:0}
-.s721-cd{ font-family: 'swiss721-cd-light', sans-serif }
+.s721-cd-light{ font-family: 'swiss721-cd-light', sans-serif }
+.s721-cd{ font-family: 'swiss721-cd', sans-serif }
 
 ::selection {
   background: #ffb700;
