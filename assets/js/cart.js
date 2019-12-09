@@ -95,6 +95,9 @@ var app = new Vue({
                           document.location.replace('/prints/order');
                       });
                     });
+                }.bind(that),
+                onCancel: function (data) {
+                    that.orderWaiting = false
                 }.bind(that)
             }).render('#paypal-button-container');
         },
