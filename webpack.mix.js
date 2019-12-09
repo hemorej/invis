@@ -1,23 +1,23 @@
 let mix = require('laravel-mix');
 
-mix.minify('assets/js/product.js', 'assets/dist/product.min.js');
+mix.minify('assets/js/product.js');
 mix.combine([
 	'assets/js/vendor/vue.min.js',
 	'assets/js/vendor/vue-carousel.min.js',
 	'assets/js/vendor/axios.min.js',
-	'assets/dist/product.min.js'], 'assets/dist/product.min.js');
+	'assets/js/product.min.js'], 'assets/dist/product.min.js');
 
-mix.minify('assets/js/cart.js', 'assets/dist/cart.min.js');
+mix.minify('assets/js/cart.js');
 mix.combine([
 	'assets/js/vendor/vue.min.js',
 	'assets/js/vendor/axios.min.js',
-	'assets/dist/cart.min.js'], 'assets/dist/cart.min.js');
+	'assets/js/cart.min.js'], 'assets/dist/cart.min.js');
 
-mix.minify('assets/js/app.js', 'assets/dist/app.min.js');
-mix.combine(['assets/js/vendor/lazyload.min.js', 'assets/dist/app.min.js'], 'assets/dist/app.min.js')
+mix.minify('assets/js/app.js');
+mix.combine(['assets/js/vendor/lazyload.min.js', 'assets/js/app.min.js'], 'assets/dist/app.min.js')
 
-mix.minify('assets/js/consent.js', 'assets/dist/consent.min.js');
-mix.combine(['assets/js/vendor/cookieconsent.min.js', 'assets/dist/consent.min.js'], 'assets/dist/consent.min.js');
+mix.minify('assets/js/consent.js');
+mix.combine(['assets/js/vendor/cookieconsent.min.js', 'assets/js/consent.min.js'], 'assets/dist/consent.min.js');
 
 mix.combine([
 	'assets/css/vendor/tachyons.css',
