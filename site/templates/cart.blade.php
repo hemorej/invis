@@ -67,7 +67,7 @@
                             <input type="hidden" name="csrf" value="@csrf()">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="{{ $item->id() }}">
-                            <button class="b--silver ba bg-animate bg-white silver border-box f5 no-underline br-100" type="submit">x</button>
+                            <button class="b--silver ba bg-animate bg-white silver border-box f7 no-underline br-100 db h1 w1 pl1" type="submit" type="submit">x</button>
                         </form>
 
                         <input v-on:change="updateCart" class="b--black-20 di input-reset w-20 f5 mr0 ba tc" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->autoid() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->id()) }}" data-sku="{{ $item->autoid() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
