@@ -1,6 +1,7 @@
 # Kirby .htaccess
 
 AddType application/font-woff .woff
+AddType application/font-woff .woff2
 
 # rewrite rules
 <IfModule mod_rewrite.c>
