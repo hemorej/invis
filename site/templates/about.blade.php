@@ -17,7 +17,7 @@
 		@if(!empty($item->separator()->value))
 			<span class="f4 f3-ns black db pa2">{{ $item->separator() }}</span><span class='db mb2'></span>
 		@endif
-		<a href="{{ $item->url() }}" target='_blank' class='f4 f3-ns pa1-l pa2 link black-60 hover-white hover-bg-gold' >
+		<a href="{{ $item->link() }}" target='_blank' class='f4 f3-ns pa1-l pa2 link black-60 hover-white hover-bg-gold' >
 			{{ $item->text() }}
 		</a>
 		<span class='db mb2'></span>
@@ -27,7 +27,7 @@
 <section class="mt5">
 	<span class="f4 f3-ns black pa2">contact</span>
 	@foreach($page->contact()->toStructure() as $item)
-		<a href="{{ e(empty($item->email()->value), $item->url(), 'mailto:'.$item->email()) }}" target='_blank' class='f4 f3-ns pa1-l link black-60 hover-white hover-bg-gold di' >
+		<a href="{{ e(empty($item->email()->value), $item->link(), 'mailto:'.$item->email()) }}" target='_blank' class='f4 f3-ns pa1-l link black-60 hover-white hover-bg-gold di' >
 			{{ $item->text() }}
 		</a>
 	@endforeach
