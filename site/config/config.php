@@ -13,7 +13,7 @@ return [
 	  'prints/*'
 	),
 	'cache.backend' => true,
-	'afbora.blade.minify.enabled' => true,
+	'afbora.blade.minify.enabled' => false,
 
 	'ga_code' => '',
 
@@ -29,6 +29,7 @@ return [
 	'mailgun_key' => '',
 	'alert_address' => '',
 	'from_address' => '',
+	'reply-to_address' => '',
 
 	'stripe_key_pub' => '',
 	'stripe_key_prv' => '',

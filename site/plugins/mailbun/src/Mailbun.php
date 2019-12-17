@@ -24,6 +24,7 @@ class Mailbun
 	      'to'      => $recipient,
 	      'from'    => kirby()->option('from_address'),
 	      'subject' => $subject,
+	      'h:Reply-To' => kirby()->option('reply-to_address'),
 	      'o:require-tls' => 'true',
 	      'text' => $subject,
 	      'html' => $body->render($data)
