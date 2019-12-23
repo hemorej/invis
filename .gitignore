@@ -1,4 +1,5 @@
 *.jpg
+*.JPG
 *.woff
 *.eot
 # content/4_journal/*
