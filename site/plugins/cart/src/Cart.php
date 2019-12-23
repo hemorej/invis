@@ -188,7 +188,7 @@ class Cart
 	        'content' => [
 	          'txn-id' => $this->txnId,
 	          'txn-date'  => date('m/d/Y H:i:s', $timestamp),
-	          'status' => 'pending',
+	          'orderstatus' => 'pending',
 	          'session-start' => $timestamp,
 	          'session-end' => $timestamp,
 	          'products' => \Yaml::encode($items)
@@ -289,7 +289,7 @@ class Cart
 			{
 				// order still pending, finalize details
 				// check status to avoid repeat processing if client reloads page
-				if($this->getCartPage()->content()->get('status') == 'pending'){
+				if($this->getCartPage()->content()->get('orderstatus') == 'pending'){
 					$this->updateInventory();
 					$this->sendNotifications();
 					$this->updateOrder('stripe');
@@ -318,7 +318,7 @@ class Cart
 
 			if($response->statusCode == 200 && $response->result->status == 'COMPLETED')
 			{
-				if($this->getCartPage()->content()->get('status') == 'pending'){
+				if($this->getCartPage()->content()->get('orderstatus') == 'pending'){
 						$this->updateInventory();
 						$this->sendNotifications();
 						$this->updateOrder('paypal');
@@ -371,7 +371,7 @@ class Cart
 		$orderId = $this->getCartPage()->autoid()->value;
 
 		kirby()->impersonate('kirby');
-		$this->getCartPage()->update(['title' => "ord-$orderId", 'status' => 'paid', 'payment' => $paymentMethod]);
+		$this->getCartPage()->update(['title' => "ord-$orderId", 'orderstatus' => 'paid', 'payment' => $paymentMethod]);
 		$this->logger->info($this->session->get('txn') . ": order status updated");
 
 		$this->session->set('state', 'success');

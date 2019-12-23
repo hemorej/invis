@@ -4,11 +4,12 @@ columns:
   - width: 1/2
     sections:
       shipped:
-        type: pages
         headline: Shipped orders
         template: order
         create: false
-        sortBy: txn_id desc shipping_date desc
+        type: pagesdisplay
+        query: site.find('orders').children.filterBy('orderstatus', '==', 'shipped') 
+        sortBy: shipping_date desc
 
   - width: 1/2
     sections:
@@ -17,4 +18,6 @@ columns:
         headline: Unshipped orders
         template: order
         create: false
-        sortBy: txn_id asc txn_date desc
+        type: pagesdisplay
+        query: site.find('orders').children.filterBy('orderstatus', 'in', ['paid', 'pending']) 
+        sortBy: txn_date desc

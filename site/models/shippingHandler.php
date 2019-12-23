@@ -18,8 +18,8 @@ class ShippingHandler
     public function notify($page, $oldPage)
     {
         $this->logger->info("handler called notify");
-        $status = (string)$page->content()->get('status');
-        $oldStatus = (string)$oldPage->content()->get('status');
+        $status = (string)$page->content()->get('orderstatus');
+        $oldStatus = (string)$oldPage->content()->get('orderstatus');
 
         if($status == 'shipped' && $oldStatus != $status)
         {
