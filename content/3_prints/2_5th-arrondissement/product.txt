@@ -32,12 +32,12 @@ Variants:
 
 - 
   name: 8x10in (20x25cm)
-  price: "50"
+  price: "100"
   stock: "8"
   autoid: iv0Aoe0G3HHZ7Kc
 - 
   name: 4x6in (10x15cm)
-  price: "7"
+  price: "10"
   stock: "10"
   autoid: h0rPkHVjYdHN1Jr
 

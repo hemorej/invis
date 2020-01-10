@@ -29,7 +29,7 @@ Variants:
 
 - 
   name: 5x7in (12x17cm)
-  price: "12"
+  price: "20"
   stock: "1"
   autoid: SFRT2xaybZ3CZln
 

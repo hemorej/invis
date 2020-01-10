@@ -32,7 +32,7 @@ Variants:
 
 - 
   name: 8x10in (20x25cm)
-  price: "50"
+  price: "100"
   stock: "2"
   autoid: vp2N0LVQpsLcTKK
 
