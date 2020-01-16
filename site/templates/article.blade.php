@@ -31,10 +31,17 @@
 		@kirbytext($page->text())
 		<span class='db mb3'></span>
 		@php $skip = false @endphp
+
 		@foreach($page->images() as $current)
-			@php if($skip == true){ $skip = false; continue;} @endphp
-			@php $next = $page->images()->nth($loop->index + 1); @endphp
-			@if($current->isPortrait() && $next->isPortrait())
+			@php
+				if($skip == true){ $skip = false; continue;}
+				$next = $page->images()->nth($loop->index + 1);
+				$hasNextPortrait = false;
+				if($next !== null)
+					$hasNextPortrait = $next->isPortrait();
+			@endphp
+
+			@if($current->isPortrait() && $hasNextPortrait)
 				<div class="mw7">
 					<section class="fl w-100 w-50-ns pr1">
 						<img alt="{{$headline}}" class="lazy" data-srcset="{{ $current->srcset('vertical') }}">
