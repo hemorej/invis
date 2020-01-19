@@ -132,7 +132,10 @@ Links:
   text: newsha tavakolian 
 -
   link: https://www.artsy.net/artist/lee-gap-chul 
-  text: gap-chul lee 
+  text: gap-chul lee
+-
+  link: https://www.artsy.net/artist/issei-suda
+  text: issei suda
 
 ----
 
