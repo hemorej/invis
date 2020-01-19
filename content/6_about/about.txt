@@ -136,6 +136,9 @@ Links:
 -
   link: https://www.artsy.net/artist/issei-suda
   text: issei suda
+-
+  link: http://www.artnet.com/artists/shikanosuke-yagaki/
+  text: shikanosuke yagaki
 
 ----
 
