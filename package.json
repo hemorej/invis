@@ -15,8 +15,8 @@
   },
   "homepage": "https://github.com/hemorej/invis#readme",
   "devDependencies": {
-    "laravel-mix": "^5.0.0",
-    "vue-template-compiler": "^2.6.10"
+    "laravel-mix": "^5.0.4",
+    "vue-template-compiler": "^2.6.11"
   },
   "scripts": {
     "prod": "export NODE_ENV=production; node_modules/.bin/webpack --config=node_modules/laravel-mix/setup/webpack.config.js"
