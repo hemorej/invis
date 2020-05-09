@@ -9,7 +9,7 @@ columns:
           - about
           - articles
           - journal
-          - orders
+          - store
 
   left:
     width: 2/3

@@ -1,0 +1,12 @@
+Title: Shop
+
+----
+
+Discounts:
+
+- 
+  code: NEWSDISC
+  autoid: 9P5mnEHhWVDd31Q
+  amount: 15
+  active: 'true'
+  description: newsletter discount

@@ -152,6 +152,12 @@
                                       <td class="td">— ${{ intval($item->amount()->value) * intval($item->quantity()->value) }}</td>
                                     </tr>
                                   @endforeach
+                                  @if(!empty($discount))
+                                    <tr class="tr">
+                                      <td class="td">Discount ({{$discount}})</td>
+                                      <td class="td">&nbsp; -{{$discountAmount}}%</td>
+                                    </tr>
+                                  @endif
                                   <tr class="tr">
                                     <td class="td">Shipping</td>
                                     <td class="td">— included</td>

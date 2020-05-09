@@ -48,6 +48,17 @@ Kirby::plugin('cart/cart', [
 			}
 
 			return page('prints/cart');
+		}],[
+		'pattern' => 'discount',
+		'method' => 'POST',
+		'action'  => function () {
+			if(csrf(get('csrf')) === true){
+				$result = (new \Cart\Cart())->applyDiscount(get('discount'));
+
+				return $result;
+			}
+
+			return false;
 		}]
 	]
 ]);

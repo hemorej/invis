@@ -27,7 +27,7 @@
         <input ref="checkoutKey" type="hidden" name="key" value="@option('stripe_key_pub')">
         <input ref="checkoutPPKey" type="hidden" name="key" value="@option('paypal_client_id')">
         <input ref="checkoutSessionID" type="hidden" name="key" value="{{ $checkoutSessionId }}">
-        <input ref="checkoutTotal" type="hidden" name="total" value="{{ $total }}">
+        <input ref="checkoutTotal" type="hidden" name="total" value="{{$total}}">
         <input ref="checkoutContent" type="hidden" name="content" value="{{ $content }}">
         <input ref="ppCsrf" type="hidden" name="csrf" value="@csrf()">
         <input ref="ppEnv" type="hidden" name="csrf" value="@option('paypal_environment')">
@@ -77,6 +77,22 @@
                 <hr>
             </div>
             @endforeach
+            <div class="mw7 center">
+                <div class="cf tr f5">
+                    <div class="fl w-100 w-10-ns dn ds-ns">&nbsp;</div>
+                    <div class="fl w-80 w-90-ns">discount</div>
+                    @if(empty($discount))
+                        <div class="fl w-20 w-10-ns">
+                            <input v-model="discount" :disabled="disableDiscount" v-on:change="applyDiscount" type="text" class="b--black-20 di input-reset w-80 f5 mb2 p2 ba tc" placeholder="code" name="discount">
+                            <input type="hidden" ref="discountCSRF" value="@csrf()">
+                        </div>
+                    @else
+                        <div class="fl w-20 w-10-ns">
+                            -{{ $discount['amount'] }}%
+                        </div>
+                    @endif
+                </div>
+            </div>
 
             <div class="mw7 center">
                 <div class="cf tr f5">
@@ -94,7 +110,8 @@
                 <div class="cf tr f4 pt2">
                     <div class="fl w-50 w-70-m w-70-ns">&nbsp;</div>
                     <div class="fl w-50 w-30-m w-30-ns tr">
-                        <span>total CAD{{ $total }}</span>
+                        <input type="hidden" ref="total" value="{{$total}}" >
+                        <span>total CAD @{{ total }}</span>
                     </div>
                 </div>
             </div>
@@ -103,7 +120,8 @@
                 <div class="cf tr f7 pt2">
                     <div class="fl w-50 w-70-m w-70-ns">&nbsp;</div>
                     <div class="fl w-50 w-30-m w-30-ns tr">
-                        <span>Approximately {{ $currencies }}</span><br />
+                        <input type="hidden" ref="currencies" value="{{$currencies}}" >
+                        <span>Approximately @{{ currencies }}</span><br />
                     </div>
                 </div>
             </div>

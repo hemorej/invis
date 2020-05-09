@@ -22,6 +22,10 @@
             $items[] = array('variant' => $product['variant'], 'name' => $product['name'], 'quantity' => $product['quantity'], 'price' => $product['amount']);
             $total += intval($product['quantity'] * $product['amount']);
         }
+        $discount = Yaml::decode($order->discount());
+        if(!empty($discount['amount'])){
+            $total = $total * (1 - intval($discount['amount'])/100);
+        }
     @endphp
 
     <section class="mw9 center ph2 black-70 f4 f4-ns">
@@ -35,6 +39,12 @@
                 <td>— ${{ $item['price']*$item['quantity'] }}</td>
               </tr>
           	@endforeach
+            @if(!empty($discount))
+                <tr>
+                    <td>Discount ({{$discount['code']}})</td>
+                    <td>&nbsp;-{{$discount['amount']}}%</td>
+                </tr>
+            @endif
               <tr>
                 <td>Shipping</td>
                 <td>— included</td>

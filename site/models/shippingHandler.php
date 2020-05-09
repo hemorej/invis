@@ -11,7 +11,7 @@ class ShippingHandler
 
     public function handle($page, $oldPage)
     {
-        if($page->parent()->uid() == 'orders')
+        if(!empty($page->parent()) && $page->parent()->uid() == 'orders')
             $this->notify($page, $oldPage);
     }
 
@@ -26,12 +26,20 @@ class ShippingHandler
             $customer = \Yaml::decode($page->customer());
 
             $collection = new \Collection();
-            $total = 0;
+            $subtotal = 0;
 
             $items = $page->products()->toStructure();
             foreach ($items as $key => $item){
                 $collection->append($key, $item);
-                $total += intval($item->quantity()->value * $item->amount()->value);
+                $subtotal += intval($item->quantity()->value * $item->amount()->value);
+            }
+
+            $discount = $page->discount()->yaml();
+
+            if(!empty($discount)){
+                $total = $subtotal - (intval($discount['amount']) / 100) * $subtotal;
+            }else{
+                $total = $subtotal;
             }
 
             try{
@@ -46,6 +54,8 @@ class ShippingHandler
                         'country' => $customer['address']['country'],
                         'postcode' => $customer['address']['postal_code'],
                         'email' => $customer['email'],
+                        'discount' => empty($discount['code']) ? null : $discount['code'],
+                        'discountAmount' => empty($discount['amount']) ? null : $discount['amount'],
                         'total' => $total,
                         'title' => 'Your order from The Invisible Cities has been shipped',
                         'subtitle' => 'Shipping confirmation',

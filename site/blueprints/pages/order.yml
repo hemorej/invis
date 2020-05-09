@@ -82,3 +82,9 @@ fields:
     label: customer
     disabled: true
     type: textarea
+    width: 1/2
+  discount:
+    label: discount
+    disabled: true
+    width: 1/2
+    type: textarea

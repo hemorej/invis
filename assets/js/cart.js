@@ -4,6 +4,10 @@ var app = new Vue({
         inCart: true,
         inShipping: false,
         inCheckout: false,
+        discount: null,
+        total: 0,
+        currencies: null,
+        disableDiscount: false,
         stripe: null,
         name: null,
         email: null,
@@ -21,6 +25,8 @@ var app = new Vue({
     },
     mounted() {
         this.country = this.$refs.userLocation.value
+        this.total = parseInt(this.$refs.total.value)
+        this.currencies = this.$refs.currencies.value
     },
     computed: {
         shippingIncomplete: function(){
@@ -28,6 +34,23 @@ var app = new Vue({
         }
     },
     methods: {
+        applyDiscount: function(){
+            this.orderWaiting = true
+            axios.post('/discount', {
+                discount: this.discount,
+                csrf: this.$refs.discountCSRF.value
+              }).then(response => {
+                if(parseInt(response.data.total) != 0){
+                    this.total = response.data.total
+                    this.currencies = response.data.currencies
+                    this.discount = response.data.discountAmount
+                    this.disableDiscount = true
+                    this.$refs.checkoutSessionID.value = response.data.checkoutSessionId
+                    this.$refs.checkoutTotal.value = response.data.total
+                }
+                this.orderWaiting = false
+              })
+        },
         showShipping: function(){
             this.inCart = false;
             this.inShipping = true;
