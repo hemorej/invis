@@ -277,7 +277,10 @@ class Cart
 		$discounts = \Yaml::decode(kirby()->site()->page('prints')->discounts());
 		foreach($discounts as $discount){
 			if($discount['code'] == $discountCode && boolval($discount['active']) == true){
-				$this->getCartPage()->update(['discount' => \Yaml::encode($discount)]);		
+
+				kirby()->impersonate('kirby');
+				$this->getCartPage()->update(['discount' => \Yaml::encode($discount)]);
+
 				$subtotal = $this->subtotal($this->items());
     			$total = $subtotal - (intval($discount['amount']) / 100) * $subtotal;
   				$currencies = $this->estimateCurrency($total);	
