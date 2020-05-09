@@ -5,11 +5,22 @@ files: false
 options:
   update: true
 fields:
+  back:
+    label: back to listing
+    type: info
+    width: 1/4
+    text: |
+      <a href="/panel/pages/prints#orders">back</a><br />
   txn_id:
     label: transaction id
     type: text
-    width: 1/2
+    width: 1/4
     disabled: true
+  autoid:
+    label: Order ID
+    width: 1/4
+    readonly: true
+    translate: false 
   txn_date:
     label: transaction date
     type: date
@@ -19,12 +30,7 @@ fields:
       format: 24
       interval: 1
     disabled: true
-    width: 1/2
-  autoid:
-    label: Order ID
     width: 1/4
-    readonly: true
-    translate: false 
   shipping_date:
     label: date shipped
     type: date
