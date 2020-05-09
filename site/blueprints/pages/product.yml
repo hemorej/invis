@@ -3,18 +3,16 @@ type: fields
 columns:
     - width: 2/3
         fields:
+          details:
+            label: Product details
+            type: headline
+            numbered: false
           back:
-            label: back to listing
+            label: back
             type: info
             width: 1/4
             text: |
-              <a href="/panel/pages/prints#products">back</a><br />
-          title:
-            label: Title
-            type: text
-            help: The title of your product
-            required: true
-            width: 1/3
+              <a href="/panel/pages/prints#products">back to products</a><br />
           autoid:
             label: Product ID
             width: 1/3

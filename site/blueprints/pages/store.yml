@@ -57,5 +57,5 @@ tabs:
             template: order
             create: false
             type: pagesdisplay
-            query: site.find('orders').children.filterBy('orderstatus', 'in', ['paid', 'pending']) 
+            query: site.find('orders').children.filterBy('orderstatus', 'in', ['paid', 'pending', 'canceled', 'returned']) 
             sortBy: txn_date desc

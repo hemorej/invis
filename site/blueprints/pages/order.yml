@@ -4,13 +4,22 @@ pages: false
 files: false
 options:
   update: true
+  preview: false
+  changeStatus: false
+  changeSlug: false
+  duplicate: false
+  changeTitle: false
 fields:
+  details:
+    label: Order details
+    type: headline
+    numbered: false
   back:
-    label: back to listing
+    label: back
     type: info
     width: 1/4
     text: |
-      <a href="/panel/pages/prints#orders">back</a><br />
+      <a href="/panel/pages/prints#orders">back to orders</a><br />
   txn_id:
     label: transaction id
     type: text
@@ -20,7 +29,9 @@ fields:
     label: Order ID
     width: 1/4
     readonly: true
-    translate: false 
+    translate: false
+  line:
+    type: line
   txn_date:
     label: transaction date
     type: date
