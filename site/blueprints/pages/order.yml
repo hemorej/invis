@@ -4,12 +4,34 @@ pages: false
 files: false
 options:
   update: true
+  preview: false
+  changeStatus: false
+  changeSlug: false
+  duplicate: false
+  changeTitle: false
 fields:
+  details:
+    label: Order details
+    type: headline
+    numbered: false
+  back:
+    label: back
+    type: info
+    width: 1/4
+    text: |
+      <a href="/panel/pages/prints#orders">back to orders</a><br />
   txn_id:
     label: transaction id
     type: text
-    width: 1/2
+    width: 1/4
     disabled: true
+  autoid:
+    label: Order ID
+    width: 1/4
+    readonly: true
+    translate: false
+  line:
+    type: line
   txn_date:
     label: transaction date
     type: date
@@ -19,12 +41,7 @@ fields:
       format: 24
       interval: 1
     disabled: true
-    width: 1/2
-  autoid:
-    label: Order ID
     width: 1/4
-    readonly: true
-    translate: false 
   shipping_date:
     label: date shipped
     type: date
@@ -81,4 +98,10 @@ fields:
   customer:
     label: customer
     disabled: true
+    type: textarea
+    width: 1/2
+  discount:
+    label: discount
+    disabled: true
+    width: 1/2
     type: textarea

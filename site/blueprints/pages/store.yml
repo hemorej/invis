@@ -1,0 +1,61 @@
+title: Shop
+icon: cart
+tabs:
+  products:
+    label: Products
+    columns:
+      - width: 1/3
+        sections:
+          hidden:
+            type: pages
+            headline: Hidden
+            status: unlisted
+            templates:
+              - article
+              - product
+      - width: 1/3
+        sections:
+          drafts:
+            type: pages
+            headline: Drafts
+            status: draft
+            create: 
+              - article
+              - product
+      - width: 1/3
+        sections:
+          listed:
+            type: pages
+            headline: Published
+            status: listed
+
+  discount:
+    label: Discounts
+    fields:
+      discounts:
+        extends: fields/discount
+        label: Discount codes
+
+  orders: 
+    label: Orders
+    columns:
+      - width: 1/2
+        sections:
+          shipped:
+            headline: Shipped orders
+            template: order
+            create: false
+            type: pagesdisplay
+            query: site.find('orders').children.filterBy('orderstatus', '==', 'shipped') 
+            sortBy: shipping_date desc
+
+      - width: 1/2
+        sections:
+          unshipped:
+            type: pages
+            headline: Unshipped orders
+            template: order
+            create: false
+            type: pagesdisplay
+            query: site.find('orders').children.filterBy('orderstatus', 'in', ['paid', 'pending', 'canceled', 'returned']) 
+            sortBy: txn_date desc

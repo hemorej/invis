@@ -1,0 +1,33 @@
+label: Discount
+type: structure
+fields:
+  code:
+    label: Discount code
+    type: text
+    required: true
+    converter: upper
+    maxlength: 8
+    minlength: 6
+    width: 1/4
+  autoid:
+    label: Discount ID
+    readonly: true
+    translate: false 
+    width: 1/4
+  amount:
+    label: Amount
+    type: number
+    required: true
+    min: 0
+    max: 100
+    width: 1/4
+  active:
+    label: Active
+    type: toggle
+    text: Active
+    default: true
+    width: 1/4
+  description:
+    type: text
+    label: Description
+    required: false

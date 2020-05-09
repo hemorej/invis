@@ -100,7 +100,7 @@ class Cart
 		return $this->site->page($this->session->get('txn'));
 	}
 
-	public function getLineItems()
+	public function getLineItems($discount = 1)
 	{
 		$lineItems = array();
 		$products = $this->getCartPage()->products()->toStructure();
@@ -111,7 +111,7 @@ class Cart
 			$lineItems[] = array(    
 				'name' => $product->variant()->value,
 			    'description' => $product->name()->value,
-			    'amount' => $product->amount()->value * 100,
+			    'amount' => $product->amount()->value * 100 * $discount,
 			    'images' => [$preview],
 			    'currency' => 'CAD',
 			    'quantity' => $product->quantity()->value);
@@ -272,6 +272,29 @@ class Cart
 	  $this->getCartPage()->update(['products' => \Yaml::encode($items)]);
 	}
 
+	public function applyDiscount($discountCode)
+	{
+		$discounts = \Yaml::decode(kirby()->site()->page('prints')->discounts());
+		foreach($discounts as $discount){
+			if($discount['code'] == $discountCode && boolval($discount['active']) == true){
+
+				kirby()->impersonate('kirby');
+				$this->getCartPage()->update(['discount' => \Yaml::encode($discount)]);
+
+				$subtotal = $this->subtotal($this->items());
+    			$total = $subtotal - (intval($discount['amount']) / 100) * $subtotal;
+  				$currencies = $this->estimateCurrency($total);	
+
+  				  $lineItems = $this->getLineItems(1 - (intval($discount['amount'])/100));
+				  $stripeSession = (new Stripe())->createSession($lineItems)->id;
+				
+				return ['total' => $total, 'currencies' => $currencies, 'discountAmount' => intval($discount['amount']), 'checkoutSessionId' => $stripeSession];
+			}
+		}
+
+		return ['total' => 0];
+	}
+
 	public function processStripe()
 	{
 		try{
@@ -384,6 +407,14 @@ class Cart
 		$orderId = $this->getCartPage()->autoid()->value;
 		$customer = \Yaml::decode($this->getCartPage()->customer());
 		$products = $this->getCartPage()->products();
+		$discount = $this->getCartPage()->discount()->yaml();
+		$subtotal = $this->subtotal($this->items());
+
+		if(!empty($discount)){
+			$total = $subtotal - (intval($discount['amount']) / 100) * $subtotal;
+		}else{
+			$total = $subtotal;
+		}
 
 		$order = array(	
 			'order' => $orderId,
@@ -395,7 +426,9 @@ class Cart
 			'postcode' => $customer['address']['postal_code'],
 			'province' => $customer['address']['state'],
 			'email' => $customer['email'],
-			'total' => $this->subtotal($this->items())
+			'discount' => empty($discount['code']) ? null : $discount['code'],
+			'discountAmount' => empty($discount['amount']) ? null : $discount['amount'],
+			'total' => $total
 		);
 
 		try{

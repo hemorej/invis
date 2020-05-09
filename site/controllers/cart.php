@@ -24,10 +24,15 @@ return function($site, $page, $kirby)
   }
   // Set txn object
   $txn = $cart->getCartPage();
-  $total = $cart->subtotal($cart->items());
+  $discount = empty($cart->getCartPage()->discount()) ? null : $cart->getCartPage()->discount()->yaml();
+  $discountAmount = empty($discount) ? 0 : intval($discount['amount']);
+  $subtotal = $cart->subtotal($cart->items());
+  $total = $subtotal - ($discountAmount / 100) * $subtotal;
+  
   $currencies = $cart->estimateCurrency($total);
 
-  $lineItems = $cart->getLineItems();
+  $lineItems = $cart->getLineItems((100-$discountAmount)/100);
+
   $stripeSession = null;
   if(!empty($lineItems))
     $stripeSession = (new Stripe())->createSession($lineItems)->id;
@@ -38,6 +43,7 @@ return function($site, $page, $kirby)
       'total' => $total,
       'currencies' => $currencies,
       'content' => $cart->contents($cart->items()),
+      'discount' => $discount,
       'cartItems' => $cart->items(),
       'txn' => $txn,
       'checkoutSessionId' => $stripeSession,
