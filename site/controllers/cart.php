@@ -33,9 +33,13 @@ return function($site, $page, $kirby)
 
   $lineItems = $cart->getLineItems((100-$discountAmount)/100);
 
+  $customerEmail = null;
+  if(isset($cart->getCartPage()->customer()->yaml()['email']))
+    $customerEmail = $cart->getCartPage()->customer()->yaml()['email'];
+
   $stripeSession = null;
   if(!empty($lineItems))
-    $stripeSession = (new Stripe())->createSession($lineItems)->id;
+    $stripeSession = (new Stripe())->createSession($lineItems, $customerEmail)->id;
 
 
   return [

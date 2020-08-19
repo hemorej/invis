@@ -295,6 +295,14 @@ class Cart
 		return ['total' => 0];
 	}
 
+	public function updateStripeSession($customerEmail)
+	{
+		$lineItems = $this->getLineItems();
+		$stripeSession = (new Stripe())->createSession($lineItems, $customerEmail)->id;
+
+		return $stripeSession;
+	}
+
 	public function processStripe()
 	{
 		try{
@@ -428,6 +436,7 @@ class Cart
 			'email' => $customer['email'],
 			'discount' => empty($discount['code']) ? null : $discount['code'],
 			'discountAmount' => empty($discount['amount']) ? null : $discount['amount'],
+	        'type' => 'order',
 			'total' => $total
 		);
 
