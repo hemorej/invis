@@ -59,3 +59,43 @@ tabs:
             type: pagesdisplay
             query: site.find('orders').children.filterBy('orderstatus', 'in', ['paid', 'pending', 'canceled', 'returned']) 
             sortBy: txn_date desc
+
+  subscriptions: 
+    label: Subscriptions
+    columns:
+      - width: 1/3
+        sections:
+          tier1:
+            headline: Tier 1 subscriptions
+            template: subscriptioncustomer
+            create: false
+            type: pagesdisplay
+            query: site.find('orders').children.filterBy('store_subscription', '==', 'Invisible Cities Tier 1 Subscription').filterBy('active', 'in', ['1', 'true'])
+            sortBy: since desc
+      - width: 1/3
+        sections:
+          tier2:
+            headline: Tier 2 subscriptions
+            create: false
+            type: pagesdisplay
+            template: subscriptioncustomer
+            query: site.find('orders').children.filterBy('store_subscription', '==', 'Invisible Cities Tier 2 Subscription').filterBy('active', 'in', ['1', 'true'])
+            sortBy: since desc
+      - width: 1/3
+        sections:
+          tier3:
+            headline: Tier 3 subscriptions
+            create: false
+            type: pagesdisplay
+            template: subscriptioncustomer
+            query: site.find('orders').children.filterBy('store_subscription', '==', 'Invisible Cities Tier 3 Subscription').filterBy('active', 'in', ['1', 'true'])
+            sortBy: since desc
+      - width: 1/1
+        sections:
+          cancelled:
+            headline: Cancelled subscriptions
+            create: false
+            type: pagesdisplay
+            template: subscriptioncustomer
+            query: site.find('orders').children.filterBy('store_subscription', 'in', ['Invisible Cities Tier 1 Subscription', 'Invisible Cities Tier 2 Subscription', 'Invisible Cities Tier 3 Subscription']).filterBy('active', 'in', ['0', 'false'])
+            sortBy: since desc

@@ -1,0 +1,50 @@
+title: subscriptioncustomer
+type: fields
+fields:
+  back:
+    label: back
+    type: info
+    width: 1/4
+    text: |
+      <a href="/panel/pages/prints#subscriptions">back to subcriptions</a><br />
+  customer:
+    label: Customer ID
+    type: text
+    required: true
+    disabled: true
+    width: 1/4
+  stripe_subscription:
+    label: Subscription ID
+    type: text
+    required: true
+    width: 1/4
+  customer_email:
+    label: Customer Email
+    width: 1/4
+    type: text
+    required: true
+  store_subscription:
+    label: Subscription Tier
+    type: text
+    required: true
+    width: 1/4
+  active:
+    label: Active
+    type: toggle
+    default: true
+    width: 1/4
+  since:
+    label: Since
+    type: date
+    disabled: true
+    date:
+      format: MM/DD/YYYY
+    time: 
+      format: 24
+      interval: 1
+    width: 1/4
+  shipping:
+    label: Shipping address
+    disabled: true
+    type: textarea
+    width: 1/4
