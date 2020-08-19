@@ -2,11 +2,7 @@
 @include('partials.menu')
 
 @php
-    if($page->title() == 'process'){
-        $articles = $page->children()->listed();
-    }else{
-        $articles = $page->children()->listed()->sortBy('publishDate', 'desc');
-    }
+    $articles = $page->children()->listed()->flip();
 @endphp
 
 <section class="cf mt5-ns mt3 center">
