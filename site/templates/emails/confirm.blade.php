@@ -128,7 +128,7 @@
                                 @if(isset($headline) && !empty($headline))
                                   {{ $headline }}
                                 @elseif($type == 'subscription' && $status == 'active')
-                                  Thank you for your support! Your subscription directly enables me to keep making photographs. You will soon be receiving, by email or post, some treats which I hope you will enjoy. If at any time you need to make changes to your subscription, you can use the Manage Subscription button on the <a href="https://the-invisible-cities.com/prints/subscriptions">subscription</a> page.
+                                  Thank you for your support! Your subscription directly enables me to keep making photographs. You will soon be receiving, by email or post, some treats which I hope you will enjoy. If at any time you wish to make changes to your subscription, you can use the Manage Subscription button on the <a href="https://the-invisible-cities.com/prints/subscriptions">subscription</a> page.
                                 @elseif($type == 'subscription' && $status == 'canceled')
                                   We're sad to see you go. You have successfully cancelled your subscription and you will no longer receive updates from The Invisible Cities.
                                 @endif
