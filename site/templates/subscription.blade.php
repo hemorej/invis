@@ -12,11 +12,11 @@
 
 
     @if(@get('canceled'))
-    <div class="measure black-70 f4 f4-ns f3-l ph2 mt4">
+    <div class="measure black-70 f4 f3-l ph2 mt4">
       <h4>Subscription cancelled</h4>
     </div>
     <span class='db mb2'></span>
-    <div class="black-70 f4 f4-ns f3-ns ph2 measure-wide lh-copy">
+    <div class="black-70 f4 f3-ns ph2 measure-wide lh-copy">
       Your transaction was cancelled. Go back to the <a class="pa1-l link black-60 hover-white hover-bg-gold" href="/prints">store</a>
     </div>
     @elseif(@get('success'))
@@ -24,7 +24,7 @@
         <h4>Subscription confirmation</h4>
     </div>
     <span class='db mb2'></span>
-    <div class="black-70 f4 f4-ns f3-ns ph2 measure-wide lh-copy">
+    <div class="black-70 f4 f4-ns ph2 measure-wide lh-copy">
       <span class="db">Thank you for your support</span>
         You will receive an email confirmation shortly. If you have questions about your subscription contact us at &#x6A;&#x65;&#x72;&#x6F;&#x6D;&#x65;&#x40;&#x74;&#x68;&#x65;&#x2D;&#x69;&#x6E;&#x76;&#x69;&#x73;&#x69;&#x62;&#x6C;&#x65;&#x2D;&#x63;&#x69;&#x74;&#x69;&#x65;&#x73;&#x2E;&#x63;&#x6F;&#x6D;. If would like to make changes, use the Manage Subscription section on the <a class="pa1-l link black-60 hover-white hover-bg-gold" href="{{$page->url()}}">subscription page</a>
     </div>
@@ -32,26 +32,32 @@
       <div id="sub">
         <input ref="checkoutKey" type="hidden" name="key" value="@option('stripe_key_pub')">
         @foreach($page->tiers()->toStructure() as $tier)
-          <div class="mw7 center dn db-ns">
-            <div class="cf ph2-ns">
-              <div class="fl f3 w-100 w-100-ns pl3-ns tracked-tight">
+          <div class="mw7 center db">
+            <div class="cf">
+              <div class="fl f3-ns pr2-ns w-50-ns tracked-tight">
+                @php
+                  $image = $page->image($tier->image()->toFile()->filename())
+                @endphp
+                <img class="db" alt="product pictures for {{ $page->title() }}" srcset="{{ $image->srcset([600, 800, 1200]) }}">
+              </div>
+              <div class="fl pl2-ns f3-ns pt3 pt0-ns f4 w-50-ns tracked-tight">
                 {{$tier->description()}}
 
-                <button @click.prevent="subscribe" data-shipping='{{$tier->require_shipping()}}' data-plan-id='{{$tier->plan_id()}}' class="fr bg-white f5 no-underline black bg-animate b--gold pa2 ml2 ba border-box hover-bg-gold mt4">${{$tier->price()}} per month</button>
+                <button @click.prevent="subscribe" data-shipping='{{$tier->require_shipping()}}' data-plan-id='{{$tier->plan_id()}}' class="fr bg-white f5-ns f5 no-underline black hover-white bg-animate b--gold ba pa2 ml2 border-box hover-bg-gold mt4">${{$tier->price()}} per month</button>
               </div>
             </div>
           </div>
-        <hr />
+        <hr class="mb4-ns"/>
         @endforeach
-        <div class="mw7 center dn db-ns">
-          <div class="cf ph2-ns">
+        <div class="mw7 center db">
+          <div class="cf">
             <div class="f3 w-10">&nbsp;</div>
-            <div class="fl f3 w-90 pl3-ns tracked-tight">
+            <div class="fl f3 w-90 tracked-tight">
               <button v-on:click.prevent='showManage()' class="bg-white f5 no-underline black bg-animate b--gold pa2 pa3-l ba border-box"><span>Manage your subscription</span></button>
             </div>
             <transition name="fade" mode="out-in">
-              <div v-show="manage == true" class="mt4 fl w-100 pl3-ns">
-                <input class="measure input-reset ba b--black-20 pa2 fl w-90" placeholder="Enter the email you used when you subscribed" v-model="email" type="email" name="email" required/>
+              <div v-show="manage == true" class="mt2 fl w-100">
+                <input class="measure input-reset ba b--black-20 pa2 fl w-90-ns w-70" placeholder="Enter the email you used when you subscribed" v-model="email" type="email" name="email" required/>
                 <input type="hidden" ref="inputCsrf" value="@csrf()">
                 <button 
                   :disabled="!validEmail(email)" 
