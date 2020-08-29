@@ -285,14 +285,29 @@ class Cart
     			$total = $subtotal - (intval($discount['amount']) / 100) * $subtotal;
   				$currencies = $this->estimateCurrency($total);	
 
-  				  $lineItems = $this->getLineItems(1 - (intval($discount['amount'])/100));
-				  $stripeSession = (new Stripe())->createSession($lineItems)->id;
+ 				$lineItems = $this->getLineItems(1 - (intval($discount['amount'])/100));
+				$stripeSession = (new Stripe())->createSession($lineItems)->id;
 				
 				return ['total' => $total, 'currencies' => $currencies, 'discountAmount' => intval($discount['amount']), 'checkoutSessionId' => $stripeSession];
 			}
 		}
 
 		return ['total' => 0];
+	}
+
+	public function updateStripeSession($customerEmail)
+	{
+	  	$discount = \Yaml::decode($this->getCartPage()->discount());
+
+	  	if(!empty($discount)){
+			$lineItems = $this->getLineItems(1 - (intval($discount['amount'])/100));
+	  	}else{
+	  		$lineItems = $this->getLineItems();
+	  	}
+
+		$stripeSession = (new Stripe())->createSession($lineItems, $customerEmail)->id;
+
+		return $stripeSession;
 	}
 
 	public function processStripe()
@@ -428,6 +443,7 @@ class Cart
 			'email' => $customer['email'],
 			'discount' => empty($discount['code']) ? null : $discount['code'],
 			'discountAmount' => empty($discount['amount']) ? null : $discount['amount'],
+	        'type' => 'order',
 			'total' => $total
 		);
 
@@ -441,7 +457,7 @@ class Cart
 		            'title' => 'Your order from The Invisible Cities has been received',
 		            'subtitle' => 'Order confirmation',
 	                'preview' => 'Order confirmation. We received your order and will prepare it for shipping soon. Below is your order information.',
-	                'headline' => 'Thanks for ordering! We received your order and will prepare it for shipping soon. Below is your order information.'
+	                'headline' => 'Thank you for your purchase! We received your order and will prepare it for sending soon. You will receive another email once the package has shipped. Below is your order information.'
 			)));
 
 		  	$this->logger->info($this->session->get('txn') . ":email confirmation sent for order id " . $orderId);

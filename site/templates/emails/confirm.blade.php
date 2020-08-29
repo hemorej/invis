@@ -124,51 +124,15 @@
                         <div class="row">
                           <table class="row__table" width="100%" align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                             <tr class="row__row">
-                              <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top">{{ $headline }}</td>
-                            </tr>
-                          </table>
-                        </div> <br/>
-                        <div class="hr" style="margin: 0 auto; width: 100%;"> <!--[if mso | IE]>
-                          <table class="hr__table__ie" role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin-right: auto; margin-left: auto; width: 100%;" width="100%" align="center">
-                            <tr>
-                              <td> <![endif]-->
-                                <table class="hr__table" role="presentation" border="0" align="center" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
-                                  <tr class="hr__row">
-                                    <td class="hr__cell" width="100%" align="left" valign="top" style="border-top: 1px solid #9A9A9A;">&nbsp;</td>
-                                  </tr>
-                                </table> <!--[if mso | IE]> </td>
-                            </tr>
-                          </table> <![endif]--> </div>
-                        <div class="row">
-                          <table class="row__table" width="100%" align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
-                            <tr class="row__row">
-                              <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Order information</b><br/>
-                                <table class="table">
-                                  @foreach($items as $i => $item)
-                                    <tr class="tr">
-                                      <td class="td">{{ $item->name() }}<br />
-                                      	<em>{{ $item->variant() }} x{{ $item->quantity() }}</em>
-                                      </td>
-                                      <td class="td">— ${{ intval($item->amount()->value) * intval($item->quantity()->value) }}</td>
-                                    </tr>
-                                  @endforeach
-                                  @if(!empty($discount))
-                                    <tr class="tr">
-                                      <td class="td">Discount ({{$discount}})</td>
-                                      <td class="td">&nbsp; -{{$discountAmount}}%</td>
-                                    </tr>
-                                  @endif
-                                  <tr class="tr">
-                                    <td class="td">Shipping</td>
-                                    <td class="td">— included</td>
-                                  </tr>
-                                  <tr class="tr">
-                                    <td class="td"><b>Total</b></td>
-                                    <td class="td">— <b>${{ $total }}</b></td>
-                                  </tr>
-                                </table>
+                              <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top">
+                                @if(isset($headline) && !empty($headline))
+                                  {{ $headline }}
+                                @elseif($type == 'subscription' && $status == 'active')
+                                  Thank you for your support! Your subscription directly enables me to keep making photographs. You will soon be receiving, by email or post, some treats which I hope you will enjoy. If at any time you wish to make changes to your subscription, you can use the Manage Subscription button on the <a href="https://the-invisible-cities.com/prints/subscriptions">subscription</a> page.
+                                @elseif($type == 'subscription' && $status == 'canceled')
+                                  We're sad to see you go. You have successfully cancelled your subscription and you will no longer receive updates from The Invisible Cities.
+                                @endif
                               </td>
-                              <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/> {{ $fullName }}<br/> {{ $street }}, {{ $city }}<br/> {{ $province }} {{ $country }}<br/> {{ $postcode }}<br/> {{ $email }}<br/> </td>
                             </tr>
                           </table>
                         </div> <br/>
@@ -186,7 +150,75 @@
                         <div class="row">
                           <table class="row__table" width="100%" align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                             <tr class="row__row">
-                              <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top"> Order number {{ $order }} </td>
+                              @if($type == 'subscription')
+                                <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Subscription information</b><br/>
+                                  <table class="table">
+                                      <tr class="tr">
+                                        <td class="td">{{ $product }} <br />
+                                          <em>subscription {{$status}}</em>
+                                        </td>
+                                        @if($status == 'active')
+                                          <td class="td">— ${{ $amount }} per month</td>
+                                        @else
+                                          <td class="td">— $0 per month</td>
+                                        @endif
+                                      </tr>
+                                  </table>
+                                </td>
+                                @if(isset($address) && !empty($address))
+                                  <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/> {{ $address['name'] }}<br/> {{ $address['line1'] }} {{ $address['line2'] }}, {{ $address['city'] }}<br/> {{ $address['state'] }} {{ $address['country'] }}<br/> {{ $address['postal_code'] }}<br/> {{ $address['email'] }}<br/> </td>
+                                @endif
+                              @else
+                                <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Order information</b><br/>
+                                  <table class="table">
+                                    @foreach($items as $i => $item)
+                                      <tr class="tr">
+                                        <td class="td">{{ $item->name() }}<br />
+                                        	<em>{{ $item->variant() }} x{{ $item->quantity() }}</em>
+                                        </td>
+                                        <td class="td">— ${{ intval($item->amount()->value) * intval($item->quantity()->value) }}</td>
+                                      </tr>
+                                    @endforeach
+                                    @if(!empty($discount))
+                                      <tr class="tr">
+                                        <td class="td">Discount ({{$discount}})</td>
+                                        <td class="td">&nbsp; -{{$discountAmount}}%</td>
+                                      </tr>
+                                    @endif
+                                    <tr class="tr">
+                                      <td class="td">Shipping</td>
+                                      <td class="td">— included</td>
+                                    </tr>
+                                    <tr class="tr">
+                                      <td class="td"><b>Total</b></td>
+                                      <td class="td">— <b>${{ $total }}</b></td>
+                                    </tr>
+                                  </table>
+                                </td>
+                                <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/> {{ $fullName }}<br/> {{ $street }}, {{ $city }}<br/> {{ $province }} {{ $country }}<br/> {{ $postcode }}<br/> {{ $email }}<br/> </td>
+                              @endif
+                            </tr>
+                          </table>
+                        </div> <br/>
+                        <div class="hr" style="margin: 0 auto; width: 100%;"> <!--[if mso | IE]>
+                          <table class="hr__table__ie" role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin-right: auto; margin-left: auto; width: 100%;" width="100%" align="center">
+                            <tr>
+                              <td> <![endif]-->
+                                <table class="hr__table" role="presentation" border="0" align="center" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
+                                  <tr class="hr__row">
+                                    <td class="hr__cell" width="100%" align="left" valign="top" style="border-top: 1px solid #9A9A9A;">&nbsp;</td>
+                                  </tr>
+                                </table> <!--[if mso | IE]> </td>
+                            </tr>
+                          </table> <![endif]--> </div>
+                        <div class="row">
+                          <table class="row__table" width="100%" align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
+                            <tr class="row__row">
+                              @if($type == 'subscription')
+                                <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top"> Subscription number {{ $subscription }} </td>
+                              @else
+                                <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top"> Order number {{ $order }} </td>
+                              @endif
 							</tr>
 							<tr class="row__row">
                               <td class="column col-sm-12" width="800" style="width: 100%" align="left" valign="top"> If you have any questions about this order, contact us at jerome@the-invisible-cities.com </td>

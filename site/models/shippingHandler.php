@@ -60,7 +60,8 @@ class ShippingHandler
                         'title' => 'Your order from The Invisible Cities has been shipped',
                         'subtitle' => 'Shipping confirmation',
                         'preview' => 'Order shipping confirmation. Your order has been shipped.',
-                        'headline' => 'Your order is on the way! Delivery is normally 5-10 business days to the US and Europe, but shipping times may vary.'
+                        'headline' => 'Your order is on the way! Delivery is normally 5-10 business days to the US and Europe, but shipping times may vary.',
+                        'type' => 'order'
                     ));
 
                 $this->logger->info("email shipping confirmation sent for order id " . $page->autoid());

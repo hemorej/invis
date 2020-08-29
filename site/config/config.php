@@ -33,6 +33,7 @@ return [
 
 	'stripe_key_pub' => '',
 	'stripe_key_prv' => '',
+    'webhook_secret' => '',
 	'paypal_client_id' => '',
 	'paypal_client_secret' => '',
 	'paypal_environment' => '',

@@ -2,11 +2,32 @@
 
 @include_once __DIR__ . '/vendor/autoload.php';
 use \Mailbun\Mailbun;
+use \Payments\StripeConnector as Stripe;
 
 Kirby::plugin('helpers/helpers', [
   'options' => [
     'cache.backend' => true
-  ]
+  ],
+  'routes' => [[
+    'pattern' => 'customer',
+    'method' => 'POST',
+    'action'  => function () {
+      if(csrf(get('csrf')) === true){
+        $stripe = new Stripe();
+        $customer = $stripe->findCustomer(urldecode(get('email')));
+        if(!empty($customer) && !empty($customer['data'])){
+          $url = $stripe->redirectToPortal($customer['data'][0]->id);
+          return [
+            'location' => $url
+          ];
+        }
+        
+        return [
+          'location' => null
+        ];
+      }
+    }
+  ]]
 ]);
 
 function addToStructure($page, $field, $data = array())

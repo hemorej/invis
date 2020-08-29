@@ -27,9 +27,11 @@ Kirby::plugin('cart/cart', [
 
 				kirby()->impersonate('kirby');
 				page(kirby()->session()->get('txn'))->update(['customer' => Yaml::encode($customer)]);
+				$sessionId = (new \Cart\Cart())->updateStripeSession(get('email'));
 
 				return [
-			      'status' => 'ok'
+			      'status' => 'ok',
+			      'checkoutSessionId' => $sessionId
 			    ];
 			}
 		}

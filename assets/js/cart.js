@@ -75,7 +75,9 @@ var app = new Vue({
                 country: this.country,
                 csrf: this.$refs.checkoutCSRF.value
               })
-              .then(function (response) {})
+              .then(response => {
+                this.$refs.checkoutSessionID.value = response.data.checkoutSessionId
+              })
         },
         initPaypal: function(){
             if(document.getElementById('paypal-button-container') === null ){
