@@ -63,7 +63,7 @@ tabs:
   subscriptions: 
     label: Subscriptions
     columns:
-      - width: 1/3
+      - width: 1/2
         sections:
           tier1:
             headline: Tier 1 subscriptions
@@ -72,7 +72,7 @@ tabs:
             type: pagesdisplay
             query: site.find('orders').children.filterBy('store_subscription', '==', 'Invisible Cities Tier 1 Subscription').filterBy('active', 'in', ['1', 'true'])
             sortBy: since desc
-      - width: 1/3
+      - width: 1/2
         sections:
           tier2:
             headline: Tier 2 subscriptions
@@ -80,15 +80,6 @@ tabs:
             type: pagesdisplay
             template: subscriptioncustomer
             query: site.find('orders').children.filterBy('store_subscription', '==', 'Invisible Cities Tier 2 Subscription').filterBy('active', 'in', ['1', 'true'])
-            sortBy: since desc
-      - width: 1/3
-        sections:
-          tier3:
-            headline: Tier 3 subscriptions
-            create: false
-            type: pagesdisplay
-            template: subscriptioncustomer
-            query: site.find('orders').children.filterBy('store_subscription', '==', 'Invisible Cities Tier 3 Subscription').filterBy('active', 'in', ['1', 'true'])
             sortBy: since desc
       - width: 1/1
         sections:
