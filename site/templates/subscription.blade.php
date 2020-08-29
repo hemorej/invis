@@ -43,7 +43,7 @@
               <div class="fl pl2-ns f3-ns pt3 pt0-ns f4 w-50-ns tracked-tight">
                 {{$tier->description()}}
 
-                <button @click.prevent="subscribe" data-shipping='{{$tier->require_shipping()}}' data-plan-id='{{$tier->plan_id()}}' class="fr bg-white f5-ns f5 no-underline black hover-white bg-animate b--gold ba pa2 ml2 border-box hover-bg-gold mt4">${{$tier->price()}} per month</button>
+                <button @click.prevent="subscribe" data-shipping='{{$tier->require_shipping()}}' data-plan-id='{{$tier->plan_id()}}' class="fr bg-white f4-ns f4 no-underline black hover-white bg-animate b--gold ba pa2 ml2 border-box hover-bg-gold mt4">${{$tier->price()}} <span class="mt2 f6-ns f6">per month</span></button>
               </div>
             </div>
           </div>
