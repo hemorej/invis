@@ -14,8 +14,8 @@ var app = new Vue({
           this.manage = !this.manage
         },
         subscribe: function(event){
-          priceId = event.target.getAttribute('data-plan-id')
-          requireShipping = event.target.getAttribute('data-shipping')
+          priceId = event.target.parentElement.getAttribute('data-plan-id')
+          requireShipping = event.target.parentElement.getAttribute('data-shipping')
 
           var checkoutConfig = {
             lineItems: [{ price: priceId, quantity: 1 }],
