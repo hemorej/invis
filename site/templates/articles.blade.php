@@ -2,7 +2,7 @@
 @include('partials.menu')
 
 @php
-	$articles = $page->children()->listed()->flip();
+	$articles = $page->children()->listed()->sortBy('published', 'desc');
 @endphp
 
 <section class="cf mt5-ns mt3 center">

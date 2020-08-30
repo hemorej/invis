@@ -73,7 +73,25 @@
     @endif
   </div>
 
-     <span class="cf db mt4"></span>
+  <span class="cf db mt4"></span>
+  <nav class="cf mt4 ph2">
+      @php
+          $articles = $page->siblings()->listed()->flip();
+      @endphp
+
+      @if($page->hasPrevListed($articles))
+          <p class="fl">
+              <a class="pa1-l f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->prev($articles)->url() }}">&laquo; {{ $page->prev($articles)->title() }}</a>
+          </p>
+      @endif
+
+      @if($page->hasNextListed($articles))
+          <p class="fr">
+              <a class="pa1-l f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->next($articles)->url() }}">{{ $page->next($articles)->title() }} &raquo;</a>
+          </p>
+      @endif
+  </nav>
+
      @extends('partials.footer')
      @section('scripts')
         @js('https://js.stripe.com/v3/', ['async' => true])

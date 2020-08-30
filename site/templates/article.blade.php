@@ -65,17 +65,24 @@
 </section>
 
 <nav class="mt4 ph2">
-	@if($page->hasPrevListed())
+	@php
+		if($page->parent()->title() == 'journal'){
+			$articles = $page->siblings()->listed()->flip();
+		}else{
+			$articles = $page->siblings()->listed()->sortBy('published', 'desc');
+		}
+	@endphp
+	@if($page->hasPrevListed($articles))
 		<p class="fl">
-			<a class="f5 f4-m f4-ns pa1-l link black-60 hover-white hover-bg-gold" href="{{ $page->prev()->url() }}">&laquo; {{ $page->parent()->title() == 'journal' ? 'previous' : $page->prev()->title() }}</a>
+			<a class="f5 f4-m f4-ns pa1-l link black-60 hover-white hover-bg-gold" href="{{ $page->prev($articles)->url() }}">&laquo; {{ $page->parent()->title() == 'journal' ? 'previous' : $page->prev($articles)->title() }}</a><p class="fl">&nbsp;&vert;&nbsp;</p>
 		</p>
 	@endif
 	@if($page->parent()->title() == 'journal')
-		<p class="fl">&nbsp;&vert;&nbsp;<a class="f5 f4-m f4-ns link pa1-l black-60 hover-white hover-bg-gold" href="{{ $page->parent()->url() }}?all=1">all posts</a></p>
+		<p class="fl"><a class="f5 f4-m f4-ns link pa1-l black-60 hover-white hover-bg-gold" href="{{ $page->parent()->url() }}?all=1">all posts</a></p>
 	@endif
-	@if($page->hasNextListed())
+	@if($page->hasNextListed($articles))
 		<p class="fr">
-			<a class="f5 f4-m f4-ns link pa1-l black-60 hover-white hover-bg-gold" href="{{ $page->next()->url() }}">{{ $page->parent()->title() == 'journal' ? 'next' : $page->next()->title() }} &raquo;</a>
+			<a class="f5 f4-m f4-ns link pa1-l black-60 hover-white hover-bg-gold" href="{{ $page->next($articles)->url() }}">{{ $page->parent()->title() == 'journal' ? 'next' : $page->next($articles)->title() }} &raquo;</a>
 		</p>
 	@endif
 </nav>

@@ -27,3 +27,4 @@ columns:
         type: pages
         headline: Published
         status: listed
+        sortBy: published desc

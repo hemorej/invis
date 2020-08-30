@@ -4,7 +4,7 @@
 
     @php
         $archive = array();
-        $articles = $page->children()->listed()->sortBy('publishDate', 'desc')->paginate(12);
+        $articles = $page->children()->listed()->flip()->paginate(12);
     @endphp
 
     <section class="cf mt5-ns mt3 center">
@@ -19,15 +19,15 @@
     </section>
 
     @if($articles->pagination()->hasPages())
-        @if($articles->pagination()->hasNextPage())
+        @if($articles->pagination()->hasPrevPage())
             <p class="fl">
-                <a class="f5 f4-m f4-ns link pa1-ns black-60 hover-white hover-bg-gold" href="{{ $articles->pagination()->nextPageURL() }}">&laquo;&nbsp;older</a>
+                <a class="f5 f4-m f4-ns link pa1-ns black-60 hover-white hover-bg-gold" href="{{ $articles->pagination()->prevPageURL() }}">&laquo;&nbsp;newer</a>
             </p>
         @endif
                 
-        @if($articles->pagination()->hasPrevPage())
+        @if($articles->pagination()->hasNextPage())
             <p class="fr">
-                <a class="f5 f4-m f4-ns link pa1-ns black-60 hover-white hover-bg-gold" href="{{ $articles->pagination()->prevPageURL() }}">newer&nbsp;&raquo;</a>
+                <a class="f5 f4-m f4-ns link pa1-ns black-60 hover-white hover-bg-gold" href="{{ $articles->pagination()->nextPageURL() }}">older&nbsp;&raquo;</a>
             </p>
         @endif
     @endif
