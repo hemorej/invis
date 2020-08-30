@@ -157,7 +157,7 @@
                                         <td class="td">{{ $product }} <br />
                                           <em>subscription {{$status}}</em>
                                         </td>
-                                        @if($status == 'active')
+                                        @if($status != 'canceled')
                                           <td class="td">— ${{ $amount }} per month</td>
                                         @else
                                           <td class="td">— $0 per month</td>

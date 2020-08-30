@@ -48,7 +48,7 @@ return function($site, $page, $kirby)
                 'customer_email' => $customer->email,
                 'store_subscription' => $product->name,
                 'since' => date('m/d/Y H:i:s', $subscription->start_date),
-                'active' => $session->status == 'active' ? 1 : 0,
+                'substatus' => $session->status == 'active' ? 'active' : 'canceled',
                 'shipping' => $shipping
                 ]
             ]);
@@ -130,6 +130,37 @@ return function($site, $page, $kirby)
           $page->save();
 
           $logger->info("Event $event->type processed successfully");
+        }elseif($event->type == 'invoice.payment_failed'){
+
+          $session = $event->data->object;
+          $subscriptionID = $session->subscription;
+          $stripe = new Stripe();
+          $customer = $stripe->retrieveCustomer($session->customer);
+          $product = $stripe->retrieveProduct($session->lines->data[0]->price->product);
+          $subscription = $stripe->retrieveSubscription($subscriptionID);
+        
+          $kirby->impersonate('kirby');
+          $site->page("prints/orders/$subscriptionID")->update(['substatus' => 'payment_failed']);
+
+          $subscriptionInfo = array( 
+            'subscription' => "$subscriptionID by $customer->email",
+            'type' => 'subscription',
+            'product' => $product->name,
+            'amount' => intval($subscription->plan->amount)/100,
+            'status' => 'payment_failed'
+          );
+
+          $mailbun = new Mailbun();
+          $mailbun->send(
+            $kirby->option('alert_address'),
+            "Failed subscription payment at The Invisible Cities",
+            'confirm',
+              \A::merge($subscriptionInfo, array(
+                'title' => "A subscription at the Invisible Cities has a failed payment",
+                'subtitle' => 'Subscription summary',
+                'preview' => 'Subscription summary',
+                'headline' => "A subscription has a failed payment"
+            )));
         }
 
         http_response_code(200);

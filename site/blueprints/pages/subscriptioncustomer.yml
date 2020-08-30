@@ -28,10 +28,15 @@ fields:
     type: text
     required: true
     width: 1/4
-  active:
-    label: Active
-    type: toggle
-    default: true
+  substatus:
+    label: Status
+    type: select
+    disabled: true
+    options:
+      active: active
+      canceled: canceled
+      payment_failed: payment_failed
+    default: active
     width: 1/4
   since:
     label: Since
