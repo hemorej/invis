@@ -8,6 +8,8 @@ columns:
         type: pages
         headline: Drafts
         status: draft
+        create: 
+          - article
 
   - width: 1/2
     sections:
@@ -16,5 +18,3 @@ columns:
         headline: Published
         status: listed
         flip: true
-        create: 
-          - article
