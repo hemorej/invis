@@ -2,21 +2,12 @@ title: Journal
 icon: book
 
 columns:
-  - width: 1/4
-    sections:
-      hidden:
-        type: pages
-        headline: Hidden
-        status: unlisted
-        
-  - width: 1/4
+  - width: 1/2
     sections:
       drafts:
         type: pages
         headline: Drafts
         status: draft
-        create: 
-          - article
 
   - width: 1/2
     sections:
@@ -25,3 +16,5 @@ columns:
         headline: Published
         status: listed
         flip: true
+        create: 
+          - article
