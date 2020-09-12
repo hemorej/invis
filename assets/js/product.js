@@ -2,6 +2,7 @@ var app = new Vue({
     el: '#prod',
     data: {
         activeVariant: null,
+        productVariant: null,
         submitting: false
     },
     components: {
@@ -10,6 +11,7 @@ var app = new Vue({
     },
     mounted() {
         this.activeVariant = this.$refs.active.getAttribute('data-option-variant')
+        this.productVariant = this.$refs.active.getAttribute('data-option-product')
     },
     methods: {
         makeActive: function(event){
@@ -18,19 +20,23 @@ var app = new Vue({
 
             this.$refs.active = event.target
             this.activeVariant = event.target.getAttribute('data-option-variant')
+            this.productVariant = event.target.getAttribute('data-option-product')
         },
         addToCart: function(event){
             this.submitting = true
 
-            axios.post('/prints/cart', {
-                uri: this.$refs.uri.value,
-                variant: this.activeVariant,
-                action: 'add',
-                csrf: this.$refs.csrf.value
-              })
-              .then(function (response) {
-                document.location.replace('cart');
-              })
+            window.umami('add-cart-'+this.productVariant)
+            .then(function (){
+                axios.post('/prints/cart', {
+                    uri: this.$refs.uri.value,
+                    variant: this.activeVariant,
+                    action: 'add',
+                    csrf: this.$refs.csrf.value
+                  })
+                  .then(function (response) {
+                    document.location.replace('cart');
+                  })
+              }.bind(this))
         }
     }
 });

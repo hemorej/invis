@@ -51,6 +51,7 @@
                                     <a {{ e($loop->first, 'ref="active"') }} 
                                     class="f4 link black-60 hover-white hover-bg-gold pa1-l {{ e($loop->first, 'bb b--gold bw2')}}"
                                     data-option-variant='{{ $variant->autoid() }}'
+                                    data-option-product='{{ $page->title() . $variant->name() }}'
                                     v-on:click.prevent='makeActive'>
                                         {{ $variant->name() }} &mdash; ${{ $variant->price() }}
                                     </a>
@@ -71,7 +72,7 @@
                                     :disabled="submitting == true"
                                     v-on:click.prevent='addToCart'
                                     class="bg-white f5 no-underline" 
-                                    :class="[submitting == true ? 'gray b--gray pa2 pa3-l' : 'black bg-animate b--gold pa2 pa3-l ba border-box umami--click--add-cart']">
+                                    :class="[submitting == true ? 'gray b--gray pa2 pa3-l' : 'black bg-animate b--gold pa2 pa3-l ba border-box']">
                                     <span v-if="submitting == true">adding&ensp;&hellip;</span>
                                     <span v-else>add to cart</span>
                                 </button>
