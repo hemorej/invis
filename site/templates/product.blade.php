@@ -71,7 +71,7 @@
                                     :disabled="submitting == true"
                                     v-on:click.prevent='addToCart'
                                     class="bg-white f5 no-underline" 
-                                    :class="[submitting == true ? 'gray b--gray pa2 pa3-l' : 'black bg-animate b--gold pa2 pa3-l ba border-box']">
+                                    :class="[submitting == true ? 'gray b--gray pa2 pa3-l' : 'black bg-animate b--gold pa2 pa3-l ba border-box umami--click--add-cart']">
                                     <span v-if="submitting == true">adding&ensp;&hellip;</span>
                                     <span v-else>add to cart</span>
                                 </button>

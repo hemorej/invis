@@ -2,7 +2,7 @@
 		@kirbytext(@html(kirby()->site()->copyright()))
 	</footer>
 
-	@include('partials.ga')
+	@include('partials.umami')
 	@yield('scripts')
 </body>
 

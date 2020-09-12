@@ -126,7 +126,7 @@
                 </div>
             </div>
             
-            <button class="bg-white f5 no-underline hover-bg-gold hover-white black bg-animate b--gold pa2 pa3-l ba border-box" v-on:click.prevent="showShipping">Begin checkout</button>
+            <button class="bg-white f5 no-underline hover-bg-gold hover-white black bg-animate b--gold pa2 pa3-l ba border-box umami--click--begin-checkout" v-on:click.prevent="showShipping">Begin checkout</button>
         </div>
 
         <div v-else-if="inCart == false && inShipping == true" key="address">

@@ -42,6 +42,19 @@
             @js('assets/js/app.js')
         @endif
     @endsection
+    <script>
+        ready(log);
+        function ready(fn) {
+          if (document.readyState != 'loading'){
+            fn();
+          } else {
+            document.addEventListener('DOMContentLoaded', fn);
+          }
+        }
+        function log(){
+            window.umami('journal-archive');
+        }
+    </script>
 @else
     {{ @go($page->children()->last()->url()) }}
 @endif

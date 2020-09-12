@@ -15,8 +15,6 @@ return [
 	'cache.backend' => true,
 	'afbora.blade.minify.enabled' => false,
 
-	'ga_code' => '',
-
 	'thumbs' => [
     	'quality'   => 90,
     	'srcsets' => [
@@ -39,6 +37,8 @@ return [
 	'paypal_environment' => '',
 	'fixer_key' => '',
 	'ipstack_key' => '',
+
+    'umami_code' => '',
 
 	'cacheTTL' => '14400',
 
