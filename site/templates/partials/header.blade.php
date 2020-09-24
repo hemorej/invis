@@ -24,7 +24,7 @@
   <meta name="description" content="@html($site->description())" />
   <meta name="keywords" content="@html($site->keywords())" />
   <meta name="robots" content="index, follow" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
   <meta itemprop="name" content="{{ $site->title() }}">
   <meta itemprop="description" content="@html($site->description())">

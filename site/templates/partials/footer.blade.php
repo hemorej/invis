@@ -4,6 +4,6 @@
 
 	@include('partials.umami')
 	@yield('scripts')
-</body>
+</main>
 
 </html>
