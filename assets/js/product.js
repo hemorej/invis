@@ -25,18 +25,15 @@ var app = new Vue({
         addToCart: function(event){
             this.submitting = true
 
-            window.umami('add-cart-'+this.productVariant)
-            .then(function (){
-                axios.post('/prints/cart', {
-                    uri: this.$refs.uri.value,
-                    variant: this.activeVariant,
-                    action: 'add',
-                    csrf: this.$refs.csrf.value
-                  })
-                  .then(function (response) {
-                    document.location.replace('cart');
-                  })
-              }.bind(this))
+            axios.post('/prints/cart', {
+                uri: this.$refs.uri.value,
+                variant: this.activeVariant,
+                action: 'add',
+                csrf: this.$refs.csrf.value
+              })
+              .then(function (response) {
+                document.location.replace('cart');
+              })
         }
     }
 });
