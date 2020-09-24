@@ -6,12 +6,12 @@ fields:
     label: CDN
     type:  toggle
     default: true
-  title:
-    label: Title
-    type:  text
+    help: turn off before publishing
+    width: 1/2
   author:
     label: Author
     type:  text
+    width: 1/2
   description:
     label: Description
     type:  textarea
