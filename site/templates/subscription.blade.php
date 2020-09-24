@@ -94,7 +94,7 @@
 
      @extends('partials.footer')
      @section('scripts')
-        @js('https://js.stripe.com/v3/', ['async' => true])
+        @js('https://js.stripe.com/v3/')
         @if(@option('env') == 'prod')
             @js('assets/dist/subs.min.js')
         @else

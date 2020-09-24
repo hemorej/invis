@@ -3,7 +3,8 @@ var app = new Vue({
     data: {
         activeVariant: null,
         productVariant: null,
-        submitting: false
+        submitting: false,
+        umami: null
     },
     components: {
         'carousel': VueCarousel.Carousel,
@@ -25,6 +26,7 @@ var app = new Vue({
         addToCart: function(event){
             this.submitting = true
 
+            window.umami('add-cart-'+this.productVariant)
             axios.post('/prints/cart', {
                 uri: this.$refs.uri.value,
                 variant: this.activeVariant,
