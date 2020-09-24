@@ -10,9 +10,12 @@ function keycdn($file, $params = [])
     $suffix = null;
     $name = Str::before($file->filename(), "." . $file->extension());
 
+
     // check the parameters passed to the function and set width and height
     if (empty($params) === false) {
-        if (empty($params['height']) === false) {
+        if( empty($params['crop']) === false ) {
+            $suffix = '-' . $params['width'] . 'x' . $params['height'];
+        }elseif (empty($params['height']) === false) {
             $suffix = '-x' . $params['height'];
         }elseif($params['width'] !== false) {
             $suffix = '-' . $params['width'] . 'x';
