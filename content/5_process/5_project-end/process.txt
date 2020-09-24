@@ -8,7 +8,7 @@ Published: 2019-01-23
 
 Text:
 
-(image: z_img_4764.jpg)
+(image: z_img_4764.jpg alt: final print with camera)
 
 #### project end
 

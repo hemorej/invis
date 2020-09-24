@@ -6,6 +6,7 @@ for (var i = 0; i < classname.length; i++) {
 
 function setPreview(){
     document.getElementById('cover').setAttribute("src", this.getAttribute('data-preview'))
+    document.getElementById('cover').setAttribute("alt", this.getAttribute('data-title'))
 }
 
 var lazyLoadInstance = new LazyLoad({

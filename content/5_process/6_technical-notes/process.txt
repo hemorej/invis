@@ -8,7 +8,7 @@ Published: 2019-01-12
 
 Text:
 
-(image: IMG_6384.JPG)
+(image: IMG_6384.JPG alt: preparing film for bulk rolling)
 
 #### some technical notes
 
