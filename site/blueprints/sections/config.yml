@@ -2,6 +2,10 @@ title: Config
 type: fields
 headline: Config
 fields:
+  cdn:
+    label: CDN
+    type:  toggle
+    default: true
   title:
     label: Title
     type:  text
@@ -20,4 +24,4 @@ fields:
   terms:
     label: Terms and Conditions
     help: terms text for store checkout
-    type: textarea
+    type:  textarea

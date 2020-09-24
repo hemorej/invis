@@ -42,7 +42,7 @@ return [
 
     'cacheTTL' => '14400',
 
-    'keycdn' => false,
+    'ready' => function ($kirby) { return [ 'keycdn' => $kirby->site()->cdn()->toBool() ]; },
     'keycdn.domain' => '',
 
     'bnomei.autoid.generator' => function(){ return Bnomei\AutoID::getToken(15, true, true, true); },
