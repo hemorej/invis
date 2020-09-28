@@ -20,7 +20,12 @@ function keycdn($file, $params = [])
         }elseif($params['width'] !== false) {
             $suffix = '-' . $params['width'] . 'x';
         }
-    }
+    // return unmodified filename with new media base url
+    }else{
+      $newFilename = Str::after(Str::before($file->mediaUrl(), $file->filename()), kirby()->site()->url()) . $file->filename();
+      return option('keycdn.domain') . $newFilename;
+    }  
+
     $versionName = Str::replace($name . $suffix . '.' . $file->extension(), '_', '-');
 
     // strip site url and replace previous filename from old path with new version name
