@@ -92,7 +92,7 @@ function archiveDate($string){
   'twenty-eight',
   'twenty-nine',
   'thirty',
-  'thirty-one');
+  'thirty-first');
 
   return implode(' ', array($month, $textualNumbers[$day-1], $year));
 }

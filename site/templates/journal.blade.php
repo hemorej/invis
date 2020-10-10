@@ -52,7 +52,7 @@
           }
         }
         function log(){
-            window.umami('journal-archive');
+            window.umami.trackEvent('Visited journal archive', 'journal-archive')
         }
     </script>
 @else
