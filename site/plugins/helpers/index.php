@@ -53,7 +53,7 @@ function getPreview($image){
     if($image->isLandscape())
       return $image->resize(600)->url();
 
-    return $image->resize(null, 600)->url();
+    return $image->resize(null, 500)->url();
 }
 
 function archiveDate($string){

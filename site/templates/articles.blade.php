@@ -2,18 +2,24 @@
 @include('partials.menu')
 
 @php
-	$articles = $page->children()->listed()->sortBy('published', 'desc');
+	$series = $page->children()->listed()->sortBy('published', 'desc');
+	$travels = $site->page('travels')->children()->listed()->sortBy('published', 'desc');
 @endphp
 
-<section class="cf mt5-ns mt3 center">
-	<nav class="fl w-100 w-30-ns pr3 tr-ns tl relative z-1">
-		@foreach($articles as $article)
-			<a data-preview="{{ getPreview($article->images()->first()) }}" data-title="{{$article->title()}} series cover" class="cover ttl link black-70 f3 s721-cd db pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">@html($article->title()->lower())</a>
+<section class="cf mt5-ns mt3">
+	<div class="fl db-ns w-60-ns tl o-30-s o-100-ns fixed static-ns z-0">
+		<img alt="{{$travels->first()->title()}} series cover" id="cover" src="{{ getPreview($travels->first()->images()->first()) }}" >
+	</div>
+	<nav class="fl w-100 w-40-ns pl3 tl relative z-1">
+		<span class="ttl link gold i f3 s721-cd pl4 pv0-ns pa2-ns">&mdash;&nbsp;travels</span>
+		@foreach($travels as $article)
+			<a data-preview="{{ getPreview($article->images()->first()) }}" data-title="{{$article->title()}} series cover" class="cover ttl link db black-70 f3 s721-cd pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">@html($article->title()->lower())</a>
+		@endforeach
+		<span class="ttl link gold i f3 s721-cd pl4 pv0-ns pa2-ns mt4 db">&mdash;&nbsp;series</span>
+		@foreach($series as $article)
+			<a data-preview="{{ getPreview($article->images()->first()) }}" data-title="{{$article->title()}} series cover" class="cover ttl link db black-70 f3 s721-cd pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">@html($article->title()->lower())</a>
 		@endforeach
 	</nav>
-	<div class="fl db-ns w-70-ns tl o-30-s o-100-ns fixed static-ns z-0">
-		<img alt="{{$articles->first()->title()}} series cover" id="cover" src="{{ getPreview($articles->first()->images()->first()) }}" >
-	</div>
 </section>
 
 <div class="db mt4"></div>

@@ -78,7 +78,7 @@
 		</p>
 	@endif
 	@if($page->parent()->title() == 'journal')
-		<p class="fl">&nbsp;&nbsp;<a class="f5 f4-m f4-ns link pa1-l black-60 hover-white hover-bg-gold" href="{{ $page->parent()->url() }}?all=1">all posts</a></p>
+		<p class="fl">&nbsp;&nbsp;<a class="f5 f4-m f4-ns link pa1-l black-60 hover-white hover-bg-gold" href="{{ $page->parent()->url() }}">all posts</a></p>
 	@endif
 	@if($page->hasNextListed($articles))
 		<p class="fr">

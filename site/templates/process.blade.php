@@ -22,7 +22,7 @@
 			<a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->prev()->url() }}">&laquo; {{ $page->prev()->title() | lower }}</a>
 		</p>
 	@endif
-	<p class="fl">{{ e($page->hasPrevListed(), '&nbsp;&vert;&nbsp;')}}<a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->parent()->url() }}">all posts</a></p>
+	<p class="fl">{{ e($page->hasPrevListed(), '&nbsp;&vert;&nbsp;')}}<a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="/journal">all posts</a></p>
 	@if($page->hasNextListed())
 		<p class="fr">
 			<a class="f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->next()->url() }}">{{ $page->next()->title() | lower}} &raquo;</a>
