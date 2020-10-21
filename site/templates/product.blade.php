@@ -23,7 +23,7 @@
 
     <div class="mw9 center">
         <div class="cf">
-            <div class="fl w-100 w-60-ns">
+            <div class="fl w-100 w-50-ns">
                 <carousel :per-page="1" :pagination-size="5" :adjustable-height="true" :pagination-color="'#ffb700'" :pagination-active-color="'black'">
                     @foreach($page->images() as $image)
                         <slide><img class="db" alt="product pictures for {{ $page->title() }}" srcset="{{ $image->srcset([600, 800, 1200]) }}"></slide>
@@ -31,7 +31,7 @@
                 </carousel>
             </div>
         
-            <div class="fl w-100 w-40-ns pa4-ns">
+            <div class="fl w-100 w-50-ns pa4-ns">
                 <section class="variants">
                     @php
                     $variants = $page->variants()->toStructure();
@@ -79,7 +79,7 @@
                             </div>
                         </form>
                         <span class="measure-narrow lh-copy black-70 f4">
-                            {{ $page->description() }}
+                            {!! $page->description()->kirbytext() !!}
                         </span>
                     @endif
                 </section>
