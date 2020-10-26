@@ -39,25 +39,36 @@ tabs:
   orders: 
     label: Orders
     columns:
-      - width: 1/2
+      - width: 1/3
         sections:
           shipped:
             headline: Shipped orders
             template: order
             create: false
             type: pagesdisplay
-            query: site.find('orders').children.filterBy('orderstatus', '==', 'shipped') 
+            query: site.find('orders').children.filterBy('orderstatus', '==', 'shipped')
             sortBy: shipping_date desc
 
-      - width: 1/2
+      - width: 1/3
         sections:
-          unshipped:
+          paid:
             type: pages
-            headline: Unshipped orders
+            headline: Completed orders
             template: order
             create: false
             type: pagesdisplay
-            query: site.find('orders').children.filterBy('orderstatus', 'in', ['paid', 'pending', 'canceled', 'returned']) 
+            query: site.find('orders').children.filterBy('orderstatus', '==', 'paid')                                     
+            sortBy: txn_date desc
+
+      - width: 1/3
+        sections:
+          unshipped:
+            type: pages
+            headline: Other orders
+            template: order
+            create: false
+            type: pagesdisplay
+            query: site.find('orders').children.filterBy('orderstatus', 'in', ['pending', 'canceled', 'returned'])        
             sortBy: txn_date desc
 
   subscriptions: 
