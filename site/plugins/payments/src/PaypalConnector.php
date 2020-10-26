@@ -24,7 +24,11 @@ class PaypalConnector
     {
         $clientId = kirby()->option('paypal_client_id');
         $clientSecret = kirby()->option('paypal_client_secret');
-        return new SandboxEnvironment($clientId, $clientSecret);
+        
+        if(kirby()->option('paypal_environment') == 'sandbox')
+            return new SandboxEnvironment($clientId, $clientSecret);
+
+        return new ProductionEnvironment($clientId, $clientSecret);
     }
 
     public function getOrder(string $orderId)
