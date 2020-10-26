@@ -64,7 +64,7 @@ fields:
         returned: returned
     required: true
   payment:
-    label: Payment methpd
+    label: Payment method
     type: select
     width: 1/4
     disabled: true
