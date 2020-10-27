@@ -5,6 +5,7 @@ use \Logger\Logger;
 use PayPalCheckoutSdk\Orders\OrdersGetRequest;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
+use PayPalCheckoutSdk\Core\ProductionEnvironment;
 
 class PaypalConnector
 {
