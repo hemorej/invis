@@ -24,15 +24,13 @@
     <div class="mw9 center">
         <div class="cf">
             <div class="fl w-100 w-50-ns">
-                <carousel :per-page="1" :pagination-size="5" :adjustable-height="true" :pagination-color="'#ffb700'" :pagination-active-color="'black'">
-                    @foreach($page->images() as $image)
-                        <slide><img class="db" alt="product pictures for {{ $page->title() }}" srcset="{{ $image->srcset([600, 800, 1200]) }}"></slide>
-                    @endforeach
-                </carousel>
+                @foreach($page->images() as $image)
+                    <img class="db mb4" alt="product pictures for {{ $page->title() }}" srcset="{{ $image->srcset([600, 800, 1200]) }}">
+                @endforeach
             </div>
         
             <div class="fl w-100 w-50-ns pa4-ns">
-                <section class="variants">
+                <section class="variants fixed-ns static mw6-ns">
                     @php
                     $variants = $page->variants()->toStructure();
 
@@ -114,7 +112,6 @@
         @js('assets/dist/product.min.js')
     @else
         @js('https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
-        @js('https://cdn.jsdelivr.net/npm/vue-carousel@0.18.0/dist/vue-carousel.min.js')
         @js('https://unpkg.com/axios/dist/axios.min.js')
         @js('assets/js/product.js')
     @endif

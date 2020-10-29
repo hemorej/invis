@@ -3,7 +3,6 @@ let mix = require('laravel-mix');
 mix.minify('assets/js/product.js');
 mix.combine([
 	'assets/js/vendor/vue.min.js',
-	'assets/js/vendor/vue-carousel.min.js',
 	'assets/js/vendor/axios.min.js',
 	'assets/js/product.min.js'], 'assets/dist/product.min.js');
 
