@@ -99,9 +99,14 @@ fields:
     label: customer
     disabled: true
     type: textarea
-    width: 1/2
+    width: 1/3
   discount:
     label: discount
     disabled: true
-    width: 1/2
+    width: 1/3
     type: textarea
+  shipping:
+    label: shipping
+    disabled: true
+    width: 1/3
+    type: number
