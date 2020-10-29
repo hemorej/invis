@@ -153,7 +153,7 @@ var app = new Vue({
             var qty = event.target.value
             var max = event.target.getAttribute('max')
 
-            if(parseInt(qty) > parseInt(max)){
+            if(parseInt(qty) >= parseInt(max)){
                 event.target.value = max
                 this.leftInStock = max
                 this.error = true

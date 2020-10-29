@@ -75,7 +75,7 @@
                         <input ref="inputCsrf" type="hidden" name="csrf" value="@csrf()">
                     </div>
                 </div>
-                <hr class="mt6">
+                <hr {{ e($loop->last, 'class="mt6"', 'class="mt2"') }}>
             </div>
             @endforeach
             <div class="mw7 center">
