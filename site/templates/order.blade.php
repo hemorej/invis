@@ -26,6 +26,8 @@
         if(!empty($discount['amount'])){
             $total = $total * (1 - intval($discount['amount'])/100);
         }
+        $shipping = Yaml::decode($order->shipping());
+        $total += $shipping[0];
     @endphp
 
     <section class="mw9 center ph2 black-70 f4 f4-ns">
@@ -47,7 +49,7 @@
             @endif
               <tr>
                 <td>Shipping</td>
-                <td>— included</td>
+                <td>— ${{$shipping[0]}}</td>
               </tr>
               <tr>
                 <td><b>Total</b></td>

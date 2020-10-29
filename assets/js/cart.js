@@ -21,7 +21,8 @@ var app = new Vue({
         error: false,
         leftInStock: 1,
         step: '1. cart',
-        orderWaiting: false
+        orderWaiting: false,
+        shipping: 0
     },
     mounted() {
         this.country = this.$refs.userLocation.value
@@ -66,6 +67,7 @@ var app = new Vue({
 
             // init stripe button
             this.stripe = Stripe(this.$refs.checkoutKey.value);
+            this.orderWaiting = true
             axios.post('/address', {
                 name: this.name,
                 email: this.email,
@@ -78,7 +80,15 @@ var app = new Vue({
                 csrf: this.$refs.checkoutCSRF.value
               })
               .then(response => {
+                this.orderWaiting = false
+                this.inShipping = false
+                this.inCheckout = true
+                this.inCart = true
+
                 this.$refs.checkoutSessionID.value = response.data.checkoutSessionId
+                this.currencies = response.data.currencies
+                this.shipping = response.data.shipping
+                this.total += this.shipping
               })
         },
         initPaypal: function(){

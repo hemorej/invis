@@ -21,7 +21,7 @@
         <span class="f4 f4-m f3-ns black-70 db">@{{ step }}</span>
         <span class='db mb3'></span>
 
-        <span  v-if="error == true" class="gold b--gold f4 f4-ns lh-copy pa2 ba border-box db mb3 tc">Sorry, there's only @{{ leftInStock }} left in stock&nbsp;<a class="ml3 link gold" href="#" v-on:click.prevent="error = false">&times;</a></span>
+        <span :class="[error == true ? 'db' : 'dn']" class="gold b--gold f4 f4-ns lh-copy pa2 ba border-box mb3 tc dn">Sorry, there's only @{{ leftInStock }} left in stock&nbsp;<a class="ml3 link gold" href="#" v-on:click.prevent="error = false">&times;</a></span>
 
         <input ref="userLocation" type="hidden" value="{{ $currentLocation }}" />
         <input ref="checkoutKey" type="hidden" name="key" value="@option('stripe_key_pub')">
@@ -32,9 +32,9 @@
         <input ref="ppCsrf" type="hidden" name="csrf" value="@csrf()">
         <input ref="ppEnv" type="hidden" name="csrf" value="@option('paypal_environment')">
 
-        <transition name="fade" mode="out-in">
+        <transition name="fade" mode="out-in" v-on:after-enter="initPaypal">
         <div v-if="inCart == true" key="cart">
-            <div class="mw7 center dn db-ns">
+            <div v-show="inCheckout == false" class="mw7 center dn db-ns">
                 <div class="cf ph2-ns">
                     <div class="fl dn ds-ns w-10-ns db-ns">&nbsp;</div>
                     <div class="fl f3 w-50 w-60-ns pl3-ns tracked-tight">
@@ -59,10 +59,11 @@
                         </a>
                         <span class="db pt2 f6 gray">{{ $product->meta()->value() }}</span>
                     </div>
-                    <div class="fl w-80 pt0-ns pt1 w-10-ns">
-                        <span class="dib">CAD{{ $item->amount()->value * $item->quantity()->value }}</span>
+                    <div :class="[inCheckout == true ? 'tr w-30-ns' : 'w-10-ns']" class="fl w-80 pt0-ns pt1">
+                        <span v-show="inCheckout == true" class="dib">CAD{{ $item->amount()->value }}&nbsp;x{{$item->quantity()->value}}</span>
+                        <span v-show="inCheckout == false" class="dib">CAD{{ $item->amount()->value * $item->quantity()->value }}</span>
                     </div>
-                    <div class="fl w-20 w-20-ns tr-ns tc">
+                    <div v-show="inCheckout == false" class="fl w-20 w-20-ns tr-ns tc">
                         <form action="" method="post" class="dib">
                             <input type="hidden" name="csrf" value="@csrf()">
                             <input type="hidden" name="action" value="delete">
@@ -74,34 +75,41 @@
                         <input ref="inputCsrf" type="hidden" name="csrf" value="@csrf()">
                     </div>
                 </div>
-                <hr>
+                <hr class="mt6">
             </div>
             @endforeach
             <div class="mw7 center">
                 <div class="cf tr f5">
                     <div class="fl w-100 w-10-ns dn ds-ns">&nbsp;</div>
                     <div class="fl w-80 w-90-ns">discount</div>
-                    @if(empty($discount))
+                    <div v-show="inCheckout == true && !isEmpty(discount)">
                         <div class="fl w-20 w-10-ns">
-                            <input v-model="discount" :disabled="disableDiscount" v-on:change="applyDiscount" type="text" class="b--black-20 di input-reset w-80 f5 mb2 p2 ba tc" placeholder="code" name="discount">
-                            <input type="hidden" ref="discountCSRF" value="@csrf()">
+                            - @{{ discount }}%
                         </div>
-                    @else
-                        <div class="fl w-20 w-10-ns">
-                            -{{ $discount['amount'] }}%
-                        </div>
-                    @endif
+                    </div>
+                    <div v-show="inCheckout == false">
+                        @if(empty($discount))
+                            <div class="fl w-20 w-10-ns">
+                                <input v-model="discount" :disabled="disableDiscount" v-on:change="applyDiscount" type="text" class="b--black-20 di input-reset w-80 f5 mb2 p2 ba tc" placeholder="code" name="discount">
+                                <input type="hidden" ref="discountCSRF" value="@csrf()">
+                            </div>
+                        @else
+                            <div class="fl w-20 w-10-ns">
+                                -{{ $discount['amount'] }}%
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
 
-            <div class="mw7 center">
+            <div class="mw7 center" v-show="inCheckout == true">
                 <div class="cf tr f5">
                     <div class="fl w-100 w-10-ns dn ds-ns">&nbsp;</div>
                     <div class="fl w-80 w-90-ns">
                         <span>shipping</span>
                     </div>
                     <div class="fl w-20 w-10-ns">
-                        <span class="tr">included</span>
+                        <span class="tr">@{{shipping}}</span>
                     </div>
                 </div>
             </div>
@@ -126,7 +134,16 @@
                 </div>
             </div>
             
-            <button class="bg-white f5 no-underline hover-bg-gold hover-white black bg-animate b--gold pa2 pa3-l ba border-box umami--click--begin-checkout" v-on:click.prevent="showShipping">Begin checkout</button>
+            <button v-if="inCheckout == false" class="bg-white f5 no-underline hover-bg-gold hover-white black bg-animate b--gold pa2 pa3-l ba border-box umami--click--begin-checkout" v-on:click.prevent="showShipping">Begin checkout</button>
+
+            <div v-if="inCheckout == true" key="checkout">
+                <div class="mw7 center mt4">
+                    <div class="cf">
+                        <button class="fl w-50 pa3-l pb3-l ph2 pv2 bg-white f5 no-underline black bg-animate b--gold hover-bg-gold hover-white ba border-box" v-on:click.prevent="redirectStripe">credit card checkout</button>
+                        <div class="fl w-50 pb1 pb0-ns b--gold ba bg-animate bg-light-gray black border-box" id="paypal-button-container"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div v-else-if="inCart == false && inShipping == true" key="address">
@@ -179,16 +196,6 @@
             <input type="hidden" ref="checkoutCSRF" value="@csrf()">
         </div>
         </transition>
-
-        <transition name="fade" mode="out-in" v-on:after-enter="initPaypal">
-        <div v-if="inCart == false && inCheckout == true" key="checkout">
-            <div class="mw7 center mt4">
-                <div class="cf">
-                    <button class="fl w-50 pa3-l pb3-l ph2 pv2 bg-white f5 no-underline black bg-animate b--gold hover-bg-gold hover-white ba border-box" v-on:click.prevent="redirectStripe">credit card checkout</button>
-                    <div class="fl w-50 pb1 pb0-ns b--gold ba bg-animate bg-light-gray black border-box" id="paypal-button-container"></div>
-                </div>
-            </div>
-        </div>
     </div>
 @endif
 

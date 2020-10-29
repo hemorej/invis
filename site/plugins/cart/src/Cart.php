@@ -100,14 +100,14 @@ class Cart
 		return $this->site->page($this->session->get('txn'));
 	}
 
-	public function getLineItems($discount = 1)
+	public function getLineItems($discount = 1, $shipping = 0)
 	{
 		$lineItems = array();
 		$products = $this->getCartPage()->products()->toStructure();
 
 		foreach($products as $product)
 		{
-			$preview = $this->site->page($product->uri()->value)->images()->first()->url();
+			$preview = $this->site->page($product->uri()->value)->images()->first()->crop(100)->url();
 			$lineItems[] = array(    
 				'name' => $product->variant()->value,
 			    'description' => $product->name()->value,
@@ -115,6 +115,15 @@ class Cart
 			    'images' => [$preview],
 			    'currency' => 'CAD',
 			    'quantity' => $product->quantity()->value);
+		}
+
+		if(!empty($shipping) && $shipping >= 0){
+			$lineItems[] = array(
+				'name' => 'Shipping',
+			    'description' => 'Standard shipping by Canada Post',
+			    'amount' => $shipping * 100,
+			    'currency' => 'CAD',
+			    'quantity' => 1);	
 		}
 
 		return $lineItems;
@@ -295,16 +304,62 @@ class Cart
 		return ['total' => 0];
 	}
 
+	public function addShipping($country, $email)
+	{
+		$region = page('prints')->regions()->toStructure()->findBy('country', $country);
+
+		if(empty($region)){
+			$region = 'rest';
+		}else{
+			$region = $region->name()->value();
+		}
+
+	    $shippingRegion = page('prints')->shipping()->toStructure()->findBy('region', $region);
+
+	    if(empty($shippingRegion)){
+	    	// technically, should never fall here
+			$shipping = '32.32';
+	    }else{
+		    $shipping = $shippingRegion->amount()->value();
+	    }
+
+	    // add to cart/order
+		page(kirby()->session()->get('txn'))->update(['shipping' => $shipping]);
+		$stripeSession = $this->updateStripeSession($email);
+
+		// recompute totals for frontend
+		$discount = \Yaml::decode($this->getCartPage()->discount());
+
+	  	if(empty($discount)){
+	  		$discount = 1;
+	  	}else{
+			$discount = (intval($discount['amount']) / 100);
+	  	}
+
+		$subtotal = $this->subtotal($this->items());
+    	$total = $subtotal - $discount * $subtotal + $shipping;
+  		$currencies = $this->estimateCurrency($total);	
+ 		$lineItems = $this->getLineItems(1 - $discount, $shipping);
+
+		return ['total' => $total, 'currencies' => $currencies, 'shipping' => $shipping, 'checkoutSessionId' => $stripeSession];
+
+	}
+
 	public function updateStripeSession($customerEmail)
 	{
 	  	$discount = \Yaml::decode($this->getCartPage()->discount());
+	  	$shipping = \Yaml::decode($this->getCartPage()->shipping());
 
-	  	if(!empty($discount)){
-			$lineItems = $this->getLineItems(1 - (intval($discount['amount'])/100));
+	  	if(empty($discount)){
+	  		$discount = 1;
 	  	}else{
-	  		$lineItems = $this->getLineItems();
+			$discount = 1 - (intval($discount['amount'])/100);
 	  	}
 
+	  	if(empty($shipping))
+	  		$shipping[0] = 0;
+
+	  	$lineItems = $this->getLineItems($discount, $shipping[0]);
 		$stripeSession = (new Stripe())->createSession($lineItems, $customerEmail)->id;
 
 		return $stripeSession;
@@ -423,6 +478,7 @@ class Cart
 		$customer = \Yaml::decode($this->getCartPage()->customer());
 		$products = $this->getCartPage()->products();
 		$discount = $this->getCartPage()->discount()->yaml();
+		$shipping = $this->getCartPage()->shipping()->yaml();
 		$subtotal = $this->subtotal($this->items());
 
 		if(!empty($discount)){
@@ -430,6 +486,8 @@ class Cart
 		}else{
 			$total = $subtotal;
 		}
+
+		$total += $shipping[0];
 
 		$order = array(	
 			'order' => $orderId,
@@ -443,6 +501,7 @@ class Cart
 			'email' => $customer['email'],
 			'discount' => empty($discount['code']) ? null : $discount['code'],
 			'discountAmount' => empty($discount['amount']) ? null : $discount['amount'],
+			'shipping' => $shipping[0],
 	        'type' => 'order',
 			'total' => $total
 		);

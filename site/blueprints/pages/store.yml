@@ -36,6 +36,13 @@ tabs:
         extends: fields/discount
         label: Discount codes
 
+  shipping:
+    label: Shipping
+    fields:
+      shipping:
+        extends: fields/shipping
+        label: Shipping profiles
+
   orders: 
     label: Orders
     columns:
