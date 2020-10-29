@@ -5,10 +5,6 @@ var app = new Vue({
         productVariant: null,
         submitting: false
     },
-    components: {
-        'carousel': VueCarousel.Carousel,
-        'slide': VueCarousel.Slide
-    },
     mounted() {
         this.activeVariant = this.$refs.active.getAttribute('data-option-variant')
         this.productVariant = this.$refs.active.getAttribute('data-option-product')
