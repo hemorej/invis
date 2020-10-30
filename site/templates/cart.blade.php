@@ -81,13 +81,14 @@
             <div class="mw7 center">
                 <div class="cf tr f5">
                     <div class="fl w-100 w-10-ns dn ds-ns">&nbsp;</div>
-                    <div class="fl w-80 w-90-ns">discount</div>
                     <div v-show="inCheckout == true && !isEmpty(discount)">
+                        <div class="fl w-80 w-90-ns">discount</div>
                         <div class="fl w-20 w-10-ns">
                             - @{{ discount }}%
                         </div>
                     </div>
                     <div v-show="inCheckout == false">
+                        <div class="fl w-80 w-90-ns">discount</div>
                         @if(empty($discount))
                             <div class="fl w-20 w-10-ns">
                                 <input v-model="discount" :disabled="disableDiscount" v-on:change="applyDiscount" type="text" class="b--black-20 di input-reset w-80 f5 mb2 p2 ba tc" placeholder="code" name="discount">

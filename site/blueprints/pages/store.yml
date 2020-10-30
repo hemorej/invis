@@ -36,6 +36,13 @@ tabs:
         extends: fields/discount
         label: Discount codes
 
+  regions:
+    label: Shipping regions
+    fields:
+      regions:
+        extends: fields/regions
+        label: Shipping regions
+
   shipping:
     label: Shipping
     fields:

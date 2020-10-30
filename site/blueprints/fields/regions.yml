@@ -1,0 +1,24 @@
+label: Shipping regions
+type: structure
+fields:
+  country:
+    label: Country
+    type:  text
+    help: Country name
+    required: true
+  name:
+    label: Region
+    type: select
+    options:
+      africa: africa
+      asia: asia
+      australia: australia
+      canada: canada
+      caribbean: caribbean
+      europe: europe
+      middle east: middle east
+      north america: north america
+      south america: south america
+      united states: united states
+    help: Region name
+    required: true
