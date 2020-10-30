@@ -44,7 +44,7 @@ tabs:
         label: Shipping regions
 
   shipping:
-    label: Shipping
+    label: Shipping profiles
     fields:
       shipping:
         extends: fields/shipping

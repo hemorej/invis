@@ -34,7 +34,7 @@
 
         <transition name="fade" mode="out-in" v-on:after-enter="initPaypal">
         <div v-if="inCart == true" key="cart">
-            <div v-show="inCheckout == false" class="mw7 center dn db-ns">
+            <div v-show="inCheckout == false" class="mw7 dn db-ns">
                 <div class="cf ph2-ns">
                     <div class="fl dn ds-ns w-10-ns db-ns">&nbsp;</div>
                     <div class="fl f3 w-50 w-60-ns pl3-ns tracked-tight">
@@ -47,7 +47,7 @@
                 </div>
             </div>
             @foreach($cartItems as $i => $item)
-            <div class="mw7 center">
+            <div class="mw7">
                 <div class="cf {{ e($loop->first, 'mt4') }}">
                     <div class="fl w-20 w-10-ns">
                         @php $product = page($item->uri()) @endphp
@@ -59,11 +59,11 @@
                         </a>
                         <span class="db pt2 f6 gray">{{ $product->meta()->value() }}</span>
                     </div>
-                    <div :class="[inCheckout == true ? 'tr w-30-ns' : 'w-10-ns']" class="fl w-80 pt0-ns pt1">
+                    <div :class="[inCheckout == true ? 'w-100 w-30-ns' : 'w-80 w-20-ns']" class="fl pt0-ns pt1 tr-ns tr">
                         <span v-show="inCheckout == true" class="dib">CAD{{ $item->amount()->value }}&nbsp;x{{$item->quantity()->value}}</span>
                         <span v-show="inCheckout == false" class="dib">CAD{{ $item->amount()->value * $item->quantity()->value }}</span>
                     </div>
-                    <div v-show="inCheckout == false" class="fl w-20 w-20-ns tr-ns tc">
+                    <div v-show="inCheckout == false" class="fl w-20 w-10-ns tr-ns tc">
                         <form action="" method="post" class="dib">
                             <input type="hidden" name="csrf" value="@csrf()">
                             <input type="hidden" name="action" value="delete">
@@ -71,14 +71,14 @@
                             <button class="b--silver ba bg-animate bg-white silver border-box f7 no-underline br-100 db h1 w1 pl1" type="submit" type="submit">x</button>
                         </form>
 
-                        <input v-on:change="updateCart" class="b--black-20 di input-reset w-20 f5 mr0 ba tc" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->autoid() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->id()) }}" data-sku="{{ $item->autoid() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
+                        <input v-on:change="updateCart" class="b--black-20 di input-reset w-30 f5 mr0 ba tc" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->autoid() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->id()) }}" data-sku="{{ $item->autoid() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
                         <input ref="inputCsrf" type="hidden" name="csrf" value="@csrf()">
                     </div>
                 </div>
-                <hr {{ e($loop->last, 'class="mt6"', 'class="mt2"') }}>
+                <hr {{ e($loop->last, 'class="mt6-ns mt4"', 'class="mt2"') }}>
             </div>
             @endforeach
-            <div class="mw7 center">
+            <div class="mw7">
                 <div class="cf tr f5">
                     <div class="fl w-100 w-10-ns dn ds-ns">&nbsp;</div>
                     <div v-show="inCheckout == true && !isEmpty(discount)">
@@ -103,19 +103,26 @@
                 </div>
             </div>
 
-            <div class="mw7 center" v-show="inCheckout == true">
-                <div class="cf tr f5">
-                    <div class="fl w-100 w-10-ns dn ds-ns">&nbsp;</div>
-                    <div class="fl w-80 w-90-ns">
+            <div class="mw7" v-show="inCheckout == true">
+                <div class="cf f5">
+                    <div class="fl w-30">
+                        @{{ name }} <br/>
+                        @{{ email }} <br/><br/>
+                        @{{ line1 }}<br/>
+                        @{{ line2 }}<br/>
+                        @{{ city }},&nbsp;@{{ province }}&nbsp;@{{ postcode }}<br/>
+                        @{{ country }}<br/>
+                    </div>
+                    <div class="fl w-60 w-60-ns tr">
                         <span>shipping</span>
                     </div>
-                    <div class="fl w-20 w-10-ns">
+                    <div class="fl w-10 w-10-ns tr">
                         <span class="tr">@{{shipping}}</span>
                     </div>
                 </div>
             </div>
 
-            <div class="mw7 center">
+            <div class="mw7">
                 <div class="cf tr f4 pt2">
                     <div class="fl w-50 w-70-m w-70-ns">&nbsp;</div>
                     <div class="fl w-50 w-30-m w-30-ns tr">
@@ -125,7 +132,7 @@
                 </div>
             </div>
 
-            <div class="mw7 center">
+            <div class="mw7">
                 <div class="cf tr f7 pt2">
                     <div class="fl w-50 w-70-m w-70-ns">&nbsp;</div>
                     <div class="fl w-50 w-30-m w-30-ns tr">
@@ -138,7 +145,7 @@
             <button v-if="inCheckout == false" class="bg-white f5 no-underline hover-bg-gold hover-white black bg-animate b--gold pa2 pa3-l ba border-box umami--click--begin-checkout" v-on:click.prevent="showShipping">Begin checkout</button>
 
             <div v-if="inCheckout == true" key="checkout">
-                <div class="mw7 center mt4">
+                <div class="mw7 mt4">
                     <div class="cf">
                         <button class="fl w-50 pa3-l pb3-l ph2 pv2 bg-white f5 no-underline black bg-animate b--gold hover-bg-gold hover-white ba border-box" v-on:click.prevent="redirectStripe">credit card checkout</button>
                         <div class="fl w-50 pb1 pb0-ns b--gold ba bg-animate bg-light-gray black border-box" id="paypal-button-container"></div>
@@ -148,7 +155,7 @@
         </div>
 
         <div v-else-if="inCart == false && inShipping == true" key="address">
-            <section class="mw7 center mt4">
+            <section class="mw7 mt4">
                 <div class="cf">
                     <label for="full-name" class="fl w-30 lh-copy">Full name</label>
                     <input class="measure input-reset ba b--black-20 pa2 mb2 fl w-60" v-model="name" type="text" name="full-name" required/>
@@ -184,7 +191,7 @@
                 </div>
             </section>
 
-           <section class="mw7 center mt4">
+           <section class="mw7 mt4">
                 <span>By continuing to checkout, you agree to the general<a href="#" class="f5 pa1 link black-60 bb b--gold bw2" v-on:click.prevent="showTerms = !showTerms">terms</a>of the sale.</span>
                 <p class="black-60 lh-copy f5" v-show="showTerms == true">{{ $site->terms() }}</p>
             </section>

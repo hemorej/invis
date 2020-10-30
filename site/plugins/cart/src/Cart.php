@@ -317,11 +317,15 @@ class Cart
 	    $shippingRegion = page('prints')->shipping()->toStructure()->findBy('region', $region);
 
 	    if(empty($shippingRegion)){
-	    	// technically, should never fall here
-			$shipping = '32.32';
+			$shippingRegion = page('prints')->shipping()->toStructure()->findBy('region', 'rest');
+		    $shipping = $shippingRegion->amount()->value();
 	    }else{
 		    $shipping = $shippingRegion->amount()->value();
 	    }
+
+	    // just in case, technically should never apply
+	    if(empty($shipping))
+	    	$shipping = 32.32;
 
 	    // add to cart/order
 		page(kirby()->session()->get('txn'))->update(['shipping' => $shipping]);

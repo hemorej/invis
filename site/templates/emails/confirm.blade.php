@@ -166,7 +166,7 @@
                                   </table>
                                 </td>
                                 @if(isset($address) && !empty($address))
-                                  <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/> {{ $address['name'] }}<br/> {{ $address['line1'] }}<br/>{{ $address['line2'] }}<br/>{{ $address['city'] }}, {{ $address['state'] }}<br/> {{ $address['postal_code'] }}<br/>{{ $address['country'] }}<br/> {{ $address['email'] }}<br/> </td>
+                                  <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/> {{ $address['name'] }}<br/> {{ $address['line1'] }}<br/>{{ $address['line2'] }}{{e(empty($address['line2']), '', '<br/>')}}{{ $address['city'] }}, {{ $address['state'] }}<br/> {{ $address['postal_code'] }}<br/>{{ $address['country'] }}<br/> {{ $address['email'] }}<br/> </td>
                                 @endif
                               @else
                                 <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Order information</b><br/>
@@ -195,7 +195,7 @@
                                     </tr>
                                   </table>
                                 </td>
-                                <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/>{{ $fullName }}<br/>{{ $street1 }}<br/>{{ $street2 }}<br/>{{ $city }}, {{ $province }}<br/>{{ $postcode }}<br/>{{ $country }}<br/><br/>{{ $email }}<br/> </td>
+                                <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/>{{ $fullName }}<br/>{{ $street1 }}<br/>{{ $street2 }} {{e(empty($street2), '', '<br/>')}} {{ $city }}, {{ $province }}<br/>{{ $postcode }}<br/>{{ $country }}<br/><br/>{{ $email }}<br/> </td>
                               @endif
                             </tr>
                           </table>
