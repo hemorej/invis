@@ -57,13 +57,13 @@
                         <a class="black-80 pv2 f4 hover-bg-gold hover-white link" href="{{ $product->url() }}">
                         {{ $item->name() }}&nbsp;&mdash;&nbsp;{{ e($item->variant()->isNotEmpty(), $item->variant()) }}
                         </a>
-                        <span class="db pt2 f6 gray">{{ $product->meta()->value() }}</span>
+                        <span class="db-ns dn pt2 f6 gray hide-for-small">{{ $product->meta()->value() }}</span>
                     </div>
-                    <div :class="[inCheckout == true ? 'w-100 w-30-ns' : 'w-80 w-20-ns']" class="fl pt0-ns pt1 tr-ns tr">
+                    <div :class="[inCheckout == true ? 'w-100 w-30-ns' : 'w-80 w-20-ns']" class="fl tr-ns tr mt2 mt1-ns">
                         <span v-show="inCheckout == true" class="dib">CAD{{ $item->amount()->value }}&nbsp;x{{$item->quantity()->value}}</span>
                         <span v-show="inCheckout == false" class="dib">CAD{{ $item->amount()->value * $item->quantity()->value }}</span>
                     </div>
-                    <div v-show="inCheckout == false" class="fl w-20 w-10-ns tr-ns tc">
+                    <div v-show="inCheckout == false" class="fl w-20 w-10-ns tr-ns tc db-ns dn">
                         <form action="" method="post" class="dib">
                             <input type="hidden" name="csrf" value="@csrf()">
                             <input type="hidden" name="action" value="delete">
@@ -88,7 +88,7 @@
                         </div>
                     </div>
                     <div v-show="inCheckout == false">
-                        <div class="fl w-80 w-90-ns">discount</div>
+                        <div class="fl w-80 w-90-ns pt1">discount</div>
                         @if(empty($discount))
                             <div class="fl w-20 w-10-ns">
                                 <input v-model="discount" :disabled="disableDiscount" v-on:change="applyDiscount" type="text" class="b--black-20 di input-reset w-80 f5 mb2 p2 ba tc" placeholder="code" name="discount">
