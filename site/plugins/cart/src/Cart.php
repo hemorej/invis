@@ -341,7 +341,7 @@ class Cart
 	  	}
 
 		$subtotal = $this->subtotal($this->items());
-    	$total = $subtotal - $discount * $subtotal + $shipping;
+    	$total = $subtotal - ((1 - $discount) * $subtotal) + $shipping;
   		$currencies = $this->estimateCurrency($total);	
  		$lineItems = $this->getLineItems(1 - $discount, $shipping);
 

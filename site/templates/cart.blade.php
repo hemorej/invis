@@ -137,7 +137,7 @@
                     <div class="fl w-50 w-70-m w-70-ns">&nbsp;</div>
                     <div class="fl w-50 w-30-m w-30-ns tr">
                         <input type="hidden" ref="currencies" value="{{$currencies}}" >
-                        <span>Approximately @{{ currencies }}</span><br />
+                        <span>about @{{ currencies }}</span><br />
                     </div>
                 </div>
             </div>
