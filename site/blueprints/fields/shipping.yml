@@ -7,7 +7,7 @@ fields:
     type: select
     options:
         canada: Canada
-        usa: United States
+        united states: United States
         europe: Europe
         rest: Everywhere else
     width: 1/3
