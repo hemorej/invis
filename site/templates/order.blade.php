@@ -30,7 +30,7 @@
         $total += $shipping[0];
     @endphp
 
-    <section class="mw9 center ph2 black-70 f4 f4-ns">
+    <section class="mw7 ph2 black-70 f4 f4-ns">
 	  <div class="cf">
 	    <div class="fl w-100 w-70-l">
 	      <h3>Order details</h3>

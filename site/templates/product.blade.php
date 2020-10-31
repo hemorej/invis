@@ -86,7 +86,7 @@
 
 <span class="cf db mt4"></span>
 
-<nav class="cf mt4 ph2">
+<nav class="cf mt4 ph2 mw7">
     @php
         $articles = $page->siblings()->listed()->flip();
     @endphp

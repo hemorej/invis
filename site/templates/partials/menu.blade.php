@@ -1,4 +1,4 @@
-<main class="mw7 center bg-lightest-gray">
+<main class="mw8 center bg-lightest-gray">
 	<nav class="mt5-l pv4 ttl s721-cd-light">
 		<a class="link tracked-tight f2 f2-m f1-ns black-70 hover-black-70 di-ns db pv2-l ph2 hover-bg-gold mr3" href="{{ url() }}" title="{{ html($site->title()) }}">{{ html($site->title()) }}</a>
 		@foreach($pages->listed() as $p)

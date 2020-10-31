@@ -27,7 +27,7 @@
 @endphp
 
 <section class="black-70 ph2">
-	<span class="f5 f4-m f3-ns black-70 db">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold pa1" href="{{ $page->url() }}">{{ $headline | lower }}</a></span>
+	<span class="f4 f3-ns black-70 db">{{ $page->parent()->title() | lower }}&nbsp;<a class="f4 f3-ns link black-60 hover-white hover-bg-gold pa1" href="{{ $page->url() }}">{{ $headline | lower }}</a></span>
 		@kirbytext($page->text())
 		<span class='db mb3'></span>
 		@php $skip = false @endphp
@@ -42,17 +42,28 @@
 			@endphp
 
 			@if($current->isPortrait() && $hasNextPortrait)
-				<div class="mw7">
-					<section class="fl w-100 w-50-ns pr1">
+				<div class="mw8 center">
+					<section class="fl w-50 pt4-m pb4-m pr4-l pr2">
 						<img alt="{{$headline}}" class="lazy" data-srcset="{{ $current->srcset('vertical') }}">
 					</section>
-					<section class="fl w-100 w-50-ns pl1">
+					<section class="fr w-50 pt4-m pb4-m pl4-l pl2">
 						<img alt="{{$headline}}" class="lazy" data-srcset="{{ $next->srcset('vertical') }}">
 					</section>
 				</div>
 				@php $skip = true @endphp
 			@else
-				<section class="{{e($current->isPortrait() || $current->isSquare(), 'mw6 db center', 'aspect-ratio aspect-ratio--6x4')}}">
+				@if($page->parent()->title() == 'journal')
+					<section class="{{e($current->isPortrait(), 'mw6 db', 'aspect-ratio aspect-ratio--6x4')}}">
+				@else
+					@if($current->isPortrait())
+						<section class="mw6 db center pa5">
+					@elseif($current->isSquare())
+						<section class="mw6 db pv5">
+					@else
+						<section class="aspect-ratio aspect-ratio--6x4">
+					@endif
+				@endif
+
 					@if($current->isPortrait())
 						<img alt="{{$headline}}" class="lazy" data-srcset="{{ $current->srcset('vertical') }}">
 					@else

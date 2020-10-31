@@ -13,11 +13,11 @@
     <nav class="fl w-100 w-40-ns pl3 tl relative z-1">
         <span class="ttl link gold i f3 s721-cd pl4 pv0-ns pa2-ns">&mdash;&nbsp;books</span>
         @foreach($books as $article)
-            <a data-preview="{{ getPreview($article->images()->first()) }}" data-title="{{$article->title()}} product preview" class="cover ttl link black-70 f3 s721-cd db pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">@html($article->title()->lower())</a>
+            <a data-preview="{{ getPreview($article->images()->first()) }}" data-title="{{$article->title()}} product preview" class="mw5 cover ttl link black-70 f3 s721-cd db pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">@html($article->title()->lower())</a>
         @endforeach
         <span class="ttl link gold i f3 s721-cd pl4 pv0-ns pa2-ns mt4 db">&mdash;&nbsp;prints</span>
         @foreach($prints as $article)
-            <a data-preview="{{ getPreview($article->images()->first()) }}" data-title="{{$article->title()}} series cover" class="cover ttl link db black-70 f3 s721-cd pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">@html($article->title()->lower())</a>
+            <a data-preview="{{ getPreview($article->images()->first()) }}" data-title="{{$article->title()}} series cover" class="mw5 cover ttl link db black-70 f3 s721-cd pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">@html($article->title()->lower())</a>
         @endforeach
     </nav>
 </section>
