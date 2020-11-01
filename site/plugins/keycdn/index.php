@@ -43,6 +43,7 @@ Kirby::plugin('author/keycdn', [
                 $file->crop(38)->save();
                 $file->crop(76)->save();
                 $file->resize(null, 600)->save();
+                $file->resize(null, 500)->save();
                 $file->resize(600)->save();
                 $file->resize(800)->save();
                 $file->resize(1200)->save();
