@@ -29,7 +29,7 @@
         </div>
     
         <div class="fl w-100 w-50-ns pa4-ns">
-            <section class="variants fixed-l mw6-ns">
+            <section class="variants fixed-l mw6-ns z-0">
                 @php
                 $variants = $page->variants()->toStructure();
 
@@ -98,7 +98,7 @@
     @endif
 
     @if($page->hasNextListed($articles))
-        <p class="fr">
+        <p class="fr fl-l pl6-l">
             <a class="pa1-l f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="{{ $page->next($articles)->url() }}">{{ $page->next($articles)->title() }} &raquo;</a>
         </p>
     @endif
