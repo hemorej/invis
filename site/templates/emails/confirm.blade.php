@@ -187,7 +187,7 @@
                                     @endif
                                     <tr class="tr">
                                       <td class="td">Shipping</td>
-                                      <td class="td">— {{$shipping}} $</td>
+                                      <td class="td">— ${{$shipping}}</td>
                                     </tr>
                                     <tr class="tr">
                                       <td class="td"><b>Total</b></td>
