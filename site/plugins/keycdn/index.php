@@ -36,6 +36,19 @@ function keycdn($file, $params = [])
 }
 
 Kirby::plugin('author/keycdn', [
+    'hooks' => [
+        'file.create:after' => function ($file) {
+            if($file->isResizable()) {
+                $file->crop(100)->save();
+                $file->crop(38)->save();
+                $file->crop(76)->save();
+                $file->resize(null, 600)->save();
+                $file->resize(600)->save();
+                $file->resize(800)->save();
+                $file->resize(1200)->save();
+            }
+        }
+      ],
     'components' => [
         'url' => function ($kirby, $path, $options, $original) {
             if (option('keycdn', false) !== false && Str::contains($path, 'assets')) {
