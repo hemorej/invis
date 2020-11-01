@@ -27,11 +27,13 @@ Kirby::plugin('cart/cart', [
 
 				kirby()->impersonate('kirby');
 				page(kirby()->session()->get('txn'))->update(['customer' => Yaml::encode($customer)]);
-				$sessionId = (new \Cart\Cart())->updateStripeSession(get('email'));
+				$shipping = (new \Cart\Cart())->addShipping(get('country'), get('email'));
 
 				return [
 			      'status' => 'ok',
-			      'checkoutSessionId' => $sessionId
+			      'checkoutSessionId' => $shipping['checkoutSessionId'],
+			      'shipping' => $shipping['shipping'],
+			      'currencies' => $shipping['currencies']
 			    ];
 			}
 		}

@@ -166,7 +166,7 @@
                                   </table>
                                 </td>
                                 @if(isset($address) && !empty($address))
-                                  <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/> {{ $address['name'] }}<br/> {{ $address['line1'] }} {{ $address['line2'] }}, {{ $address['city'] }}<br/> {{ $address['state'] }} {{ $address['country'] }}<br/> {{ $address['postal_code'] }}<br/> {{ $address['email'] }}<br/> </td>
+                                  <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/> {{ $address['name'] }}<br/> {{ $address['line1'] }}<br/>{{ $address['line2'] }}{{e(empty($address['line2']), '', '<br/>')}}{{ $address['city'] }}, {{ $address['state'] }}<br/> {{ $address['postal_code'] }}<br/>{{ $address['country'] }}<br/> {{ $address['email'] }}<br/> </td>
                                 @endif
                               @else
                                 <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Order information</b><br/>
@@ -187,7 +187,7 @@
                                     @endif
                                     <tr class="tr">
                                       <td class="td">Shipping</td>
-                                      <td class="td">— included</td>
+                                      <td class="td">— ${{$shipping}}</td>
                                     </tr>
                                     <tr class="tr">
                                       <td class="td"><b>Total</b></td>
@@ -195,7 +195,7 @@
                                     </tr>
                                   </table>
                                 </td>
-                                <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/> {{ $fullName }}<br/> {{ $street }}, {{ $city }}<br/> {{ $province }} {{ $country }}<br/> {{ $postcode }}<br/> {{ $email }}<br/> </td>
+                                <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/>{{ $fullName }}<br/>{{ $street1 }}<br/>{{ $street2 }} {{e(empty($street2), '', '<br/>')}} {{ $city }}, {{ $province }}<br/>{{ $postcode }}<br/>{{ $country }}<br/><br/>{{ $email }}<br/> </td>
                               @endif
                             </tr>
                           </table>

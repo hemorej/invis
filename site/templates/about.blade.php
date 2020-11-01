@@ -7,7 +7,7 @@
         @kirbytext(@html(kirby()->site()->terms()))
     </section>
 @else
-	<section class="ph2 aspect-ratio aspect-ratio--6x4">
+	<section class="mw7 ph2">
 		@foreach($page->images() as $image)
 			<img alt="portrait of the photographer" srcset="{{ $image->srcset([600, 800, 1200]) }}">
 		@endforeach

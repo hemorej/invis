@@ -8,7 +8,7 @@
   </noscript>
 
   <div class="black-70 ph2">
-    <span class="f5 f4-m f3-ns black-70 db mb3">{{ $page->parent()->title() | lower }}&nbsp;<a class="f5 f4-m f3-ns link black-60 hover-white hover-bg-gold pa1" href="{{ $page->url() }}">{{ $page->title() | lower }}</a></span>
+    <span class="f4 f3-ns black-70 db mb3">{{ $page->parent()->title() | lower }}&nbsp;<a class="f4 f3-ns link black-60 hover-white hover-bg-gold pa1" href="{{ $page->url() }}">{{ $page->title() | lower }}</a></span>
 
 
     @if(@get('canceled'))
@@ -32,28 +32,28 @@
       <div id="sub">
         <input ref="checkoutKey" type="hidden" name="key" value="@option('stripe_key_pub')">
         @foreach($page->tiers()->toStructure() as $tier)
-          <div class="mw7 center db">
-            <div class="cf">
-              <div class="fl f3-ns pr2-ns w-50-ns tracked-tight">
+          <div class="mw8 center db">
+            <div class="flex flex-column flex-row-l">
+              <div class="w-50-ns w-100-m f3-ns pr4-ns pb4-ns tracked-tight">
                 @php
                   $image = $page->image($tier->image()->toFile()->filename())
                 @endphp
                 <img class="db" alt="product pictures for {{ $page->title() }}" srcset="{{ $image->srcset([600, 800, 1200]) }}">
               </div>
-              <div class="fl pl2-ns f3-ns pt3 pt0-ns f4 w-50-ns tracked-tight">
-                {{$tier->description()}}
-
-                <button @click.prevent="subscribe" data-shipping='{{$tier->require_shipping()}}' data-plan-id='{{$tier->plan_id()}}' class="fr bg-white f4-ns f4 no-underline black hover-white bg-animate b--gold ba pa2 ml2 border-box hover-bg-gold mt4">${{$tier->price()}} <span class="mt2 f6-ns f6">per month</span></button>
+              <div class="flex flex-column w-50-ns w-100-m">
+                <div class="w-70-ns w-100-m pl2-ns f3-ns pt3 pt0-ns f4 tracked-tight">
+                  {{$tier->description()}}
+                </div>
+                <button @click.prevent="subscribe" data-shipping='{{$tier->require_shipping()}}' data-plan-id='{{$tier->plan_id()}}' class="w-70-ns w-100-m fr bg-white f4 no-underline black hover-white bg-animate b--gold ba pa2 ml2-ns ml0-m border-box hover-bg-gold mt4">${{$tier->price()}} <span class="mt2 f6">per month</span></button>
               </div>
             </div>
           </div>
         <hr class="mb4-ns"/>
         @endforeach
-        <div class="mw7 center db">
+        <div class="mw8 center db">
           <div class="cf">
-            <div class="f3 w-10">&nbsp;</div>
-            <div class="fl f3 w-90 tracked-tight">
-              <button v-on:click.prevent='showManage()' class="bg-white f5 no-underline black bg-animate b--gold pa2 pa3-l ba border-box"><span>Manage your subscription</span></button>
+            <div class="fl f3 w-90-ns w-100 tracked-tight">
+              <button v-on:click.prevent='showManage()' class="w-100 w-50-ns bg-white f5 f4-ns no-underline black bg-animate b--gold pa3-ns pa2 ba border-box"><span>Manage your subscription</span></button>
             </div>
             <transition name="fade" mode="out-in">
               <div v-show="manage == true" class="mt2 fl w-100">
