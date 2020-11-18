@@ -27,6 +27,7 @@ function keycdn($file, $params = [])
     }  
 
     $versionName = Str::replace($name . $suffix . '.' . $file->extension(), '_', '-');
+    $versionName = Str::replace($versionName, '--', '-');
 
     // strip site url and replace previous filename from old path with new version name
     $newFilename = Str::after(Str::before($file->mediaUrl(), $file->filename()), kirby()->site()->url()) . $versionName;
