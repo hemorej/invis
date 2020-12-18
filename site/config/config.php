@@ -46,6 +46,13 @@ return [
     'keycdn.domain' => '',
 
     'bnomei.autoid.generator' => function(){ return Bnomei\AutoID::getToken(15, true, true, true); },
+    'auth' => [
+        'trials' => 5,
+        'challenges' => ['totp', 'email'],
+        'methods' => [
+            'password' => ['2fa' => true]
+        ]
+    ],
 
     'hooks' => require_once 'hooks.php'
 ];
