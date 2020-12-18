@@ -8,7 +8,7 @@
   </noscript>
 
   <div class="black-70 ph2">
-    <span class="f4 f3-ns black-70 db mb3">{{ $page->parent()->title() | lower }}&nbsp;<a class="f4 f3-ns link black-60 hover-white hover-bg-gold pa1" href="{{ $page->url() }}">{{ $page->title() | lower }}</a></span>
+    <span class="f4 f3-ns black-70 db mb3 ttl">{{ $page->parent()->title() }}&nbsp;<a class="f4 f3-ns link black-60 hover-white hover-bg-gold pa1 ttl" href="{{ $page->url() }}">{{ $page->title() }}</a></span>
 
 
     @if(@get('canceled'))
