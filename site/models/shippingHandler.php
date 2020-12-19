@@ -35,6 +35,7 @@ class ShippingHandler
             }
 
             $discount = $page->discount()->yaml();
+            $shipping = $page->shipping()->value;
 
             if(!empty($discount)){
                 $total = $subtotal - (intval($discount['amount']) / 100) * $subtotal;
@@ -48,7 +49,8 @@ class ShippingHandler
                         'order' => $page->autoid(),
                         'items' => $items,
                         'fullName' => $customer['name'],
-                        'street' => $customer['address']['address_line_1'] . $customer['address']['address_line_2'],
+                        'street1' => $customer['address']['address_line_1'],
+                        'street2' => $customer['address']['address_line_2'],
                         'city' => $customer['address']['city'],
                         'province' => $customer['address']['state'],
                         'country' => $customer['address']['country'],
@@ -56,6 +58,7 @@ class ShippingHandler
                         'email' => $customer['email'],
                         'discount' => empty($discount['code']) ? null : $discount['code'],
                         'discountAmount' => empty($discount['amount']) ? null : $discount['amount'],
+                        'shipping' => $shipping,
                         'total' => $total,
                         'title' => 'Your order from The Invisible Cities has been shipped',
                         'subtitle' => 'Shipping confirmation',

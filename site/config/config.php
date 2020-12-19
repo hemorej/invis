@@ -45,7 +45,7 @@ return [
     'ready' => function ($kirby) { return [ 'keycdn' => $kirby->site()->cdn()->toBool() ]; },
     'keycdn.domain' => '',
 
-    'bnomei.autoid.generator' => function(){ return Bnomei\AutoID::getToken(15, true, true, true); },
+    'bnomei.autoid.generator' => function(){ return (new \Bnomei\NanoGenerator())->generate(); },
     'auth' => [
         'trials' => 5,
         'challenges' => ['totp', 'email'],
