@@ -23,7 +23,7 @@ class ShippingHandler
 
         if($status == 'shipped' && $oldStatus != $status)
         {
-            $customer = \Yaml::decode($page->customer());
+            $customer = $page->customer()->yaml();
 
             $collection = new \Collection();
             $subtotal = 0;

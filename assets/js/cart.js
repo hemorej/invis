@@ -117,7 +117,7 @@ var app = new Vue({
                     return actions.order.create({
                         purchase_units: [{
                           amount: {
-                            value: parseInt(that.$refs.checkoutTotal.value)
+                            value: parseInt(that.total)
                           }
                         }]
                     });

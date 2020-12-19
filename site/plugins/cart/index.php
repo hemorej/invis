@@ -33,7 +33,8 @@ Kirby::plugin('cart/cart', [
 			      'status' => 'ok',
 			      'checkoutSessionId' => $shipping['checkoutSessionId'],
 			      'shipping' => $shipping['shipping'],
-			      'currencies' => $shipping['currencies']
+			      'currencies' => $shipping['currencies'],
+			      'total' => $shipping['total']
 			    ];
 			}
 		}

@@ -332,11 +332,12 @@ class Cart
 		$stripeSession = $this->updateStripeSession($email);
 
 		// recompute totals for frontend
-		$discount = \Yaml::decode($this->getCartPage()->discount());
+		$discount = $this->getCartPage()->discount()->value();
 
 	  	if(empty($discount)){
 	  		$discount = 1;
 	  	}else{
+	  		$discount = \Yaml::decode($this->getCartPage()->discount());
 			$discount = (intval($discount['amount']) / 100);
 	  	}
 
@@ -351,19 +352,20 @@ class Cart
 
 	public function updateStripeSession($customerEmail)
 	{
-	  	$discount = \Yaml::decode($this->getCartPage()->discount());
-	  	$shipping = \Yaml::decode($this->getCartPage()->shipping());
-
-	  	if(empty($discount)){
+	  	if(empty($this->getCartPage()->discount()->value())){
 	  		$discount = 1;
 	  	}else{
+	  		$discount = $this->getCartPage()->discount()->value();
 			$discount = 1 - (intval($discount['amount'])/100);
 	  	}
 
-	  	if(empty($shipping))
-	  		$shipping[0] = 0;
+	  	if(empty($this->getCartPage()->shipping())){
+	  		$shipping = 0;
+	  	}else{
+	  		$shipping = $this->getCartPage()->shipping()->value();
+	  	}
 
-	  	$lineItems = $this->getLineItems($discount, $shipping[0]);
+	  	$lineItems = $this->getLineItems($discount, $shipping);
 		$stripeSession = (new Stripe())->createSession($lineItems, $customerEmail)->id;
 
 		return $stripeSession;
@@ -444,8 +446,8 @@ class Cart
 		foreach($this->items() as $item)
 		{
   			$uri = $item->uri()->value;
-			$variantStructure = $this->site->page($uri)->variants()->findBy('autoid', $item->autoid()->value);
-			$variant = \Yaml::decode($variantStructure)[0];
+			$variantStructure = $this->site->page($uri)->variants()->findBy('autoid', $item->autoid()->value)->yaml();
+			$variant = $variantStructure[0];
 
 	        $updatedVariant = array();
 	        $updatedVariant['autoid'] = $variant['autoid'];
@@ -479,7 +481,7 @@ class Cart
 	private function sendNotifications()
 	{
 		$orderId = $this->getCartPage()->autoid()->value;
-		$customer = \Yaml::decode($this->getCartPage()->customer());
+		$customer = $this->getCartPage()->customer()->yaml();
 		$products = $this->getCartPage()->products();
 		$discount = $this->getCartPage()->discount()->yaml();
 		$shipping = $this->getCartPage()->shipping()->yaml();
