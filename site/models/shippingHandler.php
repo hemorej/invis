@@ -43,6 +43,8 @@ class ShippingHandler
                 $total = $subtotal;
             }
 
+            $total += $shipping;
+
             try{
                 $mailbun = new Mailbun();
                 $mailbun->send($customer['email'], 'Your order from The Invisible Cities has been shipped', 'confirm', array(

@@ -429,7 +429,7 @@ class Cart
 				}
 			}
 
-			$this->logger->info($this->session->get('txn') . ":paypal captured with id " . get('token'));
+			$this->logger->info($this->session->get('txn') . "paypal captured with id " . get('token'));
 		}catch(\Exception $e) {
 			$this->logger->error($this->session->get('txn') . ": general error", array('reason' => $e->getMessage()));
 			sendAlert($this->session->get('txn'), $this->getCartPage()->autoid()->value, $e->getMessage());
@@ -468,15 +468,22 @@ class Cart
 
 	private function updateOrder($paymentMethod)
 	{
-		$orderId = $this->getCartPage()->autoid()->value;
+		try{
+			$orderId = $this->getCartPage()->autoid()->value;
 
-		kirby()->impersonate('kirby');
-		$this->getCartPage()->update(['title' => "ord-$orderId", 'orderstatus' => 'paid', 'payment' => $paymentMethod]);
-		$this->logger->info($this->session->get('txn') . ": order status updated");
+			kirby()->impersonate('kirby');
+			$this->getCartPage()->update(['title' => "ord-$orderId", 'orderstatus' => 'paid', 'payment' => $paymentMethod]);
+			$this->getCartPage()->changeSlug("ord-$orderId");
+			$this->logger->info($this->session->get('txn') . ": order status updated");
 
-		$this->session->set('state', 'success');
-		$this->session->set('order', $this->session->get('txn'));
-		$this->session->remove('txn');
+			$this->session->set('state', 'success');
+			$this->session->set('order', $this->session->get('txn'));
+			$this->session->clear();
+		}catch(\Exception $e) {
+			$this->logger->error($this->session->get('txn') . ": general error", array('reason' => $e->getMessage()));
+			sendAlert($this->session->get('txn'), $orderId, $e->getMessage());
+			return false;
+		}
 	}
 
 	private function sendNotifications()
