@@ -5,8 +5,8 @@
 		}
 	},
 	"require": {
-		"mailgun/mailgun-php": "^3.0",
-		"kriswallsmith/buzz": "^1.0",
-		"nyholm/psr7": "^1.2"
+		"mailgun/mailgun-php": "^3.2",
+		"kriswallsmith/buzz": "^1.2",
+		"nyholm/psr7": "^1.3"
 	}
 }

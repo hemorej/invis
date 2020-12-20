@@ -17,17 +17,17 @@
 	@php
         $items = array();
         $total = 0;
-        foreach(Yaml::decode($order->products()) as $product)
+        foreach($order->products()->yaml() as $product)
         {   
             $items[] = array('variant' => $product['variant'], 'name' => $product['name'], 'quantity' => $product['quantity'], 'price' => $product['amount']);
             $total += intval($product['quantity'] * $product['amount']);
         }
-        $discount = Yaml::decode($order->discount());
+        $discount = $order->discount()->yaml();
         if(!empty($discount['amount'])){
             $total = $total * (1 - intval($discount['amount'])/100);
         }
-        $shipping = Yaml::decode($order->shipping());
-        $total += $shipping[0];
+        $shipping = $order->shipping()->value;
+        $total += $shipping;
     @endphp
 
     <section class="mw7 ph2 black-70 f4 f4-ns">
@@ -49,7 +49,7 @@
             @endif
               <tr>
                 <td>Shipping</td>
-                <td>— ${{$shipping[0]}}</td>
+                <td>— ${{$shipping}}</td>
               </tr>
               <tr>
                 <td><b>Total</b></td>
@@ -60,7 +60,7 @@
 	    <div class="fl w-100 w-30-l ph2-l">
 	    	<h3>Shipping details</h3>
 			@php
-				$customer = \Yaml::decode($order->customer());
+				$customer = $order->customer()->yaml();
 				$address = $customer['address'];
 			@endphp
 

@@ -90,7 +90,7 @@ class Cart
 	  $subtotal = 0;
 	  foreach ($items as $item) {
 	    $itemAmount = $item->amount()->value;
-	    $subtotal += $itemAmount * (float) $item->quantity()->value;
+	    $subtotal += $itemAmount * intval($item->quantity()->value);
 	  }
 	  return $subtotal;
 	}
@@ -283,7 +283,7 @@ class Cart
 
 	public function applyDiscount($discountCode)
 	{
-		$discounts = \Yaml::decode(kirby()->site()->page('prints')->discounts());
+		$discounts = kirby()->site()->page('prints')->discounts()->yaml();
 		foreach($discounts as $discount){
 			if($discount['code'] == $discountCode && boolval($discount['active']) == true){
 
@@ -332,38 +332,42 @@ class Cart
 		$stripeSession = $this->updateStripeSession($email);
 
 		// recompute totals for frontend
-		$discount = \Yaml::decode($this->getCartPage()->discount());
+		$discount = $this->getCartPage()->discount()->value;
 
 	  	if(empty($discount)){
-	  		$discount = 1;
+	  		$discountPercentage = 0;
+	  		$discount = 0;
 	  	}else{
-			$discount = (intval($discount['amount']) / 100);
+	  		$discountPercentage = $this->getCartPage()->discount()->yaml()['amount'];
+			$discount = (intval($discountPercentage) / 100);
 	  	}
 
+
 		$subtotal = $this->subtotal($this->items());
-    	$total = $subtotal - ((1 - $discount) * $subtotal) + $shipping;
-  		$currencies = $this->estimateCurrency($total);	
+    	$total = ((1 - $discount) * $subtotal) + $shipping;
+  		$currencies = $this->estimateCurrency($total);
  		$lineItems = $this->getLineItems(1 - $discount, $shipping);
 
-		return ['total' => $total, 'currencies' => $currencies, 'shipping' => $shipping, 'checkoutSessionId' => $stripeSession];
+		return ['total' => $total, 'currencies' => $currencies, 'shipping' => $shipping, 'checkoutSessionId' => $stripeSession, 'items' => $lineItems, 'discount' => $discountPercentage];
 
 	}
 
 	public function updateStripeSession($customerEmail)
 	{
-	  	$discount = \Yaml::decode($this->getCartPage()->discount());
-	  	$shipping = \Yaml::decode($this->getCartPage()->shipping());
-
-	  	if(empty($discount)){
+	  	if(empty($this->getCartPage()->discount()->value())){
 	  		$discount = 1;
 	  	}else{
+	  		$discount = $this->getCartPage()->discount()->yaml();
 			$discount = 1 - (intval($discount['amount'])/100);
 	  	}
 
-	  	if(empty($shipping))
-	  		$shipping[0] = 0;
+	  	if(empty($this->getCartPage()->shipping())){
+	  		$shipping = 0;
+	  	}else{
+	  		$shipping = $this->getCartPage()->shipping()->value();
+	  	}
 
-	  	$lineItems = $this->getLineItems($discount, $shipping[0]);
+	  	$lineItems = $this->getLineItems($discount, $shipping);
 		$stripeSession = (new Stripe())->createSession($lineItems, $customerEmail)->id;
 
 		return $stripeSession;
@@ -426,7 +430,7 @@ class Cart
 				}
 			}
 
-			$this->logger->info($this->session->get('txn') . ":paypal captured with id " . get('token'));
+			$this->logger->info($this->session->get('txn') . "paypal captured with id " . get('token'));
 		}catch(\Exception $e) {
 			$this->logger->error($this->session->get('txn') . ": general error", array('reason' => $e->getMessage()));
 			sendAlert($this->session->get('txn'), $this->getCartPage()->autoid()->value, $e->getMessage());
@@ -444,8 +448,8 @@ class Cart
 		foreach($this->items() as $item)
 		{
   			$uri = $item->uri()->value;
-			$variantStructure = $this->site->page($uri)->variants()->findBy('autoid', $item->autoid()->value);
-			$variant = \Yaml::decode($variantStructure)[0];
+			$variantStructure = $this->site->page($uri)->variants()->findBy('autoid', $item->autoid()->value)->yaml();
+			$variant = $variantStructure[0];
 
 	        $updatedVariant = array();
 	        $updatedVariant['autoid'] = $variant['autoid'];
@@ -465,21 +469,28 @@ class Cart
 
 	private function updateOrder($paymentMethod)
 	{
-		$orderId = $this->getCartPage()->autoid()->value;
+		try{
+			$orderId = $this->getCartPage()->autoid()->value;
 
-		kirby()->impersonate('kirby');
-		$this->getCartPage()->update(['title' => "ord-$orderId", 'orderstatus' => 'paid', 'payment' => $paymentMethod]);
-		$this->logger->info($this->session->get('txn') . ": order status updated");
+			kirby()->impersonate('kirby');
+			$this->getCartPage()->update(['title' => "ord-$orderId", 'orderstatus' => 'paid', 'payment' => $paymentMethod]);
+			$this->getCartPage()->changeSlug("ord-$orderId");
+			$this->logger->info($this->session->get('txn') . ": order status updated");
 
-		$this->session->set('state', 'success');
-		$this->session->set('order', $this->session->get('txn'));
-		$this->session->remove('txn');
+			$this->session->set('state', 'success');
+			$this->session->set('order', str_replace('_', '-', "ord-$orderId"));
+			$this->session->remove('txn');
+		}catch(\Exception $e) {
+			$this->logger->error($this->session->get('txn') . ": general error", array('reason' => $e->getMessage()));
+			sendAlert($this->session->get('txn'), $orderId, $e->getMessage());
+			return false;
+		}
 	}
 
 	private function sendNotifications()
 	{
 		$orderId = $this->getCartPage()->autoid()->value;
-		$customer = \Yaml::decode($this->getCartPage()->customer());
+		$customer = $this->getCartPage()->customer()->yaml();
 		$products = $this->getCartPage()->products();
 		$discount = $this->getCartPage()->discount()->yaml();
 		$shipping = $this->getCartPage()->shipping()->yaml();

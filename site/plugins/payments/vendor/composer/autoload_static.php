@@ -15,6 +15,7 @@ class ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07
         'P' => 
         array (
             'Payments\\' => 9,
+            'PayPalHttp\\' => 11,
             'PayPalCheckoutSdk\\' => 18,
         ),
         'B' => 
@@ -35,6 +36,10 @@ class ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07
         'Payments\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'PayPalHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paypal/paypalhttp/lib/PayPalHttp',
         ),
         'PayPalCheckoutSdk\\' => 
         array (

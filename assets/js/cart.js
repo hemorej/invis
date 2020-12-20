@@ -22,7 +22,8 @@ var app = new Vue({
         leftInStock: 1,
         step: '1. cart',
         orderWaiting: false,
-        shipping: 0
+        shipping: 0,
+        items: null
     },
     mounted() {
         this.country = this.$refs.userLocation.value
@@ -88,6 +89,8 @@ var app = new Vue({
                 this.$refs.checkoutSessionID.value = response.data.checkoutSessionId
                 this.currencies = response.data.currencies
                 this.shipping = response.data.shipping
+                this.discount = response.data.discount
+                this.items = response.data.items
                 this.total += this.shipping
               })
         },
@@ -114,11 +117,34 @@ var app = new Vue({
                 createOrder: function(data, actions) {
                     window.umami.trackEvent('Chose Paypal checkout', 'checkout')
                     that.orderWaiting = true
+
+                    var items = new Array()
+                    that.items.forEach(function(item){
+                        items.push({
+                            name: item.name,
+                            unit_amount: {
+                                currency_code: "CAD",
+                                value: parseInt(item.amount/100)
+                            },
+                            quantity: item.quantity,
+                            description: item.description
+                        })
+                    })
+
                     return actions.order.create({
                         purchase_units: [{
-                          amount: {
-                            value: parseInt(that.$refs.checkoutTotal.value)
-                          }
+                            description: "Order summary",
+                            items: items,
+                            amount: {
+                                currency_code: "CAD",
+                                value: parseInt(that.total),
+                                breakdown: {
+                                    item_total: {
+                                        currency_code: "CAD",
+                                        value: parseInt(that.total)
+                                    }
+                                }
+                            }
                         }]
                     });
                 }.bind(that),

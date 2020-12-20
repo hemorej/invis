@@ -61,7 +61,7 @@
                     </div>
                     <div :class="[inCheckout == true ? 'w-100 w-30-ns' : 'w-80 w-20-ns']" class="fl tr-ns tr mt2 mt1-ns">
                         <span v-show="inCheckout == true" class="dib">CAD{{ $item->amount()->value }}&nbsp;x{{$item->quantity()->value}}</span>
-                        <span v-show="inCheckout == false" class="dib">CAD{{ $item->amount()->value * $item->quantity()->value }}</span>
+                        <span v-show="inCheckout == false" class="dib">CAD{{ $item->amount()->value }}</span>
                     </div>
                     <div v-show="inCheckout == false" class="fl w-20 w-10-ns tr-ns tc db-ns dn">
                         <form action="" method="post" class="dib">
