@@ -283,7 +283,7 @@ class Cart
 
 	public function applyDiscount($discountCode)
 	{
-		$discounts = \Yaml::decode(kirby()->site()->page('prints')->discounts());
+		$discounts = kirby()->site()->page('prints')->discounts()->yaml();
 		foreach($discounts as $discount){
 			if($discount['code'] == $discountCode && boolval($discount['active']) == true){
 
@@ -332,18 +332,19 @@ class Cart
 		$stripeSession = $this->updateStripeSession($email);
 
 		// recompute totals for frontend
-		$discount = $this->getCartPage()->discount()->value();
+		$discount = $this->getCartPage()->discount()->value;
 
 	  	if(empty($discount)){
 	  		$discount = 1;
 	  	}else{
-	  		$discount = \Yaml::decode($this->getCartPage()->discount());
+	  		$discount = $this->getCartPage()->discount()->yaml();
 			$discount = (intval($discount['amount']) / 100);
 	  	}
 
+
 		$subtotal = $this->subtotal($this->items());
-    	$total = $subtotal - ((1 - $discount) * $subtotal) + $shipping;
-  		$currencies = $this->estimateCurrency($total);	
+    	$total = ((1 - $discount) * $subtotal) + $shipping;
+  		$currencies = $this->estimateCurrency($total);
  		$lineItems = $this->getLineItems(1 - $discount, $shipping);
 
 		return ['total' => $total, 'currencies' => $currencies, 'shipping' => $shipping, 'checkoutSessionId' => $stripeSession];
@@ -355,7 +356,7 @@ class Cart
 	  	if(empty($this->getCartPage()->discount()->value())){
 	  		$discount = 1;
 	  	}else{
-	  		$discount = $this->getCartPage()->discount()->value();
+	  		$discount = $this->getCartPage()->discount()->yaml();
 			$discount = 1 - (intval($discount['amount'])/100);
 	  	}
 
