@@ -90,7 +90,7 @@ class Cart
 	  $subtotal = 0;
 	  foreach ($items as $item) {
 	    $itemAmount = $item->amount()->value;
-	    $subtotal += $itemAmount * (float) $item->quantity()->value;
+	    $subtotal += $itemAmount * intval($item->quantity()->value);
 	  }
 	  return $subtotal;
 	}
@@ -335,10 +335,11 @@ class Cart
 		$discount = $this->getCartPage()->discount()->value;
 
 	  	if(empty($discount)){
-	  		$discount = 1;
+	  		$discountPercentage = 0;
+	  		$discount = 0;
 	  	}else{
-	  		$discount = $this->getCartPage()->discount()->yaml();
-			$discount = (intval($discount['amount']) / 100);
+	  		$discountPercentage = $this->getCartPage()->discount()->yaml()['amount'];
+			$discount = (intval($discountPercentage) / 100);
 	  	}
 
 
@@ -347,7 +348,7 @@ class Cart
   		$currencies = $this->estimateCurrency($total);
  		$lineItems = $this->getLineItems(1 - $discount, $shipping);
 
-		return ['total' => $total, 'currencies' => $currencies, 'shipping' => $shipping, 'checkoutSessionId' => $stripeSession];
+		return ['total' => $total, 'currencies' => $currencies, 'shipping' => $shipping, 'checkoutSessionId' => $stripeSession, 'items' => $lineItems, 'discount' => $discountPercentage];
 
 	}
 

@@ -191,7 +191,7 @@
                                     </tr>
                                     <tr class="tr">
                                       <td class="td"><b>Total</b></td>
-                                      <td class="td">— <b>${{ $total }}</b></td>
+                                      <td class="td">— <b>${{ intval($total) }}</b></td>
                                     </tr>
                                   </table>
                                 </td>
