@@ -104,7 +104,7 @@
 	@if(@option('env') == 'prod')
 	    @js('assets/dist/app.min.js')
 	@else
-		@js('https://cdn.jsdelivr.net/npm/vanilla-lazyload@12.4.0/dist/lazyload.min.js')
+		@js('https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.3.0/dist/lazyload.min.js')
 		@js('assets/js/app.js')
 	@endif
 @endsection
