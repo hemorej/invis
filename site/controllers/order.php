@@ -4,7 +4,7 @@ return function($site, $page, $kirby) {
 	$session = kirby()->session();
 
 	if($session->get('state') == 'success'){ // an order just went through
-		$order = $site->page($session->get('order'));
+		$order = $site->page('orders/' . $session->get('order'));
 		return [ 'state' => 'complete', 'order' => $order ];
 	}elseif($session->get('error')){
 		$message = $session->get('error');

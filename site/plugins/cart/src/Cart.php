@@ -477,8 +477,8 @@ class Cart
 			$this->logger->info($this->session->get('txn') . ": order status updated");
 
 			$this->session->set('state', 'success');
-			$this->session->set('order', $this->session->get('txn'));
-			$this->session->clear();
+			$this->session->set('order', "ord-$orderId");
+			$this->session->remove('txn');
 		}catch(\Exception $e) {
 			$this->logger->error($this->session->get('txn') . ": general error", array('reason' => $e->getMessage()));
 			sendAlert($this->session->get('txn'), $orderId, $e->getMessage());
