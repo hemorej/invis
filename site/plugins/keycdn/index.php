@@ -8,8 +8,8 @@ use Kirby\Toolkit\Str;
 function keycdn($file, $params = [])
 {
     $suffix = null;
-    $name = Str::before($file->filename(), "." . $file->extension());
-
+    $name = Str::before(strtolower($file->filename()), "." . $file->extension()); // get name without extension
+    $name = Str::replace($name, '.', '-'); // replace dots in filename
 
     // check the parameters passed to the function and set width and height
     if (empty($params) === false) {
@@ -26,11 +26,13 @@ function keycdn($file, $params = [])
       return option('keycdn.domain') . $newFilename;
     }  
 
+    // replace underscores and double dashes with single dashes in versioned name (includes -x500 and extension)
     $versionName = Str::replace($name . $suffix . '.' . $file->extension(), '_', '-');
     $versionName = Str::replace($versionName, '--', '-');
 
     // strip site url and replace previous filename from old path with new version name
     $newFilename = Str::after(Str::before($file->mediaUrl(), $file->filename()), kirby()->site()->url()) . $versionName;
+    $newFilename = strtolower($newFilename);
 
     // return final URL
     return option('keycdn.domain') . $newFilename;
