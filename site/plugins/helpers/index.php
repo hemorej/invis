@@ -119,7 +119,6 @@ function getHomeImage(){
 
 function location(){
   $cache = kirby()->cache('backend');
-
   $remote = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
   if($remote == false)
     return 'CA';
@@ -127,8 +126,8 @@ function location(){
   if($data = $cache->get($remote)){
     $loc = json_decode($data);
   }else{
-    $access_key = kirby()->option('ipstack_key');
-    $requestURL = "http://api.ipstack.com/$remote?access_key=$access_key&fields=country_code,country_name,location.is_eu&language=en&output=json";
+    $access_key = kirby()->option('ipapi_key');
+    $requestURL = "http://api.ipapi.com/api/$remote?access_key=$access_key&fields=country_code,country_name,location.is_eu&language=en&output=json";
 
     $data = \Remote::get($requestURL);
     $cache->set($remote, $data->content());
