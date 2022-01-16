@@ -4,16 +4,16 @@
 @php
     $archive = array();
     $articles = $page->children()->listed()->flip()->paginate(10);
-    $process = $site->page('process')->children()->listed();
+    $journals = $site->page('journal-series')->children()->listed()->flip();
 @endphp
 
 <section class="cf mt5-ns mt3 center">
     <nav class="fl w-100 w-40-ns pr3 tr-ns tl relative z-1">
-        <span class="ttl link gold i f3 s721-cd pl4 pv0-ns pa2-ns">&mdash;&nbsp;process</span>
-        @foreach($process as $article)
-            <a data-preview="{{ getPreview($article->images()->first()) }}" data-title="{{$article->title()}} journal entry" class="cover ttl link black-70 f3 s721-cd db pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">@html($article->title()->lower())</a>
+        <span class="ttl link gold i f3 s721-cd pl4 pv0-ns pa2-ns">&mdash;&nbsp;journals</span>
+        @foreach($journals as $year)
+            <a data-preview="{{ getPreview($year->images()->first()) }}" data-title="{{$year->title()}} journal entry" class="cover ttl link black-70 f3 s721-cd db pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $year->url() }}">@html($year->title()->lower())</a>
         @endforeach
-        <span class="ttl link gold i f3 s721-cd pl4 pv0-ns pa2-ns mt4 db">&mdash;&nbsp;journal</span>
+        <span class="ttl link gold i f3 s721-cd pl4 pv0-ns pa2-ns mt4 db">&mdash;&nbsp;serial</span>
         @foreach($articles as $article)
             <a data-preview="{{ getPreview($article->images()->first()) }}" data-title="{{$article->title()}} series cover" class="cover ttl link db black-70 f3 s721-cd pl4 pv0-ns pa2-ns hover-bg-gold hover-white" href="{{ $article->url() }}">{{ archiveDate($article->published()->toString()) }}</a>
         @endforeach
