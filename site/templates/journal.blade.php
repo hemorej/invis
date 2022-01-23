@@ -2,7 +2,6 @@
 @include("partials.menu")
 
 @php
-    $archive = array();
     $articles = $page->children()->listed()->flip()->paginate(10);
     $journals = $site->page('journal-series')->children()->listed()->flip();
 @endphp

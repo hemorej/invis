@@ -77,7 +77,7 @@
 
 <nav class="mt4 ph2">
 	@php
-		if($page->parent()->title() == 'journal'){
+		if(in_array($page->parent()->title(), ['journal', 'journals'])){
 			$articles = $page->siblings()->listed()->flip();
 		}else{
 			$articles = $page->siblings()->listed()->sortBy('published', 'desc');
