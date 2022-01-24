@@ -10,10 +10,15 @@
       $url = $meta['url'];
     }
 
-    if(!empty($page->title()) && $page->title() != $page->uid()){
-      $title = $page->title();
-    }elseif($site->page()->title() == 'cart'){
-      $title = 'Cart';
+    if(!empty($page->title())){
+      if($page->title() == 'journal'){
+        // journal is the title and uid, the only exception to the below case
+        $title = $page->title();
+      }elseif($page->title() != $page->uid()){
+        $title = $page->title();
+      }elseif($site->page()->title() == 'cart'){
+        $title = $site->page()->title();
+      }
     }else{
       $title = $page->published()->toString();
     }
