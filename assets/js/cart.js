@@ -60,7 +60,6 @@ var app = new Vue({
             this.step = '1. cart   2. shipping address';
         },
         showCheckout: function(){
-            window.umami.trackEvent('Finish checkout', 'checkout')
 
             this.inCart = false;
             this.inCheckout = true;
@@ -115,7 +114,6 @@ var app = new Vue({
                     tagline: 'false'
                 },
                 createOrder: function(data, actions) {
-                    window.umami.trackEvent('Chose Paypal checkout', 'checkout')
                     that.orderWaiting = true
 
                     var items = new Array()
@@ -166,7 +164,6 @@ var app = new Vue({
             }).render('#paypal-button-container');
         },
         redirectStripe: function(){
-            window.umami.trackEvent('Chose Stripe checkout', 'checkout')
             this.stripe.redirectToCheckout({
                 sessionId: this.$refs.checkoutSessionID.value
             }).then(function (result) {

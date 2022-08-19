@@ -38,8 +38,6 @@ return [
     'fixer_key' => '',
     'ipstack_key' => '',
 
-    'umami_code' => '',
-
     'cacheTTL' => '14400',
 
     'ready' => function ($kirby) { return [ 'keycdn' => $kirby->site()->cdn()->toBool() ]; },
