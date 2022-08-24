@@ -2,6 +2,7 @@
 		@kirbytext(@html(kirby()->site()->copyright()))
 	</footer>
 
+	@include('partials.consent')
 	@yield('scripts')
 </main>
 
