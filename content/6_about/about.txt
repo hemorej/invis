@@ -12,7 +12,7 @@ I'm a photographer, printer and bookmaker living in Montreal, Canada. I started 
 
 In my photography I look for the lyrical and poetic in the everyday, collecting fragments from daily life and travels. My interests follow themes of solitude, wonder and the ephemeral quality of life and film. I love the photographic process and the slow, meditative pace of film. Making photographs has become a part of my daily routine, I rarely leave the house without my camera. 
 
-Handmade prints, signed and unmounted, are made by myself on Ilford FB (baryta) paper from black and white negatives. Check the <a href="/prints">store</a> section if you would like to buy one.
+Handmade prints, signed and unmounted, are made by myself on Ilford FB (baryta) paper from black and white negatives. Check the <a class="f4 f3-ns pa1 link gold hover-white hover-bg-gold" href="/prints">store</a> section if you would like to buy one.
 
 The name of the website is from an Italo Calvino book, its layered, poetic and sharp texts inspired a lot of my early explorations and still inform my work to this day.
 <br /><br />
