@@ -2,10 +2,6 @@ Title: the Invisible Cities
 
 ----
 
-Cdn: false
-
-----
-
 Author: Jerome Arfouche
 
 ----

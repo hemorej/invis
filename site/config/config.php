@@ -40,9 +40,6 @@ return [
 
     'cacheTTL' => '14400',
 
-    'ready' => function ($kirby) { return [ 'keycdn' => $kirby->site()->cdn()->toBool() ]; },
-    'keycdn.domain' => '',
-
     'bnomei.autoid.generator' => function(){ return (new \Bnomei\NanoGenerator())->generate(); },
     'auth' => [
         'trials' => 5,

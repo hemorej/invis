@@ -2,22 +2,17 @@ title: Config
 type: fields
 headline: Config
 fields:
-  cdn:
-    label: CDN
-    type:  toggle
-    default: true
-    help: turn off before publishing
-    width: 1/2
   author:
     label: Author
     type:  text
-    width: 1/2
-  description:
-    label: Description
-    type:  textarea
+    width: 1/4
   keywords:
     label: Keywords
     type:  tags
+    width: 3/4
+  description:
+    label: Description
+    type:  textarea
   copyright:
     label: Copyright
     type:  textarea
