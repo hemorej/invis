@@ -5,6 +5,7 @@ use \Payments\StripeConnector as Stripe;
 use \Payments\PaypalConnector as Paypal;
 use \Logger\Logger;
 use \Mailbun\Mailbun;
+use Kirby\Uuid\Uuid;
 
 class Cart
 {
@@ -50,9 +51,9 @@ class Cart
 	  if(strstr($variant, '::')){
 	    $idParts = explode('::',$variant);
 	    $uri = $idParts[0];
-	    $autoid = $idParts[1];
+	    $uuid = $idParts[1];
 
-	    $variant = page($uri)->variants()->toStructure()->findBy('autoid', $autoid);
+	    $variant = page($uri)->variants()->toStructure()->findBy('suuid', $uuid);
 	    return $variant->stock()->value();
 	  }
 
@@ -153,13 +154,13 @@ class Cart
 	    return;
 
 	  $quantityToAdd = $quantity ? intval($quantity) : 1;
-	  $idParts = explode('::', $id); // $id is formatted uri::autoid
+	  $idParts = explode('::', $id); // $id is formatted uri::uuid
 	  $uri = $idParts[0];
-	  $autoid = $idParts[1];
-	  $item = empty($this->getCartPage()) ? null : $this->getCartPage()->products()->toStructure()->findBy('autoid', $autoid);
+	  $uuid = $idParts[1];
+	  $item = empty($this->getCartPage()) ? null : $this->getCartPage()->products()->toStructure()->findBy('suuid', $uuid);
 	  $items = empty($this->getCartPage()) ? array() : $this->getCartPage()->products()->yaml();
 	  $product = $this->site->page($uri);
-	  $variant = $this->site->page($uri)->variants()->toStructure()->findBy('autoid', $autoid);
+	  $variant = $this->site->page($uri)->variants()->toStructure()->findBy('suuid', $uuid);
 
 	  if (empty($item)) {
 	    // Add a new item
@@ -170,7 +171,7 @@ class Cart
 	      'name' => $product->title()->value(),
 	      'amount' => $variant->price()->value(),
 	      'type' => $product->type()->value(),
-	      'autoid' => $autoid,
+	      'suuid' => $uuid,
 	      'quantity' => $this->updateQty($id, $quantityToAdd),
 	    ];
 	  } else {
@@ -197,6 +198,7 @@ class Cart
 	        'content' => [
 	          'txn-id' => $this->txnId,
 	          'txn-date'  => date('m/d/Y H:i:s', $timestamp),
+	          'suuid' => Uuid::generate(),
 	          'orderstatus' => 'pending',
 	          'session-start' => $timestamp,
 	          'session-end' => $timestamp,
@@ -402,7 +404,7 @@ class Cart
 			}
 		}catch(\Exception $e) {
 			$this->logger->error($this->session->get('txn') . ": general error", array('reason' => $e->getMessage()));
-			sendAlert($this->session->get('txn'), $this->getCartPage()->autoid()->value, $e->getMessage());
+			sendAlert($this->session->get('txn'), $this->getCartPage()->suuid()->value(), $e->getMessage());
 			$this->session->set('error', 'There was an unspecified error with the site, I have been notified of this issue. You may try again later');
 			return false;
 		}
@@ -433,7 +435,7 @@ class Cart
 			$this->logger->info($this->session->get('txn') . "paypal captured with id " . get('token'));
 		}catch(\Exception $e) {
 			$this->logger->error($this->session->get('txn') . ": general error", array('reason' => $e->getMessage()));
-			sendAlert($this->session->get('txn'), $this->getCartPage()->autoid()->value, $e->getMessage());
+			sendAlert($this->session->get('txn'), $this->getCartPage()->suuid()->value(), $e->getMessage());
 			$this->session->set('error', 'There was an unspecified error with the site, I have been notified of this issue. You may try again later');
 			return false;
 		}
@@ -443,22 +445,22 @@ class Cart
 
 	private function updateInventory()
 	{
-		$orderId = $this->getCartPage()->autoid()->value;
+		$orderId = $this->getCartPage()->suuid()->value();
 		
 		foreach($this->items() as $item)
 		{
   			$uri = $item->uri()->value;
-			$variantStructure = $this->site->page($uri)->variants()->findBy('autoid', $item->autoid()->value)->yaml();
+			$variantStructure = $this->site->page($uri)->variants()->findBy('suuid', $item->suuid()->value())->yaml();
 			$variant = $variantStructure[0];
 
 	        $updatedVariant = array();
-	        $updatedVariant['autoid'] = $variant['autoid'];
+	        $updatedVariant['suuid'] = $variant['suuid'];
 	        $updatedVariant['name'] = $variant['name'];
 	        $updatedVariant['price'] = $variant['price'];
 
 	        $remainingStock = intval($variant['stock']) - intval($item->quantity()->value);
 	        if($remainingStock < 0)
-	        	throw new \Exception("Insufficient stock for product " . page($uri)->title()->value() . " (autoid: " . $variant['autoid'] . ")");
+	        	throw new \Exception("Insufficient stock for product " . page($uri)->title()->value() . " (uuid: " . $variant['suuid'] . ")");
 
 	        $updatedVariant['stock'] = $remainingStock;
 
@@ -470,7 +472,7 @@ class Cart
 	private function updateOrder($paymentMethod)
 	{
 		try{
-			$orderId = $this->getCartPage()->autoid()->value;
+			$orderId = $this->getCartPage()->suuid()->value();
 
 			kirby()->impersonate('kirby');
 			$this->getCartPage()->update(['title' => "ord-$orderId", 'orderstatus' => 'paid', 'payment' => $paymentMethod]);
@@ -489,7 +491,7 @@ class Cart
 
 	private function sendNotifications()
 	{
-		$orderId = $this->getCartPage()->autoid()->value;
+		$orderId = $this->getCartPage()->suuid()->value();
 		$customer = $this->getCartPage()->customer()->yaml();
 		$products = $this->getCartPage()->products();
 		$discount = $this->getCartPage()->discount()->yaml();

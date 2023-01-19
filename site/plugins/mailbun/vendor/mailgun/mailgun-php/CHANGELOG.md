@@ -1,6 +1,59 @@
 # Change Log
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
+## 3.5.5
+
+### Fixed
+- Cast integer values to string for sending multipart data
+
+## 3.5.4
+
+### Added
+- Added ability to make own API request to needed endpoint
+
+## 3.5.3
+
+### Added
+
+- Ability to update web_scheme for domain
+- `http` or `https` - set your open, click and unsubscribe URLs to use http or https. The default is http
+
+## 3.5.1
+
+### Fixed
+
+- Error with empty array for param recipient-variables. Fix was suggested by @deviarte
+- Use null coalescing operator in IndexResponse.php when. Fix proposed by @TWithers
+
+## 3.5.0
+
+### Added
+
+- Support for new webhook endpoints (#609 by @svenbw & #749 by @Nyholm)
+
+## 3.4.1
+
+### Fixed
+
+- Fix double urlencoding (#747 by @uavn)
+
+## 3.4.0
+
+### Added
+
+- Email Validation (#726 by @uavn)
+  - Please note the Email Validation requires **always** to use the US servers. The Mailgun Team didn't enable this service on the European endpoints.
+
+## 3.3.0
+
+### Added
+
+- Support for PHP 8 (#727 by @DavidGarciaCat)
+- Added `opened`, `clicked`, `unsubscribed` and `stored` to the `TotalResponseItem` (#739 by @Arkitecht)
+
+### Removed
+
+- Support for PHP 7.1 and 7.2 as they both have reached their end of life
 
 ## 3.2.0
 

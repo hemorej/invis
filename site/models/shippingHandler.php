@@ -48,7 +48,7 @@ class ShippingHandler
             try{
                 $mailbun = new Mailbun();
                 $mailbun->send($customer['email'], 'Your order from The Invisible Cities has been shipped', 'confirm', array(
-                        'order' => $page->autoid(),
+                        'order' => $page->suuid(),
                         'items' => $items,
                         'fullName' => $customer['name'],
                         'street1' => $customer['address']['address_line_1'],
@@ -69,9 +69,9 @@ class ShippingHandler
                         'type' => 'order'
                     ));
 
-                $this->logger->info("email shipping confirmation sent for order id " . $page->autoid());
+                $this->logger->info("email shipping confirmation sent for order id " . $page->suuid());
             }catch(\Error $e){
-                $this->logger->error("email shipping confirmation error for order id " . $page->autoid() . ": " . $e->getMessage());
+                $this->logger->error("email shipping confirmation error for order id " . $page->suuid() . ": " . $e->getMessage());
             }
 
             $page->update(array(

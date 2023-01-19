@@ -32,7 +32,13 @@
 	<section class="mt5">
 		<span class="f4 f3-ns black pa2">contact</span>
 		@foreach($page->contact()->toStructure() as $item)
-			<a href="{{ e(empty($item->email()->value), $item->link(), 'mailto:'.$item->email()) }}" target='_blank' class='f4 f3-ns pa1-l link black-60 hover-white hover-bg-gold di' >
+			<a href="
+				@if(empty($item->email()->value))
+					{{ $item->link() }}
+				@else
+					mailto: {{ $item->email() }}
+				@endif
+				" target='_blank' class='f4 f3-ns pa1-l link black-60 hover-white hover-bg-gold di' >
 				{{ $item->text() }}
 			</a>
 		@endforeach

@@ -48,14 +48,21 @@
             </div>
             @foreach($cartItems as $i => $item)
             <div class="mw7">
-                <div class="cf {{ e($loop->first, 'mt4') }}">
+                <div class="cf 
+                    @if($loop->first)
+                        'mt4'
+                    @endif
+                    ">
                     <div class="fl w-20 w-10-ns">
                         @php $product = page($item->uri()) @endphp
                         <img src="{{ $product->images()->first()->crop(100)->url() }}" title="{{ $item->name() }}">
                     </div>
                     <div class="fl w-80 w-60-ns pl3">
                         <a class="black-80 pv2 f4 hover-bg-gold hover-white link" href="{{ $product->url() }}">
-                        {{ $item->name() }}&nbsp;&mdash;&nbsp;{{ e($item->variant()->isNotEmpty(), $item->variant()) }}
+                        {{ $item->name() }}&nbsp;&mdash;&nbsp;
+                        @if($item->variant()->isNotEmpty())
+                            {{ $item->variant() }}
+                        @endif
                         </a>
                         <span class="db-ns dn pt2 f6 gray hide-for-small">{{ $product->meta()->value() }}</span>
                     </div>
@@ -71,11 +78,16 @@
                             <button class="b--silver ba bg-animate bg-white silver border-box f7 no-underline br-100 db h1 w1 pl1" type="submit" type="submit">x</button>
                         </form>
 
-                        <input v-on:change="updateCart" class="b--black-20 di input-reset w-30 f5 mr0 ba tc" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->autoid() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->id()) }}" data-sku="{{ $item->autoid() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
+                        <input v-on:change="updateCart" class="b--black-20 di input-reset w-30 f5 mr0 ba tc" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->suuid() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->id()) }}" data-sku="{{ $item->suuid() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
                         <input ref="inputCsrf" type="hidden" name="csrf" value="@csrf()">
                     </div>
                 </div>
-                <hr {{ e($loop->last, 'class="mt6-ns mt4"', 'class="mt2"') }}>
+                <hr @if($loop->last)
+                        class="mt6-ns mt4"
+                    @else
+                        class="mt2"
+                    @endif
+                    >
             </div>
             @endforeach
             <div class="mw7">
