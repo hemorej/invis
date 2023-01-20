@@ -4,12 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit228208423baedd3a8ff4bae6ba8cd1fb
+class ComposerStaticInit209521fc9d96e30f97b2d0197959db99
 {
     public static $files = array (
         '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -19,7 +20,7 @@ class ComposerStaticInit228208423baedd3a8ff4bae6ba8cd1fb
         ),
         'S' => 
         array (
-            'Symfony\\Polyfill\\Ctype\\' => 23,
+            'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Component\\OptionsResolver\\' => 34,
         ),
         'P' => 
@@ -60,9 +61,9 @@ class ComposerStaticInit228208423baedd3a8ff4bae6ba8cd1fb
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Php80\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
         'Symfony\\Component\\OptionsResolver\\' => 
         array (
@@ -70,8 +71,8 @@ class ComposerStaticInit228208423baedd3a8ff4bae6ba8cd1fb
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -99,8 +100,8 @@ class ComposerStaticInit228208423baedd3a8ff4bae6ba8cd1fb
         ),
         'Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/php-http/message/src',
-            1 => __DIR__ . '/..' . '/php-http/message-factory/src',
+            0 => __DIR__ . '/..' . '/php-http/message-factory/src',
+            1 => __DIR__ . '/..' . '/php-http/message/src',
         ),
         'Http\\Discovery\\' => 
         array (
@@ -124,11 +125,21 @@ class ComposerStaticInit228208423baedd3a8ff4bae6ba8cd1fb
         ),
     );
 
+    public static $classMap = array (
+        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit228208423baedd3a8ff4bae6ba8cd1fb::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit228208423baedd3a8ff4bae6ba8cd1fb::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit209521fc9d96e30f97b2d0197959db99::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit209521fc9d96e30f97b2d0197959db99::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit209521fc9d96e30f97b2d0197959db99::$classMap;
 
         }, null, ClassLoader::class);
     }

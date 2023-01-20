@@ -1,15 +1,12 @@
 [submodule "kirby"]
 	path = kirby
 	url = https://github.com/getkirby/kirby.git
-[submodule "site/plugins/kirby-blade"]
-	path = site/plugins/kirby-blade
-	url = https://github.com/afbora/kirby-blade.git
-[submodule "site/plugins/kirby3-autoid"]
-	path = site/plugins/kirby3-autoid
-	url = https://github.com/bnomei/kirby3-autoid.git
 [submodule "site/plugins/kirby3-xmlsitemap"]
 	path = site/plugins/kirby3-xmlsitemap
 	url = https://github.com/omz13/kirby3-xmlsitemap.git
-[submodule "site/plugins/kirby3-feed"]
-	path = site/plugins/kirby3-feed
-	url = git@github.com:hemorej/kirby3-feed.git
+[submodule "site/plugins/k3-pagesdisplay-section"]
+	path = site/plugins/k3-pagesdisplay-section
+	url = https://github.com/rasteiner/k3-pagesdisplay-section.git
+[submodule "site/plugins/staticache"]
+	path = site/plugins/staticache
+	url = https://github.com/getkirby/staticache.git

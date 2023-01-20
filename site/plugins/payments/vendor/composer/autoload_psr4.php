@@ -11,5 +11,4 @@ return array(
     'Payments\\' => array($baseDir . '/src'),
     'PayPalHttp\\' => array($vendorDir . '/paypal/paypalhttp/lib/PayPalHttp'),
     'PayPalCheckoutSdk\\' => array($vendorDir . '/paypal/paypal-checkout-sdk/lib/PayPalCheckoutSdk'),
-    'BraintreeHttp\\' => array($vendorDir . '/braintree/braintreehttp/lib/BraintreeHttp'),
 );

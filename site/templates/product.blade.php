@@ -44,10 +44,23 @@
                     <ul class="list pv2 pl0">
                         @foreach($variants as $variant)
                             @if(Cart::inStock($variant))
-                                <li class='{{ e($loop->first, 'dib pl0', 'dib pt3') }}'>
-                                <a {{ e($loop->first, 'ref="active"') }} 
-                                class="f4 link black-60 hover-white hover-bg-gold pa1-l {{ e($loop->first, 'bb b--gold bw2')}}"
-                                data-option-variant='{{ $variant->autoid() }}'
+                                <li class="
+                                    @if($loop->first)
+                                        'dib pl0'
+                                    @else
+                                        'dib pt3'
+                                    @endif 
+                                ">
+                                <a 
+                                    @if($loop->first)
+                                        ref="active"
+                                    @endif
+                                class="f4 link black-60 hover-white hover-bg-gold pa1-l 
+                                    @if($loop->first)
+                                        'bb b--gold bw2'
+                                    @endif 
+                                    "
+                                data-option-variant='{{ $variant->suuid() }}'
                                 data-option-product='{{ $page->title() . $variant->name() }}'
                                 v-on:click.prevent='makeActive'>
                                     {{ $variant->name() }} &mdash; ${{ $variant->price() }}

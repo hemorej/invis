@@ -24,11 +24,12 @@ fields:
     type: text
     width: 1/4
     disabled: true
-  autoid:
+  suuid:
     label: Order ID
     width: 1/4
     readonly: true
     translate: false
+    type: text
   line:
     type: line
   txn_date:
@@ -76,7 +77,7 @@ fields:
     type: structure
     entry: >
       <a href="/{{uri}}" target="_blank">{{name}} ({{variant}})</a><br />
-      sku: {{autoid}}<br />
+      sku: {{suuid}}<br />
       qty: {{quantity}} total: {{amount}}
     fields:
       uri:

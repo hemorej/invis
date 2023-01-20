@@ -6,7 +6,7 @@ Published: February 2014
 
 ----
 
-Text: 
+Text:
 
 I'm a photographer, printer and bookmaker living in Montreal, Canada. I started making pictures in the early 2000s and have been printing since 2012.
 
@@ -19,7 +19,8 @@ The name of the website is from an Italo Calvino book, its layered, poetic and s
 
 ----
 
-Links: 
+Links:
+
 - 
   separator: influences
   link: http://www.sluban.com/ 
@@ -136,16 +137,18 @@ Links:
 
 ----
 
-Contact: 
+Contact:
+
 -
 	link: http://instagram.com/jerome_a_ 
 	text: instagram
--
-	link: https://the-invisible-cities.com/feed
-	text: rss
 -
 	email: jerome@the-invisible-cities.com
 	text: email
 -
 	link: https://tinyletter.com/the-invisible-cities
 	text: newsletter
+
+----
+
+Uuid: jBxjk139CbXs6ipE

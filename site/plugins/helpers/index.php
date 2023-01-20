@@ -33,7 +33,7 @@ Kirby::plugin('helpers/helpers', [
 function addToStructure($page, $field, $data = array())
 {
   $fieldData = $page->$field()->yaml();
-  $key = array_search($data['autoid'], array_column($fieldData, 'autoid'));
+  $key = array_search($data['suuid'], array_column($fieldData, 'suuid'));
   unset($fieldData[$key]);
   $fieldData = array_values($fieldData);
 

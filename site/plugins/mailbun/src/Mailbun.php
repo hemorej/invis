@@ -8,6 +8,7 @@ use \Kirby\Cms\App;
 class Mailbun
 {
 	protected $mailgun;
+	protected $logger;
 
 	function __construct()
 	{
@@ -19,6 +20,11 @@ class Mailbun
 	public function send($recipient, $subject, $template, $data)
 	{
 		$body = App::instance()->template('emails/' . $template);
+		
+		$data['kirby'] = kirby();
+		$data['site'] = kirby()->site();
+		$data['pages'] = [];
+		$data['page'] = kirby()->page();
 
 		$this->mailgun->messages()->send(kirby()->option('mailgun_domain'), [
 	      'to'      => $recipient,

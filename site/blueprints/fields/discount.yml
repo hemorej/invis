@@ -9,11 +9,13 @@ fields:
     maxlength: 8
     minlength: 6
     width: 1/4
-  autoid:
+  suuid:
     label: Discount ID
     readonly: true
     translate: false 
     width: 1/4
+    type: text
+    value: "{{ page.suuid }}"
   amount:
     label: Amount
     type: number

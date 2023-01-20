@@ -13,11 +13,13 @@ columns:
             width: 1/4
             text: |
               <a href="/panel/pages/prints#products">back to products</a><br />
-          autoid:
+          uuid:
             label: Product ID
             width: 1/3
             readonly: true
             translate: false 
+            type: text
+            value: "{{ page.uuid }}"
           description:
             label: Description
             help: Details for the product page
@@ -49,6 +51,7 @@ columns:
           variants:
             label: Variants
             type: structure
+            required: true
             fields:
               name:
                 label: Variant name
@@ -68,16 +71,19 @@ columns:
                 width: 1/3
                 help: Leave blank for unlimited stock
                 min: 0
-              autoid:
+              suuid:
+                type: autoranduuid
                 label: SKU
                 width: 1/3
                 readonly: true
                 translate: false 
+                autoranduuid: uuid
 
     - width: 1/3
         fields:
           uploads:
             label: Images
+            required: true
             type: files
             query: page.images
             layout: list

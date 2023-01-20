@@ -4,16 +4,19 @@ return [
     'env' => 'dev',
 
     'debug' => true,
-    'cache' => false,
-    'cache.driver' => 'file',
-    'cache.autoupdate' => true,
-    'cache.ignore' => array(
-        'home',
-        'feed',
-        'prints/*'
-    ),
-    'cache.backend' => true,
-    'afbora.blade.minify.enabled' => false,
+    'cache' => [
+        'pages' => [
+            'active'  => true,
+            'type'    => 'static',
+            'root'    => __DIR__ . '/../cache/',
+            'headers' => true,
+            'ignore' => [
+                'home',
+                'feed',
+                'prints/*'
+            ]
+        ]
+    ],
 
     'thumbs' => [
         'quality'   => 90,
@@ -36,11 +39,10 @@ return [
     'paypal_client_secret' => '',
     'paypal_environment' => '',
     'fixer_key' => '',
-    'ipstack_key' => '',
+    'ipapi_key' => '',
 
     'cacheTTL' => '14400',
 
-    'bnomei.autoid.generator' => function(){ return (new \Bnomei\NanoGenerator())->generate(); },
     'auth' => [
         'trials' => 5,
         'challenges' => ['totp', 'email'],
