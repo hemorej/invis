@@ -8,7 +8,6 @@ return [
         'pages' => [
             'active'  => true,
             'type'    => 'static',
-            'root'    => __DIR__ . '/../cache/',
             'headers' => true,
             'ignore' => [
                 'home',
