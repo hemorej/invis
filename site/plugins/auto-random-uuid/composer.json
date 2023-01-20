@@ -1,6 +1,6 @@
-{
-	"name": "logger/logger",
-    "description": "Logging component based on Monolog",
+{   
+    "name": "autoranduuid/autoranduuid",
+    "description": "Automatic random UUID for subpages on create",
     "type": "kirby-plugin",
     "license": "MIT",
     "version": "1.0.0",
@@ -10,13 +10,5 @@
             "email": "hello@jerome-arfouche.com",
             "homepage": "https://jerome-arfouche.com"
         }
-    ],
-    "require": {
-        "monolog/monolog": "^3.2"
-    },
-	"autoload": {
-		"psr-4": {
-		  "Logger\\": "src/"
-		}
-	}
+    ]
 }

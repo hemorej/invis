@@ -1,4 +1,16 @@
-{
+{   
+    "name": "cart/cart",
+    "description": "Simple Shopping Cart and checkout",
+    "type": "kirby-plugin",
+    "license": "MIT",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Jerome Arfouche",
+            "email": "hello@jerome-arfouche.com",
+            "homepage": "https://jerome-arfouche.com"
+        }
+    ],
 	"autoload": {
         "psr-4": {
             "Cart\\": "src/"

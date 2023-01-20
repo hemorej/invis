@@ -1,4 +1,16 @@
 {
+	"name": "payments/payments",
+	"description": "Payment connectors for Stripe and PayPal",
+	"type": "kirby-plugin",
+	"license": "MIT",
+	"version": "1.0.0",
+	"authors": [
+		{
+			"name": "Jerome Arfouche",
+			"email": "hello@jerome-arfouche.com",
+			"homepage": "https://jerome-arfouche.com"
+		}
+	],
     "require": {
         "stripe/stripe-php": "^10.3",
         "paypal/paypal-checkout-sdk": "^1.0"
