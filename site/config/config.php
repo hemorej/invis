@@ -17,7 +17,6 @@ return [
             ]
         ]
     ],
-    'afbora.blade.minify.enabled' => false,
 
     'thumbs' => [
         'quality'   => 90,
