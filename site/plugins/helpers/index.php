@@ -118,24 +118,34 @@ function getHomeImage(){
 }
 
 function location(){
-  $cache = kirby()->cache('backend');
-  $remote = '192.0.229.53';
-  // $remote = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
-  if($remote == false)
-    return 'CA';
+  try{
+    $cache = kirby()->cache('backend');
+    $remote = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
+    if($remote == false)
+      return 'CA';
 
-  if($data = $cache->get($remote)){
-    $loc = json_decode($data);
-  }else{
-    $access_key = kirby()->option('ipapi_key');
-    $requestURL = "http://api.ipapi.com/api/$remote?access_key=$access_key&fields=country_code,country_name,location.is_eu&language=en&output=json";
+    if($data = $cache->get($remote)){
+      $loc = json_decode($data);
+    }else{
+      $access_key = kirby()->option('ipapi_key');
+      $requestURL = "http://api.ipapi.com/api/$remote?access_key=$access_key&fields=country_code,country_name,location.is_eu&language=en&output=json";
 
-    $data = \Remote::get($requestURL);
-    $cache->set($remote, $data->content());
-    $loc = json_decode($data->content());
+      $data = \Remote::get($requestURL);
+      $cache->set($remote, $data->content());
+      $loc = json_decode($data->content());
+    }
+
+    if($loc->success == false){
+      throw new \Exception($loc->error->info);
+    }
+
+    return $loc;
+  }catch(\Exception $e){
+    $logger = (new Logger\Logger('geolocation'))->getLogger();
+    $logger->error('Could not resolve IP address: ' . $e->getMessage());
+  
+    return null;
   }
-
-  return $loc;
 }
 
 function sendAlert($sid, $orderId, $error = "Unknown reason")
