@@ -127,16 +127,12 @@ function location(){
     if($data = $cache->get($remote)){
       $loc = json_decode($data);
     }else{
-      $access_key = kirby()->option('ipapi_key');
-      $requestURL = "http://api.ipapi.com/api/$remote?access_key=$access_key&fields=country_code,country_name,location.is_eu&language=en&output=json";
+      $key = kirby()->option('ipapi_key');
+      $requestURL = "https://ipapi.co/$remote/json?key=$key";
 
       $data = \Remote::get($requestURL);
       $cache->set($remote, $data->content());
       $loc = json_decode($data->content());
-    }
-
-    if($loc->success == false){
-      throw new \Exception($loc->error->info);
     }
 
     return $loc;
