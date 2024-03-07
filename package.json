@@ -19,6 +19,6 @@
     "vue-template-compiler": "^2.7.16"
   },
   "scripts": {
-    "prod": "export NODE_ENV=production; node_modules/.bin/webpack --config=node_modules/laravel-mix/setup/webpack.config.js; rm -f assets/js/app.min.js assets/js/cart.min.js assets/js/consent.min.js assets/js/product.min.js assets/js/subs.min.js"
+    "prod": "export NODE_ENV=production; node_modules/.bin/webpack --config=node_modules/laravel-mix/setup/webpack.config.js; rm -f assets/js/app.min.js assets/js/cart.min.js assets/js/consent.min.js assets/js/product.min.js"
   }
 }

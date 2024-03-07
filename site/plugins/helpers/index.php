@@ -120,7 +120,8 @@ function getHomeImage(){
 function location(){
   try{
     $cache = kirby()->cache('backend');
-    $remote = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
+    // $remote = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
+    $remote = filter_var('192.0.229.53', FILTER_VALIDATE_IP);
     if($remote == false)
       return 'CA';
 

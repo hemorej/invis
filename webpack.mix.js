@@ -12,12 +12,6 @@ mix.combine([
 	'assets/js/vendor/axios.min.js',
 	'assets/js/cart.min.js'], 'assets/dist/cart.min.js');
 
-mix.minify('assets/js/subs.js');
-mix.combine([
-    'assets/js/vendor/vue.min.js',
-    'assets/js/vendor/axios.min.js',
-    'assets/js/subs.min.js'], 'assets/dist/subs.min.js');
-
 mix.minify('assets/js/app.js');
 mix.combine(['assets/js/vendor/lazyload.min.js', 'assets/js/app.min.js'], 'assets/dist/app.min.js')
 
