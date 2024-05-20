@@ -18,7 +18,7 @@
         @endforeach
 
         @if($articles->pagination()->hasPages())
-        <nav class="fr mt4 mw7 tr-ns tl relative z-1">                    
+        <nav class="fr-ns mt4 mw7 tr-ns tl relative z-1">                    
             @if($articles->pagination()->hasNextPage())
                 <a class="fr link db black-60 f4 s721-cd pl4 pv0-ns pa2-ns hover-bg-gold hover-white ml5" href="{{ $articles->pagination()->nextPageURL() }}">older&nbsp;&raquo;</a>
             @endif
