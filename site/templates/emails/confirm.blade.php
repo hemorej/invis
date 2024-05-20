@@ -172,7 +172,13 @@
                                   </tr>
                                 </table>
                               </td>
-                              <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/>{{ $fullName }}<br/>{{ $street1 }}<br/>{{ $street2 }} {{e(empty($street2), '', '<br/>')}} {{ $city }}, {{ $province }}<br/>{{ $postcode }}<br/>{{ $country }}<br/><br/>{{ $email }}<br/> </td>
+                              @php
+                                $street2Format = $street2;
+                                if(!empty($street2))
+                                  $street2Format .= 'br />';
+                              @endphp
+
+                              <td class="column col-sm-12" width="400" style="width: 50%" align="left" valign="top"><b>Shipping information</b><br/>{{ $fullName }}<br/>{{ $street1 }}<br/>{{ $street2Format }} {{ $city }}, {{ $province }}<br/>{{ $postcode }}<br/>{{ $country }}<br/><br/>{{ $email }}<br/> </td>
                             </tr>
                           </table>
                         </div> <br/>

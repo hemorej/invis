@@ -53,7 +53,7 @@
 				@php $skip = true @endphp
 			@else
 				@if($page->parent()->title() == 'journal')
-					<section class="{{e($current->isPortrait(), 'mw6 db', 'aspect-ratio aspect-ratio--6x4')}}">
+					<section class="aspect-ratio aspect-ratio--6x4">
 				@else
 					@if($current->isPortrait())
 						<section class="mw6 db center pa5">
