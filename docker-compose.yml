@@ -1,0 +1,40 @@
+version: '3.8'
+
+networks:
+  invis:
+    driver: bridge
+  internal:
+    driver: bridge
+
+services:
+  caddy:
+    image: caddy:2.7.4-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/data:/data
+      - ./caddy/config:/config
+    networks:
+      - invis
+      - internal
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: invis-web
+    restart: unless-stopped
+    volumes:
+      - ./content:/var/www/html/content
+      - ./site/config:/var/www/html/site/config
+      - ./site/cache:/var/www/html/site/cache
+      - ./logs:/var/www/html/logs
+    environment:
+      - PHP_MEMORY_LIMIT=256M
+      - UPLOAD_MAX_FILESIZE=100M
+      - POST_MAX_SIZE=100M
+    networks:
+      - internal
