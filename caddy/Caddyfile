@@ -1,0 +1,29 @@
+localhost {
+  log {
+    output stdout
+    format console
+  }
+  
+  # Use the auto HTTPS features in dev
+  tls internal
+
+  # Proxy to web container
+  reverse_proxy web:80
+}
+
+# Production domain configuration
+# Replace with your actual domain when deploying
+# the-invisible-cities.com {
+#   log {
+#     output stdout
+#     format console
+#   }
+#   
+#   # For production use Let's Encrypt
+#   tls {
+#     protocols tls1.2 tls1.3
+#   }
+#
+#   # Proxy to web container
+#   reverse_proxy web:80
+# }
