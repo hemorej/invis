@@ -69,7 +69,7 @@ fields:
     width: 1/4
     disabled: true
     options:
-      paypal: paypal
+      cash: cash
       stripe: stripe
   products:
     label: products

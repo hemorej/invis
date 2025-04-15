@@ -25,14 +25,11 @@
 
         <input ref="userLocation" type="hidden" value="{{ $currentLocation }}" />
         <input ref="checkoutKey" type="hidden" name="key" value="@option('stripe_key_pub')">
-        <input ref="checkoutPPKey" type="hidden" name="key" value="@option('paypal_client_id')">
         <input ref="checkoutSessionID" type="hidden" name="key" value="{{ $checkoutSessionId }}">
         <input ref="checkoutTotal" type="hidden" name="total" value="{{$total}}">
         <input ref="checkoutContent" type="hidden" name="content" value="{{ $content }}">
         <input ref="ppCsrf" type="hidden" name="csrf" value="@csrf()">
-        <input ref="ppEnv" type="hidden" name="csrf" value="@option('paypal_environment')">
 
-        <transition name="fade" mode="out-in" v-on:after-enter="initPaypal">
         <div v-if="inCart == true" key="cart">
             <div v-show="inCheckout == false" class="mw7 dn db-ns">
                 <div class="cf ph2-ns">
@@ -160,7 +157,6 @@
                 <div class="mw7 mt4">
                     <div class="cf">
                         <button class="fl w-50 pa3-l pb3-l ph2 pv2 bg-white f5 no-underline black bg-animate b--gold hover-bg-gold hover-white ba border-box" v-on:click.prevent="redirectStripe">credit card checkout</button>
-                        <div class="fl w-50 pb1 pb0-ns b--gold ba bg-animate bg-light-gray black border-box" id="paypal-button-container"></div>
                     </div>
                 </div>
             </div>
@@ -229,5 +225,4 @@
         @js('assets/js/cart.js')
     @endif
     @js('https://js.stripe.com/v3/', ['async' => true])
-    @js('https://www.paypal.com/sdk/js?currency=CAD&client-id='.option('paypal_client_id'), ['async' => true])
 @endsection
