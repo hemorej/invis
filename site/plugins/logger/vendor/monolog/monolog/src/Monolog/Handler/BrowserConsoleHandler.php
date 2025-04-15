@@ -15,8 +15,8 @@ use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Utils;
 use Monolog\LogRecord;
+use Monolog\Level;
 
-use function count;
 use function headers_list;
 use function stripos;
 
@@ -76,7 +76,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             return;
         }
 
-        if (count(static::$records) > 0) {
+        if (\count(static::$records) > 0) {
             if ($format === self::FORMAT_HTML) {
                 static::writeOutput('<script>' . self::generateScript() . '</script>');
             } else { // js format
@@ -173,7 +173,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             $extra = self::dump('Extra', $record->extra);
 
             if (\count($context) === 0 && \count($extra) === 0) {
-                $script[] = self::call_array('log', self::handleStyles($record->formatted));
+                $script[] = self::call_array(self::getConsoleMethodForLevel($record->level), self::handleStyles($record->formatted));
             } else {
                 $script = array_merge(
                     $script,
@@ -186,6 +186,16 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         }
 
         return "(function (c) {if (c && c.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
+    }
+
+    private static function getConsoleMethodForLevel(Level $level): string
+    {
+        return match ($level) {
+            Level::Debug => 'debug',
+            Level::Info, Level::Notice => 'info',
+            Level::Warning => 'warn',
+            Level::Error, Level::Critical, Level::Alert, Level::Emergency => 'error',
+        };
     }
 
     /**
@@ -202,7 +212,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             $args[] = self::quote(self::handleCustomStyles($match[2][0], $match[1][0]));
 
             $pos = $match[0][1];
-            $format = Utils::substr($format, 0, $pos) . '%c' . $match[1][0] . '%c' . Utils::substr($format, $pos + strlen($match[0][0]));
+            $format = Utils::substr($format, 0, $pos) . '%c' . $match[1][0] . '%c' . Utils::substr($format, $pos + \strlen($match[0][0]));
         }
 
         $args[] = self::quote('font-weight: normal');
@@ -220,7 +230,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             if (trim($m[1]) === 'autolabel') {
                 // Format the string as a label with consistent auto assigned background color
                 if (!isset($labels[$string])) {
-                    $labels[$string] = $colors[count($labels) % count($colors)];
+                    $labels[$string] = $colors[\count($labels) % \count($colors)];
                 }
                 $color = $labels[$string];
 
@@ -233,7 +243,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         if (null === $style) {
             $pcreErrorCode = preg_last_error();
 
-            throw new \RuntimeException('Failed to run preg_replace_callback: ' . $pcreErrorCode . ' / ' . Utils::pcreLastErrorMessage($pcreErrorCode));
+            throw new \RuntimeException('Failed to run preg_replace_callback: ' . $pcreErrorCode . ' / ' . preg_last_error_msg());
         }
 
         return $style;
@@ -246,14 +256,14 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     private static function dump(string $title, array $dict): array
     {
         $script = [];
-        $dict = array_filter($dict);
+        $dict = array_filter($dict, fn ($value) => $value !== null);
         if (\count($dict) === 0) {
             return $script;
         }
         $script[] = self::call('log', self::quote('%c%s'), self::quote('font-weight: bold'), self::quote($title));
         foreach ($dict as $key => $value) {
             $value = json_encode($value);
-            if (empty($value)) {
+            if (false === $value) {
                 $value = self::quote('');
             }
             $script[] = self::call('log', self::quote('%s: %o'), self::quote((string) $key), $value);
@@ -273,7 +283,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     private static function call(...$args): string
     {
         $method = array_shift($args);
-        if (!is_string($method)) {
+        if (!\is_string($method)) {
             throw new \UnexpectedValueException('Expected the first arg to be a string, got: '.var_export($method, true));
         }
 

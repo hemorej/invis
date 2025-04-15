@@ -17,6 +17,7 @@ use Monolog\LogRecord;
  * formats the record to be used in the FlowdockHandler
  *
  * @author Dominik Liebler <liebler.dominik@gmail.com>
+ * @deprecated Since 2.9.0 and 3.3.0, Flowdock was shutdown we will thus drop this handler in Monolog 4
  */
 class FlowdockFormatter implements FormatterInterface
 {
@@ -85,7 +86,7 @@ class FlowdockFormatter implements FormatterInterface
         static $hasMbString;
 
         if (null === $hasMbString) {
-            $hasMbString = function_exists('mb_strlen');
+            $hasMbString = \function_exists('mb_strlen');
         }
 
         $maxLength = 45;
@@ -95,7 +96,7 @@ class FlowdockFormatter implements FormatterInterface
                 $message = mb_substr($message, 0, $maxLength - 4, 'UTF-8') . ' ...';
             }
         } else {
-            if (strlen($message) > $maxLength) {
+            if (\strlen($message) > $maxLength) {
                 $message = substr($message, 0, $maxLength - 4) . ' ...';
             }
         }

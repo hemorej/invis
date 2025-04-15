@@ -2,7 +2,6 @@
 
 namespace Cart;
 use \Payments\StripeConnector as Stripe;
-use \Payments\PaypalConnector as Paypal;
 use \Logger\Logger;
 use \Mailbun\Mailbun;
 use Kirby\Uuid\Uuid;
@@ -411,36 +410,6 @@ class Cart
 
 		return true;
 
-	}
-
-	public function processPaypal()
-	{
-		try{
-			$paypal = new Paypal();
-			$response = $paypal->getOrder(get('token'));
-
-			if($response->statusCode == 200 && $response->result->status == 'COMPLETED')
-			{
-				if($this->getCartPage()->content()->get('orderstatus') == 'pending'){
-						$this->updateInventory();
-						$this->sendNotifications();
-						$this->updateOrder('paypal');
-				}else{
-					$this->logger->error($this->session->get('txn') . ": Paypal checkout returned a failed transaction", [get('token')]);
-					$this->session->set('error', 'There was an error with the payment processing, I have been notified of the issue.');
-					return false;
-				}
-			}
-
-			$this->logger->info($this->session->get('txn') . "paypal captured with id " . get('token'));
-		}catch(\Exception $e) {
-			$this->logger->error($this->session->get('txn') . ": general error", array('reason' => $e->getMessage()));
-			sendAlert($this->session->get('txn'), $this->getCartPage()->suuid()->value(), $e->getMessage());
-			$this->session->set('error', 'There was an unspecified error with the site, I have been notified of this issue. You may try again later');
-			return false;
-		}
-
-		return true;
 	}
 
 	private function updateInventory()

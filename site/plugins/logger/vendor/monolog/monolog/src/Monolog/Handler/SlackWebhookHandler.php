@@ -44,6 +44,8 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      * @param bool        $useShortAttachment     Whether the the context/extra messages added to Slack as attachments are in a short style
      * @param bool        $includeContextAndExtra Whether the attachment should include context and extra data
      * @param string[]    $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     *
+     * @throws MissingExtensionException If the curl extension is missing
      */
     public function __construct(
         string $webhookUrl,
@@ -57,7 +59,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         bool $bubble = true,
         array $excludeFields = []
     ) {
-        if (!extension_loaded('curl')) {
+        if (!\extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the SlackWebhookHandler');
         }
 
@@ -102,9 +104,6 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             CURLOPT_HTTPHEADER => ['Content-type: application/json'],
             CURLOPT_POSTFIELDS => $postString,
         ];
-        if (defined('CURLOPT_SAFE_UPLOAD')) {
-            $options[CURLOPT_SAFE_UPLOAD] = true;
-        }
 
         curl_setopt_array($ch, $options);
 

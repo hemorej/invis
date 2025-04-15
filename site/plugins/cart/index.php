@@ -47,11 +47,6 @@ Kirby::plugin('cart/cart', [
 			if($alpha == 'stripe'){
 				(new \Cart\Cart())->processStripe();
 				return page('prints/order');
-			}elseif($alpha == 'paypal'){
-				if(csrf(get('csrf')) === true){
-					(new \Cart\Cart())->processPaypal();
-					return page('prints/order');
-				}
 			}
 
 			return page('prints/cart');

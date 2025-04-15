@@ -74,7 +74,38 @@ class JsonFormatter extends NormalizerFormatter
      */
     public function format(LogRecord $record): string
     {
-        $normalized = parent::format($record);
+        $normalized = $this->normalizeRecord($record);
+
+        return $this->toJson($normalized, true) . ($this->appendNewline ? "\n" : '');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function formatBatch(array $records): string
+    {
+        return match ($this->batchMode) {
+            static::BATCH_MODE_NEWLINES => $this->formatBatchNewlines($records),
+            default => $this->formatBatchJson($records),
+        };
+    }
+
+    /**
+     * @return $this
+     */
+    public function includeStacktraces(bool $include = true): self
+    {
+        $this->includeStacktraces = $include;
+
+        return $this;
+    }
+
+    /**
+     * @return array<array<mixed>|bool|float|int|\stdClass|string|null>
+     */
+    protected function normalizeRecord(LogRecord $record): array
+    {
+        $normalized = parent::normalizeRecord($record);
 
         if (isset($normalized['context']) && $normalized['context'] === []) {
             if ($this->ignoreEmptyContextAndExtra) {
@@ -91,25 +122,7 @@ class JsonFormatter extends NormalizerFormatter
             }
         }
 
-        return $this->toJson($normalized, true) . ($this->appendNewline ? "\n" : '');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function formatBatch(array $records): string
-    {
-        return match ($this->batchMode) {
-            static::BATCH_MODE_NEWLINES => $this->formatBatchNewlines($records),
-            default => $this->formatBatchJson($records),
-        };
-    }
-
-    public function includeStacktraces(bool $include = true): self
-    {
-        $this->includeStacktraces = $include;
-
-        return $this;
+        return $normalized;
     }
 
     /**
@@ -119,7 +132,9 @@ class JsonFormatter extends NormalizerFormatter
      */
     protected function formatBatchJson(array $records): string
     {
-        return $this->toJson($this->normalize($records), true);
+        $formatted = array_map(fn (LogRecord $record) => $this->normalizeRecord($record), $records);
+
+        return $this->toJson($formatted, true);
     }
 
     /**
@@ -149,13 +164,13 @@ class JsonFormatter extends NormalizerFormatter
             return 'Over '.$this->maxNormalizeDepth.' levels deep, aborting normalization';
         }
 
-        if (is_array($data)) {
+        if (\is_array($data)) {
             $normalized = [];
 
             $count = 1;
             foreach ($data as $key => $value) {
                 if ($count++ > $this->maxNormalizeItemCount) {
-                    $normalized['...'] = 'Over '.$this->maxNormalizeItemCount.' items ('.count($data).' total), aborting normalization';
+                    $normalized['...'] = 'Over '.$this->maxNormalizeItemCount.' items ('.\count($data).' total), aborting normalization';
                     break;
                 }
 
@@ -165,7 +180,7 @@ class JsonFormatter extends NormalizerFormatter
             return $normalized;
         }
 
-        if (is_object($data)) {
+        if (\is_object($data)) {
             if ($data instanceof \DateTimeInterface) {
                 return $this->formatDate($data);
             }
@@ -183,10 +198,14 @@ class JsonFormatter extends NormalizerFormatter
                 return $data->__toString();
             }
 
+            if (\get_class($data) === '__PHP_Incomplete_Class') {
+                return new \ArrayObject($data);
+            }
+
             return $data;
         }
 
-        if (is_resource($data)) {
+        if (\is_resource($data)) {
             return parent::normalize($data);
         }
 
@@ -197,7 +216,7 @@ class JsonFormatter extends NormalizerFormatter
      * Normalizes given exception with or without its own stack trace based on
      * `includeStacktraces` property.
      *
-     * @inheritDoc
+     * @return array<array-key, string|int|array<string|int|array<string>>>
      */
     protected function normalizeException(Throwable $e, int $depth = 0): array
     {

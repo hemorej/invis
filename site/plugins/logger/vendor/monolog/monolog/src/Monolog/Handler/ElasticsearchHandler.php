@@ -47,12 +47,14 @@ use Elastic\Elasticsearch\Client as Client8;
  * @phpstan-type Options array{
  *     index: string,
  *     type: string,
- *     ignore_error: bool
+ *     ignore_error: bool,
+ *     op_type: 'index'|'create'
  * }
  * @phpstan-type InputOptions array{
  *     index?: string,
  *     type?: string,
- *     ignore_error?: bool
+ *     ignore_error?: bool,
+ *     op_type?: 'index'|'create'
  * }
  */
 class ElasticsearchHandler extends AbstractProcessingHandler
@@ -85,6 +87,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
                 'index'        => 'monolog', // Elastic index name
                 'type'         => '_doc',    // Elastic document type
                 'ignore_error' => false,     // Suppress Elasticsearch exceptions
+                'op_type'      => 'index',   // Elastic op_type (index or create) (https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html#docs-index-api-op_type)
             ],
             $options
         );
@@ -162,7 +165,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
 
             foreach ($records as $record) {
                 $params['body'][] = [
-                    'index' => $this->needsType ? [
+                    $this->options['op_type'] => $this->needsType ? [
                         '_index' => $record['_index'],
                         '_type'  => $record['_type'],
                     ] : [
@@ -206,7 +209,11 @@ class ElasticsearchHandler extends AbstractProcessingHandler
             return new ElasticInvalidArgumentException('Elasticsearch failed to index one or more records.');
         }
 
-        return new ElasticsearchRuntimeException('Elasticsearch failed to index one or more records.');
+        if (class_exists(ElasticsearchRuntimeException::class)) {
+            return new ElasticsearchRuntimeException('Elasticsearch failed to index one or more records.');
+        }
+
+        throw new \LogicException('Unsupported elastic search client version');
     }
 
     /**
@@ -222,6 +229,10 @@ class ElasticsearchHandler extends AbstractProcessingHandler
             return new ElasticInvalidArgumentException($error['type'] . ': ' . $error['reason'], 0, $previous);
         }
 
-        return new ElasticsearchRuntimeException($error['type'] . ': ' . $error['reason'], 0, $previous);
+        if (class_exists(ElasticsearchRuntimeException::class)) {
+            return new ElasticsearchRuntimeException($error['type'].': '.$error['reason'], 0, $previous);
+        }
+
+        throw new \LogicException('Unsupported elastic search client version');
     }
 }

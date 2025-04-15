@@ -4,19 +4,16 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07
+class ComposerStaticIniteaa10299fa512c51fc49a8c37be39488
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
             'Stripe\\' => 7,
-            'Sample\\' => 7,
         ),
         'P' => 
         array (
             'Payments\\' => 9,
-            'PayPalHttp\\' => 11,
-            'PayPalCheckoutSdk\\' => 18,
         ),
     );
 
@@ -25,21 +22,9 @@ class ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07
         array (
             0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
         ),
-        'Sample\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/paypal/paypal-checkout-sdk/samples',
-        ),
         'Payments\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
-        ),
-        'PayPalHttp\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/paypal/paypalhttp/lib/PayPalHttp',
-        ),
-        'PayPalCheckoutSdk\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/paypal/paypal-checkout-sdk/lib/PayPalCheckoutSdk',
         ),
     );
 
@@ -50,9 +35,9 @@ class ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd980c8aa68262d4f3fd76654a4f53a07::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticIniteaa10299fa512c51fc49a8c37be39488::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticIniteaa10299fa512c51fc49a8c37be39488::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticIniteaa10299fa512c51fc49a8c37be39488::$classMap;
 
         }, null, ClassLoader::class);
     }
