@@ -28,9 +28,6 @@ use PhpCsFixer\Tokenizer\Tokens;
  */
 final class NoUnreachableDefaultArgumentValueFixer extends AbstractFixer
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
@@ -57,25 +54,16 @@ function example($foo = "two words", $bar) {}
         return 0;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isAnyTokenKindsFound([T_FUNCTION, T_FN]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isRisky(): bool
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         $functionKinds = [T_FUNCTION, T_FN];
@@ -124,6 +112,12 @@ function example($foo = "two words", $bar) {}
 
             if ($token->equals('=')) {
                 $i = $tokens->getPrevMeaningfulToken($i);
+
+                continue;
+            }
+
+            if ($token->isGivenKind(CT::T_PROPERTY_HOOK_BRACE_CLOSE)) {
+                $i = $tokens->findBlockStart(Tokens::BLOCK_TYPE_PROPERTY_HOOK, $i);
 
                 continue;
             }
