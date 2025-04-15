@@ -23,3 +23,5 @@ cache/
 _drafts/
 .BridgeSort
 site/config/config.the-*
+.idea/
+test_plan.md
