@@ -24,7 +24,7 @@
     }
   @endphp
 
-  <title>{{ $site->title() }} - {{ strtolower($title) }}</title>
+<title>{{ $site->title() }} - {{ strtolower($title) }}</title>
   <meta charset="utf-8" />
   <meta name="description" content="{{ $site->description() }}" />
   <meta name="keywords" content="{{ $site->keywords() }}" />

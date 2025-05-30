@@ -2,10 +2,6 @@ Title: About
 
 ----
 
-Published: February 2014
-
-----
-
 Text:
 
 I'm a photographer, printer and bookmaker living in Montreal, Canada. I started making pictures in the early 2000s and have been printing since 2012.
@@ -22,132 +18,189 @@ The name of the website is from an Italo Calvino book, its layered, poetic and s
 Links:
 
 - 
+  link: http://www.sluban.com/
+  text: klavdij sluban
   separator: influences
-  link: http://www.sluban.com/ 
-  text: klavdij sluban 
--
-  link: http://www.jungjinlee.com 
-  text: jungjin lee 
--
-  link: https://www.shashasha.co/en/artist/tamiko-nishimura 
-  text: tamiko nishimura 
--
-  link: https://www.onakakoji.com/works/ 
-  text: koji onaka 
--
-  link: https://in-public.com/photographers/saul-leiter/ 
-  text: saul leiter 
--
+- 
+  link: http://www.jungjinlee.com
+  text: jungjin lee
+  separator: ""
+- 
+  link: >
+    https://www.shashasha.co/en/artist/tamiko-nishimura
+  text: tamiko nishimura
+  separator: ""
+- 
+  link: https://www.onakakoji.com/works/
+  text: koji onaka
+  separator: ""
+- 
+  link: >
+    https://in-public.com/photographers/saul-leiter/
+  text: saul leiter
+  separator: ""
+- 
+  link: >
+    https://www.shashasha.co/en/artist/kazuo-kitai
+  text: kazuo kitai
   separator: photographers i follow
-  link: https://www.shashasha.co/en/artist/kazuo-kitai 
-  text: kazuo kitai 
--
-  link: http://jasoneskenazi.com/ 
-  text: jason eskenazi 
--
-  link: http://www.gracielaiturbide.org/en/ 
-  text: graciela iturbide 
--
-  link: http://www.ralphgibson.com/gallery.html 
-  text: ralph gibson 
--
-  link: http://www.magnumphotos.com/JosefKoudelka 
-  text: josef koudelka 
--
-  link: http://www.artnet.com/artists/miyako-ishiuchi/
+- 
+  link: http://jasoneskenazi.com/
+  text: jason eskenazi
+  separator: ""
+- 
+  link: http://www.gracielaiturbide.org/en/
+  text: graciela iturbide
+  separator: ""
+- 
+  link: http://www.ralphgibson.com/gallery.html
+  text: ralph gibson
+  separator: ""
+- 
+  link: >
+    http://www.magnumphotos.com/JosefKoudelka
+  text: josef koudelka
+  separator: ""
+- 
+  link: >
+    http://www.artnet.com/artists/miyako-ishiuchi/
   text: miyako ishiuchi
--
-  link: https://carolyndrake.com/ 
-  text: carolyn drake 
--
-  link: http://www.magnumphotos.com/RaymondDepardon 
-  text: raymond depardon 
--
-  link: http://www.christopheagou.com 
-  text: christophe agou 
--
-  link: http://www.magnumphotos.com/larrytowell 
-  text: larry towell 
--
-  link: http://www.chloedewemathews.com/home/ 
-  text: chloe dewe mathews 
--
-  link: https://www.claudinedoury.com/ 
-  text: claudine doury 
--
-  link: https://pixyliao.com/ 
-  text: pixy liao 
--
-  link: http://www.luoyangphoto.com/ 
-  text: luo yang 
--
-  link: https://www.shashasha.co/en/artist/masako-tomiya 
-  text: masako tomiya 
--
-  link: http://www.dianamarkosian.com/pages/projects 
-  text: diana markosian 
--
-  link: https://www.webbnorriswebb.co/ 
-  text: rebecca norris webb 
--
-  link: http://www.magnumphotos.com/thomasdworzak 
-  text: thomas dworzak 
--
-  link: https://www.instagram.com/randall_fm/ 
-  text: randall macneil 
--
+  separator: ""
+- 
+  link: https://carolyndrake.com/
+  text: carolyn drake
+  separator: ""
+- 
+  link: >
+    http://www.magnumphotos.com/RaymondDepardon
+  text: raymond depardon
+  separator: ""
+- 
+  link: http://www.christopheagou.com
+  text: christophe agou
+  separator: ""
+- 
+  link: http://www.magnumphotos.com/larrytowell
+  text: larry towell
+  separator: ""
+- 
+  link: http://www.chloedewemathews.com/home/
+  text: chloe dewe mathews
+  separator: ""
+- 
+  link: https://www.claudinedoury.com/
+  text: claudine doury
+  separator: ""
+- 
+  link: https://pixyliao.com/
+  text: pixy liao
+  separator: ""
+- 
+  link: http://www.luoyangphoto.com/
+  text: luo yang
+  separator: ""
+- 
+  link: >
+    https://www.shashasha.co/en/artist/masako-tomiya
+  text: masako tomiya
+  separator: ""
+- 
+  link: >
+    http://www.dianamarkosian.com/pages/projects
+  text: diana markosian
+  separator: ""
+- 
+  link: https://www.webbnorriswebb.co/
+  text: rebecca norris webb
+  separator: ""
+- 
+  link: >
+    http://www.magnumphotos.com/thomasdworzak
+  text: thomas dworzak
+  separator: ""
+- 
+  link: https://www.instagram.com/randall_fm/
+  text: randall macneil
+  separator: ""
+- 
   link: https://gosha.net/
-  text: gosha tcherednitchenko 
--
-  link: http://www.tatianaplotnikova.com/ 
-  text: tatiana plotnikova 
--
-  link: http://www.lasthein.se/ 
-  text: jens olof lasthein 
--
-  link: https://www.magnumphotos.com/photographer/olivia-arthur/ 
-  text: olivia arthur 
--
-  link: http://fukuyamaemi.com/ 
-  text: emi fukuyama 
--
-  link: http://www.akikotakizawa.com/ 
-  text: akiko takizawa 
--
-  link: https://ekaterinasolovieva.com/ 
-  text: ekaterina solovieva 
--
-  link: http://yurienagashima.com/ 
-  text: yurie nagashima 
--
-  link: https://www.artsy.net/artist/william-eggleston 
-  text: william eggleston 
--
-  link: https://www.magnumphotos.com/photographer/newsha-tavakolian/ 
-  text: newsha tavakolian 
--
-  link: https://www.artsy.net/artist/lee-gap-chul 
+  text: gosha tcherednitchenko
+  separator: ""
+- 
+  link: http://www.tatianaplotnikova.com/
+  text: tatiana plotnikova
+  separator: ""
+- 
+  link: http://www.lasthein.se/
+  text: jens olof lasthein
+  separator: ""
+- 
+  link: >
+    https://www.magnumphotos.com/photographer/olivia-arthur/
+  text: olivia arthur
+  separator: ""
+- 
+  link: http://fukuyamaemi.com/
+  text: emi fukuyama
+  separator: ""
+- 
+  link: http://www.akikotakizawa.com/
+  text: akiko takizawa
+  separator: ""
+- 
+  link: https://ekaterinasolovieva.com/
+  text: ekaterina solovieva
+  separator: ""
+- 
+  link: http://yurienagashima.com/
+  text: yurie nagashima
+  separator: ""
+- 
+  link: >
+    https://www.artsy.net/artist/william-eggleston
+  text: william eggleston
+  separator: ""
+- 
+  link: >
+    https://www.magnumphotos.com/photographer/newsha-tavakolian/
+  text: newsha tavakolian
+  separator: ""
+- 
+  link: >
+    https://www.artsy.net/artist/lee-gap-chul
   text: gap-chul lee
--
+  separator: ""
+- 
   link: https://www.artsy.net/artist/issei-suda
   text: issei suda
--
-  link: http://www.artnet.com/artists/shikanosuke-yagaki/
+  separator: ""
+- 
+  link: >
+    http://www.artnet.com/artists/shikanosuke-yagaki/
   text: shikanosuke yagaki
+  separator: ""
 
 ----
 
 Contact:
 
--
-	link: http://instagram.com/jerome_a_ 
-	text: instagram
--
-	email: jerome@the-invisible-cities.com
-	text: email
--
-	link: https://tinyletter.com/the-invisible-cities
-	text: newsletter
+- 
+  link: http://instagram.com/jerome_a_
+  text: instagram
+  email: ""
+- 
+  link: ""
+  text: email
+  email: jerome@the-invisible-cities.com
+- 
+  link: >
+    https://theinvisiblecities.eo.page/signup
+  text: newsletter
+  email: ""
+
+----
+
+Published: February 2014
 
 ----
 
