@@ -90,7 +90,7 @@ function archiveDate($string){
   'twenty-sixth',
   'twenty-seventh',
   'twenty-eighth',
-  'twenty-nineth',
+  'twenty-ninth',
   'thirtieth',
   'thirty-first');
 
