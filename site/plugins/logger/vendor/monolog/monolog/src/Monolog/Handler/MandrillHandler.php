@@ -30,6 +30,8 @@ class MandrillHandler extends MailHandler
      *
      * @param string                 $apiKey  A valid Mandrill API key
      * @param callable|Swift_Message $message An example message for real messages, only the body will be replaced
+     *
+     * @throws \InvalidArgumentException if not a Swift Message is set
      */
     public function __construct(string $apiKey, callable|Swift_Message $message, int|string|Level $level = Level::Error, bool $bubble = true)
     {
@@ -68,8 +70,8 @@ class MandrillHandler extends MailHandler
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, 'https://mandrillapp.com/api/1.0/messages/send-raw.json');
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
             'key' => $this->apiKey,
             'raw_message' => (string) $message,
