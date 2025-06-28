@@ -4,34 +4,27 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
-use InvalidArgumentException;
 use function array_key_exists;
-use function assert;
 use function in_array;
+use InvalidArgumentException;
 use function is_int;
 use function is_string;
 
 trait ParameterTrait
 {
     /**
-     * @var array<non-empty-string, mixed>
+     * @var array<string, mixed>
      */
     private array $parameters = [];
 
-    /**
-     * @var non-empty-string|null
-     */
     private null|string $issuer = null;
 
-    /**
-     * @var non-empty-string|null
-     */
     private null|string $label = null;
 
     private bool $issuer_included_as_parameter = true;
 
     /**
-     * @return array<non-empty-string, mixed>
+     * @return array<string, mixed>
      */
     public function getParameters(): array
     {
@@ -47,7 +40,7 @@ trait ParameterTrait
     public function getSecret(): string
     {
         $value = $this->getParameter('secret');
-        (is_string($value) && $value !== '') || throw new InvalidArgumentException('Invalid "secret" parameter.');
+        is_string($value) || throw new InvalidArgumentException('Invalid "secret" parameter.');
 
         return $value;
     }
@@ -85,7 +78,7 @@ trait ParameterTrait
     public function getDigits(): int
     {
         $value = $this->getParameter('digits');
-        (is_int($value) && $value > 0) || throw new InvalidArgumentException('Invalid "digits" parameter.');
+        is_int($value) || throw new InvalidArgumentException('Invalid "digits" parameter.');
 
         return $value;
     }
@@ -93,7 +86,7 @@ trait ParameterTrait
     public function getDigest(): string
     {
         $value = $this->getParameter('algorithm');
-        (is_string($value) && $value !== '') || throw new InvalidArgumentException('Invalid "algorithm" parameter.');
+        is_string($value) || throw new InvalidArgumentException('Invalid "algorithm" parameter.');
 
         return $value;
     }
@@ -144,21 +137,20 @@ trait ParameterTrait
     }
 
     /**
-     * @return array<non-empty-string, callable>
+     * @return array<string, callable>
      */
     protected function getParameterMap(): array
     {
         return [
-            'label' => function (string $value): string {
-                assert($value !== '');
+            'label' => function ($value) {
                 $this->hasColon($value) === false || throw new InvalidArgumentException(
                     'Label must not contain a colon.'
                 );
 
                 return $value;
             },
-            'secret' => static fn (string $value): string => mb_strtoupper(trim($value, '=')),
-            'algorithm' => static function (string $value): string {
+            'secret' => static fn ($value): string => mb_strtoupper(trim((string) $value, '=')),
+            'algorithm' => static function ($value): string {
                 $value = mb_strtolower($value);
                 in_array($value, hash_algos(), true) || throw new InvalidArgumentException(sprintf(
                     'The "%s" digest is not supported.',
@@ -172,8 +164,7 @@ trait ParameterTrait
 
                 return (int) $value;
             },
-            'issuer' => function (string $value): string {
-                assert($value !== '');
+            'issuer' => function ($value) {
                 $this->hasColon($value) === false || throw new InvalidArgumentException(
                     'Issuer must not contain a colon.'
                 );
@@ -183,9 +174,6 @@ trait ParameterTrait
         ];
     }
 
-    /**
-     * @param non-empty-string $value
-     */
     private function hasColon(string $value): bool
     {
         $colons = [':', '%3A', '%3a'];

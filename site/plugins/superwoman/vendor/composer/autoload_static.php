@@ -4,16 +4,11 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit699f675418ed0db66a044abc4b0d733f
+class ComposerStaticInitb8b48976c6ec875c4527956644e9e20c
 {
-    public static $files = array (
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
-    );
-
     public static $prefixLengthsPsr4 = array (
         'P' => 
         array (
-            'Psr\\Clock\\' => 10,
             'ParagonIE\\ConstantTime\\' => 23,
         ),
         'O' => 
@@ -23,10 +18,6 @@ class ComposerStaticInit699f675418ed0db66a044abc4b0d733f
     );
 
     public static $prefixDirsPsr4 = array (
-        'Psr\\Clock\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/clock/src',
-        ),
         'ParagonIE\\ConstantTime\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
@@ -44,9 +35,9 @@ class ComposerStaticInit699f675418ed0db66a044abc4b0d733f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit699f675418ed0db66a044abc4b0d733f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit699f675418ed0db66a044abc4b0d733f::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit699f675418ed0db66a044abc4b0d733f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb8b48976c6ec875c4527956644e9e20c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb8b48976c6ec875c4527956644e9e20c::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitb8b48976c6ec875c4527956644e9e20c::$classMap;
 
         }, null, ClassLoader::class);
     }

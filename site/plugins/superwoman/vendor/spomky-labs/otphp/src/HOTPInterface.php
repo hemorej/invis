@@ -19,9 +19,7 @@ interface HOTPInterface extends OTPInterface
      * If the secret is null, a random 64 bytes secret will be generated.
      *
      * @param null|non-empty-string $secret
-     * @param 0|positive-int $counter
      * @param non-empty-string $digest
-     * @param positive-int $digits
      *
      * @deprecated Deprecated since v11.1, use ::createFromSecret or ::generate instead
      */

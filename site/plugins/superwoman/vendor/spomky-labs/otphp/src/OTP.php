@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
-use Exception;
-use InvalidArgumentException;
-use ParagonIE\ConstantTime\Base32;
-use RuntimeException;
-use function assert;
 use function chr;
 use function count;
+use Exception;
+use InvalidArgumentException;
 use function is_string;
+use ParagonIE\ConstantTime\Base32;
+use RuntimeException;
 use const STR_PAD_LEFT;
 
 abstract class OTP implements OTPInterface
@@ -35,9 +34,6 @@ abstract class OTP implements OTPInterface
         return str_replace($placeholder, $provisioning_uri, $uri);
     }
 
-    /**
-     * @param 0|positive-int $input
-     */
     public function at(int $input): string
     {
         return $this->generateOTP($input);
@@ -53,10 +49,6 @@ abstract class OTP implements OTPInterface
 
     /**
      * The OTP at the specified input.
-     *
-     * @param 0|positive-int $input
-     *
-     * @return non-empty-string
      */
     protected function generateOTP(int $input): string
     {
@@ -73,7 +65,7 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param array<non-empty-string, mixed> $options
+     * @param array<string, mixed> $options
      */
     protected function filterOptions(array &$options): void
     {
@@ -91,10 +83,7 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param non-empty-string $type
-     * @param array<non-empty-string, mixed> $options
-     *
-     * @return non-empty-string
+     * @param array<string, mixed> $options
      */
     protected function generateURI(string $type, array $options): string
     {
@@ -103,7 +92,7 @@ abstract class OTP implements OTPInterface
         $this->hasColon($label) === false || throw new InvalidArgumentException('Label must not contain a colon.');
         $options = [...$options, ...$this->getParameters()];
         $this->filterOptions($options);
-        $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options, '', '&'));
+        $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options));
 
         return sprintf(
             'otpauth://%s/%s?%s',
@@ -113,28 +102,18 @@ abstract class OTP implements OTPInterface
         );
     }
 
-    /**
-     * @param non-empty-string $safe
-     * @param non-empty-string $user
-     */
     protected function compareOTP(string $safe, string $user): bool
     {
         return hash_equals($safe, $user);
     }
 
-    /**
-     * @return non-empty-string
-     */
     private function getDecodedSecret(): string
     {
         try {
-            $decoded = Base32::decodeUpper($this->getSecret());
+            return Base32::decodeUpper($this->getSecret());
         } catch (Exception) {
             throw new RuntimeException('Unable to decode the secret. Is it correctly base32 encoded?');
         }
-        assert($decoded !== '');
-
-        return $decoded;
     }
 
     private function intToByteString(int $int): string
