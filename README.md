@@ -14,8 +14,8 @@ You can read all about the whole design process [here](https://jerome-arfouche.c
 
 ### Submodule update
 
-cd `submodule`  
-git checkout tag    
-cd ..  
-git commit -m ''  
-git submodule update --init --recursive  
+`cd <submodule>`  
+`git checkout tag`    
+`cd ..`  
+`git commit -m ''`  
+`git submodule update --init --recursive`  
