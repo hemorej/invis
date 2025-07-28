@@ -132,8 +132,13 @@ function location(){
       $requestURL = "https://ipapi.co/$remote/json?key=$key";
 
       $data = \Remote::get($requestURL);
-      $cache->set($remote, $data->content());
-      $loc = json_decode($data->content());
+      $response = $data->content();
+      if($response->error == true){
+        throw new Exception($response->reason);
+      }
+
+      $cache->set($remote, $response);
+      $loc = json_decode($response);
     }
 
     return $loc;

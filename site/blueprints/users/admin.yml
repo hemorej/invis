@@ -2,7 +2,7 @@ title: User
 type: fields
 headline: User
 fields:
-  secret:
-    label: Secret
+  totp:
+    label: TOTP code
     type:  text
     disabled: true
