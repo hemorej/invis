@@ -50,6 +50,8 @@ return [
         ]
     ],
 
+    'panel.vue.compiler' => false,
+
     'hooks' => [
       'page.update:after' => function ($newPage, $oldPage = null) {
         $shippingHandler = new \ShippingHandler();

@@ -61,38 +61,39 @@ function archiveDate($string){
   $day = date('j', strtotime($string));
   $year = '\'' . date('y', strtotime($string));
 
-  $textualNumbers = array(
-  'first',
-  'second',
-  'third',
-  'fourth',
-  'fifth',
-  'sixth',
-  'seventh',
-  'eighth',
-  'ninth',
-  'tenth',
-  'eleventh',
-  'twelfth',
-  'thirteenth',
-  'fourteenth',
-  'fifteenth',
-  'sixteenth',
-  'seventeenth',
-  'eighteenth',
-  'nineteenth',
-  'twentieth',
-  'twenty-first',
-  'twenty-second',
-  'twenty-third',
-  'twenty-fourth',
-  'twenty-fifth',
-  'twenty-sixth',
-  'twenty-seventh',
-  'twenty-eighth',
-  'twenty-ninth',
-  'thirtieth',
-  'thirty-first');
+  $textualNumbers = [
+    'first',
+    'second',
+    'third',
+    'fourth',
+    'fifth',
+    'sixth',
+    'seventh',
+    'eighth',
+    'ninth',
+    'tenth',
+    'eleventh',
+    'twelfth',
+    'thirteenth',
+    'fourteenth',
+    'fifteenth',
+    'sixteenth',
+    'seventeenth',
+    'eighteenth',
+    'nineteenth',
+    'twentieth',
+    'twenty-first',
+    'twenty-second',
+    'twenty-third',
+    'twenty-fourth',
+    'twenty-fifth',
+    'twenty-sixth',
+    'twenty-seventh',
+    'twenty-eighth',
+    'twenty-ninth',
+    'thirtieth',
+    'thirty-first',
+  ];
 
   return implode(' ', array($month, $textualNumbers[$day-1]));
 }
@@ -133,8 +134,9 @@ function location(){
 
       $data = \Remote::get($requestURL);
       $response = $data->content();
-      if($response->error == true){
-        throw new Exception($response->reason);
+
+      if(property_exists($response, 'error') && $response->error == true){
+          throw new Exception($response->reason);
       }
 
       $cache->set($remote, $response);
@@ -143,6 +145,7 @@ function location(){
 
     return $loc;
   }catch(\Exception $e){
+    error_log($e->getMessage());
     $logger = (new Logger\Logger('geolocation'))->getLogger();
     $logger->error('Could not resolve IP address: ' . $e->getMessage());
   

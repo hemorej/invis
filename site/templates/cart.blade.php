@@ -11,7 +11,7 @@
     </div>
 </noscript>
 
-@if(!$kirby->session()->get('txn') or $txn->products()->toStructure()->count() === 0)
+@if(!$kirby->session()->get('txn') or empty($txn) or $txn->products()->toStructure()->count() === 0)
     <section class="f5 f4-m f3-ns black-70 db ph2">
         Your cart is empty. Would you like to look at some <a class="f5 f4-m f3-ns pa2 link black-60 hover-white hover-bg-gold" href="./">prints</a>?
     </section>

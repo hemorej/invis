@@ -18,7 +18,7 @@ fields:
     type: info
     width: 1/4
     text: |
-      <a href="/panel/pages/prints#orders">back to orders</a><br />
+      <a href="/panel/pages/prints?tab=orders">back to orders</a><br />
   txn_id:
     label: transaction id
     type: text

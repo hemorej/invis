@@ -15,7 +15,7 @@
 	</div>
 
 	@php
-        $items = array();
+        $items = [];
         $total = 0;
         foreach($order->products()->yaml() as $product)
         {   

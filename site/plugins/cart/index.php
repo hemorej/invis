@@ -12,22 +12,23 @@ Kirby::plugin('cart/cart', [
 		'method' => 'POST',
 		'action'  => function () {
 			if(csrf(get('csrf')) === true){
-				$customer = array(
+				$customer = [
 					'name' => get('name'),
 					'email' => get('email'),
-						'address' => array(
+						'address' => [
 							"address_line_1" => get('line1'),
 							"address_line_2" => get('line2'),
 							"city" => get('city'),
 							"country" => get('country'),
 							"postal_code" => get('postcode'),
 							"state" => get('province')
-						)
-					);
+						]
+					];
 
-				kirby()->impersonate('kirby');
-				page(kirby()->session()->get('txn'))->update(['customer' => Yaml::encode($customer)]);
-				$shipping = (new \Cart\Cart())->addShipping(get('country'), get('email'));
+					$cart = new \Cart\Cart();
+					kirby()->impersonate('kirby');
+					$cart->getCartPage()->update(['customer' => Yaml::encode($customer)]);
+					$shipping = $cart->addShipping(get('country'), get('email'));
 
 				return [
 			      'status' => 'ok',
