@@ -75,7 +75,7 @@ class StripeConnector
 	public function createSession(array $lineItems, string $customerEmail = null)
 	{
 		try{
-			$sessionLineItems;
+			$sessionLineItems = [];
 
 			foreach($lineItems as $lineItem){
 				$productName = $lineItem['description'] . $lineItem['name'];

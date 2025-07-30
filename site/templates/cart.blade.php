@@ -55,7 +55,7 @@
                         <img src="{{ $product->images()->first()->crop(100)->url() }}" title="{{ $item->name() }}">
                     </div>
                     <div class="fl w-80 w-60-ns pl3">
-                        <a class="black-80 pv2 f4 hover-bg-gold hover-white link" href="{{ $product->url() }}">
+                        <a class="black-80 ttl ph2 f4 hover-bg-gold hover-white link" href="{{ $product->url() }}">
                         {{ $item->name() }}&nbsp;&mdash;&nbsp;
                         @if($item->variant()->isNotEmpty())
                             {{ $item->variant() }}
@@ -63,11 +63,11 @@
                         </a>
                         <span class="db-ns dn pt2 f6 gray hide-for-small">{{ $product->meta()->value() }}</span>
                     </div>
-                    <div :class="[inCheckout == true ? 'w-100 w-30-ns' : 'w-80 w-20-ns']" class="fl tr-ns tr mt2 mt1-ns">
+                    <div :class="[inCheckout == true ? 'w-100 w-30-ns' : 'w-80 w-10-ns']" class="fl tr-ns tr mt2 mt1-ns">
                         <span v-show="inCheckout == true" class="dib">CAD{{ $item->amount()->value }}&nbsp;x{{$item->quantity()->value}}</span>
                         <span v-show="inCheckout == false" class="dib">CAD{{ $item->amount()->value }}</span>
                     </div>
-                    <div v-show="inCheckout == false" class="fl w-20 w-10-ns tr-ns tc db-ns dn">
+                    <div v-show="inCheckout == false" class="fl w-20 w-15-ns tr-ns tc db-ns dn">
                         <form action="" method="post" class="dib">
                             <input type="hidden" name="csrf" value="@csrf()">
                             <input type="hidden" name="action" value="delete">
