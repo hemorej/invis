@@ -8,7 +8,8 @@ You can read all about the whole design process [here](https://jerome-arfouche.c
 
 
 ### Local setup and start  
-`ddev config --php-version=8.3 --omit-containers=db`  
+`ddev config --php-version=8.3 --omit-containers=db`
+`ddev xdebug`  
 `ddev start`  
 `ddev launch`  
 
