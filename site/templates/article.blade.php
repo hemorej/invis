@@ -65,7 +65,7 @@
 				@endif
 
 					@if($current->isPortrait() && count($page->images()) == 1)
-						<img style="max-width: 50%" alt="{{$headline}}" class="lazy" data-srcset="{{ $current->srcset('vertical') }}">
+						<img style="max-width: 45%" alt="{{$headline}}" class="lazy" data-srcset="{{ $current->srcset('vertical') }}">
 					@elseif($current->isPortrait())
 						<img alt="{{$headline}}" class="lazy" data-srcset="{{ $current->srcset('vertical') }}">
 					@else
