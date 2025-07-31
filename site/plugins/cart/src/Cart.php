@@ -114,8 +114,11 @@ class Cart
 		$lineItems = [];
 		$products = $this->getCartPage()->products()->toStructure();
 		foreach( $products as $product ) {
+
 			$preview = $this->site->page( $product->uri()->value )->images()->first()->crop( 100 )->url();
 			$lineItems[] = [
+				'product_uuid' => $product->uuid(),
+				'variant_uuid' => $product->suuid(),
 				'name' => $product->variant()->value,
 				'description' => $product->name()->value,
 				'amount' => $product->amount()->value * 100 * $discount,
