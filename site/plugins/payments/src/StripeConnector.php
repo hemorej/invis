@@ -117,7 +117,7 @@ class StripeConnector
 				$priceUuid = $lineItem['variant_uuid'];
 				$prices = $this->stripe->prices->search( ['query' => 'active:"true" AND lookup_key:"' . $priceUuid . '"'] );
 
-				if( !empty( $prices ) ) {
+				if( !empty( $prices->data ) ) {
 					$priceId = $prices->data[0]->id;
 				} else {
 					// price not found, does product exist ?
@@ -139,6 +139,8 @@ class StripeConnector
 						$prices = $this->stripe->prices->search( ['query' => 'active:"true" AND product:"' . $productId . '"'] );
 						if( empty( $prices->data ) ) {
 							$createPrice = true;
+						} else {
+							$priceId = $prices->data[0]->id;
 						}
 					}
 				}
