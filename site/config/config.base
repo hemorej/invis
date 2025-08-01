@@ -3,7 +3,22 @@ include_once( __DIR__ . '/../models/shippingHandler.php' );
 
 return [
 	'env' => 'dev',
-	'dev_ip' => '',
+	'geolocation' => (object)[
+		'ip' => '',
+		'network' => '',
+		'city' => '',
+		'region' => '',
+		'region_code' => '',
+		'country' => '',
+		'country_name' => '',
+		'country_code' => '',
+		'country_tld' => '',
+		'in_eu' => '',
+		'timezone' => '',
+		'country_calling_code' => '',
+		'currency' => '',
+		'currency_name' => '',
+	],
 
 	'debug' => true,
 	'cache' => [

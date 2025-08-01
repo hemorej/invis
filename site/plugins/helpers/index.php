@@ -149,7 +149,7 @@ function getHomeImage()
 function location()
 {
 	if( !in_array( kirby()->option( 'env', 'dev' ), ['prod', 'production'] ) )
-		return kirby()->option( 'dev_ip' );
+		return kirby()->option( 'geolocation' );
 
 	try {
 		$cache = kirby()->cache( 'backend' );
