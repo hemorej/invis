@@ -7,16 +7,23 @@ It's a custom made theme for [Kirby](https://getkirby.com) using [Tachyons](http
 You can read all about the whole design process [here](https://jerome-arfouche.com/blog)  
 
 
-### Local setup and start  
+### local setup and start  
 `ddev config --php-version=8.3 --omit-containers=db`
 `ddev xdebug`  
 `ddev start`  
 `ddev launch`  
 
-### Submodule update
+### submodule update
 
 `cd <submodule>`  
 `git checkout tag`    
 `cd ..`  
 `git commit -m ''`  
 `git submodule update --init --recursive`  
+
+
+### license activation
+
+1. Download license file  
+2. Rename the file to .license (without extensions)  
+3. Place it in the /site/config/ folder of your Kirby installation  

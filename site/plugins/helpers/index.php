@@ -2,9 +2,9 @@
 
 @include_once __DIR__ . '/vendor/autoload.php';
 
-use \Mailbun\Mailbun;
+use Mailbun\Mailbun;
 use Kirby\Http\Remote;
-use \Payments\StripeConnector as Stripe;
+use Payments\StripeConnector as Stripe;
 
 Kirby::plugin( 'helpers/helpers', [
 	'options' => [
@@ -148,6 +148,9 @@ function getHomeImage()
  */
 function location()
 {
+	if( !in_array( kirby()->option( 'env', 'dev' ), ['prod', 'production'] ) )
+		return kirby()->option( 'dev_ip' );
+
 	try {
 		$cache = kirby()->cache( 'backend' );
 		$remote = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP );
