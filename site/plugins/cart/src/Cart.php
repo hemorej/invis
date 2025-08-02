@@ -8,6 +8,7 @@ use Mailbun\Mailbun;
 use Kirby\Uuid\Uuid;
 use Kirby\Http\Remote;
 use Payments\StripeConnector as Stripe;
+use Kirby\Exception\InvalidArgumentException;
 
 class Cart
 {
@@ -26,6 +27,11 @@ class Cart
 		$this->logger = $instance->getLogger();
 	}
 
+	/**
+	 * @param $total
+	 * @return string
+	 * @throws \Exception
+	 */
 	public function estimateCurrency( $total )
 	{
 		if( $data = $this->cache->get( 'rates' ) ) {
@@ -48,6 +54,10 @@ class Cart
 		return $estimate;
 	}
 
+	/**
+	 * @param $variant
+	 * @return bool|int
+	 */
 	public static function inStock( $variant )
 	{
 		if( strstr( $variant->toString(), '::' ) ) {
@@ -66,6 +76,10 @@ class Cart
 		return false;
 	}
 
+	/**
+	 * @param $items
+	 * @return string
+	 */
 	public function contents( $items )
 	{
 		$types = [];
@@ -109,6 +123,11 @@ class Cart
 		return page( 'prints/orders' )->draft( $this->session->get( 'txn' ) );
 	}
 
+	/**
+	 * @param $discount
+	 * @param $shipping
+	 * @return array
+	 */
 	public function getLineItems( $discount = 1, $shipping = 0 )
 	{
 		$lineItems = [];
@@ -116,8 +135,7 @@ class Cart
 		foreach( $products as $product ) {
 			$preview = $this->site->page( $product->uri()->value )->images()->first()->crop( 100 )->url();
 			$lineItems[] = [
-				'product_uuid' => $product->uuid(),
-				'variant_uuid' => $product->suuid()->value,
+				'price_external_id' => $product->price_external_id()->value,
 				'name' => $product->variant()->value,
 				'description' => $product->name()->value,
 				'amount' => $product->amount()->value * 100 * $discount,
@@ -138,6 +156,9 @@ class Cart
 		return $lineItems;
 	}
 
+	/**
+	 * @return \Collection
+	 */
 	public function items()
 	{
 		$return = new \Collection();
@@ -156,6 +177,13 @@ class Cart
 		return $return;
 	}
 
+	/**
+	 * @param $id
+	 * @param $quantity
+	 * @return void
+	 * @throws InvalidArgumentException
+	 * @throws \Throwable
+	 */
 	public function add( $id, $quantity )
 	{
 		if( !empty( $quantity ) && $quantity <= 0 )
@@ -182,6 +210,7 @@ class Cart
 					'type' => $product->type()->value(),
 					'uuid' => $product->uuid()->id(),
 					'suuid' => $uuid,
+					'price_external_id' => $variant->external_id()->value,
 					'quantity' => $this->updateQty( $id, $quantityToAdd ),
 				];
 			} else {
@@ -201,7 +230,7 @@ class Cart
 				$timestamp = time();
 
 				kirby()->impersonate( 'kirby' );
-				$page = Page::create( [
+				Page::create( [
 					'parent' => page( 'prints/orders' ),
 					'slug' => $this->txnId,
 					'template' => 'order',
@@ -227,6 +256,11 @@ class Cart
 		}
 	}
 
+	/**
+	 * @param $id
+	 * @param $newQty
+	 * @return bool|int|mixed
+	 */
 	public function updateQty( $id, $newQty )
 	{
 		// $id is formatted uri::variantslug::optionslug
@@ -282,6 +316,11 @@ class Cart
 		return 0;
 	}
 
+	/**
+	 * @param $id
+	 * @return void
+	 * @throws \Throwable
+	 */
 	public function delete( $id )
 	{
 		$items = $this->getCartPage()->products()->yaml();
@@ -295,6 +334,11 @@ class Cart
 		$this->getCartPage()->update( ['products' => \Yaml::encode( $items )] );
 	}
 
+	/**
+	 * @param $discountCode
+	 * @return array|int[]
+	 * @throws \Throwable
+	 */
 	public function applyDiscount( $discountCode )
 	{
 		$discounts = kirby()->site()->page( 'prints' )->discounts()->yaml();
@@ -318,6 +362,12 @@ class Cart
 		return ['total' => 0];
 	}
 
+	/**
+	 * @param $country
+	 * @param $email
+	 * @return array
+	 * @throws \Exception
+	 */
 	public function addShipping( $country, $email )
 	{
 		$region = page( 'prints' )->regions()->toStructure()->findBy( 'country', $country );
@@ -366,6 +416,11 @@ class Cart
 
 	}
 
+	/**
+	 * @param $customerEmail
+	 * @return string
+	 * @throws \Exception
+	 */
 	public function updateStripeSession( $customerEmail )
 	{
 		if( empty( $this->getCartPage()->discount()->value() ) ) {
@@ -387,6 +442,9 @@ class Cart
 		return $stripeSession;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function processStripe()
 	{
 		try {
@@ -424,6 +482,10 @@ class Cart
 
 	}
 
+	/**
+	 * @return void
+	 * @throws \Throwable
+	 */
 	private function updateInventory()
 	{
 		$orderId = $this->getCartPage()->suuid()->value();
@@ -469,6 +531,9 @@ class Cart
 		}
 	}
 
+	/**
+	 * @return void
+	 */
 	private function sendNotifications()
 	{
 		$orderId = $this->getCartPage()->suuid()->value();

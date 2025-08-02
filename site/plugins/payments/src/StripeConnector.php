@@ -2,10 +2,10 @@
 
 namespace Payments;
 
-use \Stripe\Stripe;
-use \Stripe\Product;
-use \Stripe\Price;
-use \Logger\Logger;
+use Stripe\Price;
+use Stripe\Stripe;
+use Logger\Logger;
+use Stripe\Product;
 use Stripe\Customer;
 use Stripe\Collection;
 use Stripe\StripeClient;
@@ -111,51 +111,7 @@ class StripeConnector
 			$sessionLineItems = [];
 
 			foreach( $lineItems as $lineItem ) {
-				$createPrice = false; // assuming price exists and we don't need to create a new one
-
-				// direct search by price id first
-				$priceUuid = $lineItem['variant_uuid'];
-				$prices = $this->stripe->prices->search( ['query' => 'active:"true" AND lookup_key:"' . $priceUuid . '"'] );
-
-				if( !empty( $prices->data ) ) {
-					$priceId = $prices->data[0]->id;
-				} else {
-					// price not found, does product exist ?
-					$products = $this->stripe->products->search( ['query' => 'active:"true" AND metadata["uuid"]:"' . $lineItem['product_uuid'] . '"'] );
-
-					if( empty( $products->data ) ) {
-						// create product
-						$productName = $lineItem['description'] . $lineItem['name'];
-						$product = Product::create( [
-							'name' => $productName,
-							'description' => $lineItem['description'],
-							'images' => empty( $lineItem['images'] ) ? null : $lineItem['images'],
-							'metadata' => ['uuid' => $lineItem['product_uuid']],
-						] );
-						$productId = $product->id;
-						$createPrice = true;
-					} else {
-						$productId = $products->data[0]->id;
-						$prices = $this->stripe->prices->search( ['query' => 'active:"true" AND product:"' . $productId . '"'] );
-						if( empty( $prices->data ) ) {
-							$createPrice = true;
-						} else {
-							$priceId = $prices->data[0]->id;
-						}
-					}
-				}
-
-				if( $createPrice ) {
-					$price = Price::create( [
-						'product' => $productId,
-						'unit_amount' => $lineItem['amount'],
-						'currency' => $lineItem['currency'],
-						'lookup_key' => $priceUuid,
-					] );
-					$priceId = $price->id;
-				}
-
-				$sessionLineItems[] = ['price' => $priceId, 'quantity' => $lineItem['quantity']];
+				$sessionLineItems[] = ['price' => $lineItem['price_external_id'], 'quantity' => $lineItem['quantity']];
 			}
 
 			$sessionObject = [
@@ -216,6 +172,82 @@ class StripeConnector
 		} catch( \Exception $e ) {
 			$this->logger->error( 'Stripe general error', [$e->getMessage()] );
 			throw new \Exception( "Stripe general error" );
+		}
+	}
+
+	/**
+	 * @param $product
+	 * @param $variants
+	 * @return void
+	 * @throws ApiErrorException
+	 * @throws \Throwable
+	 */
+	public function createOrUpdateProduct( $product, $variants )
+	{
+		try {
+			$productAttributes = [
+				'name' => $product->title()->value,
+				'description' => $product->meta()->value,
+				'images' => empty( $product->images()->value ) ? null : $product->images()->value,
+				'metadata' => ['uuid' => $product->uuid()->value],
+			];
+
+			if( empty( $product->external_id()->value ) ) {
+				$stripeProduct = Product::create( $productAttributes );
+				$productStripeId = $stripeProduct->id;
+
+				kirby()->impersonate( kirby()->user() );
+				$product->parent()->update(['external_id' => $productStripeId]);
+			} else {
+				Product::update(
+					$product->external_id()->value,
+					$productAttributes
+				);
+				$productStripeId = $product->external_id()->value;
+			}
+
+			foreach( $variants as $variant ) {
+
+				if( empty( $variant->external_id()->value ) ) {
+					$createPrice = true;
+				} else {
+					// unit amount cannot be changed
+					// diff changes before we take destructive action
+					$price = Price::retrieve($variant->external_id()->value);
+					if($price->unit_amount != $variant->price()->value*100){
+						Price::update($variant->external_id()->value, ['active' => false]);
+						$createPrice = true;
+					} else {
+						$createPrice = false;
+					}
+				}
+
+				if($createPrice) {
+					$priceAttributes = [
+						'product' => $productStripeId,
+						'unit_amount' => intval( $variant->price()->value ) * 100,
+						'currency' => 'CAD',
+						'lookup_key' => $variant->suuid()->value,
+						'transfer_lookup_key' => true
+					];
+					$price = Price::create( $priceAttributes );
+					$priceStripeId = $price->id;
+
+					$variantStructure = $product->parent()->variants()->findBy( 'suuid', $variant->suuid()->value() )->yaml();
+					$storedVariant = $variantStructure[0];
+
+					$updatedVariant = [];
+					$updatedVariant['suuid'] = $storedVariant['suuid'];
+					$updatedVariant['name'] = $storedVariant['name'];
+					$updatedVariant['price'] = $storedVariant['price'];
+					$updatedVariant['external_id'] = $priceStripeId;
+					$updatedVariant['stock'] = $storedVariant['stock'];
+
+					addToStructure( $product->parent(), 'variants', $updatedVariant );
+				}
+			}
+		} catch( \Exception $e ) {
+			$this->logger->error( "Could not update products or prices" . $e->getMessage() );
 		}
 	}
 }

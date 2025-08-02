@@ -49,7 +49,15 @@ function addToStructure( $page, $field, $data = [] )
 	$fieldData[] = $data;
 	$fieldData = \Yaml::encode( $fieldData );
 	try {
-		kirby()->impersonate( 'kirby' );
+// 		@TODO eval if impersonate() is still needed
+//		if( !empty( $page->parent() ) && $page->parent()->uid() == 'prints'){
+//			$user = kirby()->user();
+//		}else {
+//			$user = 'kirby';
+//		}
+//
+//		kirby()->impersonate( $user );
+
 		$page->update( [$field => $fieldData] );
 		return true;
 	} catch( \Exception $e ) {

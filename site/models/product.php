@@ -1,8 +1,11 @@
 <?php
 class ProductPage extends Page
 {
-    public function publishDate()
-    {
+	/**
+	 * @return false|int
+	 */
+	public function publishDate(): false|int
+	{
         return strtotime($this->published());
     }
 }
