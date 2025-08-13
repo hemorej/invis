@@ -1,0 +1,5 @@
+User-agent: *
+Disallow:
+Disallow: /panel
+Disallow: /assets
+Sitemap: https://the-invisible-cities.com/sitemap.xml
