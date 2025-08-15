@@ -5,6 +5,7 @@
 use Mailbun\Mailbun;
 use Kirby\Http\Remote;
 use Payments\StripeConnector as Stripe;
+use Kirby\Toolkit\Date;
 
 Kirby::plugin( 'helpers/helpers', [
 	'options' => [
@@ -424,4 +425,12 @@ function countryList()
 		"Yemen",
 		"Zambia",
 		"Zimbabwe"];
+}
+
+/**
+ * @return string
+ */
+function getToday()
+{
+	return Date::today(new DateTimeZone('America/Montreal'))->format('Y-m-d');
 }

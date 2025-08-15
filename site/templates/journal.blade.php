@@ -2,8 +2,8 @@
 @include("partials.menu")
 
 @php
-    $articles = $page->children()->listed()->flip()->paginate(10);
-    $journals = $site->page('journal-series')->children()->listed()->flip();
+    $articles = page()->children()->listed()->flip()->paginate(10);
+    $journals = site()->page('journal-series')->children()->listed()->flip();
 @endphp
 
 <section class="cf mt5-ns mt3 center">

@@ -2,44 +2,50 @@
 <html lang="en">
 <head>
     @php
-        $image = page('projects/portfolio')->images()->first()->resize(600)->url();
-        $url = $site->url();
         if(isset($meta)){
-          $image = $meta['image'];
-          $url = $meta['url'];
+            $image = $meta['image'];
+            $url = $meta['url'];
+        } else {
+            $image = page('projects/portfolio')->images()->first()->resize(600)->url();
+            $url = site()->url();
         }
 
-        if(!empty($page->title())){
-          if($page->title() == 'journal'){
+        if(!empty(page()->title())){
+          if(page()->title() == 'journal'){
             // journal is the title and uid, the only exception to the below case
-            $title = $page->title();
-          }elseif($page->title() != $page->uid()){
-            $title = $page->title();
-          }elseif($site->page()->title() == 'cart'){
-            $title = $site->page()->title();
+            $title = page()->title();
+          }elseif(page()->title() != page()->uid()){
+            $title = page()->title();
+          }elseif(site()->page()->title() == 'cart'){
+            $title = site()->page()->title();
           }
         }else{
-          $title = $page->published()->toString();
+          $title = page()->published()->toString();
         }
     @endphp
 
-    <title>{{ $site->title() }} - {{ strtolower($title) }}</title>
+    <title>{{ site()->title() }} — {{ strtolower($title) }}</title>
     <meta charset="utf-8"/>
-    <meta name="description" content="{{ $site->description() }}"/>
+    <meta name="description" content="{{ site()->description() }}"/>
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
 
-    <meta itemprop="name" content="{{ $site->title() }}">
-    <meta itemprop="description" content="{{ $site->description() }}">
+    <meta itemprop="name" content="{{ site()->title() }}">
+    <meta itemprop="description" content="{{ site()->description() }}">
     <meta itemprop="image" content="{{ $image }}">
 
-    <meta property="og:url" content="{{ $url }}">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="{{ $site->title() }}">
-    <meta property="og:description" content="{{ $site->description() }}">
-    <meta property="og:image" content="{{ $image }}">
     <meta property="og:locale" content="en_CA">
-    <meta property="og:site_name" content="{{ $site->title() }}">
+    <meta property="og:site_name" content="{{ site()->title() }}">
+
+    @sectionMissing('additional-meta-tags')
+        <meta property="og:url" content="{{ $url }}">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="{{ site()->title() }}">
+        <meta property="og:description" content="{{ site()->description() }}">
+        <meta property="og:image" content="{{ $image }}">
+    @else
+        @yield('additional-meta-tags')
+    @endif
 
     @if(option('env') == 'prod')
         @css('assets/dist/app.min.css')
