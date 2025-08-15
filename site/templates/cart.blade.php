@@ -11,7 +11,7 @@
     </div>
 </noscript>
 
-@if(!$kirby->session()->get('txn') or $txn->products()->toStructure()->count() === 0)
+@if(!$kirby->session()->get('txn') or empty($txn) or $txn->products()->toStructure()->count() === 0)
     <section class="f5 f4-m f3-ns black-70 db ph2">
         Your cart is empty. Would you like to look at some <a class="f5 f4-m f3-ns pa2 link black-60 hover-white hover-bg-gold" href="./">prints</a>?
     </section>
@@ -55,7 +55,7 @@
                         <img src="{{ $product->images()->first()->crop(100)->url() }}" title="{{ $item->name() }}">
                     </div>
                     <div class="fl w-80 w-60-ns pl3">
-                        <a class="black-80 pv2 f4 hover-bg-gold hover-white link" href="{{ $product->url() }}">
+                        <a class="black-80 ttl ph2 f4 hover-bg-gold hover-white link" href="{{ $product->url() }}">
                         {{ $item->name() }}&nbsp;&mdash;&nbsp;
                         @if($item->variant()->isNotEmpty())
                             {{ $item->variant() }}
@@ -63,11 +63,11 @@
                         </a>
                         <span class="db-ns dn pt2 f6 gray hide-for-small">{{ $product->meta()->value() }}</span>
                     </div>
-                    <div :class="[inCheckout == true ? 'w-100 w-30-ns' : 'w-80 w-20-ns']" class="fl tr-ns tr mt2 mt1-ns">
+                    <div :class="[inCheckout == true ? 'w-100 w-30-ns' : 'w-80 w-10-ns']" class="fl tr-ns tr mt2 mt1-ns">
                         <span v-show="inCheckout == true" class="dib">CAD{{ $item->amount()->value }}&nbsp;x{{$item->quantity()->value}}</span>
                         <span v-show="inCheckout == false" class="dib">CAD{{ $item->amount()->value }}</span>
                     </div>
-                    <div v-show="inCheckout == false" class="fl w-20 w-10-ns tr-ns tc db-ns dn">
+                    <div v-show="inCheckout == false" class="fl w-20 w-15-ns tr-ns tc db-ns dn">
                         <form action="" method="post" class="dib">
                             <input type="hidden" name="csrf" value="@csrf()">
                             <input type="hidden" name="action" value="delete">
@@ -75,7 +75,7 @@
                             <button class="b--silver ba bg-animate bg-white silver border-box f7 no-underline br-100 db h1 w1 pl1" type="submit" type="submit">x</button>
                         </form>
 
-                        <input v-on:change="updateCart" class="b--black-20 di input-reset w-30 f5 mr0 ba tc" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->suuid() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->id()) }}" data-sku="{{ $item->suuid() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
+                        <input v-on:change="updateCart" class="b--black-20 di input-reset w-30 f5 mr0 ba tc" data-variant="{{ esc($item->variant()) }}" id="{{ $item->uri() }}::{{ $item->suuid() }}" value="{{ $item->quantity() }}" min="0" max="{{ Cart::inStock($item->variant()) }}" data-sku="{{ $item->suuid() }}" data-amount="{{ $item->amount()->value() }}" data-name="{{ $item->name() }}" type="number">
                         <input ref="inputCsrf" type="hidden" name="csrf" value="@csrf()">
                     </div>
                 </div>

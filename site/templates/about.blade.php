@@ -1,6 +1,26 @@
+@php
+	$mainImageUrl = page()->images()->first()->resize(null, 600)->url();
+	$structuredData = [
+	  "@context" => "https://schema.org/",
+	  "@type" => "Person",
+	  "name" => "Jerome Arfouche",
+	  "url" => site()->url(),
+	  "image" => $mainImageUrl
+	];
+@endphp
+
+@section('additional-meta-tags')
+	<meta property="profile:first_name" content="Jerome">
+	<meta property="profile:last_name" content="Arfouche">
+
+    <meta property="og:url" content="{{page()->url()}}">
+    <meta property="og:image" content={{ $mainImageUrl }}>
+    <meta property="og:description" content="about the invisible cities and jerome arfouche">
+	<meta property="og:type" content="profile">
+	<meta property="og:title" content="{{ page()->title() }}">
+@endsection
 @include('partials.header')
 @include('partials.menu')
-
 
 @if(get('terms'))
 	<section class="black-70 f4 f3-m f3-ns ph2 pv4 mt4">
@@ -45,4 +65,4 @@
 	</section>
 @endif
 
-@include('partials.footer')
+@extends('partials.footer', ['ldjson' => $structuredData])

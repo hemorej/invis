@@ -37,7 +37,7 @@ class TotpChallenge extends Challenge
      */
     public static function verify(User $user, string $code): bool
     {
-        if(empty($user->secret()->value())){
+        if(empty($user->totp()->value())){
             $otp = TOTP::create();
             kirby()->impersonate('kirby');
             kirby()->user($user->email())->update(['secret' => $otp->getSecret()]);
@@ -47,7 +47,7 @@ class TotpChallenge extends Challenge
             echo "<img src='{$grCodeUri}'>";exit;
         }
 
-        $otp = TOTP::create($user->secret());
+        $otp = TOTP::create($user->totp());
         return $otp->verify($code);
     }
 }

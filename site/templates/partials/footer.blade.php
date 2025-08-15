@@ -4,6 +4,12 @@
 
 	@include('partials.consent')
 	@yield('scripts')
+
+	@isset($ldjson)
+		<script type="application/ld+json">
+			<?= json_encode($ldjson, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>
+		</script>
+	@endisset
 </main>
 
 </html>

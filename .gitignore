@@ -1,8 +1,9 @@
 *.jpg
+*.jpeg
 *.JPG
 *.woff
 *.eot
-# content/4_journal/*
+content/4_journal/*
 content/orders/*
 site/accounts/*
 vendor/*
@@ -25,3 +26,6 @@ _drafts/
 site/config/config.the-*
 .idea/
 test_plan.md
+site/config/config.php
+site/config/license
+site/config/.license

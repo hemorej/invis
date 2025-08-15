@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eaa10299fa512c51fc49a8c37be39488",
+    "content-hash": "cf95086f117769c72fab04f3b48f0851",
     "packages": [
         {
             "name": "stripe/stripe-php",
-            "version": "v10.21.0",
+            "version": "v17.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "b4ab319731958077227fad1874a3671458c5d593"
+                "reference": "893946057e43b145826b0dfd7f398673e381e2ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/b4ab319731958077227fad1874a3671458c5d593",
-                "reference": "b4ab319731958077227fad1874a3671458c5d593",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/893946057e43b145826b0dfd7f398673e381e2ae",
+                "reference": "893946057e43b145826b0dfd7f398673e381e2ae",
                 "shasum": ""
             },
             "require": {
@@ -27,11 +27,9 @@
                 "php": ">=5.6.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "3.5.0",
-                "php-coveralls/php-coveralls": "^2.5",
+                "friendsofphp/php-cs-fixer": "3.72.0",
                 "phpstan/phpstan": "^1.2",
-                "phpunit/phpunit": "^5.7 || ^9.0",
-                "squizlabs/php_codesniffer": "^3.3"
+                "phpunit/phpunit": "^5.7 || ^9.0"
             },
             "type": "library",
             "extra": {
@@ -63,18 +61,18 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v10.21.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v17.4.0"
             },
-            "time": "2023-08-11T00:23:24+00:00"
+            "time": "2025-07-01T20:23:15+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {},
-    "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }

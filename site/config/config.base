@@ -1,59 +1,78 @@
 <?php
-include_once(__DIR__ . '/../models/shippingHandler.php');
+
+use Kirby\Cms\Page;
 
 return [
-    'env' => 'dev',
+	'env' => 'dev',
+	'geolocation' => (object)[
+		'ip' => '',
+		'network' => '',
+		'city' => '',
+		'region' => '',
+		'region_code' => '',
+		'country' => '',
+		'country_name' => '',
+		'country_code' => '',
+		'country_tld' => '',
+		'in_eu' => '',
+		'timezone' => '',
+		'country_calling_code' => '',
+		'currency' => '',
+		'currency_name' => '',
+	],
 
-    'debug' => true,
-    'cache' => [
-        'pages' => [
-            'active'  => true,
-            'type'    => 'static',
-            'headers' => true,
-            'ignore' => [
-                'home',
-                'feed',
-                'prints/*'
-            ]
-        ]
-    ],
+	'debug' => true,
+	'cache' => [
+		'pages' => [
+			'active' => true,
+			'type' => 'static',
+			'headers' => true,
+			'ignore' => [
+				'home',
+				'feed',
+				'prints/*',
+			],
+		],
+	],
 
-    'thumbs' => [
-        'quality'   => 90,
-        'format' => 'webp',
-        'srcsets' => [
-            'default' => [600, 800, 1200],
-            'vertical' => [ '400w' => ['height' => 600], '600w' => ['height' => 600], '800w' => ['height' => 600]]
-        ]
-    ],
+	'thumbs' => [
+		'quality' => 90,
+		'format' => 'webp',
+		'srcsets' => [
+			'default' => [600, 800, 1200],
+			'vertical' => ['400w' => ['height' => 600], '600w' => ['height' => 600], '800w' => ['height' => 600]],
+		],
+	],
 
-    'mailgun_domain' => '',
-    'mailgun_key' => '',
-    'alert_address' => '',
-    'from_address' => '',
-    'reply-to_address' => '',
+	'mailgun_domain' => '',
+	'mailgun_key' => '',
+	'alert_address' => '',
+	'from_address' => '',
+	'reply-to_address' => '',
 
-    'stripe_key_pub' => '',
-    'stripe_key_prv' => '',
-    'webhook_secret' => '',
+	'stripe_key_pub' => '',
+	'stripe_key_prv' => '',
+	'webhook_secret' => '',
 
-    'fixer_key' => '',
-    'ipapi_key' => '',
+	'fixer_key' => '',
+	'ipapi_key' => '',
 
-    'cacheTTL' => '14400',
+	'cacheTTL' => '14400',
 
-    'auth' => [
-        'trials' => 5,
-        'challenges' => ['totp', 'email'],
-        'methods' => [
-            'password' => ['2fa' => true]
-        ]
-    ],
+	'auth' => [
+		'trials' => 5,
+		'challenges' => ['totp', 'email'],
+		'methods' => [
+			'password' => ['2fa' => true],
+		],
+	],
 
-    'hooks' => [
-      'page.update:after' => function ($newPage, $oldPage = null) {
-        $shippingHandler = new \ShippingHandler();
-        $shippingHandler->handle($newPage, $oldPage);
-      }
-    ]
+	'panel.vue.compiler' => false,
+
+	'hooks' => [
+		'page.update:after' => function ( Page $newPage, Page $oldPage = null ) {
+			$updateHandler = new PageUpdateHandler();
+			$updateHandler->handle( $newPage, $oldPage );
+		},
+	],
 ];

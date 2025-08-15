@@ -14,26 +14,31 @@ columns:
             text: |
               <a href="/panel/pages/prints#products">back to products</a><br />
           uuid:
-            label: Product ID
-            width: 1/3
-            readonly: true
-            translate: false 
             type: text
-            value: "{{ page.uuid }}"
+            label: Product ID
+            width: 1/4
+            translate: false
+            disabled: true
+          external_id:
+            type: text
+            label: External Product ID
+            width: 1/4
+            help: Auto-generated ID from payment system, leave blank
+            translate: false
           description:
             label: Description
             help: Details for the product page
             type: textarea
             required: true
           published:
+            width: 1/4
             label: Published
             type: date
             help: Publishing date (December 21, 2017).
             required: true
             default: today
-            width: 1/3
           meta:
-            width: 1/3
+            width: 1/4
             label: Meta
             help: Small text for the cart
             type: text
@@ -58,26 +63,30 @@ columns:
                 type:  text
                 help: Describe variant
                 required: true
+                width: 1/2
               price:
                 label: Price
                 type:  text
-                width: 1/3
                 help: Numbers only
                 required: true
                 min: 0
               stock:
                 label: Quantity in stock
                 type: text
-                width: 1/3
-                help: Leave blank for unlimited stock
+                required: true
+                help: Quantity remaining, leave blank for unlimited stock
                 min: 0
               suuid:
                 type: autoranduuid
                 label: SKU
-                width: 1/3
-                readonly: true
-                translate: false 
-                autoranduuid: uuid
+                translate: false
+                help: Internal auto-generated ID, leave blank
+                autoranduuid: suuid
+              external_id:
+                type: text
+                label: External Price ID
+                help: Auto-generated ID from payment system, leave blank
+                translate: false
 
     - width: 1/3
         fields:

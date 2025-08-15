@@ -7,7 +7,7 @@ Kirby::plugin('autoranduuid/autoranduuid', [
     'fields' => [
         'autoranduuid' => [
             'props' => [
-                'autoranduuid' => function ($autoranduuid) {
+                'autoranduuid' => function ($autoranduuid = null) {
                     return Uuid::generate();
                 }
             ]

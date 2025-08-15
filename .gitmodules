@@ -5,9 +5,6 @@
 [submodule "site/plugins/kirby3-xmlsitemap"]
 	path = site/plugins/kirby3-xmlsitemap
 	url = https://github.com/omz13/kirby3-xmlsitemap.git
-[submodule "site/plugins/k3-pagesdisplay-section"]
-	path = site/plugins/k3-pagesdisplay-section
-	url = https://github.com/rasteiner/k3-pagesdisplay-section.git
 [submodule "site/plugins/staticache"]
 	path = site/plugins/staticache
 	url = https://github.com/getkirby/staticache.git

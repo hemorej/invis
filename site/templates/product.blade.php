@@ -1,15 +1,36 @@
 @php 
     use \Cart\Cart;
-    
-    $image = $page->images()->first()->resize(null, 600);
-    $title = $page->title();
-    if( $page->title() == $page->uid())
-        $title = $page->parent()->slug();
 
-    $meta = array('url' => $page->url(), 'image' => $image->url());
+	$page = page();
+    $image = $page->images()->first()->resize(null, 600);
+
+    if( $page->title() == $page->uid()){
+        $title = $page->parent()->slug();
+    } else {
+	    $title = $page->title();
+    }
+
+	$structuredData = [
+        "@context" => "http://schema.org/",
+        "@type" => "Product",
+        "name" => $page->title()->toString(),
+        "image" => $image->url(),
+        "description" => $page->meta()->toString()
+    ];
 @endphp
 
-@include('partials.header', ['meta' => $meta])
+@section('additional-meta-tags')
+    <meta property="og:type" content="product">
+    <meta property="og:title" content="{{ $title }}">
+    <meta property="og:url" content="{{ page()->url() }}">
+    <meta property="og:image" content="{{ $image->url() }}">
+    <meta property="og:description" content="{{ $page->meta()->toString() }}">
+
+    <meta property="product:price.amount" content="{{ page()->variants()->toStructure()->first()->price() }}">
+    <meta property="product:price.currency" content="CAD">
+@endsection
+
+@include('partials.header')
 @include('partials.menu')
 
 <noscript>
@@ -117,7 +138,8 @@
     @endif
 </nav>
 
-@extends('partials.footer')
+@extends('partials.footer', ['ldjson' => $structuredData])
+
 @section('scripts')
     @if(@option('env') == 'prod')
         @js('assets/dist/product.min.js')
