@@ -65,4 +65,4 @@
 	</section>
 @endif
 
-@extends('partials.footer', ['ldjson' => $structuredData]);
+@extends('partials.footer', ['ldjson' => $structuredData])
