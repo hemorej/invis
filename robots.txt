@@ -58,3 +58,24 @@ Disallow: /
 
 User-agent: Claude-Web
 Disallow: /
+
+User-agent: Foregenix
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: Sogou web spider
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: ahrefs.com^
+Disallow: /
+
+User-agent: bingbot
+Disallow: /
+
+User-agent: server.bromefields.com
+Disallow: /
