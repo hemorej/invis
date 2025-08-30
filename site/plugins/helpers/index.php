@@ -3,6 +3,7 @@
 @include_once __DIR__ . '/vendor/autoload.php';
 
 use Mailbun\Mailbun;
+use Kirby\Data\Yaml;
 use Kirby\Http\Remote;
 use Payments\StripeConnector as Stripe;
 use Kirby\Toolkit\Date;
@@ -48,20 +49,10 @@ function addToStructure( $page, $field, $data = [] )
 	$fieldData = array_values( $fieldData );
 
 	$fieldData[] = $data;
-	$fieldData = \Yaml::encode( $fieldData );
+	$fieldData = Yaml::encode( $fieldData );
 	try {
-// 		@TODO eval if impersonate() is still needed
-//		if( !empty( $page->parent() ) && $page->parent()->uid() == 'prints'){
-//			$user = kirby()->user();
-//		}else {
-//			$user = 'kirby';
-//		}
-//
-//		kirby()->impersonate( $user );
-
-		$page->update( [$field => $fieldData] );
-		return true;
-	} catch( \Exception $e ) {
+		return $page->update( [$field => $fieldData] );
+	} catch( Exception $e ) {
 		return $e->getMessage();
 	}
 }
@@ -185,7 +176,7 @@ function location()
 		}
 
 		return $loc;
-	} catch( \Exception $e ) {
+	} catch( Exception $e ) {
 		error_log( $e->getMessage() );
 		$logger = ( new Logger\Logger( 'geolocation' ) )->getLogger();
 		$logger->error( 'Could not resolve IP address: ' . $e->getMessage() );

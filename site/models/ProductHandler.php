@@ -27,7 +27,7 @@ class ProductHandler
 		if( in_array($page->content()->type()->value,  $productTypes['options'] ) && $page->isListed() )
 		{
 			$stripe = new StripeConnector();
-			$stripe->createOrUpdateProduct($page->content(), $page->variants()->toStructure());
+			$stripe->createOrUpdateProduct($page);
 		}
 	}
 }
