@@ -20,7 +20,7 @@ class Cart
 
 	function __construct()
 	{
-		$this->cache = kirby()->cache( 'backend' );
+		$this->cache = kirby()->cache( 'api' );
 		$this->site = kirby()->site();
 		$this->session = kirby()->session();
 		$instance = new Logger( 'cart' );
@@ -458,7 +458,7 @@ class Cart
 			$pi = $stripe->retrievePaymentIntent( $sid->payment_intent );
 
 			// stripe checkout went well
-			if( $pi->status == 'succeeded' && $pi->latest_charge->data[0]->paid == true ) {
+			if( $pi->status == 'succeeded' && $pi->latest_charge->paid ) {
 				// order still pending, finalize details
 				// check status to avoid repeat processing if client reloads page
 				if( $this->getCartPage()->content()->get( 'orderstatus' ) == 'pending' ) {

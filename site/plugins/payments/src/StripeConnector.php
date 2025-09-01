@@ -112,7 +112,21 @@ class StripeConnector
 			$sessionLineItems = [];
 
 			foreach( $lineItems as $lineItem ) {
-				$sessionLineItems[] = ['price' => $lineItem['price_external_id'], 'quantity' => $lineItem['quantity']];
+				if( !empty( $lineItem['price_external_id'] ) ) {
+					$sessionLineItems[] = ['price' => $lineItem['price_external_id'], 'quantity' => $lineItem['quantity']];
+				} else {
+					$sessionLineItems[] = [
+						'price_data' => [
+							'currency' => 'CAD',
+							'unit_amount' => $lineItem['amount'],
+							'product_data' => [
+								'name' => $lineItem['name'],
+								'description' => $lineItem['description'],
+						  	],
+						],
+						'quantity' => 1
+					];
+				}
 			}
 
 			$sessionObject = [
@@ -146,8 +160,7 @@ class StripeConnector
 	public function retrieveSession( string $sid )
 	{
 		try {
-			return $this->stripe->checkout->sessions->retrieve( $sid, ['latest_charge'] );
-
+			return $this->stripe->checkout->sessions->retrieve( $sid, [] );
 		} catch( InvalidRequestException $se ) {
 			$this->logger->error( 'Stripe error getting session', [$se->getMessage()] );
 			throw new Exception( 'Stripe error getting session' );
@@ -165,7 +178,7 @@ class StripeConnector
 	public function retrievePaymentIntent( string $pid )
 	{
 		try {
-			return $this->stripe->paymentIntents->retrieve( $pid );
+			return $this->stripe->paymentIntents->retrieve( $pid, ['expand' => ['latest_charge']] );
 
 		} catch( InvalidRequestException $se ) {
 			$this->logger->error( 'Stripe error getting payment intent', [$se->getMessage()] );
@@ -216,9 +229,9 @@ class StripeConnector
 				} else {
 					// unit amount cannot be changed
 					// diff changes before we take destructive action
-					$price = Price::retrieve($variant->external_id()->value);
-					if($price->unit_amount != $variant->price()->value*100){
-						Price::update($variant->external_id()->value, ['active' => false]);
+					$price = Price::retrieve( $variant->external_id()->value );
+					if( $price->unit_amount != $variant->price()->value * 100 ) {
+						Price::update( $variant->external_id()->value, ['active' => false] );
 						$createPrice = true;
 					} else {
 						$createPrice = false;
@@ -227,17 +240,17 @@ class StripeConnector
 
 				$storedVariant = $variants->findBy( 'suuid', $variant->suuid()->value() );
 				$updatedVariant = [];
-				if(empty($storedVariant)) {
+				if( empty( $storedVariant ) ) {
 					$storedVariant = $variant->content();
 				}
 
-				if($createPrice) {
+				if( $createPrice ) {
 					$priceAttributes = [
 						'product' => $productStripeId,
 						'unit_amount' => intval( $variant->price()->value ) * 100,
 						'currency' => 'CAD',
 						'lookup_key' => $variant->suuid()->value,
-						'transfer_lookup_key' => true
+						'transfer_lookup_key' => true,
 					];
 					$price = Price::create( $priceAttributes );
 					$updatedVariant['external_id'] = $price->id;
