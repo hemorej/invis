@@ -20,7 +20,7 @@ class Cart
 
 	function __construct()
 	{
-		$this->cache = kirby()->cache( 'api' );
+		$this->cache = kirby()->cache( 'helpers.helpers.backend' );
 		$this->site = kirby()->site();
 		$this->session = kirby()->session();
 		$instance = new Logger( 'cart' );

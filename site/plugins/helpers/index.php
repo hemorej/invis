@@ -123,7 +123,7 @@ function archiveDate( $string )
  */
 function getHomeImage()
 {
-	$cache = kirby()->cache( 'backend' );
+	$cache = kirby()->cache( 'helpers.helpers.backend' );
 
 	$images = [];
 	if( $data = $cache->get( 'images' ) ) {
@@ -152,7 +152,7 @@ function location()
 		return kirby()->option( 'geolocation' );
 
 	try {
-		$cache = kirby()->cache( 'backend' );
+		$cache = kirby()->cache( 'helpers.helpers.backend' );
 		$remote = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP );
 
 		if( $remote == false )
