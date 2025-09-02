@@ -2,6 +2,7 @@
 
 namespace Payments;
 
+use Exception;
 use Stripe\Price;
 use Stripe\Stripe;
 use Logger\Logger;
@@ -32,7 +33,7 @@ class StripeConnector
 	/**
 	 * @param string $productID
 	 * @return Product|null
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function retrieveProduct( string $productID )
 	{
@@ -43,17 +44,17 @@ class StripeConnector
 			return null;
 		} catch( InvalidRequestException $se ) {
 			$this->logger->error( 'Stripe error retrieving product', [$se->getMessage()] );
-			throw new \Exception( 'Stripe error retrieving product' );
-		} catch( \Exception $e ) {
+			throw new Exception( 'Stripe error retrieving product' );
+		} catch( Exception $e ) {
 			$this->logger->error( 'Stripe general error', [$e->getMessage()] );
-			throw new \Exception( 'Stripe general error' );
+			throw new Exception( 'Stripe general error' );
 		}
 	}
 
 	/**
 	 * @param string $customerID
 	 * @return Customer|null
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function retrieveCustomer( string $customerID )
 	{
@@ -64,10 +65,10 @@ class StripeConnector
 			return null;
 		} catch( InvalidRequestException $se ) {
 			$this->logger->error( 'Stripe error retrieving customer', [$se->getMessage()] );
-			throw new \Exception( 'Stripe error retrieving customer' );
-		} catch( \Exception $e ) {
+			throw new Exception( 'Stripe error retrieving customer' );
+		} catch( Exception $e ) {
 			$this->logger->error( 'Stripe general error', [$e->getMessage()] );
-			throw new \Exception( 'Stripe general error' );
+			throw new Exception( 'Stripe general error' );
 		}
 	}
 
@@ -103,7 +104,7 @@ class StripeConnector
 	 * @param array $lineItems
 	 * @param string|null $customerEmail
 	 * @return Session
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function createSession( array $lineItems, string $customerEmail = null )
 	{
@@ -111,7 +112,21 @@ class StripeConnector
 			$sessionLineItems = [];
 
 			foreach( $lineItems as $lineItem ) {
-				$sessionLineItems[] = ['price' => $lineItem['price_external_id'], 'quantity' => $lineItem['quantity']];
+				if( !empty( $lineItem['price_external_id'] ) ) {
+					$sessionLineItems[] = ['price' => $lineItem['price_external_id'], 'quantity' => $lineItem['quantity']];
+				} else {
+					$sessionLineItems[] = [
+						'price_data' => [
+							'currency' => 'CAD',
+							'unit_amount' => $lineItem['amount'],
+							'product_data' => [
+								'name' => $lineItem['name'],
+								'description' => $lineItem['description'],
+						  	],
+						],
+						'quantity' => 1
+					];
+				}
 			}
 
 			$sessionObject = [
@@ -129,49 +144,48 @@ class StripeConnector
 		} catch( InvalidRequestException $se ) {
 			error_log( $se->getMessage() );
 			$this->logger->error( 'Stripe error creating session', [$se->getMessage()] );
-			throw new \Exception( 'Stripe error creating session' );
-		} catch( \Exception $e ) {
+			throw new Exception( 'Stripe error creating session' );
+		} catch( Exception $e ) {
 			error_log( $e->getMessage() );
 			$this->logger->error( 'Stripe general error', [$e->getMessage()] );
-			throw new \Exception( 'Stripe general error' );
+			throw new Exception( 'Stripe general error' );
 		}
 	}
 
 	/**
 	 * @param string $sid
 	 * @return Session
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function retrieveSession( string $sid )
 	{
 		try {
-			return $this->stripe->checkout->sessions->retrieve( $sid, ['latest_charge'] );
-
+			return $this->stripe->checkout->sessions->retrieve( $sid, [] );
 		} catch( InvalidRequestException $se ) {
 			$this->logger->error( 'Stripe error getting session', [$se->getMessage()] );
-			throw new \Exception( 'Stripe error getting session' );
-		} catch( \Exception $e ) {
+			throw new Exception( 'Stripe error getting session' );
+		} catch( Exception $e ) {
 			$this->logger->error( 'Stripe general error', [$e->getMessage()] );
-			throw new \Exception( 'Stripe general error' );
+			throw new Exception( 'Stripe general error' );
 		}
 	}
 
 	/**
 	 * @param string $pid
 	 * @return PaymentIntent
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function retrievePaymentIntent( string $pid )
 	{
 		try {
-			return $this->stripe->paymentIntents->retrieve( $pid );
+			return $this->stripe->paymentIntents->retrieve( $pid, ['expand' => ['latest_charge']] );
 
 		} catch( InvalidRequestException $se ) {
 			$this->logger->error( 'Stripe error getting payment intent', [$se->getMessage()] );
-			throw new \Exception( "Stripe error getting payment intent" );
-		} catch( \Exception $e ) {
+			throw new Exception( "Stripe error getting payment intent" );
+		} catch( Exception $e ) {
 			$this->logger->error( 'Stripe general error', [$e->getMessage()] );
-			throw new \Exception( "Stripe general error" );
+			throw new Exception( "Stripe general error" );
 		}
 	}
 
@@ -182,9 +196,12 @@ class StripeConnector
 	 * @throws ApiErrorException
 	 * @throws \Throwable
 	 */
-	public function createOrUpdateProduct( $product, $variants )
+	public function createOrUpdateProduct( $page )
 	{
 		try {
+			$product = $page->content();
+			$fieldsToUpdate = [];
+
 			$productAttributes = [
 				'name' => $product->title()->value,
 				'description' => $product->meta()->value,
@@ -196,8 +213,7 @@ class StripeConnector
 				$stripeProduct = Product::create( $productAttributes );
 				$productStripeId = $stripeProduct->id;
 
-				kirby()->impersonate( kirby()->user() );
-				$product->parent()->update(['external_id' => $productStripeId]);
+				$fieldsToUpdate['external_id'] = $productStripeId;
 			} else {
 				Product::update(
 					$product->external_id()->value,
@@ -206,47 +222,54 @@ class StripeConnector
 				$productStripeId = $product->external_id()->value;
 			}
 
+			$variants = $page->variants()->toStructure();
 			foreach( $variants as $variant ) {
-
 				if( empty( $variant->external_id()->value ) ) {
 					$createPrice = true;
 				} else {
 					// unit amount cannot be changed
 					// diff changes before we take destructive action
-					$price = Price::retrieve($variant->external_id()->value);
-					if($price->unit_amount != $variant->price()->value*100){
-						Price::update($variant->external_id()->value, ['active' => false]);
+					$price = Price::retrieve( $variant->external_id()->value );
+					if( $price->unit_amount != $variant->price()->value * 100 ) {
+						Price::update( $variant->external_id()->value, ['active' => false] );
 						$createPrice = true;
 					} else {
 						$createPrice = false;
 					}
 				}
 
-				if($createPrice) {
+				$storedVariant = $variants->findBy( 'suuid', $variant->suuid()->value() );
+				$updatedVariant = [];
+				if( empty( $storedVariant ) ) {
+					$storedVariant = $variant->content();
+				}
+
+				if( $createPrice ) {
 					$priceAttributes = [
 						'product' => $productStripeId,
 						'unit_amount' => intval( $variant->price()->value ) * 100,
 						'currency' => 'CAD',
 						'lookup_key' => $variant->suuid()->value,
-						'transfer_lookup_key' => true
+						'transfer_lookup_key' => true,
 					];
 					$price = Price::create( $priceAttributes );
-					$priceStripeId = $price->id;
-
-					$variantStructure = $product->parent()->variants()->findBy( 'suuid', $variant->suuid()->value() )->yaml();
-					$storedVariant = $variantStructure[0];
-
-					$updatedVariant = [];
-					$updatedVariant['suuid'] = $storedVariant['suuid'];
-					$updatedVariant['name'] = $storedVariant['name'];
-					$updatedVariant['price'] = $storedVariant['price'];
-					$updatedVariant['external_id'] = $priceStripeId;
-					$updatedVariant['stock'] = $storedVariant['stock'];
-
-					addToStructure( $product->parent(), 'variants', $updatedVariant );
+					$updatedVariant['external_id'] = $price->id;
+				} else {
+					$updatedVariant['external_id'] = $storedVariant->external_id()->value();
 				}
+
+				$updatedVariant['suuid'] = $storedVariant->suuid()->value();
+				$updatedVariant['name'] = $storedVariant->name()->value();
+				$updatedVariant['price'] = $storedVariant->price()->value();
+				$updatedVariant['stock'] = $storedVariant->stock()->value();
+
+				$fieldsToUpdate['variants'][] = $updatedVariant;
 			}
-		} catch( \Exception $e ) {
+
+			if( !empty( $fieldsToUpdate ) ) {
+				$page->update( $fieldsToUpdate );
+			}
+		} catch( Exception $e ) {
 			$this->logger->error( "Could not update products or prices" . $e->getMessage() );
 		}
 	}
