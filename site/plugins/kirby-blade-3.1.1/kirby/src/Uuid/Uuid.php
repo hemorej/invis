@@ -282,7 +282,7 @@ abstract class Uuid implements Stringable
 	 */
 	final public static function is(
 		string $string,
-		string|null $type = null
+		$type = null
 	): bool {
 		// always return false when UUIDs have been disabled
 		if (Uuids::enabled() === false) {
