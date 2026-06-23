@@ -1,1 +1,0 @@
-<script async defer data-website-id="@option('umami_code')" src="https://umami.the-invisible-cities.com/umami.js"></script>
