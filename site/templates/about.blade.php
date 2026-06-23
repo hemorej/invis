@@ -58,7 +58,7 @@
 				@else
 					mailto: {{ $item->email() }}
 				@endif
-				" target='_blank' class='f4 f3-ns pa1-l link black-60 hover-white hover-bg-gold di' >
+				" target='_blank' class='f4 f3-ns pa1-l link black-60 hover-white hover-bg-gold di umami--click--{{$item->text()}}' >
 				{{ $item->text() }}
 			</a>
 		@endforeach

@@ -3,6 +3,7 @@
 	</footer>
 
 	@include('partials.consent')
+	@include('partials.umami')
 	@yield('scripts')
 
 	@isset($ldjson)
