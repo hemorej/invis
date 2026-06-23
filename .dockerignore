@@ -1,0 +1,13 @@
+.git
+.ddev
+.idea
+.github
+node_modules
+scripts
+test_plan.md
+*.md
+!README.md
+logs/*
+site/sessions/*
+site/cache/*
+media/pages

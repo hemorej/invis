@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    ports:
+      - "80:80"
+    env_file:
+      - .env
+    volumes:
+      - ./content:/var/www/html/content
+    restart: unless-stopped
