@@ -52,7 +52,7 @@
             <?php endforeach ?>
         </div>
 
-        <div style="flex:1;min-width:280px;">
+        <div style="flex:1;min-width:280px;position:sticky;top:60px;align-self:flex-start;">
             <section class="variants">
                 <?php
                 $variants = $page->variants()->toStructure();

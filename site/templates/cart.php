@@ -75,7 +75,7 @@
                             <input type="hidden" name="csrf" value="<?= csrf() ?>">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="<?= html($item->id()) ?>">
-                            <button class="b--silver ba bg-animate bg-white silver border-box f7 no-underline br-100 db h1 w1 pl1" type="submit" type="submit">x</button>
+                            <button class="b--silver ba bg-animate bg-white silver border-box f7 no-underline br-100 db h1 w1 flex items-center justify-center" type="submit">x</button>
                         </form>
 
                         <input v-on:change="updateCart" class="b--black-20 di input-reset w-30 f5 mr0 ba tc" data-variant="<?= html(esc($item->variant())) ?>" id="<?= html($item->uri()) ?>::<?= html($item->suuid()) ?>" value="<?= html($item->quantity()) ?>" min="0" max="<?= html(Cart::inStock($item->variant())) ?>" data-sku="<?= html($item->suuid()) ?>" data-amount="<?= html($item->amount()->value()) ?>" data-name="<?= html($item->name()) ?>" type="number">
