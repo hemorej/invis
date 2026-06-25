@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '9ff8a2868a2cd9e49818c8178cead27dbd5c0bb9',
+        'reference' => '95068b5b3c95f2979fae8c6d9a49a1801ccf5f4c',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9ff8a2868a2cd9e49818c8178cead27dbd5c0bb9',
+            'reference' => '95068b5b3c95f2979fae8c6d9a49a1801ccf5f4c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -38,9 +38,9 @@
             'dev_requirement' => false,
         ),
         'mailgun/mailgun-php' => array(
-            'pretty_version' => 'v3.5.9',
-            'version' => '3.5.9.0',
-            'reference' => '181749e4daea67cb33cdb27ac422261d3601aeb9',
+            'pretty_version' => 'v4.5.1',
+            'version' => '4.5.1.0',
+            'reference' => '5024827b4ba170d9547919c7cbcb56477659bdd0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../mailgun/mailgun-php',
             'aliases' => array(),
@@ -156,8 +156,8 @@
         'psr/http-factory-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '*',
-                1 => '1.0',
+                0 => '1.0',
+                1 => '*',
             ),
         ),
         'psr/http-message' => array(
@@ -172,8 +172,8 @@
         'psr/http-message-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '*',
-                1 => '1.0',
+                0 => '1.0',
+                1 => '*',
             ),
         ),
         'symfony/deprecation-contracts' => array(

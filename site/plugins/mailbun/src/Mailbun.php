@@ -3,6 +3,9 @@
 namespace Mailbun;
 use \Logger\Logger;
 use Mailgun\Mailgun;
+use Mailgun\HttpClient\HttpClientConfigurator;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Buzz\Client\FileGetContents;
 use \Kirby\Cms\App;
 
 class Mailbun
@@ -12,7 +15,13 @@ class Mailbun
 
 	function __construct()
 	{
-		$this->mailgun = Mailgun::create(kirby()->option('mailgun_key'));
+		$psr17Factory = new Psr17Factory();
+		$httpClient = new FileGetContents($psr17Factory);
+		$configurator = (new HttpClientConfigurator())
+			->setApiKey(kirby()->option('mailgun_key'))
+			->setUriFactory($psr17Factory)
+			->setHttpClient($httpClient);
+		$this->mailgun = new Mailgun($configurator);
 		$instance = new Logger('mailer');
 		$this->logger = $instance->getLogger();
 	}

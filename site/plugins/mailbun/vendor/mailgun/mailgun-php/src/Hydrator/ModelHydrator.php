@@ -23,9 +23,9 @@ use Psr\Http\Message\ResponseInterface;
 final class ModelHydrator implements Hydrator
 {
     /**
-     * @param class-string $class
-     *
+     * @param  class-string      $class
      * @return ResponseInterface
+     * @throws \JsonException
      */
     public function hydrate(ResponseInterface $response, string $class)
     {
@@ -36,10 +36,10 @@ final class ModelHydrator implements Hydrator
             throw new HydrationException('The ModelHydrator cannot hydrate response with Content-Type: '.$contentType);
         }
 
-        $data = json_decode($body, true);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new HydrationException(sprintf('Error (%d) when trying to json_decode response', json_last_error()));
+        try {
+            $data = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $exception) {
+            throw new HydrationException(sprintf('Error (%d) when trying to json_decode response: %s', $exception->getCode(), $exception->getMessage()));
         }
 
         if (is_subclass_of($class, ApiResponse::class)) {
@@ -50,6 +50,12 @@ final class ModelHydrator implements Hydrator
 
         if (method_exists($object, 'setRawStream')) {
             $object->setRawStream($response->getBody());
+        }
+        if (method_exists($object, 'setStatusCode')) {
+            $object->setStatusCode($response->getStatusCode());
+        }
+        if (method_exists($object, 'setHeaders')) {
+            $object->setHeaders($response->getHeaders());
         }
 
         return $object;

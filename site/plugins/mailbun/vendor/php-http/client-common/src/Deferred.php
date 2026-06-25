@@ -54,7 +54,7 @@ final class Deferred implements Promise
     /**
      * {@inheritdoc}
      */
-    public function then(callable $onFulfilled = null, callable $onRejected = null): Promise
+    public function then(?callable $onFulfilled = null, ?callable $onRejected = null): Promise
     {
         $deferred = new self($this->waitCallback);
 

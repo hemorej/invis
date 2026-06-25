@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Mailgun\Api;
 
-use Exception;
 use Mailgun\Assert;
+use Mailgun\Message\Exceptions\RuntimeException;
 use Mailgun\Model\EmailValidationV4\CreateBulkJobResponse;
 use Mailgun\Model\EmailValidationV4\CreateBulkPreviewResponse;
 use Mailgun\Model\EmailValidationV4\DeleteBulkJobResponse;
@@ -24,20 +24,23 @@ use Mailgun\Model\EmailValidationV4\PromoteBulkPreviewResponse;
 use Mailgun\Model\EmailValidationV4\ValidateResponse;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 /**
- * @see https://documentation.mailgun.com/en/latest/api-email-validation.html
+ * @see https://documentation.mailgun.com/docs/inboxready/api-reference/openapi-validate-final/validations
  */
 class EmailValidationV4 extends HttpApi
 {
     /**
      * Addresses are validated based off defined checks.
      * @param  string                             $address        An email address to validate. Maximum: 512 characters.
-     * @param  bool                               $providerLookup A provider lookup will be performed if Mailgun’s internal analysis is insufficient
+     * @param  bool                               $providerLookup A provider lookup will be performed if Mailgun’s internal analysis is
+     *                                                            insufficient
+     * @param  array                              $requestHeaders
      * @return ValidateResponse|ResponseInterface
-     * @throws Exception|ClientExceptionInterface Thrown when we don't catch a Client or Server side Exception
+     * @throws ClientExceptionInterface           Thrown when we don't catch a Client or Server side Exception
      */
-    public function validate(string $address, bool $providerLookup = true)
+    public function validate(string $address, bool $providerLookup = true, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($address);
 
@@ -46,7 +49,7 @@ class EmailValidationV4 extends HttpApi
             'provider_lookup' => $providerLookup,
         ];
 
-        $response = $this->httpGet('/v4/address/validate', $params);
+        $response = $this->httpGet('/v4/address/validate', $params, $requestHeaders);
 
         return $this->hydrateResponse($response, ValidateResponse::class);
     }
@@ -55,9 +58,9 @@ class EmailValidationV4 extends HttpApi
      * @param  string                             $listId   ID given when the list created
      * @param  mixed                              $filePath File path or file content
      * @return mixed|ResponseInterface
-     * @throws Exception|ClientExceptionInterface
+     * @throws ClientExceptionInterface
      */
-    public function createBulkJob(string $listId, $filePath)
+    public function createBulkJob(string $listId, $filePath, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($listId);
 
@@ -73,81 +76,97 @@ class EmailValidationV4 extends HttpApi
         $postDataMultipart = [];
         $postDataMultipart[] = $this->prepareFile('file', $fileData);
 
-        $response = $this->httpPostRaw(sprintf('/v4/address/validate/bulk/%s', $listId), $postDataMultipart);
-        $this->closeResources($postDataMultipart);
+        try {
+            $response = $this->httpPostRaw(sprintf('/v4/address/validate/bulk/%s', $listId), $postDataMultipart, $requestHeaders);
+        } catch (Throwable $throwable) {
+            throw new RuntimeException($throwable->getMessage(), 0, $throwable);
+        } finally {
+            $this->closeResources($postDataMultipart);
+        }
 
         return $this->hydrateResponse($response, CreateBulkJobResponse::class);
     }
 
     /**
-     * @param  string                                  $listId ID given when the list created
+     * @param  string                                  $listId         ID given when the list created
+     * @param  array                                   $requestHeaders
      * @return DeleteBulkJobResponse|ResponseInterface
-     * @throws Exception|ClientExceptionInterface
+     * @throws ClientExceptionInterface
      */
-    public function deleteBulkJob(string $listId)
+    public function deleteBulkJob(string $listId, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($listId);
 
-        $response = $this->httpDelete(sprintf('/v4/address/validate/bulk/%s', $listId));
+        $response = $this->httpDelete(sprintf('/v4/address/validate/bulk/%s', $listId), [], $requestHeaders);
 
         return $this->hydrateResponse($response, DeleteBulkJobResponse::class);
     }
 
     /**
-     * @param string $listId ID given when the list created
-     *
+     * @param  string                               $listId         ID given when the list created
+     * @param  array                                $requestHeaders
      * @return GetBulkJobResponse|ResponseInterface
-     *
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
-    public function getBulkJob(string $listId)
+    public function getBulkJob(string $listId, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($listId);
 
-        $response = $this->httpGet(sprintf('/v4/address/validate/bulk/%s', $listId));
+        $response = $this->httpGet(sprintf('/v4/address/validate/bulk/%s', $listId), [], $requestHeaders);
 
         return $this->hydrateResponse($response, GetBulkJobResponse::class);
     }
 
     /**
-     * @param  int                                   $limit Jobs limit
+     * @param  int                                   $limit          Jobs limit
+     * @param  array                                 $requestHeaders
      * @return GetBulkJobsResponse|ResponseInterface
-     * @throws Exception|ClientExceptionInterface
+     * @throws ClientExceptionInterface
      */
-    public function getBulkJobs(int $limit = 500)
+    public function getBulkJobs(int $limit = 500, array $requestHeaders = [])
     {
         Assert::greaterThan($limit, 0);
 
-        $response = $this->httpGet('/v4/address/validate/bulk', [
-            'limit' => $limit,
-        ]);
+        $response = $this->httpGet(
+            '/v4/address/validate/bulk',
+            [
+                'limit' => $limit,
+            ],
+            $requestHeaders
+        );
 
         return $this->hydrateResponse($response, GetBulkJobsResponse::class);
     }
 
     /**
-     * @param  int                                $limit Previews Limit
+     * @param  int                      $limit          Previews Limit
+     * @param  array                    $requestHeaders
      * @return mixed|ResponseInterface
-     * @throws Exception|ClientExceptionInterface
+     * @throws ClientExceptionInterface
      */
-    public function getBulkPreviews(int $limit = 500)
+    public function getBulkPreviews(int $limit = 500, array $requestHeaders = [])
     {
         Assert::greaterThan($limit, 0);
 
-        $response = $this->httpGet('/v4/address/validate/preview', [
-            'limit' => $limit,
-        ]);
+        $response = $this->httpGet(
+            '/v4/address/validate/preview',
+            [
+                'limit' => $limit,
+            ],
+            $requestHeaders
+        );
 
         return $this->hydrateResponse($response, GetBulkPreviewsResponse::class);
     }
 
     /**
-     * @param  string                             $previewId ID given when the list created
-     * @param  mixed                              $filePath  File path or file content
+     * @param  string                   $previewId      ID given when the list created
+     * @param  mixed                    $filePath       File path or file content
+     * @param  array                    $requestHeaders
      * @return mixed|ResponseInterface
-     * @throws Exception|ClientExceptionInterface
+     * @throws ClientExceptionInterface
      */
-    public function createBulkPreview(string $previewId, $filePath)
+    public function createBulkPreview(string $previewId, $filePath, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($previewId);
 
@@ -163,50 +182,58 @@ class EmailValidationV4 extends HttpApi
         $postDataMultipart = [];
         $postDataMultipart[] = $this->prepareFile('file', $fileData);
 
-        $response = $this->httpPostRaw(sprintf('/v4/address/validate/preview/%s', $previewId), $postDataMultipart);
-        $this->closeResources($postDataMultipart);
+        try {
+            $response = $this->httpPostRaw(sprintf('/v4/address/validate/preview/%s', $previewId), $postDataMultipart, $requestHeaders);
+        } catch (Throwable $throwable) {
+            throw new RuntimeException($throwable->getMessage(), 0, $throwable);
+        } finally {
+            $this->closeResources($postDataMultipart);
+        }
 
         return $this->hydrateResponse($response, CreateBulkPreviewResponse::class);
     }
 
     /**
-     * @param  string                             $previewId ID given when the list created
+     * @param  string                   $previewId      ID given when the list created
+     * @param  array                    $requestHeaders
      * @return mixed|ResponseInterface
-     * @throws Exception|ClientExceptionInterface
+     * @throws ClientExceptionInterface
      */
-    public function getBulkPreview(string $previewId)
+    public function getBulkPreview(string $previewId, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($previewId);
 
-        $response = $this->httpGet(sprintf('/v4/address/validate/preview/%s', $previewId));
+        $response = $this->httpGet(sprintf('/v4/address/validate/preview/%s', $previewId), [], $requestHeaders);
 
         return $this->hydrateResponse($response, GetBulkPreviewResponse::class);
     }
 
     /**
-     * @param  string                   $previewId ID given when the list created
+     * @param  string                   $previewId      ID given when the list created
+     * @param  array                    $requestHeaders
      * @return bool
      * @throws ClientExceptionInterface
      */
-    public function deleteBulkPreview(string $previewId): bool
+    public function deleteBulkPreview(string $previewId, array $requestHeaders = []): bool
     {
         Assert::stringNotEmpty($previewId);
 
-        $response = $this->httpDelete(sprintf('/v4/address/validate/preview/%s', $previewId));
+        $response = $this->httpDelete(sprintf('/v4/address/validate/preview/%s', $previewId), [], $requestHeaders);
 
         return 204 === $response->getStatusCode();
     }
 
     /**
-     * @param  string                             $previewId ID given when the list created
+     * @param  string                   $previewId      ID given when the list created
+     * @param  array                    $requestHeaders
      * @return mixed|ResponseInterface
-     * @throws Exception|ClientExceptionInterface
+     * @throws ClientExceptionInterface
      */
-    public function promoteBulkPreview(string $previewId)
+    public function promoteBulkPreview(string $previewId, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($previewId);
 
-        $response = $this->httpPut(sprintf('/v4/address/validate/preview/%s', $previewId));
+        $response = $this->httpPut(sprintf('/v4/address/validate/preview/%s', $previewId), [], $requestHeaders);
 
         return $this->hydrateResponse($response, PromoteBulkPreviewResponse::class);
     }

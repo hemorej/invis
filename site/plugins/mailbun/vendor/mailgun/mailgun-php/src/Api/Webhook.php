@@ -24,33 +24,31 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * @see https://documentation.mailgun.com/en/latest/api-webhooks.html
+ * @see https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/webhooks
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class Webhook extends HttpApi
 {
-    /**
-     * @var string
-     */
-    private $apiKey;
+    private ?string $signingKey;
 
     /**
      * @param ClientInterface $httpClient
-     * @param RequestBuilder  $requestBuilder
-     * @param Hydrator        $hydrator
-     * @param string          $apiKey
+     * @param RequestBuilder $requestBuilder
+     * @param Hydrator $hydrator
+     * @param string|null $signingKey
      */
-    public function __construct($httpClient, RequestBuilder $requestBuilder, Hydrator $hydrator, string $apiKey)
+    public function __construct($httpClient, RequestBuilder $requestBuilder, Hydrator $hydrator, ?string $signingKey = null)
     {
         parent::__construct($httpClient, $requestBuilder, $hydrator);
-        $this->apiKey = $apiKey;
+        $this->signingKey = $signingKey;
     }
 
     /**
      * This function verifies the webhook signature with your API key to to see if it is authentic.
      * If this function returns FALSE, you must not process the request.
      * You should reject the request with status code 403 Forbidden.
+     *
      * @param  int    $timestamp
      * @param  string $token
      * @param  string $signature
@@ -58,11 +56,11 @@ class Webhook extends HttpApi
      */
     public function verifyWebhookSignature(int $timestamp, string $token, string $signature): bool
     {
-        if (empty($timestamp) || empty($token) || empty($signature)) {
+        if (empty($timestamp) || empty($token) || empty($signature) || empty($this->signingKey)) {
             return false;
         }
 
-        $hmac = hash_hmac('sha256', $timestamp.$token, $this->apiKey);
+        $hmac = hash_hmac('sha256', $timestamp.$token, $this->signingKey);
 
         if (function_exists('hash_equals')) {
             // hash_equals is constant time, but will not be introduced until PHP 5.6
@@ -73,41 +71,50 @@ class Webhook extends HttpApi
     }
 
     /**
+     * @see https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/webhooks/get-v3-domains--domain--webhooks
+     *
      * @param  string                          $domain
+     * @param  array                           $requestHeaders
      * @return IndexResponse|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function index(string $domain)
+    public function index(string $domain, array $requestHeaders = [])
     {
         Assert::notEmpty($domain);
-        $response = $this->httpGet(sprintf('/v3/domains/%s/webhooks', $domain));
+        $response = $this->httpGet(sprintf('/v3/domains/%s/webhooks', $domain), [], $requestHeaders);
 
         return $this->hydrateResponse($response, IndexResponse::class);
     }
 
     /**
+     * @see https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/webhooks/get-v3-domains--domain-name--webhooks--webhook-name-
+     *
      * @param  string                         $domain
      * @param  string                         $webhook
+     * @param  array                          $requestHeaders
      * @return ShowResponse|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function show(string $domain, string $webhook)
+    public function show(string $domain, string $webhook, array $requestHeaders = [])
     {
         Assert::notEmpty($domain);
         Assert::notEmpty($webhook);
-        $response = $this->httpGet(sprintf('/v3/domains/%s/webhooks/%s', $domain, $webhook));
+        $response = $this->httpGet(sprintf('/v3/domains/%s/webhooks/%s', $domain, $webhook), [], $requestHeaders);
 
         return $this->hydrateResponse($response, ShowResponse::class);
     }
 
     /**
+     * @see https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/webhooks/post-v3-domains--domain--webhooks
+     *
      * @param  string                           $domain
      * @param  string                           $id
      * @param  array                            $url
+     * @param  array                            $requestHeaders
      * @return CreateResponse|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function create(string $domain, string $id, array $url)
+    public function create(string $domain, string $id, array $url, array $requestHeaders = [])
     {
         Assert::notEmpty($domain);
         Assert::notEmpty($id);
@@ -118,19 +125,22 @@ class Webhook extends HttpApi
             'url' => $url,
         ];
 
-        $response = $this->httpPost(sprintf('/v3/domains/%s/webhooks', $domain), $params);
+        $response = $this->httpPost(sprintf('/v3/domains/%s/webhooks', $domain), $params, $requestHeaders);
 
         return $this->hydrateResponse($response, CreateResponse::class);
     }
 
     /**
+     * @see https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/webhooks/put-v3-domains--domain-name--webhooks--webhook-name-
+     *
      * @param  string                           $domain
      * @param  string                           $id
      * @param  array                            $url
+     * @param  array                            $requestHeaders
      * @return UpdateResponse|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function update(string $domain, string $id, array $url)
+    public function update(string $domain, string $id, array $url, array $requestHeaders = [])
     {
         Assert::notEmpty($domain);
         Assert::notEmpty($id);
@@ -140,23 +150,25 @@ class Webhook extends HttpApi
             'url' => $url,
         ];
 
-        $response = $this->httpPut(sprintf('/v3/domains/%s/webhooks/%s', $domain, $id), $params);
+        $response = $this->httpPut(sprintf('/v3/domains/%s/webhooks/%s', $domain, $id), $params, $requestHeaders);
 
         return $this->hydrateResponse($response, UpdateResponse::class);
     }
 
     /**
+     * @see https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/webhooks/delete-v3-domains--domain-name--webhooks--webhook-name-
      * @param  string                           $domain
      * @param  string                           $id
+     * @param  array                            $requestHeaders
      * @return DeleteResponse|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function delete(string $domain, string $id)
+    public function delete(string $domain, string $id, array $requestHeaders = [])
     {
         Assert::notEmpty($domain);
         Assert::notEmpty($id);
 
-        $response = $this->httpDelete(sprintf('/v3/domains/%s/webhooks/%s', $domain, $id));
+        $response = $this->httpDelete(sprintf('/v3/domains/%s/webhooks/%s', $domain, $id), [], $requestHeaders);
 
         return $this->hydrateResponse($response, DeleteResponse::class);
     }

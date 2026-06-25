@@ -202,7 +202,13 @@ class CurlClient implements ClientInterface, StreamingClientInterface
      */
     private function constructUrlAndBody($method, $absUrl, $params, $hasFile, $apiMode)
     {
-        $params = Util\Util::objectsToIds($params);
+        // For V2 POST bodies, preserve null values so they serialize to JSON
+        // null (the V2 mechanism for clearing fields / metadata keys).
+        // For all other cases (V1, GET/DELETE query params), strip nulls as
+        // before — null values become empty strings in query params which
+        // causes server errors.
+        $serializeNull = ('post' === $method && 'v2' === $apiMode);
+        $params = Util\Util::objectsToIds($params, $serializeNull);
         if ('post' === $method) {
             $absUrl = Util\Util::utf8($absUrl);
             if ($hasFile) {
@@ -267,6 +273,11 @@ class CurlClient implements ClientInterface, StreamingClientInterface
         if ($body) {
             $opts[\CURLOPT_POSTFIELDS] = $body;
         }
+        // inspired by https://github.com/stripe/stripe-php/issues/1817#issuecomment-2670463182
+        elseif (isset($opts[\CURLOPT_POST]) && 1 === $opts[\CURLOPT_POST]) {
+            $opts[\CURLOPT_POSTFIELDS] = '';
+        }
+
         // this is a little verbose, but makes v1 vs v2 behavior really clear
         if (!$this->hasHeader($headers, 'Idempotency-Key')) {
             // all v2 requests should have an IK
@@ -753,7 +764,9 @@ class CurlClient implements ClientInterface, StreamingClientInterface
     private function closeCurlHandle()
     {
         if (null !== $this->curlHandle) {
-            \curl_close($this->curlHandle);
+            if (PHP_VERSION_ID < 80000) {
+                \curl_close($this->curlHandle);
+            }
             $this->curlHandle = null;
         }
     }

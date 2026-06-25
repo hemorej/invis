@@ -13,6 +13,7 @@ namespace Mailgun\Api;
 
 use Exception;
 use Mailgun\Assert;
+use Mailgun\Model\Domain\CertStatusResponse;
 use Mailgun\Model\Domain\ConnectionResponse;
 use Mailgun\Model\Domain\CreateCredentialResponse;
 use Mailgun\Model\Domain\CreateResponse;
@@ -28,12 +29,13 @@ use Mailgun\Model\Domain\UpdateCredentialResponse;
 use Mailgun\Model\Domain\UpdateOpenTrackingResponse;
 use Mailgun\Model\Domain\UpdateUnsubscribeTrackingResponse;
 use Mailgun\Model\Domain\VerifyResponse;
+use Mailgun\Model\Domain\WebPrefixResponse;
 use Mailgun\Model\Domain\WebSchemeResponse;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * @see    https://documentation.mailgun.com/api-domains.html
+ * @see https://documentation.mailgun.com/docs/mailgun/api-reference/api-overview
  *
  * @author Sean Johnson <sean@mailgun.com>
  */
@@ -41,41 +43,52 @@ class Domain extends HttpApi
 {
     private const DKIM_SIZES = ['1024', '2048'];
 
-    /**
-     * Returns a list of domains on the account.
-     * @param  int                      $limit
-     * @param  int                      $skip
-     * @return IndexResponse|array
-     * @throws ClientExceptionInterface
-     * @throws Exception
-     */
-    public function index(int $limit = 100, int $skip = 0)
+    public function index(int $limit = 100, int $skip = 0, array $params = [], array $requestHeaders = [])
     {
-        Assert::range($limit, 1, 1000);
+        if ($limit) {
+            Assert::range($limit, 1, 1000, 'Limit must be between 1 and 1000');
+        }
 
-        $params = [
+        if ($skip) {
+            Assert::greaterThanEq($skip, 0, 'Skip must be non-negative');
+        }
+
+        if (isset($params['state'])) {
+            Assert::oneOf($params['state'], ['active', 'unverified', 'disabled'],
+                'State must be one of: active, unverified, disabled');
+        }
+
+        if (isset($params['sort'])) {
+            Assert::oneOf($params['sort'], ['name', 'name:asc', 'name:desc'],
+                'Sort must be one of: name, name:asc, name:desc');
+        }
+
+        $requestParams = array_merge([
             'limit' => $limit,
             'skip' => $skip,
-        ];
+        ], $params);
 
-        $response = $this->httpGet('/v3/domains', $params);
+        $requestParams = array_filter($requestParams, function ($value) {
+            return !is_null($value) && $value !== '';
+        });
+
+        $response = $this->httpGet('/v3/domains', $requestParams, $requestHeaders);
 
         return $this->hydrateResponse($response, IndexResponse::class);
     }
 
     /**
      * Returns a single domain.
-     *
-     * @param string $domain name of the domain
-     *
+     * @param  string                               $domain         name of the domain
+     * @param  array                                $requestHeaders
      * @return ShowResponse|array|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function show(string $domain)
+    public function show(string $domain, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
 
-        $response = $this->httpGet(sprintf('/v3/domains/%s', $domain));
+        $response = $this->httpGet(sprintf('/v3/domains/%s', $domain), [], $requestHeaders);
 
         return $this->hydrateResponse($response, ShowResponse::class);
     }
@@ -83,8 +96,9 @@ class Domain extends HttpApi
     /**
      * Creates a new domain for the account.
      * See below for spam filtering parameter information.
-     * {@link https://documentation.mailgun.com/user_manual.html#um-spam-filter}.
-     * @see https://documentation.mailgun.com/en/latest/api-domains.html#domains
+     * {@link https://documentation.mailgun.com/en/latest/user_manual.html#um-spam-filter}.
+     *
+     * @see    https://documentation.mailgun.com/en/latest/api-domains.html#domains
      * @param  string                                 $domain             name of the domain
      * @param  string|null                            $smtpPass           password for SMTP authentication
      * @param  string|null                            $spamAction         `disable` or `tag` - inbound spam filtering
@@ -93,12 +107,23 @@ class Domain extends HttpApi
      * @param  string[]                               $ips                an array of ips to be assigned to the domain
      * @param  ?string                                $pool_id            pool id to assign to the domain
      * @param  string                                 $webScheme          `http` or `https` - set your open, click and unsubscribe URLs to use http or https. The default is http
-     * @param  string                                 $dkimKeySize        Set length of your domain’s generated DKIM key
+     * @param  string                                 $dkimKeySize        Set length of your domain’s generated DKIM
+     *                                                                    key
      * @return CreateResponse|array|ResponseInterface
      * @throws Exception
      */
-    public function create(string $domain, string $smtpPass = null, string $spamAction = null, bool $wildcard = null, bool $forceDkimAuthority = null, ?array $ips = null, ?string $pool_id = null, string $webScheme = 'http', string $dkimKeySize = '1024')
-    {
+    public function create(
+        string $domain,
+        ?string $smtpPass = null,
+        ?string $spamAction = null,
+        ?bool $wildcard = null,
+        ?bool $forceDkimAuthority = null,
+        ?array $ips = null,
+        ?string $pool_id = null,
+        string $webScheme = 'http',
+        string $dkimKeySize = '1024',
+        array $requestHeaders = []
+    ) {
         Assert::stringNotEmpty($domain);
 
         $params['name'] = $domain;
@@ -110,7 +135,6 @@ class Domain extends HttpApi
         }
 
         if (!empty($spamAction)) {
-            // TODO(sean.johnson): Extended spam filter input validation.
             Assert::stringNotEmpty($spamAction);
 
             $params['spam_action'] = $spamAction;
@@ -155,7 +179,7 @@ class Domain extends HttpApi
             $params['dkim_key_size'] = $dkimKeySize;
         }
 
-        $response = $this->httpPost('/v3/domains', $params);
+        $response = $this->httpPost('/v3/domains', $params, $requestHeaders);
 
         return $this->hydrateResponse($response, CreateResponse::class);
     }
@@ -163,32 +187,30 @@ class Domain extends HttpApi
     /**
      * Removes a domain from the account.
      * WARNING: This action is irreversible! Be cautious!
-     *
-     * @param string $domain name of the domain
-     *
+     * @param  string                                 $domain         name of the domain
+     * @param  array                                  $requestHeaders
      * @return DeleteResponse|array|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function delete(string $domain)
+    public function delete(string $domain, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
 
-        $response = $this->httpDelete(sprintf('/v3/domains/%s', $domain));
+        $response = $this->httpDelete(sprintf('/v3/domains/%s', $domain), [], $requestHeaders);
 
         return $this->hydrateResponse($response, DeleteResponse::class);
     }
 
     /**
      * Returns a list of SMTP credentials for the specified domain.
-     *
-     * @param string $domain name of the domain
-     * @param int    $limit  Number of credentials to return
-     * @param int    $skip   Number of credentials to omit from the list
-     *
+     * @param  string                   $domain         name of the domain
+     * @param  int                      $limit          Number of credentials to return
+     * @param  int                      $skip           Number of credentials to omit from the list
+     * @param  array                    $requestHeaders
      * @return CredentialResponse
      * @throws ClientExceptionInterface
      */
-    public function credentials(string $domain, int $limit = 100, int $skip = 0)
+    public function credentials(string $domain, int $limit = 100, int $skip = 0, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
         $params = [
@@ -196,22 +218,21 @@ class Domain extends HttpApi
             'skip' => $skip,
         ];
 
-        $response = $this->httpGet(sprintf('/v3/domains/%s/credentials', $domain), $params);
+        $response = $this->httpGet(sprintf('/v3/domains/%s/credentials', $domain), $params, $requestHeaders);
 
         return $this->hydrateResponse($response, CredentialResponse::class);
     }
 
     /**
      * Create a new SMTP credential pair for the specified domain.
-     *
-     * @param string $domain   name of the domain
-     * @param string $login    SMTP Username
-     * @param string $password SMTP Password. Length min 5, max 32.
-     *
+     * @param  string                                           $domain         name of the domain
+     * @param  string                                           $login          SMTP Username
+     * @param  string                                           $password       SMTP Password. Length min 5, max 32.
+     * @param  array                                            $requestHeaders
      * @return CreateCredentialResponse|array|ResponseInterface
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
-    public function createCredential(string $domain, string $login, string $password)
+    public function createCredential(string $domain, string $login, string $password, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
         Assert::stringNotEmpty($login);
@@ -223,7 +244,7 @@ class Domain extends HttpApi
             'password' => $password,
         ];
 
-        $response = $this->httpPost(sprintf('/v3/domains/%s/credentials', $domain), $params);
+        $response = $this->httpPost(sprintf('/v3/domains/%s/credentials', $domain), $params, $requestHeaders);
 
         return $this->hydrateResponse($response, CreateCredentialResponse::class);
     }
@@ -238,7 +259,7 @@ class Domain extends HttpApi
      * @return UpdateCredentialResponse|array|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function updateCredential(string $domain, string $login, string $pass)
+    public function updateCredential(string $domain, string $login, string $pass, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
         Assert::stringNotEmpty($login);
@@ -249,21 +270,20 @@ class Domain extends HttpApi
             'password' => $pass,
         ];
 
-        $response = $this->httpPut(sprintf('/v3/domains/%s/credentials/%s', $domain, $login), $params);
+        $response = $this->httpPut(sprintf('/v3/domains/%s/credentials/%s', $domain, $login), $params, $requestHeaders);
 
         return $this->hydrateResponse($response, UpdateCredentialResponse::class);
     }
 
     /**
      * Remove a set of SMTP credentials from the specified domain.
-     *
-     * @param string $domain name of the domain
-     * @param string $login  SMTP Username
-     *
+     * @param  string                                           $domain         name of the domain
+     * @param  string                                           $login          SMTP Username
+     * @param  array                                            $requestHeaders
      * @return DeleteCredentialResponse|array|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function deleteCredential(string $domain, string $login)
+    public function deleteCredential(string $domain, string $login, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
         Assert::stringNotEmpty($login);
@@ -273,7 +293,9 @@ class Domain extends HttpApi
                 '/v3/domains/%s/credentials/%s',
                 $domain,
                 $login
-            )
+            ),
+            [],
+            $requestHeaders
         );
 
         return $this->hydrateResponse($response, DeleteCredentialResponse::class);
@@ -281,17 +303,16 @@ class Domain extends HttpApi
 
     /**
      * Returns delivery connection settings for the specified domain.
-     *
-     * @param string $domain name of the domain
-     *
+     * @param  string                               $domain         name of the domain
+     * @param  array                                $requestHeaders
      * @return ConnectionResponse|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function connection(string $domain)
+    public function connection(string $domain, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
 
-        $response = $this->httpGet(sprintf('/v3/domains/%s/connection', $domain));
+        $response = $this->httpGet(sprintf('/v3/domains/%s/connection', $domain), [], $requestHeaders);
 
         return $this->hydrateResponse($response, ConnectionResponse::class);
     }
@@ -299,15 +320,14 @@ class Domain extends HttpApi
     /**
      * Updates the specified delivery connection settings for the specified domain.
      * If a parameter is passed in as null, it will not be updated.
-     *
-     * @param string    $domain     name of the domain
-     * @param bool|null $requireTLS enforces that messages are sent only over a TLS connection
-     * @param bool|null $noVerify   disables TLS certificate and hostname verification
-     *
+     * @param  string                                           $domain         name of the domain
+     * @param  bool|null                                        $requireTLS     enforces that messages are sent only over a TLS connection
+     * @param  bool|null                                        $noVerify       disables TLS certificate and hostname verification
+     * @param  array                                            $requestHeaders
      * @return UpdateConnectionResponse|array|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function updateConnection(string $domain, ?bool $requireTLS, ?bool $noVerify)
+    public function updateConnection(string $domain, ?bool $requireTLS, ?bool $noVerify, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
         $params = [];
@@ -320,7 +340,7 @@ class Domain extends HttpApi
             $params['skip_verification'] = $noVerify ? 'true' : 'false';
         }
 
-        $response = $this->httpPut(sprintf('/v3/domains/%s/connection', $domain), $params);
+        $response = $this->httpPut(sprintf('/v3/domains/%s/connection', $domain), $params, $requestHeaders);
 
         return $this->hydrateResponse($response, UpdateConnectionResponse::class);
     }
@@ -328,17 +348,15 @@ class Domain extends HttpApi
     /**
      * Update webScheme for existing domain
      * See below for spam filtering parameter information.
-     * {@link https://documentation.mailgun.com/user_manual.html#um-spam-filter}.
-     *
+     * {@link https://documentation.mailgun.com/en/latest/user_manual.html#um-spam-filter}.
      * @see https://documentation.mailgun.com/en/latest/api-domains.html#domains
-     *
-     * @param  string                                    $domain    name of the domain
-     * @param  string                                    $webScheme `http` or `https` - set your open, click and unsubscribe URLs to use http or https. The default is http
+     * @param  string                                    $domain         name of the domain
+     * @param  string                                    $webScheme      `http` or `https` - set your open, click and unsubscribe URLs to use http or https. The default is http
+     * @param  array                                     $requestHeaders
      * @return WebSchemeResponse|array|ResponseInterface
-     * @throws Exception
      * @throws ClientExceptionInterface
      */
-    public function updateWebScheme(string $domain, string $webScheme = 'http')
+    public function updateWebScheme(string $domain, string $webScheme = 'http', array $requestHeaders = [])
     {
         $params = [];
         Assert::stringNotEmpty($domain);
@@ -347,56 +365,52 @@ class Domain extends HttpApi
 
         $params['web_scheme'] = $webScheme;
 
-        $response = $this->httpPut(sprintf('/v3/domains/%s', $domain), $params);
+        $response = $this->httpPut(sprintf('/v3/domains/%s', $domain), $params, $requestHeaders);
 
         return $this->hydrateResponse($response, WebSchemeResponse::class);
     }
 
     /**
      * Returns a single domain.
-     *
-     * @param string $domain name of the domain
-     *
+     * @param  string                                 $domain         name of the domain
+     * @param  array                                  $requestHeaders
      * @return VerifyResponse|array|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function verify(string $domain)
+    public function verify(string $domain, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
 
-        $response = $this->httpPut(sprintf('/v3/domains/%s/verify', $domain));
+        $response = $this->httpPut(sprintf('/v3/domains/%s/verify', $domain), [], $requestHeaders);
 
         return $this->hydrateResponse($response, VerifyResponse::class);
     }
 
     /**
      * Returns a domain tracking settings.
-     *
-     * @param string $domain name of the domain
-     *
+     * @param  string                                   $domain         name of the domain
+     * @param  array                                    $requestHeaders
      * @return TrackingResponse|array|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function tracking(string $domain)
+    public function tracking(string $domain, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
 
-        $response = $this->httpGet(sprintf('/v3/domains/%s/tracking', $domain));
+        $response = $this->httpGet(sprintf('/v3/domains/%s/tracking', $domain), [], $requestHeaders);
 
         return $this->hydrateResponse($response, TrackingResponse::class);
     }
 
     /**
      * Updates a domain click tracking settings.
-     *
-     * @param string $domain The name of the domain
-     * @param string $active The status for this tracking (one of: yes, no)
-     *
+     * @param  string                                              $domain         The name of the domain
+     * @param  string                                              $active         The status for this tracking (one of: yes, no)
+     * @param  array                                               $requestHeaders
      * @return UpdateClickTrackingResponse|array|ResponseInterface
-     *
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
-    public function updateClickTracking(string $domain, string $active)
+    public function updateClickTracking(string $domain, string $active, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
         Assert::stringNotEmpty($active);
@@ -406,21 +420,20 @@ class Domain extends HttpApi
             'active' => $active,
         ];
 
-        $response = $this->httpPut(sprintf('/v3/domains/%s/tracking/click', $domain), $params);
+        $response = $this->httpPut(sprintf('/v3/domains/%s/tracking/click', $domain), $params, $requestHeaders);
 
         return $this->hydrateResponse($response, UpdateClickTrackingResponse::class);
     }
 
     /**
      * Updates a domain open tracking settings.
-     *
-     * @param string $domain The name of the domain
-     * @param string $active The status for this tracking (one of: yes, no)
-     *
+     * @param  string                                             $domain         The name of the domain
+     * @param  string                                             $active         The status for this tracking (one of: yes, no)
+     * @param  array                                              $requestHeaders
      * @return UpdateOpenTrackingResponse|array|ResponseInterface
      * @throws ClientExceptionInterface
      */
-    public function updateOpenTracking(string $domain, string $active)
+    public function updateOpenTracking(string $domain, string $active, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
         Assert::stringNotEmpty($active);
@@ -430,24 +443,22 @@ class Domain extends HttpApi
             'active' => $active,
         ];
 
-        $response = $this->httpPut(sprintf('/v3/domains/%s/tracking/open', $domain), $params);
+        $response = $this->httpPut(sprintf('/v3/domains/%s/tracking/open', $domain), $params, $requestHeaders);
 
         return $this->hydrateResponse($response, UpdateOpenTrackingResponse::class);
     }
 
     /**
      * Updates a domain unsubscribe tracking settings.
-     *
-     * @param string $domain     The name of the domain
-     * @param string $active     The status for this tracking (one of: yes, no)
-     * @param string $htmlFooter The footer for HTML emails
-     * @param string $textFooter The footer for plain text emails
-     *
+     * @param  string                                                    $domain         The name of the domain
+     * @param  string                                                    $active         The status for this tracking (one of: yes, no)
+     * @param  string                                                    $htmlFooter     The footer for HTML emails
+     * @param  string                                                    $textFooter     The footer for plain text emails
+     * @param  array                                                     $requestHeaders
      * @return UpdateUnsubscribeTrackingResponse|array|ResponseInterface
-     *
-     * @throws Exception
+     * @throws ClientExceptionInterface
      */
-    public function updateUnsubscribeTracking(string $domain, string $active, string $htmlFooter, string $textFooter)
+    public function updateUnsubscribeTracking(string $domain, string $active, string $htmlFooter, string $textFooter, array $requestHeaders = [])
     {
         Assert::stringNotEmpty($domain);
         Assert::stringNotEmpty($active);
@@ -461,8 +472,90 @@ class Domain extends HttpApi
             'text_footer' => $textFooter,
         ];
 
-        $response = $this->httpPut(sprintf('/v3/domains/%s/tracking/unsubscribe', $domain), $params);
+        $response = $this->httpPut(sprintf('/v3/domains/%s/tracking/unsubscribe', $domain), $params, $requestHeaders);
 
         return $this->hydrateResponse($response, UpdateUnsubscribeTrackingResponse::class);
+    }
+
+    /**
+     * Updates a CNAME used for tracking opens and clicks.
+     *
+     * @param string $domain    The name of the domain
+     * @param string $webPrefix The tracking CNAME for a domain
+     *
+     * @return WebPrefixResponse|array|ResponseInterface
+     * @throws ClientExceptionInterface
+     */
+    public function updateWebPrefix(string $domain, string $webPrefix)
+    {
+        Assert::stringNotEmpty($domain);
+        Assert::stringNotEmpty($webPrefix);
+
+        $params = [
+            'web_prefix' => $webPrefix,
+        ];
+
+        $response = $this->httpPut(sprintf('/v3/domains/%s/web_prefix', $domain), $params);
+
+        return $this->hydrateResponse($response, WebPrefixResponse::class);
+    }
+
+    /**
+     * Status of x509 TLS certificate
+     * @link https://documentation.mailgun.com/docs/mailgun/api-reference/openapi-final/tag/Domain-Tracking/#tag/Domain-Tracking/operation/httpapi.(*HttpAPI).getStatusV2-fm-8
+     *
+     * @param string $domain
+     * @return mixed|ResponseInterface
+     * @throws ClientExceptionInterface
+     * @throws \JsonException
+     * @throws Exception
+     */
+    public function statusOf509Crt(string $domain)
+    {
+        Assert::stringNotEmpty($domain);
+
+        $response = $this->httpGet(sprintf('/v2/x509/%s}/status', $domain), []);
+
+        return $this->hydrateResponse($response, CertStatusResponse::class);
+    }
+
+    /**
+     * @param string $domain
+     * @return mixed|ResponseInterface
+     * @throws ClientExceptionInterface
+     * @throws \JsonException
+     * @throws Exception
+     */
+    public function generate509Tls(string $domain)
+    {
+        Assert::stringNotEmpty($domain);
+
+        $params = [
+            'domain' => $domain,
+        ];
+
+        $response = $this->httpPost(sprintf('/v2/x509/%s', $domain), $params);
+
+        return $this->hydrateResponse($response, CertStatusResponse::class);
+    }
+
+    /**
+     * @param string $domain
+     * @return mixed|ResponseInterface
+     * @throws ClientExceptionInterface
+     * @throws \JsonException
+     * @throws Exception
+     */
+    public function regenerateExpiredCrt(string $domain)
+    {
+        Assert::stringNotEmpty($domain);
+
+        $params = [
+            'domain' => $domain,
+        ];
+
+        $response = $this->httpPut(sprintf('/v2/x509/%s', $domain), $params);
+
+        return $this->hydrateResponse($response, CertStatusResponse::class);
     }
 }

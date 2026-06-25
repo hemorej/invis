@@ -20,7 +20,7 @@ final class HttpRejectedPromise implements Promise
     /**
      * {@inheritdoc}
      */
-    public function then(callable $onFulfilled = null, callable $onRejected = null)
+    public function then(?callable $onFulfilled = null, ?callable $onRejected = null)
     {
         if (null === $onRejected) {
             return $this;

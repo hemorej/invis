@@ -106,7 +106,7 @@ class StripeConnector
 	 * @return Session
 	 * @throws Exception
 	 */
-	public function createSession( array $lineItems, string $customerEmail = null )
+	public function createSession( array $lineItems, ?string $customerEmail = null )
 	{
 		try {
 			$sessionLineItems = [];

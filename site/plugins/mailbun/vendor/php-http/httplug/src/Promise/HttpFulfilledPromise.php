@@ -21,7 +21,7 @@ final class HttpFulfilledPromise implements Promise
     /**
      * {@inheritdoc}
      */
-    public function then(callable $onFulfilled = null, callable $onRejected = null)
+    public function then(?callable $onFulfilled = null, ?callable $onRejected = null)
     {
         if (null === $onFulfilled) {
             return $this;
