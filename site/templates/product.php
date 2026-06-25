@@ -26,7 +26,6 @@
     <meta property="og:url" content="<?= html(page()->url()) ?>">
     <meta property="og:image" content="<?= html($image->url()) ?>">
     <meta property="og:description" content="<?= html($page->meta()->toString()) ?>">
-
     <meta property="product:price.amount" content="<?= html(page()->variants()->toStructure()->first()->price()) ?>">
     <meta property="product:price.currency" content="CAD">
 <?php endslot() ?>
@@ -35,32 +34,34 @@
 <?php snippet('partials/menu') ?>
 
 <noscript>
-    <div class="db measure lh-copy ph2">
+    <div class="spectral f-18 lh-17">
         <h2>This page requires Javascript, please enable it and try again</h2>
     </div>
 </noscript>
 
-<div id="prod" class="black-70 ph2">
-    <span class="f4 f3-ns black-70 db mb3 ttl"><?= html($page->parent()->title()) ?>&nbsp;<a class="f4 f3-ns link black-60 hover-white hover-bg-gold pa1 ttl" href="<?= html($page->url()) ?>"><?= html($page->title()) ?></a></span>
+<div id="prod">
+    <div class="mb-34">
+		<span class="spectral f-23 fw5 ink-dark ttl"><?= html($page->parent()->title()) ?></span>
+		<span class="spectral f-23 ink-subtle ttl">&nbsp;<?= html($page->title()) ?></span>
+	</div>
 
-    <div class="cf">
-        <div class="fl w-100 w-50-ns">
+    <div class="flex flex-wrap items-start gap-60">
+        <div style="flex:1;min-width:300px;display:flex;flex-direction:column;gap:28px;">
             <?php foreach($page->images() as $img): ?>
-                <img class="db mb4" alt="product pictures for <?= html($page->title()) ?>" srcset="<?= html($img->srcset([600, 800, 1200])) ?>">
+                <img class="db w-100" alt="product pictures for <?= html($page->title()) ?>" srcset="<?= html($img->srcset([600, 800, 1200])) ?>">
             <?php endforeach ?>
         </div>
 
-        <div class="fl w-100 w-50-ns pa4-ns">
-            <section class="variants fixed-l mw6-ns z-0">
+        <div style="flex:1;min-width:280px;">
+            <section class="variants">
                 <?php
                 $variants = $page->variants()->toStructure();
-
                 $stock = 0;
                 foreach($variants as $variant)
                     $stock += $variant->stock()->value();
                 ?>
                 <?php if(count($variants) == 0 || $stock == 0): ?>
-                    Out of stock
+                    <span class="spectral f-18 ink-muted">Out of stock</span>
                 <?php else: ?>
                     <ul class="list pv2 pl0">
                         <?php $loopIdx = 0; foreach($variants as $variant): ?>
@@ -68,10 +69,10 @@
                                 <li class="<?= $loopIdx === 0 ? 'dib pl0' : 'dib pt3' ?>">
                                 <a
                                     <?php if($loopIdx === 0): ?>ref="active"<?php endif ?>
-                                class="f4 link black-60 hover-white hover-bg-gold pa1-l <?= $loopIdx === 0 ? 'bb b--gold bw2' : '' ?>"
-                                data-option-variant='<?= html($variant->suuid()) ?>'
-                                data-option-product='<?= html($page->title() . $variant->name()) ?>'
-                                v-on:click.prevent='makeActive'>
+                                    class="spectral f-19 no-underline ink-body <?= $loopIdx === 0 ? 'bb bw1 b--gold pb-10' : 'ink-subtle' ?>"
+                                    data-option-variant='<?= html($variant->suuid()) ?>'
+                                    data-option-product='<?= html($page->title() . $variant->name()) ?>'
+                                    v-on:click.prevent='makeActive'>
                                     <?= html($variant->name()) ?> &mdash; $<?= html($variant->price()) ?>
                                 </a>
                                 </li>&nbsp;
@@ -80,50 +81,43 @@
                     </ul>
 
                     <form id="cart-form" method="post" action="">
-                        <div class="description">
-                            <input type="hidden" name="csrf" ref="csrf" value="<?= csrf() ?>">
-                            <input type="hidden" name="action" value="add">
-                            <input type="hidden" name="uri" ref="uri" value="<?= html($page->uri()) ?>">
-                        </div>
-
-                        <div class="action mb4">
+                        <input type="hidden" name="csrf" ref="csrf" value="<?= csrf() ?>">
+                        <input type="hidden" name="action" value="add">
+                        <input type="hidden" name="uri" ref="uri" value="<?= html($page->uri()) ?>">
+                        <div class="mt3">
                             <button
                                 :disabled="submitting == true"
                                 v-on:click.prevent='addToCart'
-                                class="bg-white f5 no-underline"
-                                :class="[submitting == true ? 'gray b--gray pa2 pa3-l' : 'black bg-animate b--gold pa2 pa3-l ba border-box']">
+                                class="btn-cart"
+                                :class="[submitting == true ? 'ink-subtle' : '']">
                                 <span v-if="submitting == true">adding&ensp;&hellip;</span>
                                 <span v-else>add to cart</span>
                             </button>
                         </div>
                     </form>
-                    <span class="measure-narrow lh-copy black-70 f4">
+                    <div class="spectral f-19 ink-body mb-28"><?= html($page->title()) ?>, <?= html($page->parent()->title()) ?></div>
+                    <div class="spectral f-19 ink-subtle mb-28">—</div>
+                    <p class="spectral f-18 lh-165" style="color:#777;max-width:46ch;margin:0;">
                         <?= $page->description()->kirbytext() ?>
-                    </span>
+                    </p>
                 <?php endif ?>
             </section>
         </div>
     </div>
 </div>
 
-<span class="cf db mt4"></span>
-
-<nav class="cf mt4 ph2 mw7">
-    <?php
-        $articles = $page->siblings()->listed()->flip();
-    ?>
-
-    <?php if($page->hasPrevListed($articles)): ?>
-        <p class="fl">
-            <a class="pa1-l f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="<?= html($page->prev($articles)->url()) ?>">&laquo; <?= html($page->prev($articles)->title()) ?></a>
-        </p>
-    <?php endif ?>
-
-    <?php if($page->hasNextListed($articles)): ?>
-        <p class="fr fl-l pl6-l">
-            <a class="pa1-l f5 f4-m f4-ns link black-60 hover-white hover-bg-gold" href="<?= html($page->next($articles)->url()) ?>"><?= html($page->next($articles)->title()) ?> &raquo;</a>
-        </p>
-    <?php endif ?>
+<nav class="flex items-baseline mt-56" style="justify-content:space-between;">
+    <?php $articles = $page->siblings()->listed()->flip(); ?>
+    <div>
+        <?php if($page->hasPrevListed($articles)): ?>
+            <a class="lnk-nav spectral f-19 ttl" href="<?= html($page->prev($articles)->url()) ?>">&laquo; <?= html($page->prev($articles)->title()) ?></a>
+        <?php endif ?>
+    </div>
+    <div>
+        <?php if($page->hasNextListed($articles)): ?>
+            <a class="lnk-nav spectral f-19 ttl" href="<?= html($page->next($articles)->url()) ?>"><?= html($page->next($articles)->title()) ?> &raquo;</a>
+        <?php endif ?>
+    </div>
 </nav>
 
 <?php snippet('partials/footer', ['ldjson' => $structuredData], false, true) ?>

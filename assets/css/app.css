@@ -7,6 +7,14 @@
 }
 
 @font-face {
+  font-family: 'ff-meta-serif';
+  src:url("../font/ff7aa537-8e40-4f5e-9c8f-c5bd078c58db.eot?#iefix");
+  src:url("../font/ff7aa537-8e40-4f5e-9c8f-c5bd078c58db.eot?#iefix") format("eot"),url("../font/4ce43a49-0d61-4c34-8054-465d5981fd0b.woff2") format("woff2"),url("../font/d7b73a86-9fc7-41b4-a367-cbbd20039787.woff") format("woff"),url("../font/7fc1eb11-127b-4452-9067-a7e4b1b321d6.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'swiss721-cd-light';
   src:url("../font/ea7b43c8-e86c-401d-9d91-66806de49029.eot?#iefix");
   src:url("../font/ea7b43c8-e86c-401d-9d91-66806de49029.eot?#iefix") format("eot"),url("../font/0c5598c6-3ae9-4a24-a8a4-ca2054a96710.woff2") format("woff2"),url("../font/159799e2-a429-4419-a67a-0fa0ba3600e8.woff") format("woff"),url("../font/026eb06c-bcbb-4ef9-86a3-da25f5a41174.ttf") format("truetype");
@@ -26,7 +34,7 @@ html,
 body {font-size: 100%}
 
 body {
-  font-family: 'ff-meta-sans', sans-serif;
+  font-family: 'ff-meta-serif', sans-serif;
   cursor: auto;
 }
 .bg-lightest-gray {background-color: #fefefe}
@@ -68,3 +76,79 @@ button:focus, input:focus, select:focus {outline:0}
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
+
+/* === New design system === */
+.spectral { font-family:'ff-meta-serif', Georgia, serif; }
+.bg-off-white { background-color: #fdfdfd; }
+body { background: #fdfdfd; }
+.mw-1040 { max-width: 1040px; }
+.ph-36 { padding-left: 36px; padding-right: 36px; }
+.pt-60 { padding-top: 60px; }
+.f-logo { font-size: 42px; line-height: 1; letter-spacing: -0.01em; }
+.f-13 { font-size: 13px; }
+.f-18 { font-size: 18px; }
+.f-19 { font-size: 19px; }
+.f-21 { font-size: 21px; }
+.f-22 { font-size: 22px; }
+.f-23 { font-size: 23px; }
+.nav-lnk { font-family:'ff-meta-serif',Georgia,serif; font-size:18px; line-height:1; text-decoration:none; padding-bottom:3px; border-bottom:2px solid transparent; }
+.nav-lnk-on { color:#2a2a2a; border-bottom-color:#ffb700; }
+.nav-lnk-off { color:#a3a3a3; }
+.nav-lnk-off:hover { color:#ffb700; }
+.lnk-content { font-family:'ff-meta-serif',Georgia,serif; text-decoration:none; color:#3c3c3c; display:block; white-space:nowrap; }
+.lnk-content:hover { color:#ffb700; }
+.lnk-muted { font-family:'ff-meta-serif',Georgia,serif; text-decoration:none; color:#6c6c6c; }
+.lnk-muted:hover { color:#ffb700; }
+.lnk-nav { font-family:'ff-meta-serif',Georgia,serif; text-decoration:none; color:#6c6c6c; }
+.lnk-nav:hover { color:#ffb700; }
+.gold-lbl { font-family:'ff-meta-serif',Georgia,serif; font-style:italic; font-size:22px; line-height:1; color:#ffb700; display:block; }
+.mb-22 { margin-bottom:22px; }
+.mb-28 { margin-bottom:28px; }
+.mb-34 { margin-bottom:34px; }
+.mb-48 { margin-bottom:48px; }
+.mb-54 { margin-bottom:54px; }
+.mb-96 { margin-bottom:96px; }
+.mt-32 { margin-top:32px; }
+.mt-56 { margin-top:56px; }
+.mt-64 { margin-top:64px; }
+.mt-84 { margin-top:84px; }
+.mt-120 { margin-top:120px; }
+.pb-10 { padding-bottom:10px; }
+.gap-26 { gap:26px; }
+.gap-28 { gap:28px; }
+.gap-40 { gap:40px; }
+.gap-44 { gap:44px; }
+.gap-52 { gap:52px; }
+.gap-60 { gap:60px; }
+.flex-1 { flex:1; }
+.flex-13 { flex:1.3; }
+.flex-135 { flex:1.35; }
+.min-w-150 { min-width:150px; }
+.min-w-175 { min-width:175px; }
+.min-w-180 { min-width:180px; }
+.min-w-185 { min-width:185px; }
+.min-w-200 { min-width:200px; }
+.min-w-280 { min-width:280px; }
+.min-w-300 { min-width:300px; }
+.mw-520 { max-width:520px; }
+.mw-840 { max-width:840px; }
+.col-2 { column-count:2; column-gap:52px; column-fill:balance; }
+.col-4 { column-count:4; column-gap:44px; }
+.col-break-avoid { break-inside:avoid; }
+img { filter:grayscale(1); }
+.ink-dark { color:#2a2a2a; }
+.ink-body { color:#3c3c3c; }
+.ink-muted { color:#6c6c6c; }
+.ink-subtle { color:#9a9a9a; }
+.ink-copy { color:#555; }
+.ink-light { color:#cfcfcf; }
+.lh-174 { line-height:1.74; }
+.lh-165 { line-height:1.65; }
+.lh-17 { line-height:1.7; }
+.lh-195 { line-height:1.95; }
+.lh-14 { line-height:1.4; }
+.product-price { font-family:'ff-meta-serif',Georgia,serif; font-size:21px; line-height:1; color:#3c3c3c; border-bottom:2px solid #ffb700; padding-bottom:10px; display:inline-block; }
+.btn-cart { font-family:'ff-meta-serif',Georgia,serif; font-size:17px; line-height:1; color:#2a2a2a; background:#fff; border:1.5px solid #ffb700; padding:12px 22px; cursor:pointer; margin-bottom:34px; }
+.btn-cart:hover { background:#ffb700; color:#fff; }
+.btn-cart[disabled] { color:#aaa; border-color:#aaa; cursor:default; }
+.tr-ns-custom { text-align:right; }
