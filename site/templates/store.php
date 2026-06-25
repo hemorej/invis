@@ -6,7 +6,7 @@
 	$prints = $page->children()->filterBy('type', 'print')->listed()->flip();
 ?>
 
-<div class="flex items-center flex-wrap gap-52">
+<div class="flex items-start flex-wrap gap-52">
 	<div class="flex-1 min-w-300">
 		<img alt="<?= html($prints->first()->title()) ?> product preview" id="cover" class="db w-100" src="<?= html(getPreview($prints->first()->images()->first())) ?>">
 	</div>
