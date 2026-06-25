@@ -21,7 +21,7 @@ var app = new Vue({
         addToCart: function(event){
             this.submitting = true
 
-            window.umami.trackEvent('added ' +this.productVariant + ' to cart', 'cart' )
+            window.umami.track('[cart] added ' +this.productVariant )
             axios.post('/prints/cart', {
                 uri: this.$refs.uri.value,
                 variant: this.activeVariant,
