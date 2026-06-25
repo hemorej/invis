@@ -5,7 +5,7 @@ use \Logger\Logger;
 use Mailgun\Mailgun;
 use Mailgun\HttpClient\HttpClientConfigurator;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use Buzz\Client\FileGetContents;
+use Buzz\Client\Curl;
 use \Kirby\Cms\App;
 
 class Mailbun
@@ -16,7 +16,7 @@ class Mailbun
 	function __construct()
 	{
 		$psr17Factory = new Psr17Factory();
-		$httpClient = new FileGetContents($psr17Factory);
+		$httpClient = new Curl($psr17Factory);
 		$configurator = (new HttpClientConfigurator())
 			->setApiKey(kirby()->option('mailgun_key'))
 			->setUriFactory($psr17Factory)
