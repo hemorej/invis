@@ -24,7 +24,7 @@ return function($site, $page, $kirby)
 
     // Set txn object
     $txn = $cart->getCartPage();
-    $discount = empty($cart->getCartPage()->discount()) ? null : $cart->getCartPage()->discount()->yaml();
+    $discount = empty($cart->getCartPage()?->discount()) ? null : $cart->getCartPage()->discount()->yaml();
     $discountAmount = empty($discount) ? 0 : intval($discount['amount']);
     $subtotal = $cart->subtotal($cart->items());
     $total = $subtotal - ($discountAmount / 100) * $subtotal;
@@ -34,8 +34,8 @@ return function($site, $page, $kirby)
     $lineItems = $cart->getLineItems((100-$discountAmount)/100);
 
     $customerEmail = null;
-    if(isset($cart->getCartPage()->customer()->yaml()['email']))
-    $customerEmail = $cart->getCartPage()->customer()->yaml()['email'];
+    if(isset($cart->getCartPage()?->customer()->yaml()['email']))
+    	$customerEmail = $cart->getCartPage()->customer()->yaml()['email'];
 
     $stripeSession = null;
     if(!empty($lineItems))

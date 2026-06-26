@@ -9,7 +9,7 @@
 </noscript>
 
 <?php if(!$kirby->session()->get('txn') or empty($txn) or $txn->products()->toStructure()->count() === 0): ?>
-    <p class="spectral f-21 lh-16 ink-copy" style="margin:0 0 80px">Your cart is empty. Would you like to look at some <a class="gold no-underline" href="./prints">prints</a>?</p>
+    <p class="spectral f-21 lh-16 ink-copy" style="margin:0 0 80px">Your cart is empty. Would you like to look at some <a class="gold no-underline" href="/prints">prints</a>?</p>
 <?php else: ?>
 <div id="cart">
     <!-- Loading overlay -->

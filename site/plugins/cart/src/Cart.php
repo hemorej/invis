@@ -131,7 +131,11 @@ class Cart
 	public function getLineItems( $discount = 1, $shipping = 0 )
 	{
 		$lineItems = [];
-		$products = $this->getCartPage()->products()->toStructure();
+		$products = $this->getCartPage()?->products()?->toStructure();
+		if(empty($products)) {
+			return $lineItems;
+		}
+
 		foreach( $products as $product ) {
 			$preview = $this->site->page( $product->uri()->value )->images()->first()->crop( 100 )->url();
 			$lineItems[] = [
@@ -490,23 +494,24 @@ class Cart
 	{
 		$orderId = $this->getCartPage()->suuid()->value();
 
-		foreach( $this->items() as $item ) {
-			$uri = $item->uri()->value;
-			$variantStructure = $this->site->page( $uri )->variants()->findBy( 'suuid', $item->suuid()->value() )->yaml();
-			$variant = $variantStructure[0];
+		foreach( $this->getCartPage()->products()->yaml() as $item ) {
+			$uri = $item['uri'];
+			$suuid = !empty( $item['suuid'] ) ? $item['suuid'] : ( explode( '::', $item['id'] )[1] ?? '' );
 
-			$updatedVariant = [];
-			$updatedVariant['suuid'] = $variant['suuid'];
-			$updatedVariant['name'] = $variant['name'];
-			$updatedVariant['price'] = $variant['price'];
+			$allVariants = $this->site->page( $uri )->variants()->yaml();
+			$key = array_search( $suuid, array_column( $allVariants, 'suuid' ) );
 
-			$remainingStock = intval( $variant['stock'] ) - intval( $item->quantity()->value );
+			if( $key === false )
+				throw new \Exception( "Variant not found for suuid: " . $suuid );
+
+			$variant = $allVariants[$key];
+
+			$remainingStock = intval( $variant['stock'] ) - intval( $item['quantity'] );
 			if( $remainingStock < 0 )
 				throw new \Exception( "Insufficient stock for product " . page( $uri )->title()->value() . " (uuid: " . $variant['suuid'] . ")" );
 
-			$updatedVariant['stock'] = $remainingStock;
-
-			addToStructure( page( $uri ), 'variants', $updatedVariant );
+			$variant['stock'] = $remainingStock;
+			addToStructure( page( $uri ), 'variants', $variant );
 		}
 		$this->logger->info( "inventory updated after order " . $orderId );
 	}
