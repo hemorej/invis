@@ -1,60 +1,60 @@
 <?php
-    if(isset($meta)){
-        $image = $meta['image'];
-        $url = $meta['url'];
-    } else {
-        $image = page('projects/portfolio')->images()->first()->resize(600)->url();
-        $url = site()->url();
-    }
+if( isset( $meta ) ) {
+    $image = $meta['image'];
+    $url = $meta['url'];
+} else {
+    $image = page( 'projects/portfolio' )->images()->first()->resize( 600 )->url();
+    $url = site()->url();
+}
 
-    $title = '';
-    if(!empty(page()->title())){
-        if(page()->title() == 'journal'){
-            $title = page()->title();
-        }elseif(page()->title() != page()->uid()){
-            $title = page()->title();
-        }elseif(site()->page()->title() == 'cart'){
-            $title = site()->page()->title();
-        }
-    }else{
-        $title = page()->published()->toString();
+$title = '';
+if( !empty( page()->title() ) ) {
+    if( page()->title() == 'journal' ) {
+        $title = page()->title();
+    } else if( page()->title() != page()->uid() ) {
+        $title = page()->title();
+    } else if( site()->page()->title() == 'cart' ) {
+        $title = site()->page()->title();
     }
+} else {
+    $title = page()->published()->toString();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><?= html(site()->title()) ?> — <?= html(strtolower($title)) ?></title>
+    <title><?= html( site()->title() ) ?> — <?= html( strtolower( $title ) ) ?></title>
     <meta charset="utf-8"/>
-    <meta name="description" content="<?= html(site()->description()) ?>"/>
+    <meta name="description" content="<?= html( site()->description() ) ?>"/>
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
 
-    <meta itemprop="name" content="<?= html(site()->title()) ?>">
-    <meta itemprop="description" content="<?= html(site()->description()) ?>">
-    <meta itemprop="image" content="<?= html($image) ?>">
+    <meta itemprop="name" content="<?= html( site()->title() ) ?>">
+    <meta itemprop="description" content="<?= html( site()->description() ) ?>">
+    <meta itemprop="image" content="<?= html( $image ) ?>">
 
     <meta property="og:locale" content="en_CA">
-    <meta property="og:site_name" content="<?= html(site()->title()) ?>">
+    <meta property="og:site_name" content="<?= html( site()->title() ) ?>">
 
-    <?php if($slot = $slots->meta()): ?>
+    <?php if( $slot = $slots->meta() ): ?>
         <?= $slot ?>
     <?php else: ?>
-        <meta property="og:url" content="<?= html($url) ?>">
+        <meta property="og:url" content="<?= html( $url ) ?>">
         <meta property="og:type" content="website">
-        <meta property="og:title" content="<?= html(site()->title()) ?>">
-        <meta property="og:description" content="<?= html(site()->description()) ?>">
-        <meta property="og:image" content="<?= html($image) ?>">
+        <meta property="og:title" content="<?= html( site()->title() ) ?>">
+        <meta property="og:description" content="<?= html( site()->description() ) ?>">
+        <meta property="og:image" content="<?= html( $image ) ?>">
     <?php endif ?>
 
-    <?php if(option('env') == 'prod'): ?>
-        <?= css('assets/dist/app.min.css') ?>
+    <?php if( option( 'env' ) == 'prod' ): ?>
+        <?= css( 'assets/dist/app.min.css' ) ?>
     <?php else: ?>
-        <?= css('assets/css/app.css') ?>
-        <?= css('assets/css/vendor/tachyons.css') ?>
+        <?= css( 'assets/css/app.css' ) ?>
+        <?= css( 'assets/css/vendor/tachyons.css' ) ?>
     <?php endif ?>
 
-    <link rel="shortcut icon" type="image/x-icon" href="<?= url('assets/images/favicon.ico') ?>"/>
-    <link rel="apple-touch-icon" sizes="72x72" href="<?= url('assets/images/apple-touch-icon-72x72.png') ?>"/>
-    <link rel="apple-touch-icon" sizes="114x114" href="<?= url('assets/images/apple-touch-icon-114x114.png') ?>"/>
-    <link rel="canonical" href="<?= html($url) ?>">
+    <link rel="shortcut icon" type="image/x-icon" href="<?= url( 'assets/images/favicon.ico' ) ?>"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="<?= url( 'assets/images/apple-touch-icon-72x72.png' ) ?>"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="<?= url( 'assets/images/apple-touch-icon-114x114.png' ) ?>"/>
+    <link rel="canonical" href="<?= html( $url ) ?>">
 </head>

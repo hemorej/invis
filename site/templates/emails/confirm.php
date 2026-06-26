@@ -156,12 +156,6 @@
                                       <td class="td">— $<?= html(intval($item->amount()->value) * intval($item->quantity()->value)) ?></td>
                                     </tr>
                                   <?php endforeach ?>
-                                  <?php if(!empty($discount)): ?>
-                                    <tr class="tr">
-                                      <td class="td">Discount (<?= html($discount) ?>)</td>
-                                      <td class="td">&nbsp; -<?= html($discountAmount) ?>%</td>
-                                    </tr>
-                                  <?php endif ?>
                                   <tr class="tr">
                                     <td class="td">Shipping</td>
                                     <td class="td">— $<?= html($shipping) ?></td>

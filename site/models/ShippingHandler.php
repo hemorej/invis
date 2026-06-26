@@ -3,18 +3,27 @@
 use Logger\Logger;
 use Mailbun\Mailbun;
 
+/**
+ * Sends a shipping confirmation email to the customer when an order status changes to "shipped".
+ */
 class ShippingHandler
 {
+	/** @var \Monolog\Logger */
 	protected $logger;
 
+	/**
+	 * @return void
+	 */
 	function __construct()
 	{
 		$this->logger = ( new Logger( 'shipping' ) )->getLogger();
 	}
 
 	/**
-	 * @param $page
-	 * @param $oldPage
+	 * Sends a shipping confirmation email if the order status transitions to "shipped".
+	 *
+	 * @param \Kirby\Cms\Page $page    The updated order page
+	 * @param \Kirby\Cms\Page $oldPage The order page state before the update
 	 * @return void
 	 */
 	public function notify( $page, $oldPage )
@@ -35,16 +44,8 @@ class ShippingHandler
 				$subtotal += intval( $item->quantity()->value * $item->amount()->value );
 			}
 
-			$discount = $page->discount()->yaml();
-			$shipping = $page->shipping()->value;
-
-			if( !empty( $discount ) ) {
-				$total = $subtotal - ( intval( $discount['amount'] ) / 100 ) * $subtotal;
-			} else {
-				$total = $subtotal;
-			}
-
-			$total += $shipping;
+			$shipping = (float) $page->shipping()->value;
+			$total = $subtotal + $shipping;
 
 			try {
 				$mailbun = new Mailbun();
@@ -59,8 +60,6 @@ class ShippingHandler
 					'country' => $customer['address']['country'],
 					'postcode' => $customer['address']['postal_code'],
 					'email' => $customer['email'],
-					'discount' => empty( $discount['code'] ) ? null : $discount['code'],
-					'discountAmount' => empty( $discount['amount'] ) ? null : $discount['amount'],
 					'shipping' => $shipping,
 					'total' => $total,
 					'title' => 'Your order from The Invisible Cities has been shipped',
@@ -71,8 +70,8 @@ class ShippingHandler
 				] );
 
 				$this->logger->info( "email shipping confirmation sent for order id " . $page->suuid() );
-			} catch( \Error $e ) {
-				$this->logger->error( "email shipping confirmation error for order id " . $page->suuid() . ": " . $e->getMessage() );
+			} catch( \Throwable $t ) {
+				$this->logger->error( "email shipping confirmation error for order id " . $page->suuid() . ": " . $t->getMessage() );
 			}
 
 			$page->update( [

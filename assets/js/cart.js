@@ -4,10 +4,8 @@ var app = new Vue({
         inCart: true,
         inShipping: false,
         inCheckout: false,
-        discount: null,
         total: 0,
         currencies: null,
-        disableDiscount: false,
         stripe: null,
         name: null,
         email: null,
@@ -27,7 +25,7 @@ var app = new Vue({
     },
     mounted() {
         this.country = this.$refs.userLocation.value
-        this.total = parseInt(this.$refs.total.value)
+        this.total = parseInt(this.$refs.checkoutTotal.value)
         this.currencies = this.$refs.currencies.value
     },
     computed: {
@@ -36,22 +34,11 @@ var app = new Vue({
         }
     },
     methods: {
-        applyDiscount: function(){
-            this.orderWaiting = true
-            axios.post('/discount', {
-                discount: this.discount,
-                csrf: this.$refs.discountCSRF.value
-              }).then(response => {
-                if(parseInt(response.data.total) != 0){
-                    this.total = response.data.total
-                    this.currencies = response.data.currencies
-                    this.discount = response.data.discountAmount
-                    this.disableDiscount = true
-                    this.$refs.checkoutSessionID.value = response.data.checkoutSessionId
-                    this.$refs.checkoutTotal.value = response.data.total
-                }
-                this.orderWaiting = false
-              })
+        resetToCart: function(){
+            this.inCart = true;
+            this.inShipping = false;
+            this.inCheckout = false;
+            this.step = '1. cart';
         },
         showShipping: function(){
             this.inCart = false;
@@ -89,7 +76,6 @@ var app = new Vue({
                 this.$refs.checkoutSessionID.value = response.data.checkoutSessionId
                 this.currencies = response.data.currencies
                 this.shipping = response.data.shipping
-                this.discount = response.data.discount
                 this.items = response.data.items
                 this.total += this.shipping
               })
@@ -123,6 +109,23 @@ var app = new Vue({
                   .then(function (response) {
                     location.reload(true);
                   })
+            }
+        },
+        incQty: function(event){
+            var row = event.target.closest('[data-qty-row]');
+            var input = row.querySelector('input[type=number]');
+            var max = parseInt(input.getAttribute('max'));
+            if(parseInt(input.value) < max){
+                input.value = parseInt(input.value) + 1;
+                input.dispatchEvent(new Event('change'));
+            }
+        },
+        decQty: function(event){
+            var row = event.target.closest('[data-qty-row]');
+            var input = row.querySelector('input[type=number]');
+            if(parseInt(input.value) > 1){
+                input.value = parseInt(input.value) - 1;
+                input.dispatchEvent(new Event('change'));
             }
         },
         validEmail: function (email) {

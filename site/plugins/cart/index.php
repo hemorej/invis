@@ -11,35 +11,50 @@ Kirby::plugin('cart/cart', [
 		'pattern' => 'address',
 		'method' => 'POST',
 		'action'  => function () {
-			if(csrf(get('csrf')) === true){
-				$customer = [
-					'name' => get('name'),
-					'email' => get('email'),
-						'address' => [
-							"address_line_1" => get('line1'),
-							"address_line_2" => get('line2'),
-							"city" => get('city'),
-							"country" => get('country'),
-							"postal_code" => get('postcode'),
-							"state" => get('province')
-						]
-					];
-
-					$cart = new \Cart\Cart();
-					kirby()->impersonate('kirby');
-					$cart->getCartPage()->update(['customer' => Yaml::encode($customer)]);
-					$shipping = $cart->addShipping(get('country'), get('email'));
-
-				return [
-			      'status' => 'ok',
-			      'checkoutSessionId' => $shipping['checkoutSessionId'],
-			      'shipping' => $shipping['shipping'],
-			      'discount' => $shipping['discount'],
-			      'currencies' => $shipping['currencies'],
-			      'items' => $shipping['items'],
-			      'total' => $shipping['total']
-			    ];
+			if( csrf( get( 'csrf' ) ) !== true ) {
+				return ['status' => 'error', 'message' => 'Invalid CSRF token'];
 			}
+
+			$name     = substr( trim( get( 'name' ) ?? '' ), 0, 100 );
+			$email    = substr( trim( get( 'email' ) ?? '' ), 0, 254 );
+			$line1    = substr( trim( get( 'line1' ) ?? '' ), 0, 200 );
+			$line2    = substr( trim( get( 'line2' ) ?? '' ), 0, 200 );
+			$city     = substr( trim( get( 'city' ) ?? '' ), 0, 100 );
+			$country  = substr( trim( get( 'country' ) ?? '' ), 0, 100 );
+			$postcode = substr( trim( get( 'postcode' ) ?? '' ), 0, 20 );
+			$province = substr( trim( get( 'province' ) ?? '' ), 0, 100 );
+
+			if( empty( $name ) || empty( $line1 ) || empty( $city ) || empty( $country ) || empty( $postcode )
+				|| !filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+				return ['status' => 'error', 'message' => 'Invalid address data'];
+			}
+
+			$customer = [
+				'name'  => $name,
+				'email' => $email,
+				'address' => [
+					'address_line_1' => $line1,
+					'address_line_2' => $line2,
+					'city'           => $city,
+					'country'        => $country,
+					'postal_code'    => $postcode,
+					'state'          => $province,
+				]
+			];
+
+			$cart = new \Cart\Cart();
+			kirby()->impersonate( 'kirby' );
+			$cart->getCartPage()->update( ['customer' => Yaml::encode( $customer )] );
+			$shipping = $cart->addShipping( $country, $email );
+
+			return [
+				'status'            => 'ok',
+				'checkoutSessionId' => $shipping['checkoutSessionId'],
+				'shipping'          => $shipping['shipping'],
+				'currencies'        => $shipping['currencies'],
+				'items'             => $shipping['items'],
+				'total'             => $shipping['total'],
+			];
 		}
 	  ],[
 		'pattern' => 'order/success/(:alpha)',
@@ -51,17 +66,6 @@ Kirby::plugin('cart/cart', [
 			}
 
 			return page('prints/cart');
-		}],[
-		'pattern' => 'discount',
-		'method' => 'POST',
-		'action'  => function () {
-			if(csrf(get('csrf')) === true){
-				$result = (new \Cart\Cart())->applyDiscount(get('discount'));
-
-				return $result;
-			}
-
-			return false;
 		}]
 	]
 ]);

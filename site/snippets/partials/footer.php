@@ -1,4 +1,4 @@
-	<footer class="moon-gray f7 f6-ns ph2 pv4 mt4 tc">
+	<footer class="mt-120 tc spectral f-13 lh-14 ink-light" style="padding-top:8px;">
 		<?= kirbytext($site->copyright()) ?>
 	</footer>
 

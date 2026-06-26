@@ -1,10 +1,10 @@
 <?php snippet('partials/header') ?>
 <?php snippet('partials/menu') ?>
 
-<article class="aspect-ratio aspect-ratio--6x4">
+<a href="<?= html($pages->listed()->first()->url()) ?>" class="db">
 	<?php foreach(getHomeImage() as $image): ?>
-		<img alt="black and white photograph" srcset="<?= html($image->srcset([600, 800, 1200])) ?>">
+		<img alt="black and white photograph" class="db w-100" srcset="<?= html($image->srcset([600, 800, 1200])) ?>">
 	<?php endforeach ?>
-</article>
+</a>
 
 <?php snippet('partials/footer') ?>
