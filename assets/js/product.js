@@ -11,8 +11,10 @@ var app = new Vue({
     },
     methods: {
         makeActive: function(event){
-            this.$refs.active.classList.remove('bb', 'b--gold', 'bw2')
-            event.target.classList.add('bb', 'b--gold', 'bw2')
+            this.$refs.active.classList.remove('variant-on')
+            this.$refs.active.classList.add('variant-off')
+            event.target.classList.remove('variant-off')
+            event.target.classList.add('variant-on')
 
             this.$refs.active = event.target
             this.activeVariant = event.target.getAttribute('data-option-variant')

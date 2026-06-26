@@ -40,73 +40,76 @@
 </noscript>
 
 <div id="prod">
-    <div class="mb-34">
-		<span class="spectral f-23 fw5 ink-dark ttl"><?= html($page->parent()->title()) ?></span>
-		<span class="spectral f-23 ink-subtle ttl">&nbsp;<?= html($page->title()) ?></span>
-	</div>
+    <div class="mb-48">
+        <span class="spectral f-23 fw5 ink-dark ttl"><?= html($page->parent()->title()) ?></span>
+        <span class="spectral f-23 ink-light">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+        <span class="spectral f-23 ink-subtle ttl"><?= html($page->title()) ?></span>
+    </div>
 
-    <div class="flex flex-wrap items-start gap-60">
-        <div style="flex:1;min-width:300px;display:flex;flex-direction:column;gap:28px;">
+    <div class="flex flex-wrap items-start gap-72">
+        <div style="flex:1.05;min-width:300px;display:flex;flex-direction:column;gap:24px;">
             <?php foreach($page->images() as $img): ?>
-                <img class="db w-100" alt="product pictures for <?= html($page->title()) ?>" srcset="<?= html($img->srcset([600, 800, 1200])) ?>">
+                <img class="db w-100" alt="product pictures for <?= html($page->title()) ?>" srcset="<?= html($img->srcset([600, 800, 1200])) ?>" style="filter:none">
             <?php endforeach ?>
         </div>
 
-        <div style="flex:1;min-width:280px;position:sticky;top:60px;align-self:flex-start;">
-            <section class="variants">
-                <?php
-                $variants = $page->variants()->toStructure();
-                $stock = 0;
-                foreach($variants as $variant)
-                    $stock += $variant->stock()->value();
-                ?>
-                <?php if(count($variants) == 0 || $stock == 0): ?>
-                    <span class="spectral f-18 ink-muted">Out of stock</span>
-                <?php else: ?>
-                    <ul class="list pv2 pl0">
+        <div style="flex:1;min-width:300px;position:sticky;top:48px;align-self:flex-start;">
+            <?php
+            $variants = $page->variants()->toStructure();
+            $stock = 0;
+            foreach($variants as $variant)
+                $stock += $variant->stock()->value();
+            ?>
+
+            <h1 class="spectral fw3 f-38 lh-108 ink-dark ls-tight mt0 mb-4"><?= html($page->title()) ?></h1>
+            <p class="spectral f-19 lh-14 ink-subtle mb-34 mt0"><?= html($page->parent()->title()) ?></p>
+
+            <?php if(count($variants) == 0 || $stock == 0): ?>
+                <span class="spectral f-18 ink-muted">Out of stock</span>
+            <?php else: ?>
+                <section class="variants">
+                    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:32px;">
                         <?php $loopIdx = 0; foreach($variants as $variant): ?>
                             <?php if(Cart::inStock($variant)): ?>
-                                <li class="<?= $loopIdx === 0 ? 'dib pl0' : 'dib pt3' ?>">
                                 <a
                                     <?php if($loopIdx === 0): ?>ref="active"<?php endif ?>
-                                    class="spectral f-19 no-underline ink-body <?= $loopIdx === 0 ? 'bb bw1 b--gold pb-10' : 'ink-subtle' ?>"
+                                    class="variant-lnk spectral f-19 <?= $loopIdx === 0 ? 'variant-on' : 'variant-off' ?>"
                                     data-option-variant='<?= html($variant->suuid()) ?>'
                                     data-option-product='<?= html($page->title() . $variant->name()) ?>'
                                     v-on:click.prevent='makeActive'>
-                                    <?= html($variant->name()) ?> &mdash; $<?= html($variant->price()) ?>
+                                    <span><?= html($variant->name()) ?></span>
+                                    <span class="ink-subtle">$<?= html($variant->price()) ?></span>
                                 </a>
-                                </li>&nbsp;
                             <?php endif ?>
                         <?php $loopIdx++; endforeach ?>
-                    </ul>
+                    </div>
 
                     <form id="cart-form" method="post" action="">
                         <input type="hidden" name="csrf" ref="csrf" value="<?= csrf() ?>">
                         <input type="hidden" name="action" value="add">
                         <input type="hidden" name="uri" ref="uri" value="<?= html($page->uri()) ?>">
-                        <div class="mt3">
-                            <button
-                                :disabled="submitting == true"
-                                v-on:click.prevent='addToCart'
-                                class="btn-cart"
-                                :class="[submitting == true ? 'ink-subtle' : '']">
-                                <span v-if="submitting == true">adding&ensp;&hellip;</span>
-                                <span v-else>add to cart</span>
-                            </button>
-                        </div>
+                        <button
+                            :disabled="submitting == true"
+                            v-on:click.prevent='addToCart'
+                            class="btn-cart"
+                            :class="[submitting == true ? 'ink-subtle' : '']">
+                            <span v-if="submitting == true">adding&ensp;&hellip;</span>
+                            <span v-else>add to cart</span>
+                        </button>
                     </form>
-                    <div class="spectral f-19 ink-body mb-28"><?= html($page->title()) ?>, <?= html($page->parent()->title()) ?></div>
-                    <div class="spectral f-19 ink-subtle mb-28">—</div>
-                    <p class="spectral f-18 lh-165" style="color:#777;max-width:46ch;margin:0;">
-                        <?= $page->description()->kirbytext() ?>
-                    </p>
-                <?php endif ?>
-            </section>
+                </section>
+
+                <div class="bt b--black-10 mt-38 mb-30"></div>
+
+                <p class="spectral f-18 lh-172 ink-copy mt0" style="max-width:50ch;">
+                    <?= $page->description()->kirbytext() ?>
+                </p>
+            <?php endif ?>
         </div>
     </div>
 </div>
 
-<nav class="flex items-baseline mt-56" style="justify-content:space-between;">
+<nav class="flex items-baseline mt-72" style="justify-content:space-between;">
     <?php $articles = $page->siblings()->listed()->flip(); ?>
     <div>
         <?php if($page->hasPrevListed($articles)): ?>

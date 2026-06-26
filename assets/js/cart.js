@@ -53,6 +53,12 @@ var app = new Vue({
                 this.orderWaiting = false
               })
         },
+        resetToCart: function(){
+            this.inCart = true;
+            this.inShipping = false;
+            this.inCheckout = false;
+            this.step = '1. cart';
+        },
         showShipping: function(){
             this.inCart = false;
             this.inShipping = true;
@@ -123,6 +129,23 @@ var app = new Vue({
                   .then(function (response) {
                     location.reload(true);
                   })
+            }
+        },
+        incQty: function(event){
+            var row = event.target.closest('[data-qty-row]');
+            var input = row.querySelector('input[type=number]');
+            var max = parseInt(input.getAttribute('max'));
+            if(parseInt(input.value) < max){
+                input.value = parseInt(input.value) + 1;
+                input.dispatchEvent(new Event('change'));
+            }
+        },
+        decQty: function(event){
+            var row = event.target.closest('[data-qty-row]');
+            var input = row.querySelector('input[type=number]');
+            if(parseInt(input.value) > 1){
+                input.value = parseInt(input.value) - 1;
+                input.dispatchEvent(new Event('change'));
             }
         },
         validEmail: function (email) {

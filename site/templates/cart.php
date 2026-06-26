@@ -1,216 +1,227 @@
 <?php snippet('partials/header') ?>
 <?php snippet('partials/menu') ?>
 <?php use \Cart\Cart; ?>
-<style>
-.loading{margin:auto}.loading:before{content:'';display:block;position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.3)}.loading:not(:required){font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0}.loading:not(:required):after{content:'';display:block;font-size:10px;width:.5em;height:.5em;margin-top:-.5em;-webkit-animation:spinner 1500ms infinite linear;-moz-animation:spinner 1500ms infinite linear;-ms-animation:spinner 1500ms infinite linear;-o-animation:spinner 1500ms infinite linear;animation:spinner 1500ms infinite linear;border-radius:.5em;-webkit-box-shadow:rgba(0,0,0,0.75) 1.5em 0 0 0,rgba(0,0,0,0.75) 1.1em 1.1em 0 0,rgba(0,0,0,0.75) 0 1.5em 0 0,rgba(0,0,0,0.75) -1.1em 1.1em 0 0,rgba(0,0,0,0.5) -1.5em 0 0 0,rgba(0,0,0,0.5) -1.1em -1.1em 0 0,rgba(0,0,0,0.75) 0 -1.5em 0 0,rgba(0,0,0,0.75) 1.1em -1.1em 0 0;box-shadow:rgba(0,0,0,0.75) 1.5em 0 0 0,rgba(0,0,0,0.75) 1.1em 1.1em 0 0,rgba(0,0,0,0.75) 0 1.5em 0 0,rgba(0,0,0,0.75) -1.1em 1.1em 0 0,rgba(0,0,0,0.75) -1.5em 0 0 0,rgba(0,0,0,0.75) -1.1em -1.1em 0 0,rgba(0,0,0,0.75) 0 -1.5em 0 0,rgba(0,0,0,0.75) 1.1em -1.1em 0 0}@-webkit-keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}@-moz-keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}@-o-keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes spinner{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
-</style>
 
 <noscript>
-    <div class="db measure lh-copy ph2 f3">
+    <div class="spectral f-18 lh-17">
         <h2>This page requires Javascript, please enable it and try again</h2>
     </div>
 </noscript>
 
 <?php if(!$kirby->session()->get('txn') or empty($txn) or $txn->products()->toStructure()->count() === 0): ?>
-    <section class="f5 f4-m f3-ns black-70 db ph2">
-        Your cart is empty. Would you like to look at some <a class="f5 f4-m f3-ns pa2 link black-60 hover-white hover-bg-gold" href="./">prints</a>?
-    </section>
+    <p class="spectral f-21 lh-16 ink-copy" style="margin:0 0 80px">Your cart is empty. Would you like to look at some <a class="gold no-underline" href="./prints">prints</a>?</p>
 <?php else: ?>
-    <div id="cart" class="black-70 ph2">
-        <div :class="[orderWaiting == true ? 'ds' : 'dn']" class="loading fixed z-999 h2 w2 overflow-visible top-0 left-0 bottom-0 right-0">Loading&#8230;</div>
-        <span class="f4 f4-m f3-ns black-70 db">{{ step }}</span>
-        <span class='db mb3'></span>
+<div id="cart">
+    <!-- Loading overlay -->
+    <div :class="[orderWaiting ? 'db' : 'dn']" class="fixed top-0 left-0 w-100 h-100 z-999" style="background:rgba(0,0,0,0.15)"></div>
 
-        <span :class="[error == true ? 'db' : 'dn']" class="gold b--gold f4 f4-ns lh-copy pa2 ba border-box mb3 tc dn">Sorry, there's only {{ leftInStock }} left in stock&nbsp;<a class="ml3 link gold" href="#" v-on:click.prevent="error = false">&times;</a></span>
+    <!-- Hidden data refs -->
+    <input ref="userLocation" type="hidden" value="<?= html($currentLocation) ?>" />
+    <input ref="checkoutKey" type="hidden" value="<?= option('stripe_key_pub') ?>">
+    <input ref="checkoutSessionID" type="hidden" value="<?= html($checkoutSessionId) ?>">
+    <input ref="checkoutTotal" type="hidden" value="<?= html($total) ?>">
+    <input ref="checkoutContent" type="hidden" value="<?= html($content) ?>">
+    <input ref="ppCsrf" type="hidden" value="<?= csrf() ?>">
 
-        <input ref="userLocation" type="hidden" value="<?= html($currentLocation) ?>" />
-        <input ref="checkoutKey" type="hidden" name="key" value="<?= option('stripe_key_pub') ?>">
-        <input ref="checkoutSessionID" type="hidden" name="key" value="<?= html($checkoutSessionId) ?>">
-        <input ref="checkoutTotal" type="hidden" name="total" value="<?= html($total) ?>">
-        <input ref="checkoutContent" type="hidden" name="content" value="<?= html($content) ?>">
-        <input ref="ppCsrf" type="hidden" name="csrf" value="<?= csrf() ?>">
+    <!-- Stock error banner -->
+    <div :class="[error ? 'db' : 'dn']" class="spectral f-18 gold ba b--gold pa3 mb-32 tc">
+        Sorry, there&rsquo;s only {{ leftInStock }} left in stock.
+        <a class="ml2 gold no-underline pointer" v-on:click.prevent="error = false">&times;</a>
+    </div>
 
-        <div v-if="inCart == true" key="cart">
-            <div v-show="inCheckout == false" class="mw7 dn db-ns">
-                <div class="cf ph2-ns">
-                    <div class="fl dn ds-ns w-10-ns db-ns">&nbsp;</div>
-                    <div class="fl f3 w-50 w-60-ns pl3-ns tracked-tight">
-                        description
-                    </div>
-                    <div class="fl dn ds-ns w-10-ns db-ns">&nbsp;</div>
-                    <div class="fl f3 w-50 w-20-ns tr tracked-tight">
-                        quantity
-                    </div>
+    <!-- Step indicator (hidden on order confirmation) -->
+    <div v-show="inCart || inShipping" class="flex items-baseline mb-64 flex-wrap">
+        <a class="step-lnk spectral" :class="[inCart && !inCheckout ? 'step-on' : 'step-off']" href="#">
+            <span class="gold f-15">01</span>&nbsp;&nbsp;cart
+        </a>
+        <span class="ink-light spectral f-18 lh-1" style="margin:0 22px">———</span>
+        <a class="step-lnk spectral" :class="[inShipping || inCheckout ? 'step-on' : 'step-off']" href="#">
+            <span class="gold f-15">02</span>&nbsp;&nbsp;shipping
+        </a>
+        <span class="ink-light spectral f-18 lh-1" style="margin:0 22px">———</span>
+        <a class="step-lnk spectral" :class="[inCheckout ? 'step-on' : 'step-off']" href="#">
+            <span class="gold f-15">03</span>&nbsp;&nbsp;payment
+        </a>
+    </div>
+
+    <!-- ===== STEP 1: CART ===== -->
+    <div v-if="inCart && !inCheckout">
+        <!-- Column labels -->
+        <div class="cart-lbl-grid spectral f-18 lh-1 gold pb-22" style="font-style:italic">
+            <span></span>
+            <span>— item</span>
+            <span class="tr">price</span>
+            <span class="tr">quantity</span>
+        </div>
+
+        <?php
+        $cartItemsArr = $cartItems;
+        foreach($cartItemsArr as $i => $item):
+            $product = page($item->uri());
+        ?>
+        <div class="cart-item-grid bt b--black-10 pt-30" data-qty-row>
+            <img src="<?= html($product->images()->first()->crop(96)->url()) ?>" alt="<?= html($item->name()) ?>" class="db" style="width:96px;height:96px;object-fit:cover;filter:none">
+            <div>
+                <div class="spectral f-20 lh-13 ink-dark">
+                    <a class="no-underline ink-dark hover-gold ttl" href="<?= html($product->url()) ?>"><?= html($item->name()) ?></a>
+                    <?php if($item->variant()->isNotEmpty()): ?>
+                        <span class="ink-subtle"> &mdash; <?= html($item->variant()) ?></span>
+                    <?php endif ?>
                 </div>
+                <div class="spectral f-15 lh-14 ink-light mt1"><?= html($product->meta()->value()) ?></div>
             </div>
-            <?php
-            $cartItemsArr = $cartItems;
-            $cartItemsCount = count($cartItemsArr);
-            $cartLoopIdx = 0;
-            foreach($cartItemsArr as $i => $item):
-            ?>
-            <div class="mw7">
-                <div class="cf
-                    <?= $cartLoopIdx === 0 ? 'mt4' : '' ?>
-                    ">
-                    <div class="fl w-20 w-10-ns">
-                        <?php $product = page($item->uri()) ?>
-                        <img src="<?= html($product->images()->first()->crop(100)->url()) ?>" title="<?= html($item->name()) ?>">
-                    </div>
-                    <div class="fl w-80 w-60-ns pl3">
-                        <a class="black-80 ttl ph2 f4 hover-bg-gold hover-white link" href="<?= html($product->url()) ?>">
-                        <?= html($item->name()) ?>&nbsp;&mdash;&nbsp;
-                        <?php if($item->variant()->isNotEmpty()): ?>
-                            <?= html($item->variant()) ?>
-                        <?php endif ?>
-                        </a>
-                        <span class="db-ns dn pt2 f6 gray hide-for-small"><?= html($product->meta()->value()) ?></span>
-                    </div>
-                    <div :class="[inCheckout == true ? 'w-100 w-30-ns' : 'w-80 w-10-ns']" class="fl tr-ns tr mt2 mt1-ns">
-                        <span v-show="inCheckout == true" class="dib">CAD<?= html($item->amount()->value) ?>&nbsp;x<?= html($item->quantity()->value) ?></span>
-                        <span v-show="inCheckout == false" class="dib">CAD<?= html($item->amount()->value) ?></span>
-                    </div>
-                    <div v-show="inCheckout == false" class="fl w-20 w-15-ns tr-ns tc db-ns dn">
-                        <form action="" method="post" class="dib">
-                            <input type="hidden" name="csrf" value="<?= csrf() ?>">
-                            <input type="hidden" name="action" value="delete">
-                            <input type="hidden" name="id" value="<?= html($item->id()) ?>">
-                            <button class="b--silver ba bg-animate bg-white silver border-box f7 no-underline br-100 db h1 w1 flex items-center justify-center" type="submit">x</button>
-                        </form>
-
-                        <input v-on:change="updateCart" class="b--black-20 di input-reset w-30 f5 mr0 ba tc" data-variant="<?= html(esc($item->variant())) ?>" id="<?= html($item->uri()) ?>::<?= html($item->suuid()) ?>" value="<?= html($item->quantity()) ?>" min="0" max="<?= html(Cart::inStock($item->variant())) ?>" data-sku="<?= html($item->suuid()) ?>" data-amount="<?= html($item->amount()->value()) ?>" data-name="<?= html($item->name()) ?>" type="number">
-                        <input ref="inputCsrf" type="hidden" name="csrf" value="<?= csrf() ?>">
-                    </div>
+            <div class="tr spectral f-18 lh-1 ink-body">CAD&nbsp;<?= html($item->amount()->value) ?></div>
+            <div class="flex items-center justify-end gap-14">
+                <div class="flex items-center" style="border:1px solid #d8d8d8">
+                    <button class="qty-btn" v-on:click.prevent="decQty">−</button>
+                    <input v-on:change="updateCart"
+                        class="qty-input"
+                        data-variant="<?= html(esc($item->variant())) ?>"
+                        id="<?= html($item->uri()) ?>::<?= html($item->suuid()) ?>"
+                        value="<?= html($item->quantity()) ?>"
+                        min="0"
+                        max="<?= html(Cart::inStock($item->variant())) ?>"
+                        data-sku="<?= html($item->suuid()) ?>"
+                        data-amount="<?= html($item->amount()->value()) ?>"
+                        data-name="<?= html($item->name()) ?>"
+                        type="number">
+                    <button class="qty-btn" v-on:click.prevent="incQty">+</button>
                 </div>
-                <hr <?= $cartLoopIdx === $cartItemsCount - 1 ? 'class="mt6-ns mt4"' : 'class="mt2"' ?>>
+                <form action="" method="post" class="dib">
+                    <input type="hidden" name="csrf" value="<?= csrf() ?>">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="id" value="<?= html($item->id()) ?>">
+                    <button class="ba b--black-20 bg-white silver f7 br-100 flex items-center justify-center pointer" style="width:22px;height:22px;border-radius:50%" type="submit">&times;</button>
+                </form>
             </div>
-            <?php $cartLoopIdx++; endforeach ?>
-            <div class="mw7">
-                <div class="cf tr f5">
-                    <div class="fl w-100 w-10-ns dn ds-ns">&nbsp;</div>
-                    <div v-show="inCheckout == true && !isEmpty(discount)">
-                        <div class="fl w-80 w-90-ns">discount</div>
-                        <div class="fl w-20 w-10-ns">
-                            - {{ discount }}%
-                        </div>
-                    </div>
-                    <div v-show="inCheckout == false">
-                        <div class="fl w-80 w-90-ns pt1">discount</div>
-                        <?php if(empty($discount)): ?>
-                            <div class="fl w-20 w-10-ns">
-                                <input v-model="discount" :disabled="disableDiscount" v-on:change="applyDiscount" type="text" class="b--black-20 di input-reset w-80 f5 mb2 p2 ba tc" placeholder="code" name="discount">
-                                <input type="hidden" ref="discountCSRF" value="<?= csrf() ?>">
-                            </div>
-                        <?php else: ?>
-                            <div class="fl w-20 w-10-ns">
-                                -<?= html($discount['amount']) ?>%
-                            </div>
-                        <?php endif ?>
-                    </div>
-                </div>
-            </div>
+        </div>
+        <input ref="inputCsrf" type="hidden" name="csrf" value="<?= csrf() ?>">
+        <?php endforeach ?>
 
-            <div class="mw7" v-show="inCheckout == true">
-                <div class="cf f5">
-                    <div class="fl w-30">
-                        {{ name }} <br/>
-                        {{ email }} <br/><br/>
-                        {{ line1 }}<br/>
-                        {{ line2 }}<br/>
-                        {{ city }},&nbsp;{{ province }}&nbsp;{{ postcode }}<br/>
-                        {{ country }}<br/>
-                    </div>
-                    <div class="fl w-60 w-60-ns tr">
-                        <span>shipping</span>
-                    </div>
-                    <div class="fl w-10 w-10-ns tr">
-                        <span class="tr">{{shipping}}</span>
-                    </div>
+        <!-- Totals + discount -->
+        <div class="flex bt b--black-10 mt-40 pt-30 flex-wrap" style="justify-content:space-between;align-items:flex-start;gap:30px">
+            <a href="./prints" class="spectral f-18 lh-1 ink-subtle no-underline" style="white-space:nowrap">« continue shopping</a>
+            <div style="margin-left:auto;text-align:right;min-width:260px">
+                <div class="flex items-center mb-26" style="justify-content:flex-end;gap:16px">
+                    <span class="spectral f-18 lh-1 ink-subtle">discount</span>
+                    <?php if(empty($discount)): ?>
+                        <input v-model="discount" :disabled="disableDiscount" v-on:change="applyDiscount" type="text" class="spectral" style="width:120px;border:1px solid #d8d8d8;padding:9px 12px;font-size:16px;line-height:1;color:#2a2a2a;text-align:center;background:#fff" placeholder="code" name="discount">
+                        <input type="hidden" ref="discountCSRF" value="<?= csrf() ?>">
+                    <?php else: ?>
+                        <span class="spectral f-18 ink-body">-<?= html($discount['amount']) ?>%</span>
+                    <?php endif ?>
                 </div>
-            </div>
-
-            <div class="mw7">
-                <div class="cf tr f4 pt2">
-                    <div class="fl w-50 w-70-m w-70-ns">&nbsp;</div>
-                    <div class="fl w-50 w-30-m w-30-ns tr">
-                        <input type="hidden" ref="total" value="<?= html($total) ?>" >
-                        <span>total CAD {{ total }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mw7">
-                <div class="cf tr f7 pt2">
-                    <div class="fl w-50 w-70-m w-70-ns">&nbsp;</div>
-                    <div class="fl w-50 w-30-m w-30-ns tr">
-                        <input type="hidden" ref="currencies" value="<?= html($currencies) ?>" >
-                        <span>about {{ currencies }}</span><br />
-                    </div>
-                </div>
-            </div>
-
-            <button v-if="inCheckout == false" class="bg-white f5 no-underline hover-bg-gold hover-white black bg-animate b--gold pa2 pa3-l ba border-box umami--click--begin-checkout" v-on:click.prevent="showShipping">Begin checkout</button>
-
-            <div v-if="inCheckout == true" key="checkout">
-                <div class="mw7 mt4">
-                    <div class="cf">
-                        <button class="fl w-50 pa3-l pb3-l ph2 pv2 bg-white f5 no-underline black bg-animate b--gold hover-bg-gold hover-white ba border-box" v-on:click.prevent="redirectStripe">credit card checkout</button>
-                    </div>
-                </div>
+                <div class="spectral ink-dark" style="font-size:25px;line-height:1">total CAD {{ total }}</div>
+                <div class="spectral f-15 lh-1 ink-light mt2">≈ {{ currencies }}</div>
             </div>
         </div>
 
-        <div v-else-if="inCart == false && inShipping == true" key="address">
-            <section class="mw7 mt4">
-                <div class="cf">
-                    <label for="full-name" class="fl w-30 lh-copy">Full name</label>
-                    <input class="measure input-reset ba b--black-20 pa2 mb2 fl w-60" v-model="name" type="text" name="full-name" required/>
+        <button class="btn-cart mt-44" v-on:click.prevent="showShipping">begin checkout</button>
+    </div>
 
-                    <label for="email" class="fl w-30 lh-copy">Email</label>
-                    <input class="measure input-reset ba b--black-20 pa2 mb2 fl w-60" v-model="email" type="email" name="email" required/>
-                </div>
+    <!-- ===== STEP 2: SHIPPING ===== -->
+    <div v-else-if="!inCart && inShipping">
+        <div style="display:grid;grid-template-columns:1fr 1fr;column-gap:32px;row-gap:26px;max-width:700px">
+            <div style="grid-column:1/2">
+                <label class="spectral f-15 lh-1 ink-subtle db mb2">full name</label>
+                <input v-model="name" type="text" required class="cart-input spectral">
+            </div>
+            <div style="grid-column:2/3">
+                <label class="spectral f-15 lh-1 ink-subtle db mb2">email</label>
+                <input v-model="email" type="email" required class="cart-input spectral">
+            </div>
+            <div style="grid-column:1/3">
+                <label class="spectral f-15 lh-1 ink-subtle db mb2">address line 1</label>
+                <input v-model="line1" type="text" required class="cart-input spectral">
+            </div>
+            <div style="grid-column:1/3">
+                <label class="spectral f-15 lh-1 ink-subtle db mb2">address line 2 <span class="ink-light">— optional</span></label>
+                <input v-model="line2" type="text" class="cart-input spectral">
+            </div>
+            <div style="grid-column:1/2">
+                <label class="spectral f-15 lh-1 ink-subtle db mb2">city</label>
+                <input v-model="city" type="text" required class="cart-input spectral">
+            </div>
+            <div style="grid-column:2/3">
+                <label class="spectral f-15 lh-1 ink-subtle db mb2">province / state</label>
+                <input v-model="province" type="text" required class="cart-input spectral">
+            </div>
+            <div style="grid-column:1/2">
+                <label class="spectral f-15 lh-1 ink-subtle db mb2">postal code</label>
+                <input v-model="postcode" type="text" required class="cart-input spectral">
+            </div>
+            <div style="grid-column:2/3">
+                <label class="spectral f-15 lh-1 ink-subtle db mb2">country</label>
+                <select v-model="country" class="tic-select cart-input spectral">
+                    <?php foreach(countryList() as $countryName): ?>
+                        <option value="<?= html($countryName) ?>"><?= html($countryName) ?></option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+        </div>
 
-                <div class="cf pt2">
-                    <label for="full-name" class="fl w-30 lh-copy">Address line 1</label>
-                    <input class="input-reset ba b--black-20 pa2 mb2 fl w-60" v-model="line1" type="text" required/>
+        <p class="spectral f-17 lh-16 mt-40 mb0" style="color:#777;max-width:700px">
+            By continuing to checkout, you agree to the general
+            <a href="#" class="ink-dark no-underline bb bw1 b--gold pb1" v-on:click.prevent="showTerms = !showTerms">terms</a>
+            of the sale.
+        </p>
+        <p class="spectral f-17 lh-16 ink-copy" v-show="showTerms"><?= html($site->terms()) ?></p>
 
-                    <label for="full-name" class="fl w-30 lh-copy">Address line 2</label>
-                    <input class="input-reset ba b--black-20 pa2 mb2 fl w-60" v-model="line2" type="text" />
-                </div>
-                <div class="cf pt2">
-                    <label for="city" class="fl w-30 lh-copy">City</label>
-                    <input class="input-reset ba b--black-20 pa2 mb2 fl w-20-ns w-60" v-model="city" type="text" name="city" required/>
-
-                    <label for="province" class="fl w-20-ns w-30 lh-copy pl2-ns tc">Province/State</label>
-                    <input class="input-reset ba b--black-20 mb2 pa2 fl w-20-ns w-60" v-model="province" type="text" name="province" required/>
-                </div>
-                <div class="cf pt2">
-                    <label for="postcode" class="fl w-30 lh-copy">Postal Code</label>
-                    <input class="input-reset ba b--black-20 pa2 mb2 fl w-20-ns w-60" v-model="postcode" type="text" name="postcode" required/>
-
-                    <label for="country" class="fl w-20-ns w-30 lh-copy pl2-ns tc">Country</label>
-                    <select class="input-reset ba b--black-20 pa2 mb2 fl w-20-ns w-60" v-model="country" name="country">
-                        <?php foreach(countryList() as $countryName): ?>
-                            <option value="<?= html($countryName) ?>"><?= html($countryName) ?></option>
-                        <?php endforeach ?>
-                    </select>
-                </div>
-            </section>
-
-           <section class="mw7 mt4">
-                <span>By continuing to checkout, you agree to the general<a href="#" class="f5 pa1 link black-60 bb b--gold bw2" v-on:click.prevent="showTerms = !showTerms">terms</a>of the sale.</span>
-                <p class="black-60 lh-copy f5" v-show="showTerms == true"><?= html($site->terms()) ?></p>
-            </section>
-
-            <button v-show="inCheckout == false"
-                class="mt3 bg-white f5 no-underline"
-                :class="[shippingIncomplete == true ? 'gray b--gray pa2 pa3-l' : 'black bg-animate b--gold hover-bg-gold hover-white pa2 pa3-l ba border-box']"
+        <div class="flex items-center mt-40 flex-wrap gap-24">
+            <a href="#" class="spectral f-18 lh-1 ink-subtle no-underline" v-on:click.prevent="resetToCart">« back to cart</a>
+            <button class="btn-cart"
                 :disabled="shippingIncomplete"
-                v-on:click.prevent="showCheckout">Finish checkout</button>
+                v-on:click.prevent="showCheckout">finish checkout</button>
             <input type="hidden" ref="checkoutCSRF" value="<?= csrf() ?>">
         </div>
-        </transition>
     </div>
+
+    <!-- ===== STEP 3: PAYMENT ===== -->
+    <div v-else-if="inCart && inCheckout">
+        <?php
+        foreach($cartItemsArr as $i => $item):
+            $product = page($item->uri());
+        ?>
+        <div class="flex items-center gap-28 mb-32">
+            <img src="<?= html($product->images()->first()->crop(96)->url()) ?>" alt="<?= html($item->name()) ?>" class="db flex-none" style="width:96px;height:96px;object-fit:cover;filter:none">
+            <div class="flex-auto">
+                <div class="spectral f-20 lh-13 ink-dark">
+                    <?= html($item->name()) ?>
+                    <?php if($item->variant()->isNotEmpty()): ?>
+                        <span class="ink-subtle"> &mdash; <?= html($item->variant()) ?></span>
+                    <?php endif ?>
+                </div>
+                <div class="spectral f-15 lh-14 ink-light mt1"><?= html($product->meta()->value()) ?></div>
+            </div>
+            <div class="spectral f-18 lh-1 ink-body ml-auto" style="white-space:nowrap">CAD&nbsp;<?= html($item->amount()->value) ?> · ×<?= html($item->quantity()) ?></div>
+        </div>
+        <?php endforeach ?>
+
+        <div class="flex bt b--black-10 mt-44 pt-32 flex-wrap" style="justify-content:space-between;align-items:flex-start;gap:40px">
+            <div class="spectral f-17 ink-copy" style="line-height:1.85">
+                <div class="ink-dark">{{ name }}</div>
+                <div>{{ email }}</div>
+                <div class="mt-14">{{ line1 }}</div>
+                <div v-show="line2">{{ line2 }}</div>
+                <div>{{ city }}, {{ province }}&nbsp;&nbsp;{{ postcode }}</div>
+                <div>{{ country }}</div>
+            </div>
+            <div style="margin-left:auto;text-align:right;min-width:240px">
+                <div class="flex mb-22" style="justify-content:flex-end;gap:64px">
+                    <span class="spectral f-18 lh-1 ink-muted">shipping</span>
+                    <span class="spectral f-18 lh-1 ink-body">CAD {{ shipping }}</span>
+                </div>
+                <div class="spectral ink-dark" style="font-size:25px;line-height:1">total CAD {{ total }}</div>
+                <div class="spectral f-15 lh-1 ink-light mt2">≈ {{ currencies }}</div>
+            </div>
+        </div>
+
+        <div class="flex items-center mt-48 flex-wrap gap-24">
+            <a href="#" class="spectral f-18 lh-1 ink-subtle no-underline" v-on:click.prevent="showShipping">« shipping</a>
+            <button class="btn-cart" v-on:click.prevent="redirectStripe">credit card checkout</button>
+        </div>
+    </div>
+</div>
 <?php endif ?>
 
 <?php snippet('partials/footer', [], false, true) ?>
