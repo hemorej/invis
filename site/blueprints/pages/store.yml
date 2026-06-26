@@ -29,13 +29,6 @@ tabs:
             headline: Published
             status: listed
 
-  discount:
-    label: Discounts
-    fields:
-      discounts:
-        extends: fields/discount
-        label: Discount codes
-
   regions:
     label: Shipping regions
     fields:
