@@ -20,6 +20,7 @@
     <input ref="checkoutKey" type="hidden" value="<?= option('stripe_key_pub') ?>">
     <input ref="checkoutSessionID" type="hidden" value="<?= html($checkoutSessionId) ?>">
     <input ref="checkoutTotal" type="hidden" value="<?= html($total) ?>">
+    <input ref="currencies" type="hidden" value="<?= html($currencies) ?>">
     <input ref="checkoutContent" type="hidden" value="<?= html($content) ?>">
     <input ref="ppCsrf" type="hidden" value="<?= csrf() ?>">
 
@@ -169,7 +170,7 @@
 
         <div class="flex items-center mt-40 flex-wrap gap-24">
             <a href="#" class="spectral f-18 lh-1 ink-subtle no-underline" v-on:click.prevent="resetToCart">« back to cart</a>
-            <button class="btn-cart"
+            <button class="btn-cart" style="margin-bottom:0"
                 :disabled="shippingIncomplete"
                 v-on:click.prevent="showCheckout">finish checkout</button>
             <input type="hidden" ref="checkoutCSRF" value="<?= csrf() ?>">
@@ -218,7 +219,7 @@
 
         <div class="flex items-center mt-48 flex-wrap gap-24">
             <a href="#" class="spectral f-18 lh-1 ink-subtle no-underline" v-on:click.prevent="showShipping">« shipping</a>
-            <button class="btn-cart" v-on:click.prevent="redirectStripe">credit card checkout</button>
+            <button class="btn-cart" style="margin-bottom:0" v-on:click.prevent="redirectStripe">credit card checkout</button>
         </div>
     </div>
 </div>

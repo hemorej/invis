@@ -27,7 +27,7 @@ var app = new Vue({
     },
     mounted() {
         this.country = this.$refs.userLocation.value
-        this.total = parseInt(this.$refs.total.value)
+        this.total = parseInt(this.$refs.checkoutTotal.value)
         this.currencies = this.$refs.currencies.value
     },
     computed: {
