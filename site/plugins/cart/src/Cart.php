@@ -12,8 +12,8 @@ use Kirby\Exception\InvalidArgumentException;
 
 /**
  * Manages the shopping cart backed by Kirby draft pages under prints/orders.
- * Handles item add/delete, discount and shipping calculation, Stripe session
- * management, payment processing, inventory deduction, and order notifications.
+ * Handles item add/delete, shipping calculation, Stripe session management,
+ * payment processing, inventory deduction, and order notifications.
  */
 class Cart
 {
@@ -31,6 +31,9 @@ class Cart
 
 	/** @var \Monolog\Logger */
 	protected $logger;
+
+	/** @var \Kirby\Cms\Page|null */
+	protected $cartPage = null;
 
 	/**
 	 * @return void
@@ -146,19 +149,17 @@ class Cart
 	 */
 	public function getCartPage()
 	{
-		if( empty( $this->session->get( 'txn' ) ) ) {
-			return null;
-		}
-
-		return page( 'prints/orders' )->draft( $this->session->get( 'txn' ) );
+		if( $this->cartPage !== null ) return $this->cartPage;
+		if( empty( $this->session->get( 'txn' ) ) ) return null;
+		$this->cartPage = page( 'prints/orders' )->draft( $this->session->get( 'txn' ) );
+		return $this->cartPage;
 	}
 
 	/**
-	 * @param $discount
-	 * @param $shipping
+	 * @param int|float $shipping
 	 * @return array
 	 */
-	public function getLineItems( $discount = 1, $shipping = 0 )
+	public function getLineItems( $shipping = 0 )
 	{
 		$lineItems = [];
 		$products = $this->getCartPage()?->products()?->toStructure();
@@ -172,7 +173,7 @@ class Cart
 				'price_external_id' => $product->price_external_id()->value,
 				'name' => $product->variant()->value,
 				'description' => $product->name()->value,
-				'amount' => $product->amount()->value * 100 * $discount,
+				'amount' => $product->amount()->value * 100,
 				'images' => [$preview],
 				'currency' => 'CAD',
 				'quantity' => $product->quantity()->value];
@@ -260,7 +261,7 @@ class Cart
 
 			// Create the transaction file if we don't have one yet
 			if( empty( $this->session->get( 'txn' ) ) || empty( $this->getCartPage() ) ) {
-				$this->txnId = $this->session->startTime() . $this->session->expiryTime();
+				$this->txnId = bin2hex( random_bytes( 12 ) ) . $this->session->startTime();
 				$timestamp = time();
 
 				kirby()->impersonate( 'kirby' );
@@ -284,8 +285,9 @@ class Cart
 			} else {
 				kirby()->impersonate( 'kirby' );
 				$this->getCartPage()->update( ['products' => \Yaml::encode( $items )] );
+				$this->cartPage = null;
 			}
-		} catch( Exception $e ) {
+		} catch( \Exception $e ) {
 			error_log( $e->getMessage() );
 		}
 	}
@@ -369,34 +371,6 @@ class Cart
 	}
 
 	/**
-	 * @param $discountCode
-	 * @return array|int[]
-	 * @throws \Throwable
-	 */
-	public function applyDiscount( $discountCode )
-	{
-		$discounts = kirby()->site()->page( 'prints' )->discounts()->yaml();
-		foreach( $discounts as $discount ) {
-			if( $discount['code'] == $discountCode && boolval( $discount['active'] ) == true ) {
-
-				kirby()->impersonate( 'kirby' );
-				$this->getCartPage()->update( ['discount' => \Yaml::encode( $discount )] );
-
-				$subtotal = $this->subtotal( $this->items() );
-				$total = $subtotal - ( intval( $discount['amount'] ) / 100 ) * $subtotal;
-				$currencies = $this->estimateCurrency( $total );
-
-				$lineItems = $this->getLineItems( 1 - ( intval( $discount['amount'] ) / 100 ) );
-				$stripeSession = ( new Stripe() )->createSession( $lineItems )->id;
-
-				return ['total' => $total, 'currencies' => $currencies, 'discountAmount' => intval( $discount['amount'] ), 'checkoutSessionId' => $stripeSession];
-			}
-		}
-
-		return ['total' => 0];
-	}
-
-	/**
 	 * @param $country
 	 * @param $email
 	 * @return array
@@ -421,33 +395,19 @@ class Cart
 			$shipping = $shippingRegion->amount()->value();
 		}
 
-		// just in case, technically should never apply
 		if( empty( $shipping ) )
 			$shipping = 32.32;
 
-		// add to cart/order
 		$this->getCartPage()->update( ['shipping' => $shipping] );
+		$this->cartPage = null;
 		$stripeSession = $this->updateStripeSession( $email );
 
-		// recompute totals for frontend
-		$discount = $this->getCartPage()->discount()->value;
-
-		if( empty( $discount ) ) {
-			$discountPercentage = 0;
-			$discount = 0;
-		} else {
-			$discountPercentage = $this->getCartPage()->discount()->yaml()['amount'];
-			$discount = ( intval( $discountPercentage ) / 100 );
-		}
-
-
 		$subtotal = $this->subtotal( $this->items() );
-		$total = ( ( 1 - $discount ) * $subtotal ) + $shipping;
+		$total = $subtotal + (float) $shipping;
 		$currencies = $this->estimateCurrency( $total );
-		$lineItems = $this->getLineItems( 1 - $discount, $shipping );
+		$lineItems = $this->getLineItems( (float) $shipping );
 
-		return ['total' => $total, 'currencies' => $currencies, 'shipping' => $shipping, 'checkoutSessionId' => $stripeSession, 'items' => $lineItems, 'discount' => $discountPercentage];
-
+		return ['total' => $total, 'currencies' => $currencies, 'shipping' => $shipping, 'checkoutSessionId' => $stripeSession, 'items' => $lineItems];
 	}
 
 	/**
@@ -457,23 +417,18 @@ class Cart
 	 */
 	public function updateStripeSession( $customerEmail )
 	{
-		if( empty( $this->getCartPage()->discount()->value() ) ) {
-			$discount = 1;
-		} else {
-			$discount = $this->getCartPage()->discount()->yaml();
-			$discount = 1 - ( intval( $discount['amount'] ) / 100 );
-		}
+		$shipping = empty( $this->getCartPage()->shipping()->value() )
+			? 0
+			: (float) $this->getCartPage()->shipping()->value();
 
-		if( empty( $this->getCartPage()->shipping() ) ) {
-			$shipping = 0;
-		} else {
-			$shipping = $this->getCartPage()->shipping()->value();
-		}
+		$lineItems = $this->getLineItems( $shipping );
+		$session = ( new Stripe() )->createSession( $lineItems, $customerEmail );
 
-		$lineItems = $this->getLineItems( $discount, $shipping );
-		$stripeSession = ( new Stripe() )->createSession( $lineItems, $customerEmail )->id;
+		kirby()->impersonate( 'kirby' );
+		$this->getCartPage()->update( ['stripe_session_id' => $session->id] );
+		$this->cartPage = null;
 
-		return $stripeSession;
+		return $session->id;
 	}
 
 	/**
@@ -482,10 +437,15 @@ class Cart
 	public function processStripe()
 	{
 		try {
-			// request must come from stripe with a valid SID
-			// following a successful store session
 			if( empty( get( 'sid' ) ) || empty( $this->session->get( 'txn' ) ) )
 				return false;
+
+			$storedSid = $this->getCartPage()?->stripe_session_id()->value();
+			if( get( 'sid' ) !== $storedSid ) {
+				$this->logger->error( $this->session->get( 'txn' ) . ": SID mismatch – possible replay attempt", [get( 'sid' ), $storedSid] );
+				$this->session->set( 'error', 'Invalid payment session.' );
+				return false;
+			}
 
 			$stripe = new Stripe();
 			$sid = $stripe->retrieveSession( get( 'sid' ) );
@@ -579,18 +539,9 @@ class Cart
 	{
 		$orderId = $this->getCartPage()->suuid()->value();
 		$customer = $this->getCartPage()->customer()->yaml();
-		$products = $this->getCartPage()->products();
-		$discount = $this->getCartPage()->discount()->yaml();
-		$shipping = $this->getCartPage()->shipping()->yaml();
+		$shipping = (float) $this->getCartPage()->shipping()->value();
 		$subtotal = $this->subtotal( $this->items() );
-
-		if( !empty( $discount ) ) {
-			$total = $subtotal - ( intval( $discount['amount'] ) / 100 ) * $subtotal;
-		} else {
-			$total = $subtotal;
-		}
-
-		$total += $shipping[0];
+		$total = $subtotal + $shipping;
 
 		$order = [
 			'order' => $orderId,
@@ -603,9 +554,7 @@ class Cart
 			'postcode' => $customer['address']['postal_code'],
 			'province' => $customer['address']['state'],
 			'email' => $customer['email'],
-			'discount' => empty( $discount['code'] ) ? null : $discount['code'],
-			'discountAmount' => empty( $discount['amount'] ) ? null : $discount['amount'],
-			'shipping' => $shipping[0],
+			'shipping' => $shipping,
 			'type' => 'order',
 			'total' => $total,
 		];
@@ -637,12 +586,8 @@ class Cart
 				] ) );
 
 			$this->logger->info( $this->session->get( 'txn' ) . ":admin notification sent for order id " . $orderId );
-		} catch( \Error $err ) {
-			$description = "email confirmation error for order id " . $orderId . ": " . $err->getMessage();
-			$this->logger->error( $this->session->get( 'txn' ) . ":" . $description );
-			sendAlert( $this->session->get( 'txn' ), $orderId, $description );
-		} catch( \Exception $e ) {
-			$description = "email confirmation error for order id " . $orderId . ": " . $e->getMessage();
+		} catch( \Throwable $t ) {
+			$description = "email confirmation error for order id " . $orderId . ": " . $t->getMessage();
 			$this->logger->error( $this->session->get( 'txn' ) . ":" . $description );
 			sendAlert( $this->session->get( 'txn' ), $orderId, $description );
 		}

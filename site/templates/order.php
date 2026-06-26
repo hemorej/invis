@@ -16,11 +16,7 @@
         ];
         $subtotal += intval($product['quantity'] * $product['amount']);
     }
-    $discount = $order->discount()->yaml();
-    if(!empty($discount['amount'])) {
-        $subtotal = $subtotal * (1 - intval($discount['amount']) / 100);
-    }
-    $shipping   = $order->shipping()->value;
+    $shipping   = (float) $order->shipping()->value;
     $grandTotal = $subtotal + $shipping;
     $customer   = $order->customer()->yaml();
     $address    = $customer['address'];
@@ -45,10 +41,6 @@
                     </span>
                     <span class="spectral f-18 lh-copy ink-body tr" style="white-space:nowrap">CAD&nbsp;<?= html($item['price'] * $item['quantity']) ?></span>
                 <?php endforeach ?>
-                <?php if(!empty($discount)): ?>
-                    <span class="spectral f-18 lh-copy ink-muted">discount (<?= html($discount['code']) ?>)</span>
-                    <span class="spectral f-18 lh-copy ink-muted tr" style="white-space:nowrap">-<?= html($discount['amount']) ?>%</span>
-                <?php endif ?>
                 <span class="spectral f-18 lh-copy ink-muted">shipping</span>
                 <span class="spectral f-18 lh-copy ink-muted tr" style="white-space:nowrap">CAD&nbsp;<?= html($shipping) ?></span>
                 <div style="grid-column:1/3;border-top:1px solid #e7e7e7;margin:8px 0 4px"></div>

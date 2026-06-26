@@ -99,19 +99,10 @@
         <input ref="inputCsrf" type="hidden" name="csrf" value="<?= csrf() ?>">
         <?php endforeach ?>
 
-        <!-- Totals + discount -->
+        <!-- Totals -->
         <div class="flex bt b--black-10 mt-40 pt-30 flex-wrap" style="justify-content:space-between;align-items:flex-start;gap:30px">
             <a href="./prints" class="spectral f-18 lh-1 ink-subtle no-underline" style="white-space:nowrap">« continue shopping</a>
             <div style="margin-left:auto;text-align:right;min-width:260px">
-                <div class="flex items-center mb-26" style="justify-content:flex-end;gap:16px">
-                    <span class="spectral f-18 lh-1 ink-subtle">discount</span>
-                    <?php if(empty($discount)): ?>
-                        <input v-model="discount" :disabled="disableDiscount" v-on:change="applyDiscount" type="text" class="spectral" style="width:120px;border:1px solid #d8d8d8;padding:9px 12px;font-size:16px;line-height:1;color:#2a2a2a;text-align:center;background:#fff" placeholder="code" name="discount">
-                        <input type="hidden" ref="discountCSRF" value="<?= csrf() ?>">
-                    <?php else: ?>
-                        <span class="spectral f-18 ink-body">-<?= html($discount['amount']) ?>%</span>
-                    <?php endif ?>
-                </div>
                 <div class="spectral ink-dark" style="font-size:25px;line-height:1">total CAD {{ total }}</div>
                 <div class="spectral f-15 lh-1 ink-light mt2">≈ {{ currencies }}</div>
             </div>
