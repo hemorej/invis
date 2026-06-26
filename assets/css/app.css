@@ -44,7 +44,6 @@ body {
   font-family: 'Spectral', Georgia, serif;
   cursor: auto;
 }
-.bg-lightest-gray {background-color: #fefefe}
 button:focus, input:focus, select:focus {outline:0}
 .s721-cd-light{ font-family: 'swiss721-cd-light', sans-serif }
 
@@ -56,31 +55,6 @@ button:focus, input:focus, select:focus {outline:0}
 ::-moz-selection {
   background: #ffb700;
   color: #fff;
-}
-
-.cc1 { column-count: 1 }
-@media screen and (max-width: 30em) {
-  .o-30-s {opacity: 0.3}
-}
-@media screen and (min-width: 30em) {
-  .o-100-ns {opacity: 1}
-  .cc3-ns { column-count: 3 }
-}
-@media screen and (min-width: 30em) and (max-width: 60em) {
-  .o-100-m {opacity: 1}
-  .cc2-m { column-count: 2 }
-}
-@media screen and (min-width: 60em) {
-  .o-100-l {opacity: 1}
-  .cc3-l { column-count: 3 }
-}
-/*Vue styles*/
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
 }
 
 /* === New design system === */
@@ -119,7 +93,6 @@ body { background: #fdfdfd; }
 .mt-64 { margin-top:64px; }
 .mt-84 { margin-top:84px; }
 .mt-120 { margin-top:120px; }
-.pb-10 { padding-bottom:10px; }
 .gap-26 { gap:26px; }
 .gap-28 { gap:28px; }
 .gap-40 { gap:40px; }
@@ -140,7 +113,6 @@ body { background: #fdfdfd; }
 .mw-840 { max-width:840px; }
 .col-2 { column-count:2; column-gap:52px; column-fill:balance; }
 .col-4 { column-count:4; column-gap:44px; }
-.col-break-avoid { break-inside:avoid; }
 .ink-dark { color:#2a2a2a; }
 .ink-body { color:#3c3c3c; }
 .ink-muted { color:#6c6c6c; }
@@ -152,11 +124,9 @@ body { background: #fdfdfd; }
 .lh-17 { line-height:1.7; }
 .lh-195 { line-height:1.95; }
 .lh-14 { line-height:1.4; }
-.product-price { font-family:'Spectral',Georgia,serif; font-size:21px; line-height:1; color:#3c3c3c; border-bottom:2px solid #ffb700; padding-bottom:10px; display:inline-block; }
 .btn-cart { font-family:'Spectral',Georgia,serif; font-size:17px; line-height:1; color:#2a2a2a; background:#fff; border:1.5px solid #ffb700; padding:12px 22px; cursor:pointer; margin-bottom:34px; }
 .btn-cart:hover { background:#ffb700; color:#fff; }
 .btn-cart[disabled] { color:#aaa; border-color:#aaa; cursor:default; }
-.tr-ns-custom { text-align:right; }
 
 /* === Cart / Product redesign utilities === */
 .f-15 { font-size:15px; }
@@ -197,7 +167,6 @@ body { background: #fdfdfd; }
 .pt-30 { padding-top:30px; }
 .pt-32 { padding-top:32px; }
 .pb-22 { padding-bottom:22px; }
-.mw-440 { max-width:440px; }
 .mw-700 { max-width:700px; }
 /* Product description */
 .prod-desc p { font:400 18px/1.72 'Spectral',serif; color:#555; margin:0 0 30px; max-width:50ch; }

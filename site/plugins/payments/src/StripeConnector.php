@@ -7,7 +7,6 @@ use Stripe\Price;
 use Stripe\Stripe;
 use Logger\Logger;
 use Stripe\Product;
-use Stripe\Customer;
 use Stripe\Collection;
 use Stripe\StripeClient;
 use Stripe\PaymentIntent;
@@ -39,48 +38,6 @@ class StripeConnector
 		$this->stripe = new StripeClient( kirby()->option( 'stripe_key_prv' ) );
 
 		return $this->stripe;
-	}
-
-	/**
-	 * @param string $productID
-	 * @return Product|null
-	 * @throws Exception
-	 */
-	public function retrieveProduct( string $productID )
-	{
-		try {
-			if( !empty( $productID ) )
-				return $this->stripe->products->retrieve( $productID );
-
-			return null;
-		} catch( InvalidRequestException $se ) {
-			$this->logger->error( 'Stripe error retrieving product', [$se->getMessage()] );
-			throw new Exception( 'Stripe error retrieving product' );
-		} catch( Exception $e ) {
-			$this->logger->error( 'Stripe general error', [$e->getMessage()] );
-			throw new Exception( 'Stripe general error' );
-		}
-	}
-
-	/**
-	 * @param string $customerID
-	 * @return Customer|null
-	 * @throws Exception
-	 */
-	public function retrieveCustomer( string $customerID )
-	{
-		try {
-			if( !empty( $customerID ) )
-				return $this->stripe->customers->retrieve( $customerID );
-
-			return null;
-		} catch( InvalidRequestException $se ) {
-			$this->logger->error( 'Stripe error retrieving customer', [$se->getMessage()] );
-			throw new Exception( 'Stripe error retrieving customer' );
-		} catch( Exception $e ) {
-			$this->logger->error( 'Stripe general error', [$e->getMessage()] );
-			throw new Exception( 'Stripe general error' );
-		}
 	}
 
 	/**
