@@ -29,11 +29,6 @@ if( !empty( page()->title() ) ) {
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,400&display=swap"
-          rel="stylesheet">
-
     <meta itemprop="name" content="<?= html( site()->title() ) ?>">
     <meta itemprop="description" content="<?= html( site()->description() ) ?>">
     <meta itemprop="image" content="<?= html( $image ) ?>">

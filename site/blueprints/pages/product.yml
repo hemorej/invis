@@ -53,6 +53,29 @@ columns:
                 zine: zine
             required: true
             default: print
+          edition:
+            label: Edition
+            type: text
+            width: 1/2
+          paper:
+            label: Paper
+            type: text
+            width: 1/2
+          process:
+            label: Process
+            type: text
+            when:
+              type: print
+          dimensions:
+            label: Dimensions
+            type: text
+            when:
+              type: zine
+          binding:
+            label: Binding
+            type: text
+            when:
+              type: zine
           variants:
             label: Variants
             type: structure

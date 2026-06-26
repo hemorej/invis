@@ -62,7 +62,7 @@
             ?>
 
             <h1 class="spectral fw3 f-38 lh-108 ink-dark ls-tight mt0 mb-4"><?= html($page->title()) ?></h1>
-            <p class="spectral f-19 lh-14 ink-subtle mb-34 mt0"><?= html($page->parent()->title()) ?></p>
+            <p class="ttl spectral f-19 lh-14 ink-subtle mb-34 mt0"><?= html($page->parent()->title()) ?></p>
 
             <?php if(count($variants) == 0 || $stock == 0): ?>
                 <span class="spectral f-18 ink-muted">Out of stock</span>
@@ -101,9 +101,31 @@
 
                 <div class="bt b--black-10 mt-38 mb-30"></div>
 
-                <p class="spectral f-18 lh-172 ink-copy mt0" style="max-width:50ch;">
+                <div class="prod-desc">
                     <?= $page->description()->kirbytext() ?>
-                </p>
+                </div>
+
+                <?php
+                $attrs = [];
+                if ($page->type() == 'print') {
+                    if ($page->edition()->isNotEmpty())   $attrs['edition']  = $page->edition();
+                    if ($page->paper()->isNotEmpty())     $attrs['paper']    = $page->paper();
+                    if ($page->process()->isNotEmpty())   $attrs['process']  = $page->process();
+                } else {
+                    if ($page->edition()->isNotEmpty())   $attrs['edition']    = $page->edition();
+                    if ($page->dimensions()->isNotEmpty()) $attrs['dimensions'] = $page->dimensions();
+                    if ($page->paper()->isNotEmpty())     $attrs['paper']      = $page->paper();
+                    if ($page->binding()->isNotEmpty())   $attrs['binding']    = $page->binding();
+                }
+                ?>
+                <?php if (!empty($attrs)): ?>
+                <div class="prod-attrs">
+                    <?php foreach ($attrs as $label => $value): ?>
+                        <span class="prod-attr-lbl"><?= html($label) ?></span>
+                        <span class="prod-attr-val"><?= html($value) ?></span>
+                    <?php endforeach ?>
+                </div>
+                <?php endif ?>
             <?php endif ?>
         </div>
     </div>

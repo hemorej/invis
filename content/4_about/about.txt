@@ -184,19 +184,10 @@ Links:
 
 Contact:
 
-- 
-  link: http://instagram.com/jerome_a_
-  text: instagram
-  email: ""
-- 
+-
   link: ""
   text: email
   email: jerome@the-invisible-cities.com
-- 
-  link: >
-    https://theinvisiblecities.eo.page/signup
-  text: newsletter
-  email: ""
 
 ----
 

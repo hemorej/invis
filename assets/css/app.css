@@ -6,13 +6,42 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Spectral';
+  src: url("../font/Spectral-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Spectral';
+  src: url("../font/Spectral-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Spectral';
+  src: url("../font/Spectral-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Spectral';
+  src: url("../font/Spectral-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 html,
 body {font-size: 100%}
 
 html { overflow-y: scroll; }
 
 body {
-  font-family: 'ff-meta-serif', sans-serif;
+  font-family: 'Spectral', Georgia, serif;
   cursor: auto;
 }
 .bg-lightest-gray {background-color: #fefefe}
@@ -170,8 +199,14 @@ body { background: #fdfdfd; }
 .pb-22 { padding-bottom:22px; }
 .mw-440 { max-width:440px; }
 .mw-700 { max-width:700px; }
+/* Product description */
+.prod-desc p { font:400 18px/1.72 'Spectral',serif; color:#555; margin:0 0 30px; max-width:50ch; }
+.prod-attrs  { display:grid; grid-template-columns:104px 1fr; row-gap:15px; column-gap:24px; max-width:50ch; }
+.prod-attr-lbl { font:italic 400 16px/1.5 'Spectral',serif; color:#ffb700; }
+.prod-attr-val { font:400 17px/1.5 'Spectral',serif; color:#444; }
 /* Variant picker */
 .variant-lnk { display:flex; justify-content:space-between; align-items:baseline; gap:20px; text-decoration:none; cursor:pointer; padding-bottom:11px; max-width:300px; }
+.variant-lnk span { pointer-events:none; }
 .variant-on  { color:#1f1f1f; border-bottom:2px solid #ffb700; }
 .variant-off { color:#a3a3a3; border-bottom:1px solid #e7e7e7; }
 .variant-off:hover { color:#1f1f1f; }
