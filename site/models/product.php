@@ -2,7 +2,7 @@
 class ProductPage extends Page
 {
 	/**
-	 * @return false|int
+	 * @return false|int Unix timestamp of the published date, or false on failure
 	 */
 	public function publishDate(): false|int
 	{

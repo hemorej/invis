@@ -4,18 +4,28 @@ use Logger\Logger;
 use Kirby\Cms\Page;
 use Payments\StripeConnector;
 
+/**
+ * Routes page.update:after hook events to the appropriate domain handler
+ * (ShippingHandler for orders, ProductHandler for prints).
+ */
 class PageUpdateHandler
 {
+	/** @var \Monolog\Logger */
 	protected $logger;
 
+	/**
+	 * @return void
+	 */
 	function __construct()
 	{
 		$this->logger = ( new Logger( 'pageUpdateHandler' ) )->getLogger();
 	}
 
 	/**
-	 * @param Page $page
-	 * @param Page $oldPage
+	 * Dispatches the page update to the correct handler based on the parent page.
+	 *
+	 * @param Page $page    The updated page
+	 * @param Page $oldPage The page state before the update
 	 * @return void
 	 */
 	public function handle( Page $page, Page $oldPage )
@@ -30,8 +40,10 @@ class PageUpdateHandler
 	}
 
 	/**
-	 * @param $page
-	 * @param $oldPage
+	 * Delegates product creation/update to ProductHandler.
+	 *
+	 * @param Page $page    The updated page
+	 * @param Page $oldPage The page state before the update
 	 * @return void
 	 */
 	public function createOrUpdate( $page, $oldPage )
@@ -43,8 +55,10 @@ class PageUpdateHandler
 	}
 
 	/**
-	 * @param $page
-	 * @param $oldPage
+	 * Delegates shipping notification to ShippingHandler.
+	 *
+	 * @param Page $page    The updated order page
+	 * @param Page $oldPage The order page state before the update
 	 * @return void
 	 */
 	public function notify( $page, $oldPage )

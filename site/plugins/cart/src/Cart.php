@@ -10,14 +10,31 @@ use Kirby\Http\Remote;
 use Payments\StripeConnector as Stripe;
 use Kirby\Exception\InvalidArgumentException;
 
+/**
+ * Manages the shopping cart backed by Kirby draft pages under prints/orders.
+ * Handles item add/delete, discount and shipping calculation, Stripe session
+ * management, payment processing, inventory deduction, and order notifications.
+ */
 class Cart
 {
+	/** @var \Kirby\Cache\Cache */
 	protected $cache;
+
+	/** @var \Kirby\Cms\Site */
 	protected $site;
+
+	/** @var \Kirby\Session\Session */
 	protected $session;
+
+	/** @var string|null */
 	protected $txnId;
+
+	/** @var \Monolog\Logger */
 	protected $logger;
 
+	/**
+	 * @return void
+	 */
 	function __construct()
 	{
 		$this->cache = kirby()->cache( 'helpers.helpers.backend' );
@@ -28,8 +45,10 @@ class Cart
 	}
 
 	/**
-	 * @param $total
-	 * @return string
+	 * Converts a CAD subtotal into a formatted USD/EUR/GBP estimate using live Fixer.io rates.
+	 *
+	 * @param int|float $total Amount in CAD
+	 * @return string Formatted string, e.g. "42$/38€/33£"
 	 * @throws \Exception
 	 */
 	public function estimateCurrency( $total )
@@ -77,7 +96,9 @@ class Cart
 	}
 
 	/**
-	 * @param $items
+	 * Returns a human-readable summary of cart item types and quantities (e.g. "2 prints, 1 poster").
+	 *
+	 * @param \Collection $items Cart items structure
 	 * @return string
 	 */
 	public function contents( $items )
@@ -104,6 +125,10 @@ class Cart
 		return ltrim( $content, ', ' );
 	}
 
+	/**
+	 * @param \Collection $items Cart items structure
+	 * @return int|float
+	 */
 	public function subtotal( $items )
 	{
 		$subtotal = 0;
@@ -114,6 +139,11 @@ class Cart
 		return $subtotal;
 	}
 
+	/**
+	 * Returns the current cart's draft order page, or null if no active session exists.
+	 *
+	 * @return Page|null
+	 */
 	public function getCartPage()
 	{
 		if( empty( $this->session->get( 'txn' ) ) ) {
@@ -516,6 +546,12 @@ class Cart
 		$this->logger->info( "inventory updated after order " . $orderId );
 	}
 
+	/**
+	 * Marks the order as paid, renames the draft page to ord-{uuid}, and updates the session state.
+	 *
+	 * @param string $paymentMethod Payment provider identifier (e.g. 'stripe')
+	 * @return void|false Returns false on exception; otherwise void
+	 */
 	private function updateOrder( $paymentMethod )
 	{
 		try {

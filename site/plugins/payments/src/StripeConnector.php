@@ -15,11 +15,22 @@ use Stripe\Checkout\Session;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Exception\InvalidRequestException;
 
+/**
+ * Wraps the Stripe SDK for session creation, product/price sync, and payment-intent retrieval.
+ */
 class StripeConnector
 {
+	/** @var StripeClient */
 	protected $stripe;
+
+	/** @var \Monolog\Logger */
 	protected $logger;
 
+	/**
+	 * Initialises the Stripe SDK with the private key from Kirby config.
+	 *
+	 * @return void
+	 */
 	function __construct()
 	{
 		$instance = new Logger( 'stripe' );
@@ -190,8 +201,10 @@ class StripeConnector
 	}
 
 	/**
-	 * @param $product
-	 * @param $variants
+	 * Creates or updates a Stripe Product and its Prices to match the given Kirby page.
+	 * Deactivates stale prices when the unit amount changes (Stripe prices are immutable).
+	 *
+	 * @param \Kirby\Cms\Page $page The print page whose variants drive Stripe product/price data
 	 * @return void
 	 * @throws ApiErrorException
 	 * @throws \Throwable

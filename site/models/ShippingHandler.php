@@ -3,18 +3,27 @@
 use Logger\Logger;
 use Mailbun\Mailbun;
 
+/**
+ * Sends a shipping confirmation email to the customer when an order status changes to "shipped".
+ */
 class ShippingHandler
 {
+	/** @var \Monolog\Logger */
 	protected $logger;
 
+	/**
+	 * @return void
+	 */
 	function __construct()
 	{
 		$this->logger = ( new Logger( 'shipping' ) )->getLogger();
 	}
 
 	/**
-	 * @param $page
-	 * @param $oldPage
+	 * Sends a shipping confirmation email if the order status transitions to "shipped".
+	 *
+	 * @param \Kirby\Cms\Page $page    The updated order page
+	 * @param \Kirby\Cms\Page $oldPage The order page state before the update
 	 * @return void
 	 */
 	public function notify( $page, $oldPage )

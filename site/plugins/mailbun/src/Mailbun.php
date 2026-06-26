@@ -8,11 +8,20 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Buzz\Client\Curl;
 use \Kirby\Cms\App;
 
+/**
+ * Sends transactional emails via the Mailgun API using Kirby templates for the HTML body.
+ */
 class Mailbun
 {
+	/** @var Mailgun */
 	protected $mailgun;
+
+	/** @var \Monolog\Logger */
 	protected $logger;
 
+	/**
+	 * @return void
+	 */
 	function __construct()
 	{
 		$psr17Factory = new Psr17Factory();
@@ -26,6 +35,15 @@ class Mailbun
 		$this->logger = $instance->getLogger();
 	}
 
+	/**
+	 * Sends an HTML email rendered from a Kirby email template.
+	 *
+	 * @param string $recipient Recipient email address
+	 * @param string $subject   Email subject line
+	 * @param string $template  Template name under site/templates/emails/
+	 * @param array  $data      Variables passed to the template
+	 * @return void
+	 */
 	public function send($recipient, $subject, $template, $data)
 	{
 		$body = App::instance()->template('emails/' . $template);
