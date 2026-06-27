@@ -531,7 +531,9 @@ class Cart
 
 			kirby()->impersonate( 'kirby' );
 			$this->getCartPage()->update( ['title' => "ord-$orderId", 'orderstatus' => 'paid', 'payment' => $paymentMethod] );
+			$this->cartPage = null;
 			$this->getCartPage()->changeSlug( "ord-$orderId" );
+			$this->cartPage = null;
 			$this->logger->info( $this->session->get( 'txn' ) . ": order status updated" );
 
 			$this->session->set( 'state', 'success' );
