@@ -43,8 +43,7 @@ Kirby::plugin('cart/cart', [
 			];
 
 			$cart = new \Cart\Cart();
-			kirby()->impersonate( 'kirby' );
-			$cart->getCartPage()->update( ['customer' => Yaml::encode( $customer )] );
+			$cart->setCustomer( $customer );
 			$shipping = $cart->addShipping( $country, $email );
 
 			return [

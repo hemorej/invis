@@ -368,6 +368,18 @@ class Cart
 
 		kirby()->impersonate( 'kirby' );
 		$this->getCartPage()->update( ['products' => \Yaml::encode( $items )] );
+		$this->cartPage = null;
+	}
+
+	/**
+	 * @param array $customer
+	 * @return void
+	 */
+	public function setCustomer( array $customer )
+	{
+		kirby()->impersonate( 'kirby' );
+		$this->getCartPage()->update( ['customer' => \Yaml::encode( $customer )] );
+		$this->cartPage = null;
 	}
 
 	/**
