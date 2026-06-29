@@ -54,7 +54,11 @@ if( !empty( page()->title() ) ) {
     <?php endif ?>
 
     <link rel="shortcut icon" type="image/x-icon" href="<?= url( 'assets/images/favicon.ico' ) ?>"/>
-    <link rel="apple-touch-icon" sizes="72x72" href="<?= url( 'assets/images/apple-touch-icon-72x72.png' ) ?>"/>
-    <link rel="apple-touch-icon" sizes="114x114" href="<?= url( 'assets/images/apple-touch-icon-114x114.png' ) ?>"/>
+    <link rel="apple-touch-icon" href="<?= url( 'assets/images/apple-touch-icon.png' ) ?>"/>
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#fdfdfd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="The Invisible Cities">
     <link rel="canonical" href="<?= html( $url ) ?>">
 </head>
