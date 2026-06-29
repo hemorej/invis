@@ -71,7 +71,19 @@ Disallow: /
 User-agent: YandexBot
 Disallow: /
 
-User-agent: ahrefs.com^
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AnthropicBot
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: PetalBot
 Disallow: /
 
 User-agent: bingbot

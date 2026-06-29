@@ -7,6 +7,8 @@ if( isset( $meta ) ) {
     $url = site()->url();
 }
 
+$metaDesc = isset($pageDescription) ? $pageDescription : site()->description()->toString();
+
 $title = '';
 if( !empty( page()->title() ) ) {
     if( page()->title() == 'journal' ) {
@@ -25,7 +27,7 @@ if( !empty( page()->title() ) ) {
 <head>
     <title><?= html( site()->title() ) ?> — <?= html( strtolower( $title ) ) ?></title>
     <meta charset="utf-8"/>
-    <meta name="description" content="<?= html( site()->description() ) ?>"/>
+    <meta name="description" content="<?= html( $metaDesc ) ?>"/>
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
 
@@ -42,8 +44,13 @@ if( !empty( page()->title() ) ) {
         <meta property="og:url" content="<?= html( $url ) ?>">
         <meta property="og:type" content="website">
         <meta property="og:title" content="<?= html( site()->title() ) ?>">
-        <meta property="og:description" content="<?= html( site()->description() ) ?>">
+        <meta property="og:description" content="<?= html( $metaDesc ) ?>">
         <meta property="og:image" content="<?= html( $image ) ?>">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@jerome_a_">
+        <meta name="twitter:title" content="<?= html( site()->title() ) ?>">
+        <meta name="twitter:description" content="<?= html( $metaDesc ) ?>">
+        <meta name="twitter:image" content="<?= html( $image ) ?>">
     <?php endif ?>
 
     <?php if( option( 'env' ) == 'prod' ): ?>
