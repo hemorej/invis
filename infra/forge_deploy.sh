@@ -5,6 +5,7 @@ git clone --depth 1 --branch=$FORGE_SITE_BRANCH $REPO_URL
 git submodule update --init --recursive
 
 cd $FORGE_RELEASE_DIRECTORY/site/config && ln -s /mnt/$VOLUME_NAME/site/config/config.php .
+cd $FORGE_RELEASE_DIRECTORY/site/config && ln -s /mnt/$VOLUME_NAME/site/config/config.php config.the-invisible-cities.ca.php
 cd $FORGE_RELEASE_DIRECTORY/site/config && ln -s /mnt/$VOLUME_NAME/site/config/.license .
 
 cd $FORGE_RELEASE_DIRECTORY/content && rm -rf 1_projects && ln -s /mnt/$VOLUME_NAME/content/1_projects .
