@@ -67,6 +67,11 @@ return [
 		],
 	],
 
+	'omz13.xmlsitemap' => [
+		'includeUnlistedWhenSlugIs' => ['travels', 'journal-series'],
+		'excludePageWhenSlugIs'     => ['19', 'buenos-aires', 'frankfurt', 'iceland', 'ottawa', 'color', 'portfolio', 'second-floor-window', 'four-book-bundle'],
+	],
+
 	'panel.vue.compiler' => false,
 
 	'umami_code' => '',
