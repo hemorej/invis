@@ -29,7 +29,6 @@ return [
 			'headers' => true,
 			'ignore' => [
 				'home',
-				'feed',
 				'prints/*',
 			],
 		],
