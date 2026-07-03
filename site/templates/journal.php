@@ -1,10 +1,16 @@
-<?php snippet('partials/header') ?>
-<?php snippet('partials/menu') ?>
-
 <?php
 	$articles = page()->children()->listed()->flip()->paginate(10);
 	$journals = site()->page('journal-series')->children()->listed()->flip();
+	$coverImage = $articles->first()->images()->first();
 ?>
+
+<?php snippet('partials/header', [], false, true) ?>
+<?php slot('preload') ?>
+	<link rel="preload" as="image" fetchpriority="high" href="<?= html(getPreview($coverImage)) ?>">
+<?php endslot() ?>
+<?php endsnippet() ?>
+
+<?php snippet('partials/menu') ?>
 
 <div class="flex items-start flex-wrap gap-52">
 	<div class="flex flex-wrap min-w-300 gap-40" style="flex:1.35;justify-content:flex-end;">
@@ -25,7 +31,7 @@
 		</div>
 	</div>
 	<div class="flex-1 min-w-300">
-		<img alt="<?= html($articles->first()->title()) ?> journal entry" id="cover" class="db w-100" src="<?= html(getPreview($articles->first()->images()->first())) ?>">
+		<img alt="<?= html($articles->first()->title()) ?> journal entry" id="cover" class="db w-100" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" style="height:auto" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
 	</div>
 </div>
 

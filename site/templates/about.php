@@ -30,7 +30,7 @@
 <?php else: ?>
 	<section>
 		<?php foreach($page->images() as $image): ?>
-			<img alt="portrait of the photographer" class="db w-100 mw-520 mb-54" srcset="<?= html($image->srcset([600, 800, 1200])) ?>">
+			<img alt="portrait of the photographer" class="db w-100 mw-520 mb-54" width="<?= $image->width() ?>" height="<?= $image->height() ?>" style="height:auto" sizes="(min-width: 520px) 520px, 100vw" srcset="<?= html($image->srcset([600, 800, 1200])) ?>">
 		<?php endforeach ?>
 	</section>
 

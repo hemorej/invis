@@ -1,4 +1,5 @@
 {
+    "/assets/css/tachyons.purged.css": "/assets/css/tachyons.purged.css",
     "/assets/js/product.min.js": "/assets/js/product.min.js",
     "/assets/dist/product.min.js": "/assets/dist/product.min.js",
     "/assets/js/cart.min.js": "/assets/js/cart.min.js",
@@ -7,5 +8,6 @@
     "/assets/dist/app.min.js": "/assets/dist/app.min.js",
     "/assets/js/consent.min.js": "/assets/js/consent.min.js",
     "/assets/dist/consent.min.js": "/assets/dist/consent.min.js",
+    "/assets/css/app.min.css": "/assets/css/app.min.css",
     "/assets/dist/app.min.css": "/assets/dist/app.min.css"
 }

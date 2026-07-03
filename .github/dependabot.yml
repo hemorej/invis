@@ -1,12 +1,10 @@
 version: 2
 updates:
-  # Enable version updates for npm
-  - package-ecosystem: "npm"
+  - package-ecosystem: "pnpm"
     directory: "/"
     schedule:
       interval: "weekly"
 
-  # Enable version updates for php
   - package-ecosystem: "composer"
     directory: "/"
     schedule:

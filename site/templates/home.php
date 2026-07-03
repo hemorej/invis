@@ -1,10 +1,15 @@
-<?php snippet('partials/header') ?>
+<?php $heroImage = getHomeImage()['images'] ?>
+
+<?php snippet('partials/header', [], false, true) ?>
+<?php slot('preload') ?>
+	<link rel="preload" as="image" fetchpriority="high" imagesrcset="<?= html($heroImage->srcset([600, 800, 1200])) ?>" imagesizes="100vw">
+<?php endslot() ?>
+<?php endsnippet() ?>
+
 <?php snippet('partials/menu') ?>
 
 <a href="<?= html($pages->listed()->first()->url()) ?>" class="db">
-	<?php foreach(getHomeImage() as $image): ?>
-		<img alt="black and white photograph" class="db w-100" srcset="<?= html($image->srcset([600, 800, 1200])) ?>">
-	<?php endforeach ?>
+	<img alt="black and white photograph" class="db w-100" width="<?= $heroImage->width() ?>" height="<?= $heroImage->height() ?>" style="height:auto" sizes="100vw" fetchpriority="high" srcset="<?= html($heroImage->srcset([600, 800, 1200])) ?>">
 </a>
 
 <?php snippet('partials/footer') ?>

@@ -20,7 +20,8 @@ cd $FORGE_RELEASE_DIRECTORY/assets && rm -rf font && ln -s /mnt/$VOLUME_NAME/ass
 cd $FORGE_RELEASE_DIRECTORY && ln -s /mnt/$VOLUME_NAME/media .
 cd $FORGE_RELEASE_DIRECTORY/site && ln -s /mnt/$VOLUME_NAME/site/accounts .
 
-npm install && npm run prod
+corepack enable && corepack prepare pnpm@11.9.0 --activate
+$PNPM_PATH install --frozen-lockfile && $PNPM_PATH run prod
 
 $ACTIVATE_RELEASE()
 
