@@ -3,6 +3,8 @@
 *.JPG
 *.woff
 *.eot
+/assets/css/app.min.css
+/assets/css/tachyons.purged.css
 content/4_journal/*
 content/orders/*
 site/accounts/*

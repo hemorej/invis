@@ -1,35 +1,40 @@
 @font-face {
   font-family: 'swiss721-cd-light';
-  src:url("../font/ea7b43c8-e86c-401d-9d91-66806de49029.eot?#iefix");
-  src:url("../font/ea7b43c8-e86c-401d-9d91-66806de49029.eot?#iefix") format("eot"),url("../font/0c5598c6-3ae9-4a24-a8a4-ca2054a96710.woff2") format("woff2"),url("../font/159799e2-a429-4419-a67a-0fa0ba3600e8.woff") format("woff"),url("../font/026eb06c-bcbb-4ef9-86a3-da25f5a41174.ttf") format("truetype");
+  src: url("../font/0c5598c6-3ae9-4a24-a8a4-ca2054a96710.woff2") format("woff2"),
+       url("../font/159799e2-a429-4419-a67a-0fa0ba3600e8.woff") format("woff");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Spectral';
-  src: url("../font/Spectral-Light.ttf") format("truetype");
+  src: url("../font/Spectral-Light.woff2") format("woff2"),
+       url("../font/Spectral-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Spectral';
-  src: url("../font/Spectral-Regular.ttf") format("truetype");
+  src: url("../font/Spectral-Regular.woff2") format("woff2"),
+       url("../font/Spectral-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Spectral';
-  src: url("../font/Spectral-Italic.ttf") format("truetype");
+  src: url("../font/Spectral-Italic.woff2") format("woff2"),
+       url("../font/Spectral-Italic.ttf") format("truetype");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
 @font-face {
   font-family: 'Spectral';
-  src: url("../font/Spectral-Medium.ttf") format("truetype");
+  src: url("../font/Spectral-Medium.woff2") format("woff2"),
+       url("../font/Spectral-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;

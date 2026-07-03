@@ -38,6 +38,12 @@ if( !empty( page()->title() ) ) {
     <meta property="og:locale" content="en_CA">
     <meta property="og:site_name" content="<?= html( site()->title() ) ?>">
 
+    <link rel="preload" as="font" type="font/woff2" href="<?= url( 'assets/font/Spectral-Regular.woff2' ) ?>" crossorigin>
+
+    <?php if( $slot = $slots->preload() ): ?>
+        <?= $slot ?>
+    <?php endif ?>
+
     <?php if( $slot = $slots->meta() ): ?>
         <?= $slot ?>
     <?php else: ?>

@@ -1,14 +1,20 @@
-<?php snippet('partials/header') ?>
-<?php snippet('partials/menu') ?>
-
 <?php
 	$books = $page->children()->filterBy('type', 'zine')->listed()->flip();
 	$prints = $page->children()->filterBy('type', 'print')->listed()->flip();
+	$coverImage = $prints->first()->images()->first();
 ?>
+
+<?php snippet('partials/header', [], false, true) ?>
+<?php slot('preload') ?>
+	<link rel="preload" as="image" fetchpriority="high" href="<?= html(getPreview($coverImage)) ?>">
+<?php endslot() ?>
+<?php endsnippet() ?>
+
+<?php snippet('partials/menu') ?>
 
 <div class="flex items-start flex-wrap gap-52">
 	<div class="flex-1 min-w-300">
-		<img alt="<?= html($prints->first()->title()) ?> product preview" id="cover" class="db w-100" src="<?= html(getPreview($prints->first()->images()->first())) ?>">
+		<img alt="<?= html($prints->first()->title()) ?> product preview" id="cover" class="db w-100" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" style="aspect-ratio:<?= $coverImage->width() ?>/<?= $coverImage->height() ?>" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
 	</div>
 	<div class="flex flex-wrap min-w-300 gap-40" style="flex:1.35;">
 		<div style="flex:1.3;min-width:200px;">
