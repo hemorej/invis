@@ -14,7 +14,7 @@
 
 <div class="flex items-start flex-wrap gap-52">
 	<div class="flex-1 min-w-300">
-		<img alt="<?= html($prints->first()->title()) ?> product preview" id="cover" class="db w-100" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" style="aspect-ratio:<?= $coverImage->width() ?>/<?= $coverImage->height() ?>" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
+		<img alt="<?= html($prints->first()->title()) ?> product preview" id="cover" class="db w-100" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" style="height:auto" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
 	</div>
 	<div class="flex flex-wrap min-w-300 gap-40" style="flex:1.35;">
 		<div style="flex:1.3;min-width:200px;">

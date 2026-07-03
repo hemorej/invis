@@ -49,7 +49,7 @@
     <div class="flex flex-wrap items-start gap-72">
         <div style="flex:1.05;min-width:300px;display:flex;flex-direction:column;gap:24px;">
             <?php foreach($page->images() as $img): ?>
-                <img class="db w-100" alt="product pictures for <?= html($page->title()) ?>" width="<?= $img->width() ?>" height="<?= $img->height() ?>" sizes="(min-width: 700px) 50vw, 100vw" srcset="<?= html($img->srcset([600, 800, 1200])) ?>" style="filter:none;aspect-ratio:<?= $img->width() ?>/<?= $img->height() ?>">
+                <img class="db w-100" alt="product pictures for <?= html($page->title()) ?>" width="<?= $img->width() ?>" height="<?= $img->height() ?>" sizes="(min-width: 700px) 50vw, 100vw" srcset="<?= html($img->srcset([600, 800, 1200])) ?>" style="filter:none;height:auto">
             <?php endforeach ?>
         </div>
 

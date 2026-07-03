@@ -31,7 +31,7 @@
 		</div>
 	</div>
 	<div class="flex-1 min-w-300">
-		<img alt="<?= html($articles->first()->title()) ?> journal entry" id="cover" class="db w-100" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" style="aspect-ratio:<?= $coverImage->width() ?>/<?= $coverImage->height() ?>" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
+		<img alt="<?= html($articles->first()->title()) ?> journal entry" id="cover" class="db w-100" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" style="height:auto" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
 	</div>
 </div>
 

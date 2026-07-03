@@ -9,7 +9,7 @@
 <?php snippet('partials/menu') ?>
 
 <a href="<?= html($pages->listed()->first()->url()) ?>" class="db">
-	<img alt="black and white photograph" class="db w-100" width="<?= $heroImage->width() ?>" height="<?= $heroImage->height() ?>" style="aspect-ratio:<?= $heroImage->width() ?>/<?= $heroImage->height() ?>" sizes="100vw" fetchpriority="high" srcset="<?= html($heroImage->srcset([600, 800, 1200])) ?>">
+	<img alt="black and white photograph" class="db w-100" width="<?= $heroImage->width() ?>" height="<?= $heroImage->height() ?>" style="height:auto" sizes="100vw" fetchpriority="high" srcset="<?= html($heroImage->srcset([600, 800, 1200])) ?>">
 </a>
 
 <?php snippet('partials/footer') ?>
