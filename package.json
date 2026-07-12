@@ -19,7 +19,7 @@
     "laravel-mix": "^6.0.49",
     "laravel-mix-purgecss": "^6.0.0",
     "vue-template-compiler": "^2.7.16",
-    "webpack": "5.105.0"
+    "webpack": "5.108.4"
   },
   "scripts": {
     "prod": "export NODE_ENV=production; node_modules/.bin/webpack --config=node_modules/laravel-mix/setup/webpack.config.js; rm -f assets/js/app.min.js assets/js/cart.min.js assets/js/consent.min.js assets/js/product.min.js assets/css/app.min.css assets/css/tachyons.purged.css",
