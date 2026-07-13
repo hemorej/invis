@@ -1,0 +1,48 @@
+name: Composer audit
+
+# Checks every plugin's PHP dependencies against the FriendsOfPHP security
+# advisory database. Runs on a schedule (not just on dependency-bump PRs)
+# because a package already in composer.lock can have a new advisory
+# published against it at any time — nothing about our own commits changes,
+# so a diff-triggered check alone wouldn't catch that.
+on:
+  pull_request:
+    paths:
+      - "site/plugins/**/composer.json"
+      - "site/plugins/**/composer.lock"
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2.37.2
+        with:
+          php-version: "8.3"
+          tools: composer:2
+
+      - name: Audit each plugin's dependencies
+        run: |
+          set -e
+          status=0
+          for dir in site/plugins/*/; do
+            [ -f "$dir/composer.json" ] || continue
+            echo "::group::$dir"
+            if ! composer install --no-scripts --no-interaction --prefer-dist --working-dir="$dir"; then
+              echo "install failed in $dir"
+              status=1
+              echo "::endgroup::"
+              continue
+            fi
+            if ! composer audit --working-dir="$dir"; then
+              status=1
+            fi
+            echo "::endgroup::"
+          done
+          exit $status

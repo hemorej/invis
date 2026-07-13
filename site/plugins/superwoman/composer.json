@@ -17,5 +17,8 @@
     ],
     "require": {
         "spomky-labs/otphp": "^11.1.0"
+    },
+    "config": {
+        "secure-http": true
     }
 }
