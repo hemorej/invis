@@ -47,8 +47,6 @@ var app = new Vue({
             this.step = '1. cart   2. shipping address';
         },
         showCheckout: function(){
-            window.umami.track('[checkout] Finish checkout');
-
             this.inCart = false;
             this.inCheckout = true;
             this.step = '1. cart   2. shipping address   3. payment';
@@ -81,7 +79,6 @@ var app = new Vue({
               })
         },
         redirectStripe: function(){
-            window.umami.track('[checkout] Chose Stripe')
             this.stripe.redirectToCheckout({
                 sessionId: this.$refs.checkoutSessionID.value
             }).then(function (result) {

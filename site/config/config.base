@@ -73,7 +73,6 @@ return [
 
 	'panel.vue.compiler' => false,
 
-	'umami_code' => '',
 
 	'hooks' => [
 		'page.update:after' => function ( $newPage, $oldPage ) {

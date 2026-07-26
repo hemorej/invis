@@ -1,1 +1,0 @@
-<script defer src="https://umami.the-invisible-cities.com/script.js" data-website-id="<?= option('umami_code') ?>"></script>
