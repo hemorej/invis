@@ -40,7 +40,6 @@ async function main() {
 		buildJsBundle(['assets/js/vendor/lazyload.min.js'], 'assets/js/app.js', 'assets/dist/app.min.js'),
 		buildJsBundle(['assets/js/vendor/vue.min.js', 'assets/js/vendor/axios.min.js'], 'assets/js/cart.js', 'assets/dist/cart.min.js'),
 		buildJsBundle(['assets/js/vendor/vue.min.js', 'assets/js/vendor/axios.min.js'], 'assets/js/product.js', 'assets/dist/product.min.js'),
-		buildJsBundle(['assets/js/vendor/cookieconsent.min.js'], 'assets/js/consent.js', 'assets/dist/consent.min.js'),
 		buildCss(),
 	])
 }

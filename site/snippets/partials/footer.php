@@ -2,7 +2,6 @@
 		<?= kirbytext($site->copyright()) ?>
 	</footer>
 
-	<?php snippet('partials/consent') ?>
 	<?= $slots->scripts() ?>
 
 	<?php if(isset($ldjson)): ?>
