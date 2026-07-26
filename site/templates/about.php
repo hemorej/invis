@@ -43,7 +43,7 @@
 			<?php if(!empty($item->separator()->value)): ?>
 				<span class="spectral fw5 f-19 ink-dark db" style="margin-bottom:16px;margin-top:16px;break-inside:avoid;"><?= html($item->separator()) ?></span>
 			<?php endif ?>
-			<a href="<?= html($item->link()) ?>" target="_blank" class="lnk-muted spectral f-18 lh-195 db umami--click--<?= html($item->text()) ?>">
+			<a href="<?= html($item->link()) ?>" target="_blank" class="lnk-muted spectral f-18 lh-195 db">
 				<?= html($item->text()) ?>
 			</a>
 		<?php endforeach ?>
@@ -54,7 +54,7 @@
 		<?php foreach($page->contact()->toStructure() as $item): ?>
 			<a href="<?php if(empty($item->email()->value)): ?><?= html($item->link()) ?><?php else: ?>mailto:<?= html($item->email()) ?><?php endif ?>"
 				target="_blank"
-				class="lnk-muted spectral f-18 umami--click--<?= html($item->text()) ?>">
+				class="lnk-muted spectral f-18">
 				<?= html($item->text()) ?>
 			</a>
 		<?php endforeach ?>
