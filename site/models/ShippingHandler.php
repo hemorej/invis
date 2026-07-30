@@ -28,7 +28,6 @@ class ShippingHandler
 	 */
 	public function notify( $page, $oldPage )
 	{
-		$this->logger->info( "handler called notify" );
 		$status = (string)$page->content()->get( 'orderstatus' );
 		$oldStatus = (string)$oldPage->content()->get( 'orderstatus' );
 
@@ -69,14 +68,18 @@ class ShippingHandler
 					'type' => 'order',
 				] );
 
-				$this->logger->info( "email shipping confirmation sent for order id " . $page->suuid() );
+				$this->logger->info( "shipping confirmation email sent", ['order' => $page->suuid()->value(), 'email' => maskEmail( $customer['email'] )] );
 			} catch( \Throwable $t ) {
-				$this->logger->error( "email shipping confirmation error for order id " . $page->suuid() . ": " . $t->getMessage() );
+				$this->logger->error( "shipping confirmation email failed", ['order' => $page->suuid()->value(), 'reason' => $t->getMessage()] );
 			}
 
 			$page->update( [
 				'shipping_date' => date( 'm/d/Y H:i:s', time() ),
 			] );
+
+			$this->logger->info( "order marked as shipped", ['order' => $page->suuid()->value()] );
+		} else {
+			$this->logger->debug( "order status update did not trigger shipping notification", ['order' => $page->suuid()->value(), 'status' => $status, 'previous_status' => $oldStatus] );
 		}
 	}
 }

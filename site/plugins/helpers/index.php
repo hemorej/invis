@@ -143,6 +143,21 @@ function getHomeImage()
 }
 
 /**
+ * Masks an email address for safe inclusion in logs, e.g. "jerome@example.com" -> "j***@example.com".
+ *
+ * @param string|null $email
+ * @return string
+ */
+function maskEmail( ?string $email ): string
+{
+	if( empty( $email ) || !str_contains( $email, '@' ) )
+		return 'unknown';
+
+	[$local, $domain] = explode( '@', $email, 2 );
+	return substr( $local, 0, 1 ) . '***@' . $domain;
+}
+
+/**
  * Geolocation utility
  * @return mixed|string|null
  */
@@ -177,9 +192,8 @@ function location()
 
 		return $loc;
 	} catch( Exception $e ) {
-		error_log( $e->getMessage() );
 		$logger = ( new Logger\Logger( 'geolocation' ) )->getLogger();
-		$logger->error( 'Could not resolve IP address: ' . $e->getMessage() );
+		$logger->error( 'could not resolve IP address', ['ip' => $remote ?? null, 'reason' => $e->getMessage()] );
 
 		return null;
 	}
@@ -193,16 +207,21 @@ function location()
  */
 function sendAlert( $sid, $orderId, $error = "Unknown reason" )
 {
-	$mailbun = new Mailbun();
-	$mailbun->send(
-		kirby()->option( 'alert_address' ),
-		'Order exception alert',
-		'error',
-		['orderId' => $orderId, 'sid' => $sid, 'error' => $error]
-	);
-
 	$logger = ( new Logger\Logger( 'order' ) )->getLogger();
-	$logger->info( "Alert sent for " . $orderId );
+
+	try {
+		$mailbun = new Mailbun();
+		$mailbun->send(
+			kirby()->option( 'alert_address' ),
+			'Order exception alert',
+			'error',
+			['orderId' => $orderId, 'sid' => $sid, 'error' => $error]
+		);
+
+		$logger->warning( "order exception alert sent", ['txn' => $sid, 'order' => $orderId, 'reason' => $error] );
+	} catch( \Throwable $t ) {
+		$logger->error( "failed to send order exception alert", ['txn' => $sid, 'order' => $orderId, 'reason' => $error, 'mail_error' => $t->getMessage()] );
+	}
 }
 
 /**

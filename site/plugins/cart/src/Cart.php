@@ -236,6 +236,7 @@ class Cart
 
 			if( empty( $item ) ) {
 				// Add a new item
+				$grantedQty = $this->updateQty( $id, $quantityToAdd );
 				$items[] = [
 					'id' => $id,
 					'uri' => $uri,
@@ -246,17 +247,19 @@ class Cart
 					'uuid' => $product->uuid()->id(),
 					'suuid' => $uuid,
 					'price_external_id' => $variant->external_id()->value,
-					'quantity' => $this->updateQty( $id, $quantityToAdd ),
+					'quantity' => $grantedQty,
 				];
 			} else {
 				// Increase the quantity of an existing item
+				$newQty = $quantity ? (int)$quantity : (int)$item->quantity()->value + 1;
+				$grantedQty = $this->updateQty( $id, $newQty );
 				foreach( $items as $key => $i ) {
 					if( $i['id'] == $item->id() ) {
-						$newQty = $quantity ? (int)$quantity : (int)$item->quantity()->value + 1;
-						$items[$key]['quantity'] = $this->updateQty( $id, $newQty );
+						$items[$key]['quantity'] = $grantedQty;
 						continue;
 					}
 				}
+				$quantityToAdd = $newQty;
 			}
 
 			// Create the transaction file if we don't have one yet
@@ -287,8 +290,14 @@ class Cart
 				$this->getCartPage()->update( ['products' => \Yaml::encode( $items )] );
 				$this->cartPage = null;
 			}
+
+			if( $grantedQty < $quantityToAdd ) {
+				$this->logger->warning( "requested quantity reduced due to stock", ['txn' => $this->session->get( 'txn' ), 'item' => $id, 'requested' => $quantityToAdd, 'granted' => $grantedQty] );
+			} else {
+				$this->logger->info( "item added to cart", ['txn' => $this->session->get( 'txn' ), 'item' => $id, 'quantity' => $grantedQty] );
+			}
 		} catch( \Exception $e ) {
-			error_log( $e->getMessage() );
+			$this->logger->error( "failed to add item to cart", ['txn' => $this->session->get( 'txn' ), 'item' => $id, 'reason' => $e->getMessage()] );
 		}
 	}
 
@@ -369,6 +378,8 @@ class Cart
 		kirby()->impersonate( 'kirby' );
 		$this->getCartPage()->update( ['products' => \Yaml::encode( $items )] );
 		$this->cartPage = null;
+
+		$this->logger->info( "item removed from cart", ['txn' => $this->session->get( 'txn' ), 'item' => $id] );
 	}
 
 	/**
@@ -380,6 +391,8 @@ class Cart
 		kirby()->impersonate( 'kirby' );
 		$this->getCartPage()->update( ['customer' => \Yaml::encode( $customer )] );
 		$this->cartPage = null;
+
+		$this->logger->info( "customer details set for order", ['txn' => $this->session->get( 'txn' ), 'email' => maskEmail( $customer['email'] ), 'country' => $customer['address']['country'] ?? null] );
 	}
 
 	/**
@@ -419,6 +432,8 @@ class Cart
 		$currencies = $this->estimateCurrency( $total );
 		$lineItems = $this->getLineItems( (float) $shipping );
 
+		$this->logger->info( "shipping calculated for order", ['txn' => $this->session->get( 'txn' ), 'country' => $country, 'region' => $region, 'shipping' => $shipping, 'total' => $total] );
+
 		return ['total' => $total, 'currencies' => $currencies, 'shipping' => $shipping, 'checkoutSessionId' => $stripeSession, 'items' => $lineItems];
 	}
 
@@ -448,13 +463,17 @@ class Cart
 	 */
 	public function processStripe()
 	{
+		$txn = $this->session->get( 'txn' );
+
 		try {
-			if( empty( get( 'sid' ) ) || empty( $this->session->get( 'txn' ) ) )
+			if( empty( get( 'sid' ) ) || empty( $txn ) ) {
+				$this->logger->debug( "processStripe called with no session id or txn, nothing to do", ['txn' => $txn] );
 				return false;
+			}
 
 			$storedSid = $this->getCartPage()?->stripe_session_id()->value();
 			if( get( 'sid' ) !== $storedSid ) {
-				$this->logger->error( $this->session->get( 'txn' ) . ": SID mismatch – possible replay attempt", [get( 'sid' ), $storedSid] );
+				$this->logger->error( "SID mismatch, possible replay attempt", ['txn' => $txn, 'sid' => get( 'sid' ), 'stored_sid' => $storedSid] );
 				$this->session->set( 'error', 'Invalid payment session.' );
 				return false;
 			}
@@ -468,18 +487,21 @@ class Cart
 				// order still pending, finalize details
 				// check status to avoid repeat processing if client reloads page
 				if( $this->getCartPage()->content()->get( 'orderstatus' ) == 'pending' ) {
+					$this->logger->info( "payment captured, finalizing order", ['txn' => $txn, 'session_id' => $sid->id, 'payment_intent_id' => $pi->id] );
 					$this->updateInventory();
 					$this->sendNotifications();
 					$this->updateOrder( 'stripe' );
+				} else {
+					$this->logger->info( "order already finalized, skipping repeat processing", ['txn' => $txn, 'session_id' => $sid->id] );
 				}
 			} else {
-				$this->logger->error( $this->session->get( 'txn' ) . ": Stripe checkout returned a non-captured transaction", [$sid->id, $pi->id] );
+				$this->logger->error( "stripe checkout returned a non-captured transaction", ['txn' => $txn, 'session_id' => $sid->id, 'payment_intent_id' => $pi->id, 'payment_intent_status' => $pi->status] );
 				$this->session->set( 'error', 'There was an error with the payment processing, I have been notified of the issue.' );
 				return false;
 			}
 		} catch( \Exception $e ) {
-			$this->logger->error( $this->session->get( 'txn' ) . ": general error", ['reason' => $e->getMessage()] );
-			sendAlert( $this->session->get( 'txn' ), $this->getCartPage()->suuid()->value(), $e->getMessage() );
+			$this->logger->error( "general error processing stripe payment", ['txn' => $txn, 'reason' => $e->getMessage()] );
+			sendAlert( $txn, $this->getCartPage()?->suuid()->value(), $e->getMessage() );
 			$this->session->set( 'error', 'There was an unspecified error with the site, I have been notified of this issue. You may try again later' );
 			return false;
 		}
@@ -515,7 +537,7 @@ class Cart
 			$variant['stock'] = $remainingStock;
 			addToStructure( page( $uri ), 'variants', $variant );
 		}
-		$this->logger->info( "inventory updated after order " . $orderId );
+		$this->logger->info( "inventory updated after order", ['txn' => $this->session->get( 'txn' ), 'order' => $orderId] );
 	}
 
 	/**
@@ -526,6 +548,9 @@ class Cart
 	 */
 	private function updateOrder( $paymentMethod )
 	{
+		$orderId = null;
+		$txn = $this->session->get( 'txn' );
+
 		try {
 			$orderId = $this->getCartPage()->suuid()->value();
 
@@ -534,14 +559,14 @@ class Cart
 			$this->cartPage = null;
 			$this->getCartPage()->changeSlug( "ord-$orderId" );
 			$this->cartPage = null;
-			$this->logger->info( $this->session->get( 'txn' ) . ": order status updated" );
+			$this->logger->info( "order status updated to paid", ['txn' => $txn, 'order' => $orderId, 'payment_method' => $paymentMethod] );
 
 			$this->session->set( 'state', 'success' );
 			$this->session->set( 'order', str_replace( '_', '-', "ord-$orderId" ) );
 			$this->session->remove( 'txn' );
 		} catch( \Exception $e ) {
-			$this->logger->error( $this->session->get( 'txn' ) . ": general error", ['reason' => $e->getMessage()] );
-			sendAlert( $this->session->get( 'txn' ), $orderId, $e->getMessage() );
+			$this->logger->error( "failed to finalize order", ['txn' => $txn, 'order' => $orderId, 'reason' => $e->getMessage()] );
+			sendAlert( $txn, $orderId, $e->getMessage() );
 			return false;
 		}
 	}
@@ -586,7 +611,7 @@ class Cart
 					'headline' => 'Thank you for your purchase! We received your order and will prepare it for sending soon. You will receive another email once the package has shipped. Below is your order information.',
 				] ) );
 
-			$this->logger->info( $this->session->get( 'txn' ) . ":email confirmation sent for order id " . $orderId );
+			$this->logger->info( "order confirmation email sent", ['txn' => $this->session->get( 'txn' ), 'order' => $orderId] );
 
 			$mailbun->send(
 				kirby()->option( 'alert_address' ),
@@ -599,11 +624,11 @@ class Cart
 					'headline' => 'Below is the order information.',
 				] ) );
 
-			$this->logger->info( $this->session->get( 'txn' ) . ":admin notification sent for order id " . $orderId );
+			$this->logger->info( "admin order notification sent", ['txn' => $this->session->get( 'txn' ), 'order' => $orderId] );
 		} catch( \Throwable $t ) {
-			$description = "email confirmation error for order id " . $orderId . ": " . $t->getMessage();
-			$this->logger->error( $this->session->get( 'txn' ) . ":" . $description );
-			sendAlert( $this->session->get( 'txn' ), $orderId, $description );
+			$description = "order notification email failed for order " . $orderId;
+			$this->logger->error( $description, ['txn' => $this->session->get( 'txn' ), 'order' => $orderId, 'reason' => $t->getMessage()] );
+			sendAlert( $this->session->get( 'txn' ), $orderId, $t->getMessage() );
 		}
 	}
 

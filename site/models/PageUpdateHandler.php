@@ -30,13 +30,15 @@ class PageUpdateHandler
 	 */
 	public function handle( Page $page, Page $oldPage )
 	{
-		if( !empty( $page->parent() ) && $page->parent()->uid() == 'orders' )
+		$parentUid = $page->parent()?->uid();
+
+		if( $parentUid == 'orders' ) {
 			$this->notify( $page, $oldPage );
-
-		if( !empty( $page->parent() ) && $page->parent()->uid() == 'prints')
+		} elseif( $parentUid == 'prints' ) {
 			$this->createOrUpdate( $page, $oldPage );
-
-		$this->logger->info( "handler didn't match expected, nothing to do" );
+		} else {
+			$this->logger->debug( "page update didn't match a known handler, nothing to do", ['page' => $page->id(), 'parent' => $parentUid] );
+		}
 	}
 
 	/**
@@ -48,7 +50,7 @@ class PageUpdateHandler
 	 */
 	public function createOrUpdate( $page, $oldPage )
 	{
-		$this->logger->info( "handler called createOrUpdate, delegating to product handler" );
+		$this->logger->debug( "delegating page update to product handler", ['page' => $page->id()] );
 
 		$productHandler = new ProductHandler();
 		$productHandler->createOrUpdate( $page, $oldPage );
@@ -63,7 +65,7 @@ class PageUpdateHandler
 	 */
 	public function notify( $page, $oldPage )
 	{
-		$this->logger->info( "handler called notify, delegating to shipping handler" );
+		$this->logger->debug( "delegating page update to shipping handler", ['page' => $page->id()] );
 
 		$shippingHandler = new ShippingHandler();
 		$shippingHandler->notify( $page, $oldPage );

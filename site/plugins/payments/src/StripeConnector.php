@@ -108,14 +108,15 @@ class StripeConnector
 			if( !empty( $customerEmail ) )
 				$sessionObject['customer_email'] = $customerEmail;
 
-			return $this->stripe->checkout->sessions->create( $sessionObject );
+			$session = $this->stripe->checkout->sessions->create( $sessionObject );
+			$this->logger->info( 'stripe checkout session created', ['session_id' => $session->id, 'line_items' => count( $sessionLineItems ), 'customer_email' => empty( $customerEmail ) ? null : maskEmail( $customerEmail )] );
+
+			return $session;
 		} catch( InvalidRequestException $se ) {
-			error_log( $se->getMessage() );
-			$this->logger->error( 'Stripe error creating session', [$se->getMessage()] );
+			$this->logger->error( 'stripe error creating session', ['reason' => $se->getMessage()] );
 			throw new Exception( 'Stripe error creating session' );
 		} catch( Exception $e ) {
-			error_log( $e->getMessage() );
-			$this->logger->error( 'Stripe general error', [$e->getMessage()] );
+			$this->logger->error( 'stripe general error creating session', ['reason' => $e->getMessage()] );
 			throw new Exception( 'Stripe general error' );
 		}
 	}
@@ -130,10 +131,10 @@ class StripeConnector
 		try {
 			return $this->stripe->checkout->sessions->retrieve( $sid, [] );
 		} catch( InvalidRequestException $se ) {
-			$this->logger->error( 'Stripe error getting session', [$se->getMessage()] );
+			$this->logger->error( 'stripe error getting session', ['session_id' => $sid, 'reason' => $se->getMessage()] );
 			throw new Exception( 'Stripe error getting session' );
 		} catch( Exception $e ) {
-			$this->logger->error( 'Stripe general error', [$e->getMessage()] );
+			$this->logger->error( 'stripe general error getting session', ['session_id' => $sid, 'reason' => $e->getMessage()] );
 			throw new Exception( 'Stripe general error' );
 		}
 	}
@@ -149,10 +150,10 @@ class StripeConnector
 			return $this->stripe->paymentIntents->retrieve( $pid, ['expand' => ['latest_charge']] );
 
 		} catch( InvalidRequestException $se ) {
-			$this->logger->error( 'Stripe error getting payment intent', [$se->getMessage()] );
+			$this->logger->error( 'stripe error getting payment intent', ['payment_intent_id' => $pid, 'reason' => $se->getMessage()] );
 			throw new Exception( "Stripe error getting payment intent" );
 		} catch( Exception $e ) {
-			$this->logger->error( 'Stripe general error', [$e->getMessage()] );
+			$this->logger->error( 'stripe general error getting payment intent', ['payment_intent_id' => $pid, 'reason' => $e->getMessage()] );
 			throw new Exception( "Stripe general error" );
 		}
 	}
@@ -239,8 +240,10 @@ class StripeConnector
 			if( !empty( $fieldsToUpdate ) ) {
 				$page->update( $fieldsToUpdate );
 			}
+
+			$this->logger->info( "stripe product synced", ['page' => $page->id(), 'product_id' => $productStripeId, 'variants' => count( $variants )] );
 		} catch( Exception $e ) {
-			$this->logger->error( "Could not update products or prices" . $e->getMessage() );
+			$this->logger->error( "could not sync stripe product or prices", ['page' => $page->id(), 'reason' => $e->getMessage()] );
 		}
 	}
 }

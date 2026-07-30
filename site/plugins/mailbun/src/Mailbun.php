@@ -47,22 +47,27 @@ class Mailbun
 	public function send($recipient, $subject, $template, $data)
 	{
 		$body = App::instance()->template('emails/' . $template);
-		
+
 		$data['kirby'] = kirby();
 		$data['site'] = kirby()->site();
 		$data['pages'] = [];
 		$data['page'] = kirby()->page();
 
-		$this->mailgun->messages()->send(kirby()->option('mailgun_domain'), [
-	      'to'      => $recipient,
-	      'from'    => kirby()->option('from_address'),
-	      'subject' => $subject,
-	      'h:Reply-To' => kirby()->option('reply-to_address'),
-	      'o:require-tls' => 'true',
-	      'text' => $subject,
-	      'html' => $body->render($data)
-		]);
+		try {
+			$this->mailgun->messages()->send(kirby()->option('mailgun_domain'), [
+		      'to'      => $recipient,
+		      'from'    => kirby()->option('from_address'),
+		      'subject' => $subject,
+		      'h:Reply-To' => kirby()->option('reply-to_address'),
+		      'o:require-tls' => 'true',
+		      'text' => $subject,
+		      'html' => $body->render($data)
+			]);
+		} catch( \Throwable $t ) {
+			$this->logger->error('email send failed', ['recipient' => maskEmail($recipient), 'subject' => $subject, 'template' => $template, 'reason' => $t->getMessage()]);
+			throw $t;
+		}
 
-		$this->logger->info('email message successfully sent');
+		$this->logger->info('email sent', ['recipient' => maskEmail($recipient), 'subject' => $subject, 'template' => $template]);
 	}
 }

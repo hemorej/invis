@@ -30,13 +30,14 @@ class ProductHandler
 	 */
 	public function createOrUpdate( Page $page, Page $oldPage )
 	{
-		$this->logger->info( "handler called createOrUpdate" );
-
 		$productTypes = $page->blueprint()->field('type');
 		if( in_array($page->content()->type()->value,  $productTypes['options'] ) && $page->isListed() )
 		{
+			$this->logger->info( "syncing print page to Stripe", ['page' => $page->id(), 'type' => $page->content()->type()->value] );
 			$stripe = new StripeConnector();
 			$stripe->createOrUpdateProduct($page);
+		} else {
+			$this->logger->debug( "print page update skipped, not a listed product", ['page' => $page->id()] );
 		}
 	}
 }

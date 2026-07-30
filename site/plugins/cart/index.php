@@ -11,7 +11,10 @@ Kirby::plugin('cart/cart', [
 		'pattern' => 'address',
 		'method' => 'POST',
 		'action'  => function () {
+			$logger = ( new \Logger\Logger( 'cart' ) )->getLogger();
+
 			if( csrf( get( 'csrf' ) ) !== true ) {
+				$logger->warning( "address submission rejected, invalid CSRF token", ['txn' => kirby()->session()->get( 'txn' )] );
 				return ['status' => 'error', 'message' => 'Invalid CSRF token'];
 			}
 
@@ -26,6 +29,7 @@ Kirby::plugin('cart/cart', [
 
 			if( empty( $name ) || empty( $line1 ) || empty( $city ) || empty( $country ) || empty( $postcode )
 				|| !filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+				$logger->warning( "address submission rejected, invalid address data", ['txn' => kirby()->session()->get( 'txn' )] );
 				return ['status' => 'error', 'message' => 'Invalid address data'];
 			}
 
@@ -59,11 +63,15 @@ Kirby::plugin('cart/cart', [
 		'pattern' => 'order/success/(:alpha)',
 		'method' => 'GET|POST',
 		'action'  => function ($alpha) {
+			$logger = ( new \Logger\Logger( 'cart' ) )->getLogger();
+
 			if($alpha == 'stripe'){
+				$logger->debug( "order success callback received", ['txn' => kirby()->session()->get( 'txn' ), 'provider' => 'stripe'] );
 				(new \Cart\Cart())->processStripe();
 				return page('prints/order');
 			}
 
+			$logger->warning( "order success callback received with unknown provider", ['txn' => kirby()->session()->get( 'txn' ), 'provider' => $alpha] );
 			return page('prints/cart');
 		}]
 	]
