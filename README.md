@@ -9,11 +9,27 @@ It's a custom made theme for [Kirby](https://getkirby.com) using [Tachyons](http
 You can read all about the whole design process [here](https://jerome-arfouche.com/blog)  
 
 
-### local setup and start  
-`ddev config --php-version=8.5 --omit-containers=db`
-`ddev xdebug`  
-`ddev start`  
-`ddev launch`  
+### local setup and start
+
+This project uses [DDEV](https://ddev.readthedocs.io/) for local development. No database is required (flat-file CMS).
+
+```sh
+ddev start        # start the local environment
+ddev launch       # open in browser (https://invis.ddev.site)
+ddev xdebug        # toggle Xdebug
+ddev stop
+```
+
+### frontend build
+
+Requires [pnpm](https://pnpm.io) (v11+).
+
+```sh
+pnpm install
+pnpm run build     # compile and minify JS/CSS (esbuild + PurgeCSS) → assets/dist/
+```
+
+There is no dev/watch mode; run `pnpm run build` after every CSS/JS change.
 
 ### submodule update
 
