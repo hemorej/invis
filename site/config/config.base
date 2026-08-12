@@ -23,9 +23,8 @@ return [
 
 	'debug' => true,
 
-	'content' => [
-		'salt' => '',
-	],
+	'content' => [ 'salt' => '' ],
+   'cookie'  => [ 'key'  => '' ],
 
 	'cache' => [
 		'pages' => [
