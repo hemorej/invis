@@ -22,6 +22,14 @@ return [
 	],
 
 	'debug' => true,
+
+	'content' => [
+		'salt' => '',
+	],
+	'cookie' => [
+		'key' => '',
+	],
+
 	'cache' => [
 		'pages' => [
 			'active' => true,
