@@ -26,9 +26,6 @@ return [
 	'content' => [
 		'salt' => '',
 	],
-	'cookie' => [
-		'key' => '',
-	],
 
 	'cache' => [
 		'pages' => [
