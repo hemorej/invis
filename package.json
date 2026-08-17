@@ -16,7 +16,7 @@
   "homepage": "https://github.com/hemorej/invis#readme",
   "packageManager": "pnpm@11.9.0",
   "devDependencies": {
-    "esbuild": "^0.28.1",
+    "esbuild": "^0.28.2",
     "purgecss": "^8.0.0"
   },
   "scripts": {
