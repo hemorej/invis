@@ -1,7 +1,7 @@
 <main class="mw-1040 center hero-main">
-	<header class="flex items-baseline flex-wrap mb-96" style="gap:28px;">
+	<header class="flex items-baseline flex-wrap mb-96 site-header" style="gap:28px;">
 		<a class="s721-cd-light tracked-tight ttl f-logo fw3 ink-dark no-underline" href="<?= url() ?>" title="<?= html($site->title()) ?>"><?= html($site->title()) ?></a>
-		<nav class="flex flex-wrap ml-auto" style="gap:26px;">
+		<nav class="flex flex-wrap ml-auto site-nav" style="gap:26px;">
 			<?php foreach($pages->listed() as $p): ?>
 				<?php
 					$isActive = $p->isOpen() && $site->page()->title() != 'cart';

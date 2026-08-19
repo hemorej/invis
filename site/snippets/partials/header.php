@@ -71,8 +71,8 @@ if( !empty( page()->title() ) ) {
     <?php if( option( 'env' ) == 'prod' ): ?>
         <?= css( 'assets/dist/app.min.css' ) ?>
     <?php else: ?>
-        <?= css( 'assets/css/app.css' ) ?>
         <?= css( 'assets/css/vendor/tachyons.css' ) ?>
+        <?= css( 'assets/css/app.css' ) ?>
     <?php endif ?>
 
     <link rel="shortcut icon" type="image/x-icon" href="<?= url( 'assets/images/favicon.ico' ) ?>"/>
