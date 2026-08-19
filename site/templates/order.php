@@ -43,7 +43,7 @@
                 <?php endforeach ?>
                 <span class="spectral f-18 lh-copy ink-muted">shipping</span>
                 <span class="spectral f-18 lh-copy ink-muted tr" style="white-space:nowrap">CAD&nbsp;<?= html($shipping) ?></span>
-                <div style="grid-column:1/3;border-top:1px solid #e7e7e7;margin:8px 0 4px"></div>
+                <div style="grid-column:1/3;border-top:1px solid var(--rule);margin:8px 0 4px"></div>
                 <span class="spectral fw5 f-19 lh-14 ink-dark">total</span>
                 <span class="spectral fw5 f-19 lh-14 ink-dark tr" style="white-space:nowrap">CAD&nbsp;<?= html(intval($grandTotal)) ?></span>
             </div>
