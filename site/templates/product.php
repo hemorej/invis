@@ -99,7 +99,7 @@
                     </form>
                 </section>
 
-                <div class="bt b--black-10 mt-38 mb-30"></div>
+                <div class="bt-rule mt-38 mb-30"></div>
 
                 <div class="prod-desc">
                     <?= $page->description()->kirbytext() ?>

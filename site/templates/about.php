@@ -28,29 +28,57 @@
         <?= kirbytext($site->terms()) ?>
     </section>
 <?php else: ?>
-	<section>
+	<?php
+		$linkGroups = [];
+		$currentLabel = null;
+		foreach($page->links()->toStructure() as $item) {
+			if(!empty($item->separator()->value)) {
+				$currentLabel = $item->separator()->value;
+				$linkGroups[$currentLabel] = [];
+			}
+			if($currentLabel !== null) {
+				$linkGroups[$currentLabel][] = $item;
+			}
+		}
+		$groupLabels = array_keys($linkGroups);
+	?>
+
+	<div class="flex items-start flex-wrap" style="gap:56px;">
 		<?php foreach($page->images() as $image): ?>
-			<img alt="portrait of the photographer" class="db w-100 mw-520 mb-54" width="<?= $image->width() ?>" height="<?= $image->height() ?>" style="height:auto" sizes="(min-width: 520px) 520px, 100vw" srcset="<?= html($image->srcset([600, 800, 1200])) ?>">
+			<img alt="portrait of the photographer" class="db" style="flex:0 0 360px;width:360px;max-width:100%;height:auto" width="<?= $image->width() ?>" height="<?= $image->height() ?>" sizes="(min-width: 360px) 360px, 100vw" srcset="<?= html($image->srcset([600, 800, 1200])) ?>">
 		<?php endforeach ?>
-	</section>
+		<div class="spectral f-18 lh-17 ink-copy" style="flex:1;min-width:320px;max-width:56ch">
+			<?= kirbytext($page->text()) ?>
+		</div>
+	</div>
 
-	<section class="col-2 mw-840 spectral f-18 lh-17 ink-copy">
-		<?= kirbytext($page->text()) ?>
-	</section>
-
-	<div class="col-4 mt-84">
-		<?php foreach($page->links()->toStructure() as $item): ?>
-			<?php if(!empty($item->separator()->value)): ?>
-				<span class="spectral fw5 f-19 ink-dark db" style="margin-bottom:16px;margin-top:16px;break-inside:avoid;"><?= html($item->separator()) ?></span>
-			<?php endif ?>
-			<a href="<?= html($item->link()) ?>" target="_blank" class="lnk-muted spectral f-18 lh-195 db">
-				<?= html($item->text()) ?>
-			</a>
-		<?php endforeach ?>
+	<div class="flex flex-wrap items-start mt-84" style="gap:44px;">
+		<?php if(isset($groupLabels[0])): ?>
+			<div style="min-width:200px;">
+				<span class="gold-lbl mb-22">— <?= html($groupLabels[0]) ?></span>
+				<?php foreach($linkGroups[$groupLabels[0]] as $item): ?>
+					<a href="<?= html($item->link()) ?>" target="_blank" class="lnk-muted spectral f-18 lh-195 db">
+						<?= html($item->text()) ?>
+					</a>
+				<?php endforeach ?>
+			</div>
+		<?php endif ?>
+		<?php if(isset($groupLabels[1])): ?>
+			<div class="flex-1" style="min-width:300px;">
+				<span class="gold-lbl mb-22">— <?= html($groupLabels[1]) ?></span>
+				<div style="columns:150px 3;column-gap:44px;">
+					<?php foreach($linkGroups[$groupLabels[1]] as $item): ?>
+						<a href="<?= html($item->link()) ?>" target="_blank" class="lnk-muted spectral f-18 lh-195 db">
+							<?= html($item->text()) ?>
+						</a>
+					<?php endforeach ?>
+				</div>
+			</div>
+		<?php endif ?>
 	</div>
 
 	<div class="flex items-baseline flex-wrap mt-64 gap-28">
-		<span class="spectral fw5 f-19 ink-dark">contact</span>
+		<span class="gold-lbl" style="white-space:nowrap;flex:0 0 auto">— contact</span>
 		<?php foreach($page->contact()->toStructure() as $item): ?>
 			<a href="<?php if(empty($item->email()->value)): ?><?= html($item->link()) ?><?php else: ?>mailto:<?= html($item->email()) ?><?php endif ?>"
 				target="_blank"

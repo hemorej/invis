@@ -12,7 +12,7 @@
 
 <?php snippet('partials/menu') ?>
 
-<div class="flex items-start flex-wrap gap-52">
+<div class="flex items-center flex-wrap gap-52">
 	<div class="flex flex-wrap min-w-300 gap-40" style="flex:1.35;justify-content:flex-end;">
 		<div style="flex:1.2;min-width:185px;text-align:right;">
 			<span class="gold-lbl mb-22">— journals</span>
@@ -31,7 +31,7 @@
 		</div>
 	</div>
 	<div class="flex-1 min-w-300">
-		<img alt="<?= html($articles->first()->title()) ?> journal entry" id="cover" class="db w-100" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" style="height:auto" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
+		<img alt="<?= html($articles->first()->title()) ?> journal entry" id="cover" class="db w-100 cover-photo" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
 	</div>
 </div>
 

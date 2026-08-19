@@ -25,7 +25,7 @@
     <input ref="ppCsrf" type="hidden" value="<?= csrf() ?>">
 
     <!-- Stock error banner -->
-    <div :class="[error ? 'db' : 'dn']" class="spectral f-18 gold ba b--gold pa3 mb-32 tc">
+    <div :class="[error ? 'db' : 'dn']" class="spectral f-18 gold ba b--accent pa3 mb-32 tc">
         Sorry, there&rsquo;s only {{ leftInStock }} left in stock.
         <a class="ml2 gold no-underline pointer" v-on:click.prevent="error = false">&times;</a>
     </div>
@@ -35,11 +35,11 @@
         <a class="step-lnk spectral" :class="[inCart && !inCheckout ? 'step-on' : 'step-off']" href="#">
             <span class="gold f-15">01</span>&nbsp;&nbsp;cart
         </a>
-        <span class="ink-light spectral f-18 lh-1" style="margin:0 22px">———</span>
+        <span class="ink-rule2 spectral f-18 lh-1" style="margin:0 22px">———</span>
         <a class="step-lnk spectral" :class="[inShipping || inCheckout ? 'step-on' : 'step-off']" href="#">
             <span class="gold f-15">02</span>&nbsp;&nbsp;shipping
         </a>
-        <span class="ink-light spectral f-18 lh-1" style="margin:0 22px">———</span>
+        <span class="ink-rule2 spectral f-18 lh-1" style="margin:0 22px">———</span>
         <a class="step-lnk spectral" :class="[inCheckout ? 'step-on' : 'step-off']" href="#">
             <span class="gold f-15">03</span>&nbsp;&nbsp;payment
         </a>
@@ -60,7 +60,7 @@
         foreach($cartItemsArr as $i => $item):
             $product = page($item->uri());
         ?>
-        <div class="cart-item-grid bt b--black-10 pt-30" data-qty-row>
+        <div class="cart-item-grid bt-rule pt-30" data-qty-row>
             <img src="<?= html($product->images()->first()->crop(96)->url()) ?>" alt="<?= html($item->name()) ?>" class="db" style="width:96px;height:96px;object-fit:cover;filter:none">
             <div>
                 <div class="spectral f-20 lh-13 ink-dark">
@@ -73,7 +73,7 @@
             </div>
             <div class="tr spectral f-18 lh-1 ink-body">CAD&nbsp;<?= html($item->amount()->value) ?></div>
             <div class="flex items-center justify-end gap-14">
-                <div class="flex items-center" style="border:1px solid #d8d8d8">
+                <div class="flex items-center" style="border:1px solid var(--border)">
                     <button class="qty-btn" v-on:click.prevent="decQty">−</button>
                     <input v-on:change="updateCart"
                         class="qty-input"
@@ -92,7 +92,7 @@
                     <input type="hidden" name="csrf" value="<?= csrf() ?>">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="<?= html($item->id()) ?>">
-                    <button class="ba b--black-20 bg-white silver f7 br-100 flex items-center justify-center pointer" style="width:22px;height:22px;border-radius:50%" type="submit">&times;</button>
+                    <button class="cart-remove-btn f7 br-100 flex items-center justify-center pointer" style="width:22px;height:22px;border-radius:50%" type="submit">&times;</button>
                 </form>
             </div>
         </div>
@@ -100,7 +100,7 @@
         <?php endforeach ?>
 
         <!-- Totals -->
-        <div class="flex bt b--black-10 mt-40 pt-30 flex-wrap" style="justify-content:space-between;align-items:flex-start;gap:30px">
+        <div class="flex bt-rule mt-40 pt-30 flex-wrap" style="justify-content:space-between;align-items:flex-start;gap:30px">
             <a href="./prints" class="spectral f-18 lh-1 ink-subtle no-underline" style="white-space:nowrap">« continue shopping</a>
             <div style="margin-left:auto;text-align:right;min-width:260px">
                 <div class="spectral ink-dark" style="font-size:25px;line-height:1">total CAD {{ total }}</div>
@@ -152,9 +152,9 @@
             </div>
         </div>
 
-        <p class="spectral f-17 lh-16 mt-40 mb0" style="color:#777;max-width:700px">
+        <p class="spectral f-17 lh-16 mt-40 mb0" style="color:var(--mid2);max-width:700px">
             By continuing to checkout, you agree to the general
-            <a href="#" class="ink-dark no-underline bb bw1 b--gold pb1" v-on:click.prevent="showTerms = !showTerms">terms</a>
+            <a href="#" class="ink-dark no-underline bb bw1 b--accent pb1" v-on:click.prevent="showTerms = !showTerms">terms</a>
             of the sale.
         </p>
         <p class="spectral f-17 lh-16 ink-copy" v-show="showTerms"><?= html($site->terms()) ?></p>
@@ -189,7 +189,7 @@
         </div>
         <?php endforeach ?>
 
-        <div class="flex bt b--black-10 mt-44 pt-32 flex-wrap" style="justify-content:space-between;align-items:flex-start;gap:40px">
+        <div class="flex bt-rule mt-44 pt-32 flex-wrap" style="justify-content:space-between;align-items:flex-start;gap:40px">
             <div class="spectral f-17 ink-copy" style="line-height:1.85">
                 <div class="ink-dark">{{ name }}</div>
                 <div>{{ email }}</div>
