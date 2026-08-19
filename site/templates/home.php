@@ -8,6 +8,8 @@
 
 <?php snippet('partials/menu') ?>
 
-<img alt="black and white photograph" class="db w-100" width="<?= $heroImage->width() ?>" height="<?= $heroImage->height() ?>" style="height:auto" sizes="100vw" fetchpriority="high" srcset="<?= html($heroImage->srcset([600, 800, 1200])) ?>">
+<div class="img-loader db w-100">
+	<img alt="black and white photograph" class="db w-100" width="<?= $heroImage->width() ?>" height="<?= $heroImage->height() ?>" style="height:auto" sizes="100vw" fetchpriority="high" srcset="<?= html($heroImage->srcset([600, 800, 1200])) ?>">
+</div>
 
 <?php snippet('partials/footer') ?>

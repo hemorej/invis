@@ -79,10 +79,14 @@
 	<?php if($current->isPortrait() && $hasNextPortrait): ?>
 		<div class="mw8 center">
 			<section class="fl w-50 pt4-m pb4-m pr4-l pr2">
-				<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset('vertical')) ?>">
+				<div class="img-loader">
+					<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset('vertical')) ?>">
+				</div>
 			</section>
 			<section class="fr w-50 pt4-m pb4-m pl4-l pl2">
-				<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($next->srcset('vertical')) ?>">
+				<div class="img-loader">
+					<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($next->srcset('vertical')) ?>">
+				</div>
 			</section>
 		</div>
 		<?php $skip = true ?>
@@ -99,13 +103,15 @@
 			<?php endif ?>
 		<?php endif ?>
 
-		<?php if($current->isPortrait() && count(page()->images()) == 1): ?>
-			<img style="max-width: 45%" alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset('vertical')) ?>">
-		<?php elseif($current->isPortrait()): ?>
-			<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset('vertical')) ?>">
-		<?php else: ?>
-			<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset()) ?>">
-		<?php endif ?>
+		<div class="img-loader">
+			<?php if($current->isPortrait() && count(page()->images()) == 1): ?>
+				<img style="max-width: 45%" alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset('vertical')) ?>">
+			<?php elseif($current->isPortrait()): ?>
+				<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset('vertical')) ?>">
+			<?php else: ?>
+				<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset()) ?>">
+			<?php endif ?>
+		</div>
 		</section>
 	<?php endif ?>
 	<span class="cf db mb3"></span>

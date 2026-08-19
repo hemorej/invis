@@ -251,3 +251,35 @@ body { background: var(--bg); }
 .tic-select { appearance:none; -webkit-appearance:none; -moz-appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'><path d='M1 1l4.5 4.5L10 1' fill='none' stroke='%23999' stroke-width='1.4'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; }
 .hover-gold:hover { color:var(--accent); }
 .cover-photo { object-fit:contain; aspect-ratio:3/2; height:auto; }
+
+/* Image loading indicator: color:transparent hides the alt-text flash on slow/uncached
+   image loads, and ::before traces a thin accent-color line sweeping around the
+   container's perimeter while --sweep-angle animates. is-loaded (added by app.js on the
+   "load" event) removes the sweep once the real photo has painted over it. */
+@property --sweep-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.img-loader { position:relative; }
+.img-loader img { color:transparent; }
+.img-loader::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  padding:1.5px;
+  border-radius:inherit;
+  background:conic-gradient(from var(--sweep-angle), transparent 0deg, transparent 300deg, var(--accent) 330deg, transparent 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  animation:img-sweep 1.6s linear infinite;
+  pointer-events:none;
+}
+.img-loader.is-loaded::before { content:none; }
+@keyframes img-sweep {
+  to { --sweep-angle:360deg; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .img-loader::before { animation:none; }
+}

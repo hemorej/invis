@@ -31,7 +31,9 @@
 		</div>
 	</div>
 	<div class="flex-1 min-w-300">
-		<img alt="<?= html($articles->first()->title()) ?> journal entry" id="cover" class="db w-100 cover-photo" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
+		<div class="img-loader">
+			<img alt="<?= html($articles->first()->title()) ?> journal entry" id="cover" class="db w-100 cover-photo" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
+		</div>
 	</div>
 </div>
 
