@@ -1,4 +1,4 @@
-<main class="mw-1040 center" style="padding:clamp(132px, 26vh, 300px) 36px 64px">
+<main class="mw-1040 center hero-main">
 	<header class="flex items-baseline flex-wrap mb-96" style="gap:28px;">
 		<a class="s721-cd-light tracked-tight ttl f-logo fw3 ink-dark no-underline" href="<?= url() ?>" title="<?= html($site->title()) ?>"><?= html($site->title()) ?></a>
 		<nav class="flex flex-wrap ml-auto" style="gap:26px;">
