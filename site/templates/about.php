@@ -52,7 +52,7 @@
 		</div>
 	</div>
 
-	<div class="flex flex-wrap items-start mt-84" style="gap:44px;">
+	<div class="flex flex-wrap items-start mt-84 list-pair" style="gap:44px;">
 		<?php if(isset($groupLabels[0])): ?>
 			<div style="min-width:200px;">
 				<span class="gold-lbl mb-22">— <?= html($groupLabels[0]) ?></span>

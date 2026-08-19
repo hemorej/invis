@@ -13,7 +13,12 @@
 <?php snippet('partials/menu') ?>
 
 <div class="flex items-center flex-wrap gap-52">
-	<div class="flex flex-wrap min-w-300 gap-40" style="flex:1.35;justify-content:flex-end;">
+	<div class="flex-1 min-w-300">
+		<div class="img-loader">
+			<img alt="<?= html($articles->first()->title()) ?> journal entry" id="cover" class="db w-100 cover-photo" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
+		</div>
+	</div>
+	<div class="flex flex-wrap min-w-300 gap-40 list-pair" style="flex:1.35;justify-content:flex-end;">
 		<div style="flex:1.2;min-width:185px;text-align:right;">
 			<span class="gold-lbl mb-22">— journals</span>
 			<?php foreach($journals as $year): ?>
@@ -28,11 +33,6 @@
 			<?php if($articles->pagination()->hasPages() && $articles->pagination()->hasNextPage()): ?>
 				<a class="lnk-muted spectral f-18 db ttl" style="margin-top:28px;text-align:right;" href="<?= html($articles->pagination()->nextPageURL()) ?>">older&nbsp;»</a>
 			<?php endif ?>
-		</div>
-	</div>
-	<div class="flex-1 min-w-300">
-		<div class="img-loader">
-			<img alt="<?= html($articles->first()->title()) ?> journal entry" id="cover" class="db w-100 cover-photo" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
 		</div>
 	</div>
 </div>

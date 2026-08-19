@@ -18,7 +18,7 @@
 			<img alt="<?= html($prints->first()->title()) ?> product preview" id="cover" class="db w-100 cover-photo" width="<?= $coverImage->width() ?>" height="<?= $coverImage->height() ?>" fetchpriority="high" src="<?= html(getPreview($coverImage)) ?>">
 		</div>
 	</div>
-	<div class="flex flex-wrap min-w-300 gap-40" style="flex:1.35;">
+	<div class="flex flex-wrap min-w-300 gap-40 list-pair" style="flex:1.35;">
 		<div style="flex:1.3;min-width:200px;">
 			<span class="gold-lbl mb-22">— prints</span>
 			<?php foreach($prints as $article): ?>

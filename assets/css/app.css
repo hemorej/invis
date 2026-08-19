@@ -175,6 +175,10 @@ body { background: var(--bg); }
   [data-r="footer"] .theme-lnk,
   [data-r="footer"] .footer-copyright p { font-size:10px; }
 }
+@media (max-width:700px){
+  .list-pair { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .list-pair > div { min-width:0 !important; flex:none !important; }
+}
 .lh-174 { line-height:1.74; }
 .lh-165 { line-height:1.65; }
 .lh-17 { line-height:1.7; }

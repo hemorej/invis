@@ -13,7 +13,7 @@
 			<img alt="<?= html($travels->first()->title()) ?> series cover" id="cover" class="db w-100 cover-photo" src="<?= html(getPreview($coverImage)) ?>">
 		</div>
 	</div>
-	<div class="flex flex-wrap min-w-300 gap-40" style="flex:1.35;">
+	<div class="flex flex-wrap min-w-300 gap-40 list-pair" style="flex:1.35;">
 		<div style="flex:1.3;min-width:180px;">
 			<span class="gold-lbl mb-22">— travels</span>
 			<?php foreach($travels as $article): ?>
