@@ -164,6 +164,13 @@ body { background: var(--bg); }
 .theme-lnk { font-family:'Spectral',Georgia,serif; font-size:13px; line-height:1.4; text-decoration:none; color:var(--faint2); }
 .theme-lnk.is-active { color:var(--mid); }
 .theme-lnk:hover { color:var(--accent); }
+@media (max-width:480px){
+  [data-r="footer"] { font-size:10px; gap:8px; }
+  [data-r="footer"] .footer-copyright,
+  [data-r="footer"] #theme-switch { flex:0 0 100%; justify-content:center; text-align:center; font-size:10px; }
+  [data-r="footer"] .theme-lnk,
+  [data-r="footer"] .footer-copyright p { font-size:10px; }
+}
 .lh-174 { line-height:1.74; }
 .lh-165 { line-height:1.65; }
 .lh-17 { line-height:1.7; }

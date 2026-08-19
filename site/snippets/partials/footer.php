@@ -1,5 +1,5 @@
-	<footer class="mt-120 flex items-baseline justify-center flex-wrap spectral f-13 lh-14 ink-light" style="padding-top:8px;gap:26px;">
-		<span class="spectral f-13 lh-14 ink-light"><?= kirbytext($site->copyright()) ?></span>
+	<footer class="mt-120 flex items-baseline justify-center flex-wrap spectral f-13 lh-14 ink-light" style="padding-top:8px;gap:26px;" data-r="footer">
+		<span class="spectral f-13 lh-14 ink-light footer-copyright"><?= kirbytext($site->copyright()) ?></span>
 		<span class="flex items-baseline spectral f-13 lh-14" style="gap:12px" id="theme-switch">
 			<a href="#" class="theme-lnk" data-theme-set="auto">auto</a>
 			<span class="ink-rule2">·</span>
