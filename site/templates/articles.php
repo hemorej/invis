@@ -4,11 +4,12 @@
 <?php
 	$series = $site->page('projects')->children()->listed()->sortBy('published', 'desc');
 	$travels = $site->page('travels')->children()->listed()->sortBy('published', 'desc');
+	$coverImage = $travels->first()->images()->first();
 ?>
 
 <div class="flex items-center flex-wrap gap-52">
 	<div class="flex-1 min-w-300">
-		<img alt="<?= html($travels->first()->title()) ?> series cover" id="cover" class="db w-100" src="<?= html(getPreview($travels->first()->images()->first())) ?>">
+		<img alt="<?= html($travels->first()->title()) ?> series cover" id="cover" class="db w-100 cover-photo" style="aspect-ratio:<?= $coverImage->width() ?>/<?= $coverImage->height() ?>" src="<?= html(getPreview($coverImage)) ?>">
 	</div>
 	<div class="flex flex-wrap min-w-300 gap-40" style="flex:1.35;">
 		<div style="flex:1.3;min-width:180px;">

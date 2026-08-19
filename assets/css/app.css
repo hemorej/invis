@@ -250,3 +250,4 @@ body { background: var(--bg); }
 /* Custom select arrow */
 .tic-select { appearance:none; -webkit-appearance:none; -moz-appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'><path d='M1 1l4.5 4.5L10 1' fill='none' stroke='%23999' stroke-width='1.4'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; }
 .hover-gold:hover { color:var(--accent); }
+.cover-photo { object-fit:contain; }
