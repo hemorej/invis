@@ -79,12 +79,12 @@
 	<?php if($current->isPortrait() && $hasNextPortrait): ?>
 		<div class="mw8 center">
 			<section class="fl w-50 pt4-m pb4-m pr4-l pr2">
-				<div class="img-loader">
+				<div class="img-loader" style="aspect-ratio:<?= $current->width() ?>/<?= $current->height() ?>">
 					<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset('vertical')) ?>">
 				</div>
 			</section>
 			<section class="fr w-50 pt4-m pb4-m pl4-l pl2">
-				<div class="img-loader">
+				<div class="img-loader" style="aspect-ratio:<?= $next->width() ?>/<?= $next->height() ?>">
 					<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($next->srcset('vertical')) ?>">
 				</div>
 			</section>
@@ -103,7 +103,7 @@
 			<?php endif ?>
 		<?php endif ?>
 
-		<div class="img-loader">
+		<div class="img-loader" style="aspect-ratio:<?= $current->width() ?>/<?= $current->height() ?>">
 			<?php if($current->isPortrait() && count(page()->images()) == 1): ?>
 				<img style="max-width: 45%" alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset('vertical')) ?>">
 			<?php elseif($current->isPortrait()): ?>
