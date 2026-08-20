@@ -31,15 +31,6 @@ if( !empty( page()->title() ) ) {
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
 
-    <script>
-    (function(){
-        try {
-            var t = localStorage.getItem('tic-theme');
-            if (t && t !== 'auto') document.documentElement.setAttribute('data-theme', t);
-        } catch (e) {}
-    })();
-    </script>
-
     <meta itemprop="name" content="<?= html( site()->title() ) ?>">
     <meta itemprop="description" content="<?= html( site()->description() ) ?>">
     <meta itemprop="image" content="<?= html( $image ) ?>">
