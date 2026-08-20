@@ -96,11 +96,8 @@ select option { background: #2b2d30; }
 
 /* === New design system === */
 .spectral { font-family:'Spectral', Georgia, serif; }
-.bg-off-white { background-color: var(--bg); }
 body { background: var(--bg); }
 .mw-1040 { max-width: 1040px; }
-.ph-36 { padding-left: 36px; padding-right: 36px; }
-.pt-60 { padding-top: 60px; }
 .hero-main { padding:clamp(132px, 26vh, 300px) 36px 64px; }
 @media (max-height:900px){
 	.hero-main { padding-top:clamp(64px, 10vh, 132px); }
@@ -110,7 +107,6 @@ body { background: var(--bg); }
 .f-18 { font-size: clamp(13px, 9.346px + 0.962vw, 18px); }
 .f-19 { font-size: clamp(14px, 10.346px + 0.962vw, 19px); }
 .f-21 { font-size: clamp(16px, 12.346px + 0.962vw, 21px); }
-.f-22 { font-size: clamp(16px, 11.615px + 1.154vw, 22px); }
 .f-23 { font-size: clamp(17px, 12.615px + 1.154vw, 23px); }
 .nav-lnk { font-family:'Spectral',Georgia,serif; font-size:clamp(13px, 9.346px + 0.962vw, 18px); line-height:1; text-decoration:none; padding-bottom:3px; border-bottom:2px solid transparent; }
 .nav-lnk-on { color:var(--ink2); border-bottom-color:var(--accent); }
@@ -124,36 +120,18 @@ body { background: var(--bg); }
 .lnk-nav:hover { color:var(--accent); }
 .gold-lbl { font-family:'Spectral',Georgia,serif; font-style:italic; font-size:clamp(16px, 11.615px + 1.154vw, 22px); line-height:1; color:var(--accent); display:block; }
 .mb-22 { margin-bottom:22px; }
-.mb-28 { margin-bottom:28px; }
 .mb-34 { margin-bottom:34px; }
 .mb-48 { margin-bottom:48px; }
-.mb-54 { margin-bottom:54px; }
 .mb-96 { margin-bottom:96px; }
 .mt-32 { margin-top:32px; }
-.mt-56 { margin-top:56px; }
 .mt-64 { margin-top:64px; }
 .mt-84 { margin-top:84px; }
 .mt-120 { margin-top:120px; }
-.gap-26 { gap:26px; }
 .gap-28 { gap:28px; }
 .gap-40 { gap:40px; }
-.gap-44 { gap:44px; }
 .gap-52 { gap:52px; }
-.gap-60 { gap:60px; }
 .flex-1 { flex:1; }
-.flex-13 { flex:1.3; }
-.flex-135 { flex:1.35; }
-.min-w-150 { min-width:150px; }
-.min-w-175 { min-width:175px; }
-.min-w-180 { min-width:180px; }
-.min-w-185 { min-width:185px; }
-.min-w-200 { min-width:200px; }
-.min-w-280 { min-width:280px; }
 .min-w-300 { min-width:300px; }
-.mw-520 { max-width:520px; }
-.mw-840 { max-width:840px; }
-.col-2 { column-count:2; column-gap:52px; column-fill:balance; }
-.col-4 { column-count:4; column-gap:44px; }
 .ink-dark { color:var(--ink2); }
 .ink-body { color:var(--ink3); }
 .ink-muted { color:var(--mid); }
@@ -182,7 +160,6 @@ body { background: var(--bg); }
   .site-nav { margin-left:0; }
 }
 .lh-174 { line-height:1.74; }
-.lh-165 { line-height:1.65; }
 .lh-17 { line-height:1.7; }
 .lh-195 { line-height:1.95; }
 .lh-14 { line-height:1.4; }
@@ -194,24 +171,19 @@ body { background: var(--bg); }
 .f-15 { font-size:clamp(11px, 8.077px + 0.769vw, 15px); }
 .f-17 { font-size:clamp(13px, 10.077px + 0.769vw, 17px); }
 .f-20 { font-size:clamp(15px, 11.346px + 0.962vw, 20px); }
-.f-25 { font-size:clamp(18px, 12.885px + 1.346vw, 25px); }
 .f-38 { font-size:clamp(28px, 20.692px + 1.923vw, 38px); }
 .lh-1 { line-height:1; }
 .lh-108 { line-height:1.08; }
 .lh-13 { line-height:1.3; }
 .lh-16 { line-height:1.6; }
 .lh-172 { line-height:1.72; }
-.lh-185 { line-height:1.85; }
 .ls-tight { letter-spacing:-0.01em; }
 .gold { color:var(--accent); }
 .gap-14 { gap:14px; }
-.gap-16 { gap:16px; }
 .gap-24 { gap:24px; }
-.gap-32 { gap:32px; }
 .gap-72 { gap:72px; }
 .gap-80 { gap:80px; }
 .mt-14 { margin-top:14px; }
-.mt-22 { margin-top:22px; }
 .mt-38 { margin-top:38px; }
 .mt-40 { margin-top:40px; }
 .mt-44 { margin-top:44px; }
@@ -223,13 +195,10 @@ body { background: var(--bg); }
 .mb-26 { margin-bottom:26px; }
 .mb-30 { margin-bottom:30px; }
 .mb-32 { margin-bottom:32px; }
-.mb-38 { margin-bottom:38px; }
 .mb-64 { margin-bottom:64px; }
-.pt-22 { padding-top:22px; }
 .pt-30 { padding-top:30px; }
 .pt-32 { padding-top:32px; }
 .pb-22 { padding-bottom:22px; }
-.mw-700 { max-width:700px; }
 /* Product description */
 .prod-desc p { font:400 clamp(13px, 9.346px + 0.962vw, 18px)/1.72 'Spectral',serif; color:var(--body); margin:0 0 30px; max-width:50ch; }
 .prod-attrs  { display:grid; grid-template-columns:104px 1fr; row-gap:15px; column-gap:24px; max-width:50ch; }
