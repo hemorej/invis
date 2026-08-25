@@ -191,6 +191,11 @@ body { background: var(--bg); }
 .pb-22 { padding-bottom:22px; }
 /* Product description */
 .prod-desc p { font:400 clamp(13px, 9.346px + 0.962vw, 18px)/1.72 'Spectral',serif; color:var(--body); margin:0 0 30px; max-width:50ch; }
+/* Article intro text */
+.article-desc p { color:#000; }
+@media (prefers-color-scheme: dark){
+  .article-desc p { color:var(--ink1); }
+}
 .prod-attrs  { display:grid; grid-template-columns:104px 1fr; row-gap:15px; column-gap:24px; max-width:50ch; }
 .prod-attr-lbl { font:italic 400 clamp(12px, 9.077px + 0.769vw, 16px)/1.5 'Spectral',serif; color:var(--accent); }
 .prod-attr-val { font:400 clamp(13px, 10.077px + 0.769vw, 17px)/1.5 'Spectral',serif; color:var(--ink4); }

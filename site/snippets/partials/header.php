@@ -10,14 +10,11 @@ if( isset( $meta ) ) {
 $metaDesc = isset($pageDescription) ? $pageDescription : site()->description()->toString();
 
 $title = '';
-if( !empty( page()->title() ) ) {
-    if( page()->title() == 'journal' ) {
-        $title = page()->title();
-    } else if( page()->title() != page()->uid() ) {
-        $title = page()->title();
-    } else if( site()->page()->title() == 'cart' ) {
-        $title = site()->page()->title();
-    }
+if( page()->parent() && page()->parent()->title() == 'journal' ) {
+    $published = page()->published()->toString();
+    $title = !empty( $published ) ? $published : page()->title();
+} else if( !empty( page()->title() ) ) {
+    $title = page()->title();
 } else {
     $title = page()->published()->toString();
 }

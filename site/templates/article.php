@@ -63,7 +63,7 @@
 	<?php endif ?>
 </div>
 
-<?php echo kirbytext(page()->text()) ?>
+<div class="article-desc"><?php echo kirbytext(page()->text()) ?></div>
 <span class="db mb3"></span>
 
 <?php $skip = false ?>
