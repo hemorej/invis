@@ -11,12 +11,16 @@ fields:
     type: date
     default: today
     required: true
+  thumbnail:
+    label: Thumbnail
+    type: files
+    query: page.images
+    layout: cards
+    multiple: false
+    store: id
+    help: Preview image shown in the newsletter archive list
   text:
     label: Content
     type: textarea
     size: large
-    buttons:
-      - bold
-      - italic
-      - email
-      - link
+    buttons: false
