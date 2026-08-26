@@ -9,6 +9,7 @@ columns:
           - about
           - articles
           - journal
+          - newsletter
           - store
 
   left:
