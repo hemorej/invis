@@ -5,8 +5,10 @@ require_once __DIR__ . '/src/Design.php';
 require_once __DIR__ . '/src/Newsletter.php';
 
 use Newsletter\Newsletter;
+use Kirby\Exception\Exception as KirbyException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
+use Kirby\Toolkit\Escape;
 use Kirby\Uuid\Uuid;
 
 /**
@@ -26,76 +28,47 @@ function newsletterEditionForUuid( string $uuid )
 	return $edition;
 }
 
-/**
- * Renders a plain confirmation page before actually sending an edition to
- * every confirmed subscriber. Deliberately plain server-rendered HTML (no
- * Panel Vue component) since the project runs with panel.vue.compiler
- * disabled and has no Panel JS build step.
- *
- * @param \Kirby\Cms\Page $edition
- * @param int $count
- * @return string
- */
-function newsletterSendConfirmView( $edition, int $count )
-{
-	$title = htmlspecialchars( $edition->title()->value(), ENT_QUOTES );
-	$action = htmlspecialchars( url( 'newsletter/panel/send/' . $edition->uuid()->id() ), ENT_QUOTES );
-	$csrf = htmlspecialchars( csrf(), ENT_QUOTES );
-
-	return <<<HTML
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Send newsletter edition</title>
-<style>
-	body { font-family: -apple-system, Helvetica, Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 20px; color: #222; }
-	button { margin-top: 12px; padding: 10px 18px; cursor: pointer; }
-	p.count { color: #666; font-size: 14px; }
-</style>
-</head>
-<body>
-	<h1>Send "{$title}"</h1>
-	<p class="count">This will email {$count} confirmed subscriber(s). This can't be undone.</p>
-	<form method="post" action="{$action}">
-		<input type="hidden" name="csrf" value="{$csrf}">
-		<button type="submit">Send now</button>
-	</form>
-</body>
-</html>
-HTML;
-}
-
-/**
- * Renders the result of a send attempt.
- *
- * @param string $message
- * @return string
- */
-function newsletterSendResultView( string $message )
-{
-	$messageAttr = htmlspecialchars( $message, ENT_QUOTES );
-
-	return <<<HTML
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Newsletter send</title>
-<style>
-	body { font-family: -apple-system, Helvetica, Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 20px; color: #222; }
-</style>
-</head>
-<body>
-	<p>{$messageAttr}</p>
-</body>
-</html>
-HTML;
-}
-
 Kirby::plugin( 'newsletter/newsletter', [
 	'options' => [
 		'cache.backend' => true,
+	],
+	'areas' => [
+		'newsletter' => function () {
+			return [
+				'dialogs' => [
+					'newsletter.send' => [
+						'pattern' => 'newsletter/send/(:any)',
+						'load' => function ( $uuid ) {
+							$edition = newsletterEditionForUuid( $uuid );
+							$count = count( ( new Newsletter() )->confirmedEmails() );
+
+							return [
+								'component' => 'k-remove-dialog',
+								'props' => [
+									'text' => 'Send "' . Escape::html( $edition->title()->value() ) . '" to '
+										. $count . ' confirmed subscriber(s)? This can\'t be undone.',
+									'submitButton' => [
+										'icon' => 'email',
+										'text' => 'Send now',
+										'theme' => 'positive',
+									],
+								]
+							];
+						},
+						'submit' => function ( $uuid ) {
+							$edition = newsletterEditionForUuid( $uuid );
+							$result = ( new Newsletter() )->sendEdition( $edition );
+
+							return match ( $result['status'] ) {
+								'sent' => ['message' => "Sent to {$result['count']} confirmed subscriber(s)."],
+								'no_subscribers' => throw new KirbyException( 'Nothing sent, there are no confirmed subscribers.' ),
+								'mail_error' => throw new KirbyException( 'Something went wrong sending the newsletter. Check the logs for details.' ),
+							};
+						}
+					]
+				]
+			];
+		}
 	],
 	'routes' => [
 		[
@@ -218,40 +191,6 @@ Kirby::plugin( 'newsletter/newsletter', [
 					] );
 
 				return new Response( $html, 'text/html' );
-			}
-		],
-		[
-			'pattern' => 'newsletter/panel/send/(:any)',
-			'method' => 'GET',
-			'action' => function ( $uuid ) {
-				if( !kirby()->user() )
-					throw new PermissionException( 'You must be logged in to view this page' );
-
-				$edition = newsletterEditionForUuid( $uuid );
-				$count = count( ( new Newsletter() )->confirmedEmails() );
-				return new Response( newsletterSendConfirmView( $edition, $count ), 'text/html' );
-			}
-		],
-		[
-			'pattern' => 'newsletter/panel/send/(:any)',
-			'method' => 'POST',
-			'action' => function ( $uuid ) {
-				if( !kirby()->user() )
-					throw new PermissionException( 'You must be logged in to do this' );
-
-				if( csrf( get( 'csrf' ) ) !== true )
-					throw new PermissionException( 'Invalid CSRF token' );
-
-				$edition = newsletterEditionForUuid( $uuid );
-				$result = ( new Newsletter() )->sendEdition( $edition );
-
-				$messages = [
-					'sent' => "Sent to {$result['count']} confirmed subscriber(s).",
-					'no_subscribers' => 'Nothing sent, there are no confirmed subscribers.',
-					'mail_error' => 'Something went wrong sending the newsletter. Check the logs for details.',
-				];
-
-				return new Response( newsletterSendResultView( $messages[$result['status']] ), 'text/html' );
 			}
 		]
 	]

@@ -10,7 +10,7 @@ buttons:
   send:
     icon: email
     text: Send to subscribers
-    link: "/newsletter/panel/send/{{ page.uuid }}"
+    dialog: "newsletter/send/{{ page.uuid }}"
 fields:
   headline:
     label: Headline

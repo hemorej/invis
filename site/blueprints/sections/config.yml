@@ -20,3 +20,7 @@ fields:
     label: Terms and Conditions
     help: terms text for store checkout
     type:  textarea
+  address:
+    label: Newsletter Address
+    help: postal address shown in the newsletter email footer (CAN-SPAM requirement)
+    type:  textarea

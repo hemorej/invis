@@ -37,11 +37,14 @@ class Design
 	const GUTTER = 40;
 
 	/**
+	 * Postal address shown in the footer, sourced from the site's Address
+	 * field (Panel > Site > Config) so it stays out of version control.
+	 *
 	 * @return string
 	 */
 	public static function address()
 	{
-		return 'Jerome Arfouche — black and white 35mm film photography.<br>1245 Rue Sainte-Catherine O, Montreal, QC H3G 1P1, Canada';
+		return nl2br( self::esc( site()->address() ) );
 	}
 
 	/**

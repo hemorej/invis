@@ -15,13 +15,15 @@
 
 <?php if($editions->count() === 0): ?>
 	<div class="mb-34">
-		<span class="spectral f-23 fw5 ink-dark ttl">Newsletter archive</span>
+		<span class="spectral f-23 fw5 ink-dark ttl">
+			<a class="lnk-nav spectral f-19 ttl" href="https://invis.ddev.site/newsletter/editions">Newsletter archive</a>
+		</span>
 	</div>
 	<p class="spectral f-18 lh-17 ink-copy">No editions published yet.</p>
 <?php else: ?>
 	<div class="flex items-center flex-wrap gap-52">
 		<div class="flex-1 min-w-300 list-pair" style="text-align:right;">
-			<span class="gold-lbl mb-22">— serial</span>
+			<span class="gold-lbl mb-22">— letters</span>
 			<?php foreach($editions as $edition): ?>
 				<?php $preview = $edition->thumbnail()->toFile() ?: $edition->images()->first() ?>
 				<a data-preview="<?= html($preview ? getPreview($preview) : '') ?>" data-title="<?= html($edition->title()) ?>" class="cover lnk-content spectral f-18 lh-174 ttl db" style="text-align:right;" href="<?= html($edition->url()) ?>">

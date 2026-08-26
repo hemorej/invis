@@ -6,7 +6,10 @@
 <?php snippet('partials/menu') ?>
 
 <div class="mb-34">
-	<span class="spectral f-23 fw5 ink-dark ttl"><?= html(page()->parent()->title()) ?></span>
+	<span class="spectral f-23 fw5 ink-dark ttl">
+		<a class="lnk-nav spectral f-23 ttl" 
+			href="https://invis.ddev.site/newsletter/editions"><?= html(page()->parent()->title()) ?></a>
+		</span>
 	<span class="spectral f-23 ink-subtle ttl">&nbsp;<?= html(page()->published()->toDate('F j, Y')) ?> — <?= html(page()->title()) ?></span>
 </div>
 
