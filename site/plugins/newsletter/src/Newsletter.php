@@ -142,7 +142,8 @@ class Newsletter
 				'preview' => 'One more step to confirm your subscription to the newsletter.',
 				'headline' => 'Thanks for signing up! Click the button below to confirm your email address and start receiving the newsletter.',
 				'confirmUrl' => $confirmUrl,
-			]
+			],
+			kirby()->option( 'newsletter_from_address' )
 		);
 	}
 
@@ -225,7 +226,8 @@ class Newsletter
 				[
 					'title' => $edition->title()->value(),
 					'content' => $edition->text()->value(),
-				]
+				],
+				kirby()->option( 'newsletter_from_address' )
 			);
 		} catch( \Throwable $t ) {
 			$this->logger->error( 'newsletter edition send failed', ['edition' => $edition->id(), 'reason' => $t->getMessage()] );

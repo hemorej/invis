@@ -38,13 +38,14 @@ class Mailbun
 	/**
 	 * Sends an HTML email rendered from a Kirby email template.
 	 *
-	 * @param string $recipient Recipient email address
-	 * @param string $subject   Email subject line
-	 * @param string $template  Template name under site/templates/emails/
-	 * @param array  $data      Variables passed to the template
+	 * @param string      $recipient Recipient email address
+	 * @param string      $subject   Email subject line
+	 * @param string      $template  Template name under site/templates/emails/
+	 * @param array       $data      Variables passed to the template
+	 * @param string|null $from      From header override; defaults to the from_address option
 	 * @return void
 	 */
-	public function send($recipient, $subject, $template, $data)
+	public function send($recipient, $subject, $template, $data, $from = null)
 	{
 		$body = App::instance()->template('emails/' . $template);
 
@@ -56,7 +57,7 @@ class Mailbun
 		try {
 			$this->mailgun->messages()->send(kirby()->option('mailgun_domain'), [
 		      'to'      => $recipient,
-		      'from'    => kirby()->option('from_address'),
+		      'from'    => $from ?? kirby()->option('from_address'),
 		      'subject' => $subject,
 		      'h:Reply-To' => kirby()->option('reply-to_address'),
 		      'o:require-tls' => 'true',
@@ -77,13 +78,14 @@ class Mailbun
 	 * and never sees the other addresses on the send — no BCC needed.
 	 * Chunks the list into groups of 1000, Mailgun's limit per API call.
 	 *
-	 * @param string[] $recipients
-	 * @param string   $subject
-	 * @param string   $template Template name under site/templates/emails/
-	 * @param array    $data     Variables passed to the template
+	 * @param string[]    $recipients
+	 * @param string      $subject
+	 * @param string      $template Template name under site/templates/emails/
+	 * @param array       $data     Variables passed to the template
+	 * @param string|null $from     From header override; defaults to the from_address option
 	 * @return int Number of recipients the email was sent to
 	 */
-	public function sendBulk($recipients, $subject, $template, $data)
+	public function sendBulk($recipients, $subject, $template, $data, $from = null)
 	{
 		$body = App::instance()->template('emails/' . $template);
 
@@ -100,7 +102,7 @@ class Mailbun
 			try {
 				$this->mailgun->messages()->send($domain, [
 			      'to'      => $chunk,
-			      'from'    => kirby()->option('from_address'),
+			      'from'    => $from ?? kirby()->option('from_address'),
 			      'subject' => $subject,
 			      'h:Reply-To' => kirby()->option('reply-to_address'),
 			      'o:require-tls' => 'true',
