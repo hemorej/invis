@@ -1,0 +1,22 @@
+title: Newsletter Edition
+preset: page
+pages: false
+fields:
+  title:
+    label: Title
+    type: text
+    required: true
+  published:
+    label: Published
+    type: date
+    default: today
+    required: true
+  text:
+    label: Content
+    type: textarea
+    size: large
+    buttons:
+      - bold
+      - italic
+      - email
+      - link

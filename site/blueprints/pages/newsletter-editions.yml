@@ -1,0 +1,20 @@
+title: Newsletter Archive
+icon: book
+
+columns:
+  - width: 1/2
+    sections:
+      drafts:
+        type: pages
+        headline: Drafts
+        status: draft
+        create:
+          - newsletter-edition
+
+  - width: 1/2
+    sections:
+      listed:
+        type: pages
+        headline: Published
+        status: listed
+        flip: true

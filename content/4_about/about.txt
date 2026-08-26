@@ -188,6 +188,10 @@ Contact:
   link: ""
   text: email
   email: jerome@the-invisible-cities.com
+-
+  link: /newsletter
+  text: newsletter
+  email: ""
 
 ----
 

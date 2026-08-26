@@ -1,0 +1,14 @@
+{
+    "name": "newsletter/newsletter",
+    "description": "Newsletter signup, confirmation, unsubscribe and archive",
+    "type": "kirby-plugin",
+    "license": "MIT",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Jerome Arfouche",
+            "email": "hello@jerome-arfouche.com",
+            "homepage": "https://jerome-arfouche.com"
+        }
+    ]
+}

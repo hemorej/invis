@@ -1,0 +1,26 @@
+title: Subscribers
+icon: email
+buttons:
+  emails:
+    icon: email
+    text: Copy subscriber emails
+    link: "/newsletter/panel/emails"
+
+columns:
+  - width: 1/2
+    sections:
+      pending:
+        type: pages
+        headline: Pending confirmation
+        create: false
+        query: page.drafts.filterBy('substatus', '==', 'pending')
+        template: newsletter-subscriber
+
+  - width: 1/2
+    sections:
+      confirmed:
+        type: pages
+        headline: Confirmed
+        create: false
+        query: page.drafts.filterBy('substatus', '==', 'confirmed')
+        template: newsletter-subscriber

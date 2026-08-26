@@ -1,0 +1,30 @@
+title: Subscriber
+type: page
+pages: false
+files: false
+options:
+  update: false
+  preview: false
+  changeStatus: false
+  duplicate: false
+  changeTitle: false
+fields:
+  substatus:
+    label: status
+    type: select
+    width: 1/3
+    disabled: true
+    options:
+      pending: pending
+      confirmed: confirmed
+  created:
+    label: created
+    type: text
+    width: 1/3
+    disabled: true
+  email_hmac:
+    label: lookup digest
+    type: text
+    width: 1/3
+    disabled: true
+    help: Not the email address — a keyed digest used only to detect duplicate signups.

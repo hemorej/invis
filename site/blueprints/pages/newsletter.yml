@@ -1,0 +1,22 @@
+title: Newsletter
+icon: email
+
+fields:
+  intro:
+    label: Signup intro text
+    type: textarea
+    help: Shown above the signup form on the public newsletter page.
+  line:
+    type: line
+  editionsLink:
+    label: Archive
+    type: info
+    width: 1/2
+    text: |
+      <a href="/panel/pages/newsletter+editions">manage newsletter editions</a><br />
+  subscribersLink:
+    label: Subscribers
+    type: info
+    width: 1/2
+    text: |
+      <a href="/panel/pages/newsletter+subscribers">manage subscribers &amp; copy emails</a><br />
