@@ -1,0 +1,28 @@
+name: Print
+icon: cart
+fields:
+  product:
+    label: Print
+    type: pages
+    query: site.find("prints").children.listed
+    multiple: false
+    help: Optional. Pulls the title and thumbnail from the print page.
+  image:
+    label: Image override
+    type: files
+    query: page.images
+    layout: cards
+    multiple: false
+    store: id
+    help: Only needed if you are not linking a print above.
+  title:
+    label: Title override
+    type: text
+  meta:
+    label: Details
+    type: text
+    help: "e.g. Silver gelatin, hand-printed. Edition of 15, 30 × 40 cm."
+  price:
+    label: Price
+    type: text
+    help: "e.g. CAD 240"

@@ -1,0 +1,22 @@
+name: Image
+icon: image
+fields:
+  image:
+    label: Image
+    type: files
+    query: page.images
+    layout: cards
+    multiple: false
+    store: id
+    required: true
+  caption:
+    label: Caption
+    type: text
+  height:
+    label: Height
+    type: number
+    default: 347
+    min: 100
+    max: 900
+    step: 1
+    help: Width is always 520px. Height sets the crop.

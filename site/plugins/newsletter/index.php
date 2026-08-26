@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/src/Crypto.php';
+require_once __DIR__ . '/src/Design.php';
 require_once __DIR__ . '/src/Newsletter.php';
 
 use Newsletter\Newsletter;
@@ -195,6 +196,28 @@ Kirby::plugin( 'newsletter/newsletter', [
 				// Always show the same message, whether or not the email was found, to avoid leaking subscriber status.
 				kirby()->session()->set( 'notice', ['type' => 'success', 'message' => "You've been unsubscribed."] );
 				return Response::redirect( url( 'newsletter' ) );
+			}
+		],
+		[
+			'pattern' => 'newsletter/panel/preview/(:any)',
+			'method' => 'GET',
+			'action' => function ( $uuid ) {
+				if( !kirby()->user() )
+					throw new PermissionException( 'You must be logged in to view this page' );
+
+				$edition = newsletterEditionForUuid( $uuid );
+
+				$html = \Kirby\Cms\App::instance()
+					->template( 'emails/newsletter' )
+					->render( [
+						'edition' => $edition,
+						'kirby' => kirby(),
+						'site' => kirby()->site(),
+						'pages' => [],
+						'page' => $edition,
+					] );
+
+				return new Response( $html, 'text/html' );
 			}
 		],
 		[

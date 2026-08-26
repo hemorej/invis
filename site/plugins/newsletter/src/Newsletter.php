@@ -224,8 +224,7 @@ class Newsletter
 				$edition->title()->value(),
 				'newsletter',
 				[
-					'title' => $edition->title()->value(),
-					'content' => $edition->text()->value(),
+					'edition' => $edition,
 				],
 				kirby()->option( 'newsletter_from_address' )
 			);

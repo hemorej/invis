@@ -10,7 +10,7 @@
 	<span class="spectral f-23 ink-subtle ttl">&nbsp;<?= html(page()->published()->toDate('F j, Y')) ?> — <?= html(page()->title()) ?></span>
 </div>
 
-<div class="article-desc"><?= page()->text()->value() ?></div>
+<?php snippet('emails/newsletter-body', ['edition' => page()]) ?>
 
 <nav class="flex items-baseline mt-32" style="justify-content:space-between;">
 	<div>

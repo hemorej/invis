@@ -1,0 +1,24 @@
+name: Paragraph
+icon: text
+preview: text
+fields:
+  text:
+    label: Text
+    type: writer
+    inline: true
+    marks:
+      - bold
+      - italic
+      - link
+  lead:
+    label: Lead-in line
+    type: text
+    help: Optional bold line above the paragraph, for a titled note.
+  tight:
+    label: Spacing
+    type: toggle
+    text:
+      - normal
+      - tight
+    default: false
+    help: Tight when this paragraph follows another block closely.

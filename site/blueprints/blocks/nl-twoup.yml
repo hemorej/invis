@@ -1,0 +1,21 @@
+name: Image pair
+icon: grid
+fields:
+  images:
+    label: Two images
+    type: files
+    query: page.images
+    layout: cards
+    multiple: true
+    max: 2
+    min: 2
+    store: id
+    required: true
+  height:
+    label: Height
+    type: number
+    default: 312
+    min: 100
+    max: 900
+    step: 1
+    help: Each column is 250px wide.

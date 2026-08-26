@@ -1,0 +1,21 @@
+name: Call to action
+icon: url
+preview: fields
+wysiwyg: true
+fields:
+  label:
+    label: Label
+    type: text
+    required: true
+  href:
+    label: Links to
+    type: link
+    required: true
+  variant:
+    label: Style
+    type: select
+    default: link
+    required: true
+    options:
+      link: Underlined link
+      button: Outlined button

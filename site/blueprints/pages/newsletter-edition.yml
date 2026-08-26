@@ -2,31 +2,58 @@ title: Newsletter Edition
 preset: page
 pages: false
 buttons:
+  preview:
+    icon: preview
+    text: Preview email
+    link: "/newsletter/panel/preview/{{ page.uuid }}"
+    target: _blank
   send:
     icon: email
     text: Send to subscribers
     link: "/newsletter/panel/send/{{ page.uuid }}"
 fields:
-  title:
-    label: Title
+  headline:
+    label: Headline
     type: text
     required: true
-  published:
-    label: Published
-    type: date
-    default: today
-    required: true
-  thumbnail:
-    label: Thumbnail
+    help: The big serif line at the top of the letter.
+  blocks:
+    label: Letter
+    type: blocks
+    fieldsets:
+      - nl-text
+      - nl-divider
+      - nl-image
+      - nl-twoup
+      - nl-print
+      - nl-cta
+sidebar:
+  meta:
+    type: fields
+    fields:
+      title:
+        label: Edition
+        type: text
+        required: true
+        help: "Shown top-right of the email and in the archive, e.g. Edition 07"
+      published:
+        label: Published
+        type: date
+        default: today
+        required: true
+        help: Sets the italic date line.
+      preheader:
+        label: Preheader
+        type: text
+        help: First line shown in the inbox list, before the email is opened.
+      thumbnail:
+        label: Thumbnail
+        type: files
+        query: page.images
+        layout: cards
+        multiple: false
+        store: id
+        help: Preview image shown in the newsletter archive list
+  files:
     type: files
-    query: page.images
-    layout: cards
-    multiple: false
-    store: id
-    help: Preview image shown in the newsletter archive list
-  text:
-    label: Content
-    type: code-editor
-    language: html
-    size: huge
-    lineNumbers: true
+    layout: list
