@@ -1,8 +1,9 @@
 <?php snippet('partials/header') ?>
 <?php snippet('partials/menu') ?>
 
-<div class="mb-34">
+<div class="mb-22">
 	<span class="spectral f-23 fw5 ink-dark ttl">Newsletter</span>
+	<div class="nl-rule" style="max-width:1040px"></div>
 </div>
 
 <?php if(!empty($notice)): ?>
@@ -11,44 +12,53 @@
 	</p>
 <?php endif ?>
 
-<div class="flex flex-wrap" style="gap:64px;">
-	<div style="flex:1;min-width:300px;max-width:56ch">
+<div class="nl-grid mt-32">
+
+	<!-- row 1: eyebrows -->
+	<span class="gold-lbl">— subscribe</span>
+	<span class="gold-lbl">— unsubscribe</span>
+
+	<!-- row 2: lede copy -->
+	<div class="spectral nl-lede">
 		<?php if(!empty(page()->intro()->value())): ?>
-			<p class="spectral f-18 lh-17 ink-copy mb-32"><?= kirbytext(page()->intro()) ?></p>
+			<?= kirbytext(page()->intro()) ?>
+		<?php else: ?>
+			Occasional notes on new work, prints and journal entries. No spam, unsubscribe any time.
 		<?php endif ?>
-
-		<form action="<?= html(url('newsletter/subscribe')) ?>" method="post">
-			<input type="hidden" name="csrf" value="<?= csrf() ?>">
-			<div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
-				<label for="nl-website">Leave this field empty</label>
-				<input type="text" id="nl-website" name="website" tabindex="-1" autocomplete="off">
-			</div>
-
-			<label class="spectral f-15 lh-1 ink-subtle db mb2" for="nl-email">email</label>
-			<div class="flex flex-wrap" style="gap:12px;">
-				<input id="nl-email" name="email" type="email" required placeholder="you@example.com" class="cart-input spectral" style="flex:1;min-width:220px;">
-				<button type="submit" class="btn-cart spectral">subscribe</button>
-			</div>
-		</form>
-
-		<a class="lnk-muted spectral f-16 db mt-28" href="<?= html(url('newsletter/editions')) ?>">see what's already been sent &raquo;</a>
+	</div>
+	<div class="spectral nl-lede">
+		Already on the list and want off? Enter the address you subscribed with.
 	</div>
 
-	<div style="flex:0 0 260px;min-width:220px;">
-		<span class="gold-lbl mb-22">— unsubscribe</span>
-		<p class="spectral f-15 lh-17 ink-subtle mb-16">Already on the list and want off? Enter your email below.</p>
-		<form action="<?= html(url('newsletter/unsubscribe')) ?>" method="post">
-			<input type="hidden" name="csrf" value="<?= csrf() ?>">
-			<div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
-				<label for="nl-unsub-website">Leave this field empty</label>
-				<input type="text" id="nl-unsub-website" name="website" tabindex="-1" autocomplete="off">
-			</div>
+	<!-- row 3: field + button -->
+	<form action="<?= html(url('newsletter/subscribe')) ?>" method="post" class="nl-field-row">
+		<input type="hidden" name="csrf" value="<?= csrf() ?>">
+		<div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
+			<label for="nl-website">Leave this field empty</label>
+			<input type="text" id="nl-website" name="website" tabindex="-1" autocomplete="off">
+		</div>
+		<label class="visually-hidden" for="nl-email">email</label>
+		<input id="nl-email" name="email" type="email" required placeholder="you@example.com" class="nl-input spectral">
+		<button type="submit" class="nl-btn nl-btn-primary spectral">subscribe</button>
+	</form>
 
-			<label class="spectral f-15 lh-1 ink-subtle db mb2" for="nl-unsub-email">email</label>
-			<input id="nl-unsub-email" name="email" type="email" required placeholder="you@example.com" class="cart-input spectral db mb-16">
-			<button type="submit" class="btn-cart spectral">unsubscribe</button>
-		</form>
-	</div>
+	<form action="<?= html(url('newsletter/unsubscribe')) ?>" method="post" class="nl-field-row">
+		<input type="hidden" name="csrf" value="<?= csrf() ?>">
+		<div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
+			<label for="nl-unsub-website">Leave this field empty</label>
+			<input type="text" id="nl-unsub-website" name="website" tabindex="-1" autocomplete="off">
+		</div>
+		<label class="visually-hidden" for="nl-unsub-email">email</label>
+		<input id="nl-unsub-email" name="email" type="email" required placeholder="you@example.com" class="nl-input spectral">
+		<button type="submit" class="nl-btn nl-btn-secondary spectral">unsubscribe</button>
+	</form>
+
+	<!-- row 4: notes -->
+	<p class="spectral nl-note">
+		Roughly one edition a month.
+		<a class="lnk-muted" href="<?= html(url('newsletter/editions')) ?>">see what's already been sent &raquo;</a>
+	</p>
+
 </div>
 
 <?php snippet('partials/footer') ?>

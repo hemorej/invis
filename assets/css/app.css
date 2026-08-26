@@ -257,3 +257,71 @@ body { background: var(--bg); }
 @media (prefers-reduced-motion:reduce) {
   .img-loader::before { animation:none; }
 }
+
+/* Newsletter page — two-column subscribe/unsubscribe body laid out row-by-row
+   so the eyebrow / paragraph / field / note rows align across columns
+   regardless of copy length. Children must be emitted in row order:
+   L1 R1 L2 R2 L3 R3 L4 R4. */
+.nl-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 64px;
+  row-gap: 0;
+  align-items: start;
+  max-width: 1040px;
+}
+
+/* Compact field: ~42px tall instead of the 50px+ .cart-input */
+.nl-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  padding: 10px 13px;
+  font-family: 'Spectral', Georgia, serif;
+  font-size: 16px;
+  line-height: 1.25;
+  color: var(--ink2);
+  background: var(--surface);
+}
+.nl-input:focus { outline: none; border-color: var(--accent); }
+.nl-input::placeholder { color: var(--faint); }
+
+/* Buttons sit on the field row, so no .btn-cart bottom margin */
+.nl-btn {
+  font-family: 'Spectral', Georgia, serif;
+  font-size: 16px;
+  line-height: 1.25;
+  padding: 10px 22px;
+  border: 1px solid;
+  cursor: pointer;
+  white-space: nowrap;
+  margin: 0;
+}
+.nl-btn-primary { background: var(--accent); border-color: var(--accent); color: var(--ink2); }
+.nl-btn-primary:hover { background: #f0ac00; border-color: #f0ac00; }
+.nl-btn-secondary { background: var(--surface); border-color: var(--border); color: var(--body); }
+.nl-btn-secondary:hover { border-color: var(--dim); color: var(--ink2); }
+
+.nl-field-row { display: flex; gap: 10px; align-items: stretch; margin-top: 22px; }
+.nl-field-row .nl-input { flex: 1; min-width: 0; }
+.nl-note { margin: 12px 0 0 0; font-size: 14px; line-height: 1.6; color: var(--dim); }
+.nl-lede { margin: 14px 0 0 0; font-size: 16px; line-height: 1.7; color: var(--ink3); text-wrap: pretty; }
+.nl-lede p { margin: 0; }
+.nl-rule { height: 1px; background: var(--rule); margin-top: 20px; }
+
+@media (max-width: 760px) {
+  .nl-grid { grid-template-columns: 1fr; column-gap: 0; }
+  .nl-grid > *:nth-child(1) { order: 1; }
+  .nl-grid > *:nth-child(3) { order: 2; }
+  .nl-grid > *:nth-child(5) { order: 3; }
+  .nl-grid > *:nth-child(7) { order: 4; }
+  .nl-grid > *:nth-child(2) { order: 5; margin-top: 48px; }
+  .nl-grid > *:nth-child(4) { order: 6; }
+  .nl-grid > *:nth-child(6) { order: 7; }
+  .nl-grid > *:nth-child(8) { order: 8; }
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px;
+  padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
