@@ -41,7 +41,10 @@
 
 <div id="prod">
     <div class="mb-48">
-        <span class="spectral f-23 fw5 ink-dark ttl"><?= html($page->parent()->title()) ?></span>
+        <span class="spectral f-23 fw5 ink-dark ttl">
+            <a class="lnk-nav spectral f-23 ttl" 
+                href="<?= page()->parent()->url() ?>"><?= html(page()->parent()->title()) ?></a>
+        </span>
         <span class="spectral f-23 ink-light">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
         <span class="spectral f-23 ink-subtle ttl"><?= html($page->title()) ?></span>
     </div>
