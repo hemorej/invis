@@ -187,7 +187,7 @@ class Newsletter
 	}
 
 	/**
-	 * Decrypts and returns every confirmed subscriber's email, for pasting into a manual BCC send.
+	 * Decrypts and returns every confirmed subscriber's email.
 	 *
 	 * @return string[]
 	 * @throws \Exception
@@ -200,5 +200,39 @@ class Newsletter
 		}
 
 		return $emails;
+	}
+
+	/**
+	 * Sends a newsletter edition's content to every confirmed subscriber.
+	 *
+	 * @param Page $edition
+	 * @return array ['status' => 'sent'|'no_subscribers'|'mail_error', 'count' => int]
+	 */
+	public function sendEdition( Page $edition )
+	{
+		$emails = $this->confirmedEmails();
+
+		if( empty( $emails ) ) {
+			$this->logger->info( 'newsletter edition send skipped, no confirmed subscribers', ['edition' => $edition->id()] );
+			return ['status' => 'no_subscribers', 'count' => 0];
+		}
+
+		try {
+			$sent = ( new Mailbun() )->sendBulk(
+				$emails,
+				$edition->title()->value(),
+				'newsletter',
+				[
+					'title' => $edition->title()->value(),
+					'content' => $edition->text()->value(),
+				]
+			);
+		} catch( \Throwable $t ) {
+			$this->logger->error( 'newsletter edition send failed', ['edition' => $edition->id(), 'reason' => $t->getMessage()] );
+			return ['status' => 'mail_error', 'count' => 0];
+		}
+
+		$this->logger->info( 'newsletter edition sent', ['edition' => $edition->id(), 'count' => $sent] );
+		return ['status' => 'sent', 'count' => $sent];
 	}
 }

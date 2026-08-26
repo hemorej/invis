@@ -70,4 +70,54 @@ class Mailbun
 
 		$this->logger->info('email sent', ['recipient' => maskEmail($recipient), 'subject' => $subject, 'template' => $template]);
 	}
+
+	/**
+	 * Sends the same HTML email to many recipients via Mailgun's batch
+	 * sending (recipient-variables), so each recipient gets their own copy
+	 * and never sees the other addresses on the send — no BCC needed.
+	 * Chunks the list into groups of 1000, Mailgun's limit per API call.
+	 *
+	 * @param string[] $recipients
+	 * @param string   $subject
+	 * @param string   $template Template name under site/templates/emails/
+	 * @param array    $data     Variables passed to the template
+	 * @return int Number of recipients the email was sent to
+	 */
+	public function sendBulk($recipients, $subject, $template, $data)
+	{
+		$body = App::instance()->template('emails/' . $template);
+
+		$data['kirby'] = kirby();
+		$data['site'] = kirby()->site();
+		$data['pages'] = [];
+		$data['page'] = kirby()->page();
+
+		$html = $body->render($data);
+		$domain = kirby()->option('mailgun_domain');
+		$sent = 0;
+
+		foreach (array_chunk($recipients, 1000) as $chunk) {
+			try {
+				$this->mailgun->messages()->send($domain, [
+			      'to'      => $chunk,
+			      'from'    => kirby()->option('from_address'),
+			      'subject' => $subject,
+			      'h:Reply-To' => kirby()->option('reply-to_address'),
+			      'o:require-tls' => 'true',
+			      'text' => $subject,
+			      'html' => $html,
+			      'recipient-variables' => json_encode(array_fill_keys($chunk, new \stdClass()), JSON_FORCE_OBJECT),
+				]);
+			} catch( \Throwable $t ) {
+				$this->logger->error('bulk email send failed', ['recipients' => count($chunk), 'subject' => $subject, 'template' => $template, 'reason' => $t->getMessage()]);
+				throw $t;
+			}
+
+			$sent += count($chunk);
+		}
+
+		$this->logger->info('bulk email sent', ['recipients' => $sent, 'subject' => $subject, 'template' => $template]);
+
+		return $sent;
+	}
 }

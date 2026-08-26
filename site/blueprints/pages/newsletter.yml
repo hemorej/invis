@@ -19,4 +19,4 @@ fields:
     type: info
     width: 1/2
     text: |
-      <a href="/panel/pages/newsletter+subscribers">manage subscribers &amp; copy emails</a><br />
+      <a href="/panel/pages/newsletter+subscribers">manage subscribers</a><br />

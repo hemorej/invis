@@ -1,10 +1,5 @@
 title: Subscribers
 icon: email
-buttons:
-  emails:
-    icon: email
-    text: Copy subscriber emails
-    link: "/newsletter/panel/emails"
 
 columns:
   - width: 1/2

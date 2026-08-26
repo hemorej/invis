@@ -1,6 +1,11 @@
 title: Newsletter Edition
 preset: page
 pages: false
+buttons:
+  send:
+    icon: email
+    text: Send to subscribers
+    link: "/newsletter/panel/send/{{ page.uuid }}"
 fields:
   title:
     label: Title
