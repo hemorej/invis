@@ -21,6 +21,7 @@ fields:
     help: Preview image shown in the newsletter archive list
   text:
     label: Content
-    type: textarea
-    size: large
-    buttons: false
+    type: code-editor
+    language: html
+    size: huge
+    lineNumbers: true
