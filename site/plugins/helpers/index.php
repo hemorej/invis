@@ -5,33 +5,12 @@
 use Mailbun\Mailbun;
 use Kirby\Data\Yaml;
 use Kirby\Http\Remote;
-use Payments\StripeConnector as Stripe;
 use Kirby\Toolkit\Date;
 
 Kirby::plugin( 'helpers/helpers', [
 	'options' => [
 		'cache.backend' => true,
 	],
-	'routes' => [[
-		'pattern' => 'customer',
-		'method' => 'POST',
-		'action' => function () {
-			if( csrf( get( 'csrf' ) ) === true ) {
-				$stripe = new Stripe();
-				$customer = $stripe->findCustomer( urldecode( get( 'email' ) ) );
-				if( !empty( $customer ) && !empty( $customer['data'] ) ) {
-					$url = $stripe->redirectToPortal( $customer['data'][0]->id );
-					return [
-						'location' => $url,
-					];
-				}
-
-				return [
-					'location' => null,
-				];
-			}
-		},
-	]],
 ] );
 
 /**

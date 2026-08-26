@@ -7,7 +7,6 @@ use Stripe\Price;
 use Stripe\Stripe;
 use Logger\Logger;
 use Stripe\Product;
-use Stripe\Collection;
 use Stripe\StripeClient;
 use Stripe\PaymentIntent;
 use Stripe\Checkout\Session;
@@ -38,34 +37,6 @@ class StripeConnector
 		$this->stripe = new StripeClient( kirby()->option( 'stripe_key_prv' ) );
 
 		return $this->stripe;
-	}
-
-	/**
-	 * @param string $email
-	 * @return Collection|null
-	 * @throws ApiErrorException
-	 */
-	public function findCustomer( string $email )
-	{
-		if( !empty( $email ) && filter_var( $email, FILTER_VALIDATE_EMAIL ) )
-			return $this->stripe->customers->all( ['email' => $email] );
-
-		return null;
-	}
-
-	/**
-	 * @param string $customerID
-	 * @return string
-	 * @throws ApiErrorException
-	 */
-	public function redirectToPortal( string $customerID )
-	{
-		$billingPortal = $this->stripe->billingPortal->sessions->create( [
-			'customer' => $customerID,
-			'return_url' => 'https://the-invisible-cities.com/prints/subscriptions',
-		] );
-
-		return $billingPortal->url;
 	}
 
 	/**
