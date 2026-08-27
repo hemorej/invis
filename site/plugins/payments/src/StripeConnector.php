@@ -40,10 +40,17 @@ class StripeConnector
 	}
 
 	/**
-	 * @param array $lineItems
-	 * @param string|null $customerEmail
+	 * Creates a Stripe Checkout session for the given line items.
+	 *
+	 * Each line item either references an existing Stripe Price
+	 * (`price_external_id`) or carries inline `price_data` (name, description,
+	 * amount in cents). On success/cancel Stripe redirects back to the
+	 * /order/success/stripe and /prints/cart routes.
+	 *
+	 * @param array               $lineItems     Output of Cart::getLineItems()
+	 * @param string|null         $customerEmail Prefills the checkout email field
 	 * @return Session
-	 * @throws Exception
+	 * @throws Exception  Wrapped Stripe error (details are logged, not exposed)
 	 */
 	public function createSession( array $lineItems, ?string $customerEmail = null )
 	{
@@ -93,9 +100,11 @@ class StripeConnector
 	}
 
 	/**
-	 * @param string $sid
+	 * Fetches a Checkout session by id (used on the Stripe return redirect).
+	 *
+	 * @param string $sid Stripe Checkout session id
 	 * @return Session
-	 * @throws Exception
+	 * @throws Exception  Wrapped Stripe error
 	 */
 	public function retrieveSession( string $sid )
 	{
@@ -111,9 +120,12 @@ class StripeConnector
 	}
 
 	/**
-	 * @param string $pid
+	 * Fetches a PaymentIntent with its latest charge expanded, so the caller
+	 * can check both `status` and `latest_charge->paid`.
+	 *
+	 * @param string $pid Stripe PaymentIntent id
 	 * @return PaymentIntent
-	 * @throws Exception
+	 * @throws Exception  Wrapped Stripe error
 	 */
 	public function retrievePaymentIntent( string $pid )
 	{

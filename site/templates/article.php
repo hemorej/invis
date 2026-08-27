@@ -58,7 +58,7 @@
 
 <div class="mb-34">
 	<span class="spectral f-23 fw5 ink-dark ttl">
-		<a class="lnk-nav spectral f-23 ttl" 
+		<a class="lnk-nav spectral f-23 ttl"
 			href="<?= page()->parent()->url() ?>"><?= html(page()->parent()->title()) ?></a>
 	</span>
 	<?php if(!empty($headline)): ?>
