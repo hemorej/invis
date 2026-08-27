@@ -29,3 +29,5 @@ test_plan.md
 site/config/config.php
 site/config/license
 site/config/.license
+.ddev/*
+CLAUDE.md

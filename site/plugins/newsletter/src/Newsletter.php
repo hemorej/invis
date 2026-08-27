@@ -166,7 +166,43 @@ class Newsletter
 		$subscriber->update( ['substatus' => 'confirmed'] );
 
 		$this->logger->info( 'subscriber confirmed', ['uuid' => $uuid] );
+
+		$this->notifyAdmin( Crypto::decrypt( $subscriber->email_enc()->value() ) );
+
 		return true;
+	}
+
+	/**
+	 * Emails the site owner that a subscriber has completed double opt-in,
+	 * mirroring the new-order alert the shop sends. Mail failures are
+	 * logged but never bubble up — the visitor's confirmation still stands.
+	 *
+	 * @param string $email
+	 * @return void
+	 */
+	protected function notifyAdmin( string $email )
+	{
+		$alertAddress = kirby()->option( 'alert_address' );
+		if( empty( $alertAddress ) )
+			return;
+
+		try {
+			( new Mailbun() )->send(
+				$alertAddress,
+				'New newsletter subscriber at The Invisible Cities!',
+				'newsletter-alert',
+				[
+					'title' => 'New newsletter subscriber',
+					'subtitle' => 'New newsletter subscriber',
+					'preview' => 'Someone confirmed their subscription to the newsletter.',
+					'email' => $email,
+					'confirmedAt' => date( 'Y-m-d H:i:s' ),
+				]
+			);
+			$this->logger->info( 'admin newsletter subscriber notification sent' );
+		} catch( \Throwable $t ) {
+			$this->logger->error( 'failed to send admin newsletter subscriber notification', ['reason' => $t->getMessage()] );
+		}
 	}
 
 	/**
