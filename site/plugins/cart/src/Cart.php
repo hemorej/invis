@@ -77,11 +77,18 @@ class Cart
 	}
 
 	/**
-	 * @param $variant
-	 * @return bool|int
+	 * Reports stock availability for a variant.
+	 *
+	 * Accepts either a variant structure object or a "uri::suuid" id string
+	 * (which is resolved to the variant first).
+	 *
+	 * @param mixed $variant Variant structure object, or a "uri::suuid" id
+	 * @return bool|int  true = unlimited (blank stock field), false = out of
+	 *                   stock, or the positive integer quantity on hand
 	 */
 	public static function inStock( $variant )
 	{
+		// Id string form: split "uri::suuid" and look the variant up.
 		if( strstr( $variant->toString(), '::' ) ) {
 			$idParts = explode( '::', $variant );
 			$uri = $idParts[0];
@@ -91,8 +98,8 @@ class Cart
 			return $variant->stock()->value();
 		}
 
-		if( !is_numeric( $variant->stock()->value ) and $variant->stock()->value === '' ) return true;
-		if( is_numeric( $variant->stock()->value ) and intval( $variant->stock()->value ) <= 0 ) return false;
+		if( !is_numeric( $variant->stock()->value ) and $variant->stock()->value === '' ) return true;  // blank = untracked / unlimited
+		if( is_numeric( $variant->stock()->value ) and intval( $variant->stock()->value ) <= 0 ) return false; // 0 or negative = sold out
 		if( is_numeric( $variant->stock()->value ) and intval( $variant->stock()->value ) > 0 ) return intval( $variant->stock()->value );
 
 		return false;
@@ -129,6 +136,8 @@ class Cart
 	}
 
 	/**
+	 * Sums amount x quantity across cart items (CAD, pre-shipping).
+	 *
 	 * @param \Collection $items Cart items structure
 	 * @return int|float
 	 */
@@ -156,8 +165,11 @@ class Cart
 	}
 
 	/**
-	 * @param int|float $shipping
-	 * @return array
+	 * Builds the Stripe line-item array from the current cart page, optionally
+	 * appending a "Shipping" line. Amounts are converted to cents.
+	 *
+	 * @param int|float $shipping Shipping amount in CAD; omit / 0 for no line
+	 * @return array<int, array<string, mixed>> Stripe-shaped line items
 	 */
 	public function getLineItems( $shipping = 0 )
 	{
@@ -192,6 +204,8 @@ class Cart
 	}
 
 	/**
+	 * Returns the cart's product rows as a Collection (empty if no active cart).
+	 *
 	 * @return \Collection
 	 */
 	public function items()
@@ -213,8 +227,12 @@ class Cart
 	}
 
 	/**
-	 * @param $id
-	 * @param $quantity
+	 * Adds a variant to the cart, or bumps its quantity if already present,
+	 * clamping to available stock (see updateQty()). Creates the draft order
+	 * page and the session `txn` on the first add.
+	 *
+	 * @param string   $id       Variant id, formatted "uri::suuid"
+	 * @param int|null $quantity Desired quantity; null/0 means "add one more"
 	 * @return void
 	 * @throws InvalidArgumentException
 	 * @throws \Throwable
@@ -264,9 +282,12 @@ class Cart
 
 			// Create the transaction file if we don't have one yet
 			if( empty( $this->session->get( 'txn' ) ) || empty( $this->getCartPage() ) ) {
+				// 24 random hex chars + session start time: unguessable, and
+				// scoped to this session so a stale cookie can't resurrect a cart.
 				$this->txnId = bin2hex( random_bytes( 12 ) ) . $this->session->startTime();
 				$timestamp = time();
 
+				// Draft order pages live outside the visitor's permission scope.
 				kirby()->impersonate( 'kirby' );
 				Page::create( [
 					'parent' => page( 'prints/orders' ),
@@ -302,9 +323,12 @@ class Cart
 	}
 
 	/**
-	 * @param $id
-	 * @param $newQty
-	 * @return bool|int|mixed
+	 * Clamps a requested quantity to what stock allows, accounting for the
+	 * quantity of the same variant's option siblings already in the cart.
+	 *
+	 * @param string $id     Variant id, formatted "uri::variantslug::optionslug"
+	 * @param int    $newQty Requested quantity for this option
+	 * @return int The grantable quantity (may be less than requested, or 0)
 	 */
 	public function updateQty( $id, $newQty )
 	{
@@ -362,7 +386,9 @@ class Cart
 	}
 
 	/**
-	 * @param $id
+	 * Removes a line from the cart by its "uri::suuid" id.
+	 *
+	 * @param string $id Variant id to remove
 	 * @return void
 	 * @throws \Throwable
 	 */
@@ -383,7 +409,9 @@ class Cart
 	}
 
 	/**
-	 * @param array $customer
+	 * Persists the checkout contact/address block onto the draft order page.
+	 *
+	 * @param array $customer ['name', 'email', 'address' => [...]] as built by the /address route
 	 * @return void
 	 */
 	public function setCustomer( array $customer )
@@ -396,9 +424,14 @@ class Cart
 	}
 
 	/**
-	 * @param $country
-	 * @param $email
-	 * @return array
+	 * Looks up the shipping cost for the destination country (falling back to
+	 * the 'rest' region, then a hard-coded default), stores it on the order,
+	 * refreshes the Stripe session, and returns the recomputed totals for the
+	 * checkout UI.
+	 *
+	 * @param string $country Destination country name
+	 * @param string $email   Customer email, forwarded to the Stripe session
+	 * @return array{total: float, currencies: string, shipping: float|string, checkoutSessionId: string, items: array}
 	 * @throws \Exception
 	 */
 	public function addShipping( $country, $email )
@@ -438,8 +471,11 @@ class Cart
 	}
 
 	/**
-	 * @param $customerEmail
-	 * @return string
+	 * Creates a fresh Stripe Checkout session for the current line items and
+	 * stores its id on the order page (overwriting any previous session).
+	 *
+	 * @param string $customerEmail Prefills the Stripe checkout email field
+	 * @return string The new Stripe session id
 	 * @throws \Exception
 	 */
 	public function updateStripeSession( $customerEmail )
@@ -459,7 +495,15 @@ class Cart
 	}
 
 	/**
-	 * @return bool
+	 * Finalizes an order after the visitor returns from Stripe Checkout.
+	 *
+	 * Verifies the returned `sid` matches the one stored on the order (replay
+	 * guard), confirms the PaymentIntent actually succeeded, then — only if the
+	 * order is still 'pending', so a page reload can't double-process — deducts
+	 * inventory, sends notifications and marks the order paid. Failures are
+	 * logged, alerted, and surfaced to the visitor via a session `error`.
+	 *
+	 * @return bool True if the order was finalized (or already was), false on any failure
 	 */
 	public function processStripe()
 	{
@@ -511,6 +555,10 @@ class Cart
 	}
 
 	/**
+	 * Deducts each ordered quantity from its variant's stock field.
+	 * Throws (aborting order finalization) if a variant is missing or would
+	 * go negative.
+	 *
 	 * @return void
 	 * @throws \Throwable
 	 */
@@ -572,6 +620,10 @@ class Cart
 	}
 
 	/**
+	 * Sends the order-confirmation email to the customer and a copy to the
+	 * site owner's alert address. Mail failures are logged and alerted but
+	 * don't abort order finalization.
+	 *
 	 * @return void
 	 */
 	private function sendNotifications()

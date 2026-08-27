@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Page model for "process" (design write-up) pages.
+ * Adds a helper to read the `published` field as a Unix timestamp.
+ */
 class ProcessPage extends Page
 {
     /**

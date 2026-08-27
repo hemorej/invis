@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Page model for journal articles (template: article).
+ * Adds a helper to read the `published` field as a Unix timestamp.
+ */
 class ArticlePage extends Page
 {
     /**

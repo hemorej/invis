@@ -14,10 +14,16 @@ Kirby::plugin( 'helpers/helpers', [
 ] );
 
 /**
- * @param $page
- * @param $field
- * @param $data
- * @return string|true
+ * Upserts a single row into a Kirby structure field, keyed by its `suuid`.
+ *
+ * The existing row with the same `suuid` (if any) is removed and the new
+ * `$data` appended, so callers can treat it as "set this variant/order line
+ * to exactly these values" without worrying about duplicates.
+ *
+ * @param \Kirby\Cms\Page $page  Page owning the field
+ * @param string          $field Structure field name (e.g. 'variants')
+ * @param array           $data  Row data; must contain a 'suuid' key
+ * @return string|true  True on success, or the exception message on failure
  * @throws Throwable
  */
 function addToStructure( $page, $field, $data = [] )
@@ -37,8 +43,11 @@ function addToStructure( $page, $field, $data = [] )
 }
 
 /**
- * @param $image
- * @return mixed
+ * Returns a preview URL for an image, sized by orientation: landscape images
+ * are constrained to 600px wide, portrait images to 500px tall.
+ *
+ * @param \Kirby\Cms\File $image
+ * @return string Resized image URL
  */
 function getPreview( $image )
 {
@@ -50,14 +59,19 @@ function getPreview( $image )
 }
 
 /**
- * @param $string
+ * Formats a date string as "Month ordinal-word", e.g. "March fourteenth",
+ * used for the journal archive headings.
+ *
+ * @param string $string Any strtotime()-parseable date
  * @return string
  */
 function archiveDate( $string )
 {
 	$month = date( 'F', strtotime( $string ) );
-	$day = date( 'j', strtotime( $string ) );
+	$day = date( 'j', strtotime( $string ) ); // day of month, 1-31
 	$year = '\'' . date( 'y', strtotime( $string ) );
+
+	// Index 0 = "first"; look up with $day - 1 below.
 
 	$textualNumbers = [
 		'first',
@@ -97,7 +111,12 @@ function archiveDate( $string )
 }
 
 /**
- * @return array
+ * Picks a random landscape image from the portfolio project for the home page.
+ *
+ * The list of eligible filenames is cached for 12 hours (43200s); only the
+ * filename list is cached, a fresh random pick happens on every call.
+ *
+ * @return array{images: \Kirby\Cms\File}
  * @throws \Kirby\Exception\InvalidArgumentException
  */
 function getHomeImage()
@@ -137,8 +156,13 @@ function maskEmail( ?string $email ): string
 }
 
 /**
- * Geolocation utility
- * @return mixed|string|null
+ * Resolves the visitor's approximate location from their IP via ipapi.co.
+ *
+ * In non-production environments this skips the lookup and returns the
+ * hard-coded `geolocation` option. Successful lookups are cached per IP.
+ * Returns 'CA' when the remote address is unusable and null on API error.
+ *
+ * @return object|string|null Decoded ipapi.co response, a country code, or null
  */
 function location()
 {
@@ -179,9 +203,13 @@ function location()
 }
 
 /**
- * @param $sid
- * @param $orderId
- * @param $error
+ * Emails the site owner about an order-processing exception, then logs the
+ * outcome. Never throws — a failed alert must not break the caller's own
+ * error handling.
+ *
+ * @param string $sid     Session / transaction id the failure relates to
+ * @param string $orderId  Order suuid, if one exists yet
+ * @param string $error    Human-readable failure reason
  * @return void
  */
 function sendAlert( $sid, $orderId, $error = "Unknown reason" )
@@ -204,7 +232,9 @@ function sendAlert( $sid, $orderId, $error = "Unknown reason" )
 }
 
 /**
- * @return array
+ * Static list of country names for the checkout address <select>.
+ *
+ * @return string[]
  */
 function countryList()
 {
@@ -417,6 +447,8 @@ function countryList()
 }
 
 /**
+ * Today's date in the site's timezone (America/Montreal), as 'Y-m-d'.
+ *
  * @return string
  */
 function getToday()

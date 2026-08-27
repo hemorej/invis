@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Page model for print-store products (template: product).
+ * Adds a helper to read the `published` field as a Unix timestamp.
+ */
 class ProductPage extends Page
 {
 	/**
