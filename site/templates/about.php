@@ -80,8 +80,9 @@
 	<div class="flex items-baseline flex-wrap mt-64 gap-28">
 		<span class="gold-lbl" style="white-space:nowrap;flex:0 0 auto">— contact</span>
 		<?php foreach($page->contact()->toStructure() as $item): ?>
+			<?php $isInternal = empty($item->email()->value) && str_starts_with($item->link()->value(), '/') ?>
 			<a href="<?php if(empty($item->email()->value)): ?><?= html($item->link()) ?><?php else: ?>mailto:<?= html($item->email()) ?><?php endif ?>"
-				target="_blank"
+				<?php if(!$isInternal): ?>target="_blank"<?php endif ?>
 				class="lnk-muted spectral f-18">
 				<?= html($item->text()) ?>
 			</a>
