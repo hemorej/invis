@@ -19,7 +19,7 @@ use Newsletter\Design as D;
 	<meta name="x-apple-disable-message-reformatting">
 	<meta name="color-scheme" content="light dark">
 	<meta name="supported-color-schemes" content="light dark">
-	<title><?= D::esc( site()->title() ) ?> &mdash; <?= D::esc( $edition->title() ) ?></title>
+	<title><?= D::esc( D::NAME ) ?> &mdash; <?= D::esc( $edition->title() ) ?></title>
 	<!--[if mso]>
 	<xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
 	<![endif]-->

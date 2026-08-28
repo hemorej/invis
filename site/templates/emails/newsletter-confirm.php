@@ -21,7 +21,7 @@
       <tr>
         <td align="left" width="100%" valign="top" style="color: #000000; font-family: Helvetica,Arial,sans-serif; font-size: 16px; line-height: 20px;">
           <div style="margin: 0 auto; width: 100%; max-width: 600px; padding: 25px">
-            <img src="https://the-invisible-cities.com/assets/images/logo_email.png" alt="The Invisible Cities" border="0" style="margin: 0 0 25px; display: block; max-width: 220px;" />
+            <img src="https://the-invisible-cities.com/assets/images/logo_email.png" alt="cities and memory" border="0" style="margin: 0 0 25px; display: block; max-width: 220px;" />
             <h2 style="margin: 20px 0; line-height: 30px; color: #000000; font-family: Helvetica,Arial,sans-serif;"><?= html($subtitle) ?></h2>
             <p style="font-family: Helvetica,Arial,sans-serif; font-size: 16px; line-height: 22px;"><?= html($headline) ?></p>
             <table role="presentation" border="0" cellpadding="0" cellspacing="0">

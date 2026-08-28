@@ -18,7 +18,7 @@ $dateLine = $edition->published()->isNotEmpty()
 
 	<?= D::cellOpen( 38 ) ?>
 	<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="<?= D::CONTENT ?>" style="width:<?= D::CONTENT ?>px; border-collapse:collapse;"><tr>
-		<td align="left" valign="baseline" style="font-family:<?= D::DISPLAY ?>; font-size:26px; line-height:28px; letter-spacing:-0.01em; color:<?= D::INK ?>; font-weight:300;"><?= D::esc( site()->title() ) ?></td>
+		<td align="left" valign="baseline" style="font-family:<?= D::DISPLAY ?>; font-size:26px; line-height:28px; letter-spacing:-0.01em; color:<?= D::INK ?>; font-weight:300;"><?= D::esc( D::NAME ) ?></td>
 		<td align="right" valign="baseline" style="font-family:<?= D::SERIF ?>; font-size:13px; line-height:16px; color:<?= D::FAINT ?>;"><?= D::esc( mb_strtolower( $edition->title() ) ) ?></td>
 	</tr></table>
 	<?= D::cellClose() ?>

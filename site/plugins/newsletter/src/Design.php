@@ -15,6 +15,9 @@ use Kirby\Uuid\Uuid;
  */
 class Design
 {
+	/** Newsletter brand name, shown in the masthead and email subjects */
+	const NAME = 'cities and memory';
+
 	const ACCENT      = '#ffb700';
 	const INK         = '#2a2a2a';
 	const BODY        = '#3c3c3c';

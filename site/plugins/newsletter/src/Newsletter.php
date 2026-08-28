@@ -134,7 +134,7 @@ class Newsletter
 
 		( new Mailbun() )->send(
 			$email,
-			'Confirm your subscription to The Invisible Cities newsletter',
+			'Confirm your subscription to the cities and memory newsletter',
 			'newsletter-confirm',
 			[
 				'title' => 'Confirm your subscription',
@@ -189,7 +189,7 @@ class Newsletter
 		try {
 			( new Mailbun() )->send(
 				$alertAddress,
-				'New newsletter subscriber at The Invisible Cities!',
+				'New newsletter subscriber at cities and memory!',
 				'newsletter-alert',
 				[
 					'title' => 'New newsletter subscriber',
