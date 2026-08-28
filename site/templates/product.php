@@ -10,6 +10,9 @@
 	    $title = $page->title();
     }
 
+    // Books live under the prints section but present themselves as "books".
+    $parentLabel = $page->type()->value() === 'book' ? 'books' : $page->parent()->title();
+
 	$structuredData = [
         "@context" => "http://schema.org/",
         "@type" => "Product",
@@ -47,7 +50,7 @@
     <div class="mb-48">
         <span class="spectral f-23 fw5 ink-dark ttl">
             <a class="lnk-nav spectral f-23 ttl"
-                href="<?= page()->parent()->url() ?>"><?= html(page()->parent()->title()) ?></a>
+                href="<?= page()->parent()->url() ?>"><?= html($parentLabel) ?></a>
         </span>
         <span class="spectral f-23 ink-light">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
         <span class="spectral f-23 ink-subtle ttl"><?= html($page->title()) ?></span>
@@ -131,7 +134,7 @@
             <?php else: ?>
                 <?php /* Books are display-only: no variants, stock or purchase action. */ ?>
                 <h1 class="spectral fw3 f-38 lh-108 ink-dark ls-tight mt0 mb-4"><?= html($page->title()) ?></h1>
-                <p class="ttl spectral f-19 lh-14 ink-subtle mb-34 mt0"><?= html($page->parent()->title()) ?></p>
+                <p class="ttl spectral f-19 lh-14 ink-subtle mb-34 mt0"><?= html($parentLabel) ?></p>
 
                 <div class="prod-desc">
                     <?= $page->description()->kirbytext() ?>
