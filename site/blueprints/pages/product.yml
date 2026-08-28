@@ -46,11 +46,11 @@ columns:
           type:
             width: 1/3
             label: Attribute
-            help: Product attribute (print, zine...)
+            help: Product attribute (print, book...)
             type: select
             options:
                 print: print
-                zine: zine
+                book: book
             required: true
             default: print
           edition:
@@ -70,16 +70,18 @@ columns:
             label: Dimensions
             type: text
             when:
-              type: zine
+              type: book
           binding:
             label: Binding
             type: text
             when:
-              type: zine
+              type: book
           variants:
             label: Variants
             type: structure
             required: true
+            when:
+              type: print
             fields:
               name:
                 label: Variant name
