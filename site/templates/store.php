@@ -1,5 +1,5 @@
 <?php
-	$books = $page->children()->filterBy('type', 'zine')->listed()->flip();
+	$books = $page->children()->filterBy('type', 'book')->listed()->flip();
 	$prints = $page->children()->filterBy('type', 'print')->listed()->flip();
 	$coverImage = $prints->first()->images()->first();
 ?>

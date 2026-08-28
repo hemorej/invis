@@ -23,6 +23,8 @@ class ProductHandler
 	/**
 	 * Creates or updates the corresponding Stripe product when a listed print page changes.
 	 *
+	 * Only `print` products are sold; books are display-only and never synced.
+	 *
 	 * @param Page $page    The updated page
 	 * @param Page $oldPage The page state before the update
 	 * @return void
@@ -30,8 +32,7 @@ class ProductHandler
 	 */
 	public function createOrUpdate( Page $page, Page $oldPage )
 	{
-		$productTypes = $page->blueprint()->field('type');
-		if( in_array($page->content()->type()->value,  $productTypes['options'] ) && $page->isListed() )
+		if( $page->content()->type()->value === 'print' && $page->isListed() )
 		{
 			$this->logger->info( "syncing print page to Stripe", ['page' => $page->id(), 'type' => $page->content()->type()->value] );
 			$stripe = new StripeConnector();
