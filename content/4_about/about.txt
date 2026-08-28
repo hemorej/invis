@@ -36,7 +36,7 @@ Links:
   separator: ""
 - 
   link: >
-    https://in-public.com/photographers/saul-leiter/
+    https://www.saulleiterfoundation.org/color
   text: saul leiter
   separator: ""
 - 
@@ -45,7 +45,7 @@ Links:
   text: kazuo kitai
   separator: photographers i follow
 - 
-  link: http://jasoneskenazi.com/
+  link: https://www.instagram.com/jasoneskenazi/
   text: jason eskenazi
   separator: ""
 - 
@@ -53,17 +53,17 @@ Links:
   text: graciela iturbide
   separator: ""
 - 
-  link: http://www.ralphgibson.com/gallery.html
+  link: https://www.ralphgibson.com/
   text: ralph gibson
   separator: ""
 - 
   link: >
-    http://www.magnumphotos.com/JosefKoudelka
+    https://www.magnumphotos.com/photographer/josef-koudelka/
   text: josef koudelka
   separator: ""
 - 
   link: >
-    http://www.artnet.com/artists/miyako-ishiuchi/
+    https://www.shashasha.co/en/artist/miyako-ishiuchi
   text: miyako ishiuchi
   separator: ""
 - 
@@ -72,7 +72,7 @@ Links:
   separator: ""
 - 
   link: >
-    http://www.magnumphotos.com/RaymondDepardon
+    https://www.magnumphotos.com/photographer/raymond-depardon/
   text: raymond depardon
   separator: ""
 - 
@@ -80,7 +80,8 @@ Links:
   text: christophe agou
   separator: ""
 - 
-  link: http://www.magnumphotos.com/larrytowell
+  link: >
+    https://www.magnumphotos.com/photographer/larry-towell/
   text: larry towell
   separator: ""
 - 
@@ -105,8 +106,7 @@ Links:
   text: masako tomiya
   separator: ""
 - 
-  link: >
-    http://www.dianamarkosian.com/pages/projects
+  link: https://www.dianamarkosian.com/projects
   text: diana markosian
   separator: ""
 - 
@@ -115,7 +115,7 @@ Links:
   separator: ""
 - 
   link: >
-    http://www.magnumphotos.com/thomasdworzak
+    https://www.magnumphotos.com/photographer/thomas-dworzak/
   text: thomas dworzak
   separator: ""
 - 
@@ -127,7 +127,7 @@ Links:
   text: gosha tcherednitchenko
   separator: ""
 - 
-  link: http://www.tatianaplotnikova.com/
+  link: https://www.instagram.com/tatiana.plotnikova/
   text: tatiana plotnikova
   separator: ""
 - 
@@ -171,7 +171,7 @@ Links:
   text: gap-chul lee
   separator: ""
 - 
-  link: https://www.artsy.net/artist/issei-suda
+  link: https://www.shashasha.co/en/artist/issei-suda
   text: issei suda
   separator: ""
 - 
