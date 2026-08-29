@@ -18,7 +18,7 @@ The name of the website is from an Italo Calvino book, its layered, poetic and s
 Links:
 
 - 
-  link: http://www.sluban.com/
+  link: https://www.lensculture.com/ksluban
   text: klavdij sluban
   separator: influences
 - 
@@ -97,7 +97,7 @@ Links:
   text: pixy liao
   separator: ""
 - 
-  link: http://www.luoyangphoto.com/
+  link: https://photographyofchina.com/author/luo-yang
   text: luo yang
   separator: ""
 - 
@@ -140,7 +140,7 @@ Links:
   text: olivia arthur
   separator: ""
 - 
-  link: http://fukuyamaemi.com/
+  link: https://tppg.jp/tppg-archive/member/fukuyama_emi.html
   text: emi fukuyama
   separator: ""
 - 
