@@ -36,23 +36,7 @@
 	];
 ?>
 
-<?php snippet('partials/header', ['pageDescription' => $articleDesc], false, true) ?>
-<?php slot('meta') ?>
-	<meta property="og:type" content="article">
-	<meta property="og:title" content="<?= html($headline) ?>">
-	<meta property="og:url" content="<?= html(page()->url()) ?>">
-	<meta property="og:image" content="<?= html($mainImage->url()) ?>">
-	<meta property="og:description" content="<?= html($articleDesc) ?>">
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="@jerome_a_">
-	<meta name="twitter:title" content="<?= html($headline) ?>">
-	<meta name="twitter:description" content="<?= html($articleDesc) ?>">
-	<meta name="twitter:image" content="<?= html($mainImage->url()) ?>">
-	<meta property="article:author" content="Jerome Arfouche">
-	<meta property="article:section" content="Photography">
-	<meta property="article:tag" content="black and white, photography">
-<?php endslot() ?>
-<?php endsnippet() ?>
+<?php snippet('partials/header', ['pageDescription' => $articleDesc]) ?>
 
 <?php snippet('partials/menu') ?>
 

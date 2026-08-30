@@ -9,17 +9,7 @@
 	];
 ?>
 
-<?php snippet('partials/header', [], false, true) ?>
-<?php slot('meta') ?>
-	<meta property="profile:first_name" content="Jerome">
-	<meta property="profile:last_name" content="Arfouche">
-	<meta property="og:url" content="<?= html(page()->url()) ?>">
-	<meta property="og:image" content=<?= html($mainImageUrl) ?>>
-	<meta property="og:description" content="about the invisible cities and jerome arfouche">
-	<meta property="og:type" content="profile">
-	<meta property="og:title" content="<?= html(page()->title()) ?>">
-<?php endslot() ?>
-<?php endsnippet() ?>
+<?php snippet('partials/header') ?>
 
 <?php snippet('partials/menu') ?>
 

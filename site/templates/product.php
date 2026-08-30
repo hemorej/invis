@@ -22,19 +22,7 @@
     ];
 ?>
 
-<?php snippet('partials/header', [], false, true) ?>
-<?php slot('meta') ?>
-    <meta property="og:type" content="product">
-    <meta property="og:title" content="<?= html($title) ?>">
-    <meta property="og:url" content="<?= html(page()->url()) ?>">
-    <meta property="og:image" content="<?= html($image->url()) ?>">
-    <meta property="og:description" content="<?= html($page->meta()->toString()) ?>">
-    <?php if($page->type()->value() === 'print'): ?>
-    <meta property="product:price.amount" content="<?= html(page()->variants()->toStructure()->first()->price()) ?>">
-    <meta property="product:price.currency" content="CAD">
-    <?php endif ?>
-<?php endslot() ?>
-<?php endsnippet() ?>
+<?php snippet('partials/header') ?>
 
 <?php snippet('partials/menu') ?>
 

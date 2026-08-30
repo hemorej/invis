@@ -32,28 +32,10 @@ if( page()->parent() && page()->parent()->title() == 'journal' ) {
     <meta itemprop="description" content="<?= html( site()->description() ) ?>">
     <meta itemprop="image" content="<?= html( $image ) ?>">
 
-    <meta property="og:locale" content="en_CA">
-    <meta property="og:site_name" content="<?= html( site()->title() ) ?>">
-
     <link rel="preload" as="font" type="font/woff2" href="<?= url( 'assets/font/Spectral-Regular.woff2' ) ?>" crossorigin>
 
     <?php if( $slot = $slots->preload() ): ?>
         <?= $slot ?>
-    <?php endif ?>
-
-    <?php if( $slot = $slots->meta() ): ?>
-        <?= $slot ?>
-    <?php else: ?>
-        <meta property="og:url" content="<?= html( $url ) ?>">
-        <meta property="og:type" content="website">
-        <meta property="og:title" content="<?= html( site()->title() ) ?>">
-        <meta property="og:description" content="<?= html( $metaDesc ) ?>">
-        <meta property="og:image" content="<?= html( $image ) ?>">
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:site" content="@jerome_a_">
-        <meta name="twitter:title" content="<?= html( site()->title() ) ?>">
-        <meta name="twitter:description" content="<?= html( $metaDesc ) ?>">
-        <meta name="twitter:image" content="<?= html( $image ) ?>">
     <?php endif ?>
 
     <?php if( option( 'env' ) == 'prod' ): ?>
@@ -71,4 +53,6 @@ if( page()->parent() && page()->parent()->title() == 'journal' ) {
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="The Invisible Cities">
     <link rel="canonical" href="<?= html( $url ) ?>">
+    <link rel="alternate" hreflang="en" href="<?= html( $url ) ?>">
+    <link rel="alternate" hreflang="x-default" href="<?= html( $url ) ?>">
 </head>

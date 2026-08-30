@@ -25,8 +25,11 @@
 			<?php foreach($articles as $article): ?>
 				<a data-preview="<?= html(getPreview($article->images()->first())) ?>" data-title="<?= html($article->title()) ?> series cover" class="cover lnk-content spectral f-18 lh-174 ttl" style="text-align:right;" href="<?= html($article->url()) ?>"><?= html(archiveDate($article->published()->toString())) ?></a>
 			<?php endforeach ?>
-			<?php if($articles->pagination()->hasPages() && $articles->pagination()->hasNextPage()): ?>
-				<a class="lnk-muted spectral f-18 db ttl" style="margin-top:28px;text-align:right;" href="<?= html($articles->pagination()->nextPageURL()) ?>">older&nbsp;»</a>
+			<?php if($articles->pagination()->hasPrevPage()): ?>
+				<a rel="prev" class="lnk-muted spectral f-18 db ttl" style="margin-top:28px;text-align:right;" href="<?= html($articles->pagination()->prevPageURL()) ?>">«&nbsp;newer</a>
+			<?php endif ?>
+			<?php if($articles->pagination()->hasNextPage()): ?>
+				<a rel="next" class="lnk-muted spectral f-18 db ttl" style="margin-top:28px;text-align:right;" href="<?= html($articles->pagination()->nextPageURL()) ?>">older&nbsp;»</a>
 			<?php endif ?>
 		</div>
 	</div>

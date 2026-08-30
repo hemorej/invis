@@ -72,9 +72,6 @@ AddType application/font-woff .woff2
   # Perhaps better to whitelist expires rules? Perhaps.
   ExpiresDefault                          "access plus 1 week"
 
-  # Feed
-  ExpiresByType application/rss+xml       "access plus 1 hour"
-
   # Favicon (cannot be renamed)
   ExpiresByType image/x-icon              "access plus 1 year" 
 
