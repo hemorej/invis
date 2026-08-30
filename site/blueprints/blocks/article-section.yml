@@ -1,0 +1,10 @@
+name: Section
+icon: line
+preview: fields
+wysiwyg: true
+fields:
+  label:
+    label: Section label
+    type: text
+    required: true
+    help: "Set in italic gold, e.g. new work"

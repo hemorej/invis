@@ -1,7 +1,7 @@
 <?php
 	$articles = page()->children()->listed()->flip()->paginate(10);
 	$journals = site()->page('journal-series')->children()->listed()->flip();
-	$coverImage = $articles->first()->images()->first();
+	$coverImage = $articles->first()->previewImage();
 ?>
 
 <?php snippet('partials/header', [], false, true) ?>
@@ -23,7 +23,7 @@
 		<div style="flex:1.3;min-width:200px;text-align:right;">
 			<span class="gold-lbl mb-22">— serial</span>
 			<?php foreach($articles as $article): ?>
-				<a data-preview="<?= html(getPreview($article->images()->first())) ?>" data-title="<?= html($article->title()) ?> series cover" class="cover lnk-content spectral f-18 lh-174 ttl" style="text-align:right;" href="<?= html($article->url()) ?>"><?= html(archiveDate($article->published()->toString())) ?></a>
+				<a data-preview="<?= html(getPreview($article->previewImage())) ?>" data-title="<?= html($article->title()) ?> series cover" class="cover lnk-content spectral f-18 lh-174 ttl" style="text-align:right;" href="<?= html($article->url()) ?>"><?php if($article->isTextArticle()): ?>&#x2733;&nbsp;<?php endif ?><?= html(archiveDate($article->published()->toString())) ?></a>
 			<?php endforeach ?>
 			<?php if($articles->pagination()->hasPrevPage()): ?>
 				<a rel="prev" class="lnk-muted spectral f-18 db ttl" style="margin-top:28px;text-align:right;" href="<?= html($articles->pagination()->prevPageURL()) ?>">«&nbsp;newer</a>

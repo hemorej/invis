@@ -1,0 +1,15 @@
+name: Image
+icon: image
+fields:
+  image:
+    label: Image
+    type: files
+    query: page.images
+    layout: cards
+    multiple: false
+    max: 1
+    store: id
+    required: true
+  caption:
+    label: Caption
+    type: text
