@@ -41,6 +41,7 @@ return [
 	'thumbs' => [
 		'quality' => 90,
 		'format' => 'webp',
+		'driver'  => 'im',
 		'srcsets' => [
 			'default' => [600, 800, 1200],
 			'vertical' => ['400w' => ['height' => 600], '600w' => ['height' => 600], '800w' => ['height' => 600]],
