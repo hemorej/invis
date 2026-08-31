@@ -145,9 +145,12 @@ body { background: var(--bg); }
 @media (max-width:700px){
   .list-pair { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
   .list-pair > div { min-width:0 !important; flex:none !important; }
-  .site-header { gap:14px !important; }
+  .site-header { gap:14px !important; margin-bottom:32px !important; }
   .site-nav { margin-left:0; }
   .journal-cover { order:-1; }
+  .hero-main { padding-top:clamp(40px, 7vh, 80px); }
+  /* Article page-title line matches the menu type size on small screens. */
+  .mb-34 .f-23 { font-size:clamp(13px, 9.346px + 0.962vw, 18px); }
 }
 .lh-174 { line-height:1.74; }
 .lh-17 { line-height:1.7; }
@@ -280,7 +283,14 @@ body { background: var(--bg); }
 .article-portrait { margin: 0 auto 48px; display: flex; justify-content: center; }
 .article-portrait img { display: block; width: 100%; max-width: clamp(420px, 62vw, 660px); height: auto; }
 
+/* On laptop/desktop, bound the portrait photo by viewport height so it fits
+   without scrolling; the loader wrapper shrinks with it. */
+@media (min-width: 761px) {
+  .article-portrait .img-loader { width: auto; max-width: 100%; }
+  .article-portrait img { width: auto; max-width: clamp(420px, 62vw, 660px); max-height: calc(100vh - 260px); }
+}
+
 @media (max-width: 760px) {
-  .article-portrait { margin-left: -24px; margin-right: -24px; margin-bottom: 36px; }
+  .article-portrait { margin-bottom: 36px; }
   .article-portrait img { max-width: 100%; }
 }
