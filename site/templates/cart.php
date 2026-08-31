@@ -152,7 +152,7 @@
             </div>
         </div>
 
-        <p class="spectral f-17 lh-16 mt-40 mb0" style="color:var(--mid2);max-width:700px">
+        <p class="spectral f-17 lh-16 mt-40 mb0" style="color:var(--muted);max-width:700px">
             By continuing to checkout, you agree to the general
             <a href="#" class="ink-dark no-underline bb bw1 b--accent pb1" v-on:click.prevent="showTerms = !showTerms">terms</a>
             of the sale.
