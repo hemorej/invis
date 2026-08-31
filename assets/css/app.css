@@ -257,3 +257,19 @@ body { background: var(--bg); }
 @media (prefers-reduced-motion:reduce) {
   .img-loader::before { animation:none; }
 }
+/* === Text-type article (long-form) ===
+   Body blocks for articles with type: text. Type scale and gold section
+   labels are lifted from the newsletter design; width matches the photo
+   articles it sits among. */
+.article-body { max-width:48rem; }
+.article-copy p { font:400 clamp(15px, 11.346px + 0.962vw, 18px)/1.85 'Spectral', Georgia, serif; color:var(--ink3); margin:0; max-width:68ch; }
+.article-copy p + p { margin-top:1.5em; }
+.article-copy a { color:var(--ink2); text-decoration:none; border-bottom:1px solid var(--accent); }
+.article-copy a:hover { color:var(--accent); }
+.article-copy em { font-style:italic; }
+.article-copy strong { font-weight:500; color:var(--ink2); }
+.article-lead { font-size:clamp(16px, 11.615px + 1.154vw, 19px); line-height:1.4; color:var(--ink2); margin:0 0 6px; }
+.article-section { display:block; }
+.article-rule { display:block; height:1px; margin-bottom:14px; background:linear-gradient(to right, var(--accent) 0, var(--accent) 28px, var(--rule) 28px); }
+.article-figure { margin:0; }
+.article-caption { display:block; font-style:italic; font-size:clamp(11px, 8.808px + 0.577vw, 13px); line-height:1.6; color:var(--dim); margin-top:10px; }

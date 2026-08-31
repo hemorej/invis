@@ -1,5 +1,9 @@
 <?php
-	$mainImage = page()->images()->first()->resize(null, 600);
+	$isText = page()->isTextArticle();
+	$previewImage = $isText ? page()->previewImage() : page()->images()->first();
+	$mainImage = $previewImage
+		? $previewImage->resize(null, 600)
+		: page('projects/portfolio')->images()->first()->resize(600);
 	$title = (page()->title() == page()->uid()) ? page()->parent()->slug() : page()->title();
 	$headline = '';
 	$published = page()->published()->toString();
@@ -12,7 +16,9 @@
 		$headline = "_" . page()->title()->lower();
 	}
 
-	$rawText = trim(strip_tags(kirbytext(page()->text())));
+	$rawText = $isText
+		? trim(strip_tags(page()->body()->toBlocks()->toHtml()))
+		: trim(strip_tags(kirbytext(page()->text())));
 	$articleDesc = mb_strlen($rawText) > 155 ? mb_substr($rawText, 0, 152) . '…' : $rawText;
 	if (empty($articleDesc)) {
 		$articleDesc = 'Black and white 35mm film photography by Jerome Arfouche.';
@@ -50,6 +56,9 @@
 	<?php endif ?>
 </div>
 
+<?php if($isText): ?>
+	<?php snippet('partials/article-body', ['article' => page(), 'previewImage' => $previewImage, 'headline' => $headline]) ?>
+<?php else: ?>
 <div class="article-desc"><?php echo kirbytext(page()->text()) ?></div>
 <span class="db mb3"></span>
 
@@ -103,6 +112,7 @@
 	<?php endif ?>
 	<span class="cf db mb3"></span>
 <?php $loopIdx++; endforeach ?>
+<?php endif ?>
 
 <nav class="flex items-baseline mt-32" style="justify-content:space-between;">
 	<?php

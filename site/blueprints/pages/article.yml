@@ -6,20 +6,54 @@ fields:
 		label: Title
 		type: text
 		help: The title of your article.
-		required: true    
+		required: true
 	published:
 		label: Published
 		type: date
 		help: Publishing date (01 January 2012).
 		required: true
 		default: today
+	type:
+		label: Type
+		type: select
+		default: picture
+		required: true
+		empty: false
+		options:
+			picture: Picture — a photo series
+			text: Text — a long-form written piece
+		help: Picture uses the page's image files. Text uses the Body blocks below.
 	text:
 		label: Your content
 		type: textarea
 		size: large
-		help: Your content.
-		buttons: 
+		help: Intro text for a Picture article.
+		when:
+			type: picture
+		buttons:
 			- bold
 			- italic
 			- email
 			- link
+	preview:
+		label: Preview image
+		type: files
+		query: page.images
+		layout: cards
+		multiple: false
+		min: 1
+		max: 1
+		required: true
+		when:
+			type: text
+		help: Lead image — shown at the top of the article and as the hover preview in the index.
+	body:
+		label: Body
+		type: blocks
+		when:
+			type: text
+		empty: Add a paragraph, section or image.
+		fieldsets:
+			- article-text
+			- article-section
+			- article-image
