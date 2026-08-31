@@ -273,3 +273,14 @@ body { background: var(--bg); }
 .article-rule { display:block; height:1px; margin-bottom:14px; background:linear-gradient(to right, var(--accent) 0, var(--accent) 28px, var(--rule) 28px); }
 .article-figure { margin:0; }
 .article-caption { display:block; font-style:italic; font-size:clamp(11px, 8.808px + 0.577vw, 13px); line-height:1.6; color:var(--dim); margin-top:10px; }
+
+/* Journal entry — single portrait photo.
+   Width-driven so short/laptop viewports don't shrink it; bleeds toward the
+   edges below 760px (page padding is 36px, so -24px leaves 12px gutters). */
+.article-portrait { margin: 0 auto 48px; display: flex; justify-content: center; }
+.article-portrait img { display: block; width: 100%; max-width: clamp(420px, 62vw, 660px); height: auto; }
+
+@media (max-width: 760px) {
+  .article-portrait { margin-left: -24px; margin-right: -24px; margin-bottom: 36px; }
+  .article-portrait img { max-width: 100%; }
+}

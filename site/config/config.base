@@ -44,7 +44,7 @@ return [
 	    'driver' => 'imagick',
 		'srcsets' => [
 			'default' => [600, 800, 1200],
-			'vertical' => ['400w' => ['height' => 600], '600w' => ['height' => 600], '800w' => ['height' => 600]],
+			'vertical' => ['400w' => ['height' => 600], '800w' => ['height' => 1200], '1350w' => ['height' => 2000]],
 		],
 	],
 

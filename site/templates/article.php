@@ -88,7 +88,11 @@
 		<?php $skip = true ?>
 	<?php else: ?>
 		<?php if(page()->parent()->title() == 'journal'): ?>
-			<section class="aspect-ratio aspect-ratio--6x4">
+			<?php if($current->isPortrait()): ?>
+				<section class="article-portrait">
+			<?php else: ?>
+				<section class="aspect-ratio aspect-ratio--6x4">
+			<?php endif ?>
 		<?php else: ?>
 			<?php if($current->isPortrait()): ?>
 				<section class="mw6 db center pa5">
@@ -100,9 +104,7 @@
 		<?php endif ?>
 
 		<div class="img-loader" style="aspect-ratio:<?= $current->width() ?>/<?= $current->height() ?>">
-			<?php if($current->isPortrait() && count(page()->images()) == 1): ?>
-				<img style="max-width: 45%" alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset('vertical')) ?>">
-			<?php elseif($current->isPortrait()): ?>
+			<?php if($current->isPortrait()): ?>
 				<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset('vertical')) ?>">
 			<?php else: ?>
 				<img alt="<?= html($headline) ?>" class="lazy" data-srcset="<?= html($current->srcset()) ?>">
