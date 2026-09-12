@@ -25,7 +25,7 @@ if( page()->parent() && page()->parent()->title() == 'journal' ) {
     <title><?= html( site()->title() ) ?> — <?= html( strtolower( $title ) ) ?></title>
     <meta charset="utf-8"/>
     <meta name="description" content="<?= html( $metaDesc ) ?>"/>
-    <meta name="robots" content="index, follow"/>
+    <meta name="robots" content="index, follow, noai, noimageai"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
 
     <meta itemprop="name" content="<?= html( site()->title() ) ?>">
