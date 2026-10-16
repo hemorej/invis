@@ -1,0 +1,8 @@
+# Workflow, CI and deploy changes always need the owner's review.
+/.github/ @hemorej
+/infra/ @hemorej
+/scripts/ @hemorej
+/package.json @hemorej
+/pnpm-lock.yaml @hemorej
+/pnpm-workspace.yaml @hemorej
+/.npmrc @hemorej
