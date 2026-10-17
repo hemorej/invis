@@ -4,6 +4,13 @@ cd $FORGE_RELEASE_DIRECTORY
 git clone --depth 1 --branch=$FORGE_SITE_BRANCH $REPO_URL
 git submodule update --init --recursive
 
+# Forge clones with a token embedded in the remote URL; strip the userinfo so it
+# isn't left readable in .git/config. Covers the release dir and the repo cloned above.
+for repo in "$FORGE_RELEASE_DIRECTORY" "$FORGE_RELEASE_DIRECTORY"/*/; do
+  git -C "$repo" remote get-url origin >/dev/null 2>&1 || continue
+  git -C "$repo" remote set-url origin "$(git -C "$repo" remote get-url origin | sed -E 's#^(https?://)[^/@]+@#\1#')"
+done
+
 cd $FORGE_RELEASE_DIRECTORY/site/config && ln -s /mnt/$VOLUME_NAME/site/config/config.php .
 cd $FORGE_RELEASE_DIRECTORY/site/config && ln -s /mnt/$VOLUME_NAME/site/config/.license .
 
