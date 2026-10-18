@@ -1,8 +1,6 @@
 The Invisible Cities
 ====================
 
-[![Laravel Forge Site Deployment Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fforge.laravel.com%2Fsite-badges%2F3bb5f071-9553-4336-b0c7-b049571c89e7&style=plastic)](https://forge.laravel.com/jerome-zpm/snowy-briars-j49/3264932)
-
 This is the code for my [website](https://the-invisible-cities.com) of the same name. I wanted to open source it and have this repo as a code and content backup. 
 It's a custom made theme for [Kirby](https://getkirby.com) using [Tachyons](https://tachyons.io/) and [Lazyload](https://github.com/verlok/lazyload) for lazy loading srcset images using the IntersectionObserver API
 
