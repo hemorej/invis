@@ -1,0 +1,7 @@
+# Scheduled jobs for the-invisible-cities.com, as defined in Forge's Scheduler (user: forge).
+# Documentation only — nothing installs this file. Forge's scheduler did not show up in
+# `crontab -l` for forge or root on the droplet (checked 2026-10-23), so Forge runs these some
+# other way; leaving Forge means adding them to the forge user's crontab (`crontab -e`).
+
+# kirby cache cleanup — empties Kirby's generated page-media cache on the volume (Forge "weekly")
+@weekly rm -rf /mnt/data-volume/media/pages/*
