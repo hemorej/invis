@@ -6,6 +6,7 @@ use Kirby\Cms\Page;
 use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Remote;
+use Kirby\Uuid\Uuid;
 use Logger\Logger;
 use Mailbun\Mailbun;
 
@@ -46,6 +47,40 @@ function addToStructure( Page $page, string $field, array $data = [] ): Page
 	}
 
 	return $page->update( [$field => Yaml::encode( array_values( $fieldData ) )] );
+}
+
+/**
+ * Gives every variant of a product page a `suuid` if it doesn't have one yet.
+ *
+ * The `suuid` is the stable id the cart, the order lines and the Stripe price
+ * lookup key all rely on, so it must exist before a product is synced or sold.
+ * Existing ids are never changed. Returns the page unchanged when nothing was
+ * missing, or the updated page (use that one, the passed-in object is stale).
+ *
+ * @param Page $page A page that may have a `variants` structure (only `product` pages are touched)
+ * @return Page
+ * @throws \Throwable When the page update fails
+ */
+function ensureVariantIds( Page $page ): Page
+{
+	if( $page->intendedTemplate()->name() !== 'product' )
+		return $page;
+
+	$variants = $page->variants()->yaml();
+	$changed = false;
+
+	foreach( $variants as &$variant ) {
+		if( empty( $variant['suuid'] ) ) {
+			$variant['suuid'] = Uuid::generate();
+			$changed = true;
+		}
+	}
+	unset( $variant );
+
+	if( !$changed )
+		return $page;
+
+	return kirby()->impersonate( 'kirby', fn() => $page->update( ['variants' => Yaml::encode( $variants )] ) );
 }
 
 /**

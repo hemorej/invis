@@ -102,11 +102,11 @@ columns:
                 help: Quantity remaining, leave blank for unlimited stock
                 min: 0
               suuid:
-                type: autoranduuid
+                type: text
                 label: SKU
                 translate: false
-                help: Internal auto-generated ID, leave blank
-                autoranduuid: suuid
+                disabled: true
+                help: Internal ID, generated automatically when the page is saved
               external_id:
                 type: text
                 label: External Price ID
