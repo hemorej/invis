@@ -379,7 +379,7 @@ class Cart
 				$this->session->set( 'txn', $this->txnId );
 			} else {
 				kirby()->impersonate( 'kirby' );
-				$this->getCartPage()->update( ['products' => \Yaml::encode( $items )] );
+				$this->getCartPage()->update( ['products' => \Yaml::encode( $items )] + $this->expireStaleStripeSession() );
 				$this->cartPage = null;
 			}
 
@@ -394,66 +394,47 @@ class Cart
 	}
 
 	/**
-	 * Clamps a requested quantity to what stock allows, accounting for the
-	 * quantity of the same variant's option siblings already in the cart.
+	 * Clamps a requested line quantity to the stock of that exact variant.
 	 *
-	 * @param string $id     Variant id, formatted "uri::variantslug::optionslug"
-	 * @param int    $newQty Requested quantity for this option
+	 * @param string $id     Variant id, formatted "uri::suuid"
+	 * @param int    $newQty Requested absolute quantity for the line
 	 * @return int The grantable quantity (may be less than requested, or 0)
 	 */
 	public function updateQty( $id, $newQty )
 	{
-		// $id is formatted uri::variantslug::optionslug
-		$idParts = explode( '::', $id );
-		$uri = $idParts[0];
-		$variantSlug = $idParts[1];
+		[$uri, $suuid] = array_pad( explode( '::', (string) $id ), 2, '' );
 
-		// Get combined quantity of this option's siblings
-		$siblingsQty = 0;
-		if( !empty( $this->getCartPage() ) ) {
-			foreach( $this->getCartPage()->products()->toStructure() as $item ) {
-				if( strpos( $item->id(), $uri . '::' . $variantSlug ) === 0 ) {
-					$siblingsQty += $item->quantity()->value;
-				}
-			}
-		}
+		$variant = $this->site->page( $uri )?->variants()->toStructure()->findBy( 'suuid', $suuid );
+		if( empty( $variant ) )
+			return 0;
 
-		foreach( $this->site->page( $uri )->variants()->toStructure() as $variant ) {
-			// Store the stock in a variable for quicker processing
-			if( !$this->inStock( $variant ) )
-				continue;
+		$stock = self::inStock( $variant ); // true = unlimited, false = sold out, int = on hand
 
-			$stock = self::inStock( $variant );
+		if( $stock === true )
+			return max( 0, (int) $newQty );
 
-			if( $siblingsQty === 0 ) {
-				// If there are no siblings
-				if( $stock === true or $stock >= $newQty ) {
-					// If there is enough stock
-					return $newQty;
-				} else if( $stock === false ) {
-					// If there is no stock
-					return 0;
-				} else {
-					// If there is insufficient stock
-					return $stock;
-				}
-			} else {
-				// If there are siblings
-				if( $stock === true or $stock >= $newQty ) {
-					// If the siblings plus $newQty won't exceed the max stock, go ahead
-					return $newQty;
-				} else if( $stock === false or $stock <= $siblingsQty ) {
-					// If the siblings have already maxed out the stock, return 0
-					return $siblingsQty;
-				} else if( $stock > $siblingsQty and $stock <= $siblingsQty + $newQty ) {
-					// If the siblings don't exceed max stock, but the newQty will, reduce newQty to the appropriate level
-					return $siblingsQty;
-				}
-			}
-		}
+		if( $stock === false )
+			return 0;
 
-		// The script should never get to this point
-		return 0;
+		return max( 0, min( (int) $newQty, $stock ) );
+	}
+
+	/**
+	 * Expires the order's open Stripe Checkout session, if any, so a cart that
+	 * changed after checkout started can't be paid at the old price/contents.
+	 * Returns the field changes to merge into the next cart-page update.
+	 * If Stripe won't expire it (already paid), the id is kept so the return
+	 * redirect still matches.
+	 *
+	 * @return array<string, string>
+	 */
+	private function expireStaleStripeSession(): array
+	{
+		$sid = $this->getCartPage()?->stripe_session_id()->value();
+		if( empty( $sid ) )
+			return [];
+
+		return ( new Stripe() )->expireSession( $sid ) ? ['stripe_session_id' => ''] : [];
 	}
 
 	/**
@@ -474,7 +455,7 @@ class Cart
 		) );
 
 		kirby()->impersonate( 'kirby' );
-		$cartPage->update( ['products' => \Yaml::encode( $items )] );
+		$cartPage->update( ['products' => \Yaml::encode( $items )] + $this->expireStaleStripeSession() );
 		$this->cartPage = null;
 
 		$this->logger->info( "item removed from cart", ['txn' => $this->session->get( 'txn' ), 'item' => $id] );
@@ -552,6 +533,9 @@ class Cart
 			? 0
 			: (float) $this->getCartPage()->shipping()->value();
 
+		// A re-submitted address supersedes any earlier session; keep only one payable.
+		$this->expireStaleStripeSession();
+
 		$lineItems = $this->getLineItems( $shipping );
 		$session = ( new Stripe() )->createSession( $lineItems, $customerEmail );
 
@@ -567,8 +551,10 @@ class Cart
 	 *
 	 * Verifies the returned `sid` matches the one stored on the order (replay
 	 * guard), confirms the PaymentIntent actually succeeded, then — only if the
-	 * order is still 'pending', so a page reload can't double-process — deducts
-	 * inventory, sends notifications and marks the order paid. Failures are
+	 * order is still 'pending' — deducts inventory, marks the order paid and
+	 * sends notifications. The whole section runs under a per-order file lock
+	 * and re-reads the order once the lock is held, so concurrent requests
+	 * (reloads, double clicks) can't process the same order twice. Failures are
 	 * logged, alerted, and surfaced to the visitor via a session `error`.
 	 *
 	 * @return bool True if the order was finalized (or already was), false on any failure
@@ -576,33 +562,48 @@ class Cart
 	public function processStripe()
 	{
 		$txn = $this->session->get( 'txn' );
+		$returnedSid = get( 'sid' );
+		$lock = null;
 
 		try {
-			if( empty( get( 'sid' ) ) || empty( $txn ) ) {
+			if( empty( $returnedSid ) || !is_string( $returnedSid ) || empty( $txn ) ) {
 				$this->logger->debug( "processStripe called with no session id or txn, nothing to do", ['txn' => $txn] );
 				return false;
 			}
 
-			$storedSid = $this->getCartPage()?->stripe_session_id()->value();
-			if( get( 'sid' ) !== $storedSid ) {
-				$this->logger->error( "SID mismatch, possible replay attempt", ['txn' => $txn, 'sid' => get( 'sid' ), 'stored_sid' => $storedSid] );
+			// Serialize processing per order; take the lock before reading any order content.
+			$lock = fopen( kirby()->root( 'cache' ) . '/order-' . preg_replace( '/[^a-z0-9]/i', '', $txn ) . '.lock', 'c' );
+			if( $lock === false || !flock( $lock, LOCK_EX ) )
+				throw new \Exception( 'Could not lock order for processing' );
+
+			$cartPage = $this->getCartPage();
+			if( empty( $cartPage ) ) {
+				// A concurrent request already finalized (and renamed) this order.
+				$this->logger->info( "order already finalized by another request, skipping", ['txn' => $txn] );
+				return true;
+			}
+
+			$storedSid = $cartPage->stripe_session_id()->value();
+			if( $returnedSid !== $storedSid ) {
+				$this->logger->error( "SID mismatch, possible replay attempt", ['txn' => $txn, 'sid' => $returnedSid, 'stored_sid' => $storedSid] );
 				$this->session->set( 'error', 'Invalid payment session.' );
 				return false;
 			}
 
 			$stripe = new Stripe();
-			$sid = $stripe->retrieveSession( get( 'sid' ) );
+			$sid = $stripe->retrieveSession( $returnedSid );
 			$pi = $stripe->retrievePaymentIntent( $sid->payment_intent );
 
 			// stripe checkout went well
-			if( $pi->status == 'succeeded' && $pi->latest_charge->paid ) {
-				// order still pending, finalize details
+			if( $pi->status === 'succeeded' && $pi->latest_charge->paid ) {
 				// check status to avoid repeat processing if client reloads page
-				if( $this->getCartPage()->content()->get( 'orderstatus' ) == 'pending' ) {
+				if( $cartPage->content()->get( 'orderstatus' )->value() === 'pending' ) {
 					$this->logger->info( "payment captured, finalizing order", ['txn' => $txn, 'session_id' => $sid->id, 'payment_intent_id' => $pi->id] );
+					$this->checkPaidAmount( $sid, $txn );
 					$this->updateInventory();
+					$this->markPaid( 'stripe' ); // persisted before emails so a reload can't repeat them
 					$this->sendNotifications();
-					$this->updateOrder( 'stripe' );
+					$this->updateOrder();
 				} else {
 					$this->logger->info( "order already finalized, skipping repeat processing", ['txn' => $txn, 'session_id' => $sid->id] );
 				}
@@ -611,15 +612,39 @@ class Cart
 				$this->session->set( 'error', 'There was an error with the payment processing, I have been notified of the issue.' );
 				return false;
 			}
-		} catch( \Exception $e ) {
+		} catch( \Throwable $e ) {
 			$this->logger->error( "general error processing stripe payment", ['txn' => $txn, 'reason' => $e->getMessage()] );
 			sendAlert( $txn, $this->getCartPage()?->suuid()->value(), $e->getMessage() );
 			$this->session->set( 'error', 'There was an unspecified error with the site, I have been notified of this issue. You may try again later' );
 			return false;
+		} finally {
+			if( is_resource( $lock ) ) {
+				flock( $lock, LOCK_UN );
+				fclose( $lock );
+			}
 		}
 
 		return true;
+	}
 
+	/**
+	 * Safety net: compares what Stripe actually charged with the cart total and
+	 * alerts the site owner on a mismatch. It never blocks finalization — the
+	 * customer has already paid — it just makes a discrepancy visible.
+	 *
+	 * @param \Stripe\Checkout\Session $session Retrieved Checkout session
+	 * @param string                    $txn     Transaction id (for logging)
+	 * @return void
+	 */
+	private function checkPaidAmount( $session, $txn ): void
+	{
+		$expected = (int) round( ( $this->subtotal( $this->items() ) + (float) $this->getCartPage()->shipping()->value() ) * 100 );
+
+		if( (int) $session->amount_total !== $expected ) {
+			$message = "Charged amount {$session->amount_total} differs from cart total {$expected} (cents)";
+			$this->logger->error( "paid amount does not match cart total", ['txn' => $txn, 'session_id' => $session->id, 'charged' => $session->amount_total, 'expected' => $expected] );
+			sendAlert( $txn, $this->getCartPage()->suuid()->value(), $message );
+		}
 	}
 
 	/**
@@ -673,34 +698,48 @@ class Cart
 	}
 
 	/**
-	 * Marks the order as paid, renames the draft page to ord-{uuid}, and updates the session state.
+	 * Persists the 'paid' status in a single update. This is what stops a reload
+	 * from re-running inventory/notifications, so a failure is thrown to the caller.
 	 *
 	 * @param string $paymentMethod Payment provider identifier (e.g. 'stripe')
-	 * @return void|false Returns false on exception; otherwise void
+	 * @return void
+	 * @throws \Throwable When the paid status could not be persisted
 	 */
-	private function updateOrder( $paymentMethod )
+	private function markPaid( $paymentMethod )
 	{
-		$orderId = null;
+		$orderId = $this->getCartPage()->suuid()->value();
+
+		kirby()->impersonate( 'kirby' );
+		$this->getCartPage()->update( ['title' => "ord-$orderId", 'orderstatus' => 'paid', 'payment' => $paymentMethod] );
+		$this->cartPage = null;
+
+		$this->logger->info( "order status updated to paid", ['txn' => $this->session->get( 'txn' ), 'order' => $orderId, 'payment_method' => $paymentMethod] );
+	}
+
+	/**
+	 * Final bookkeeping for a paid order: renames the draft page to ord-{uuid}
+	 * and updates the session state. The order is already paid by now, so a
+	 * failed rename is only logged and alerted.
+	 *
+	 * @return void
+	 */
+	private function updateOrder()
+	{
 		$txn = $this->session->get( 'txn' );
+		$orderId = $this->getCartPage()->suuid()->value();
 
+		kirby()->impersonate( 'kirby' );
 		try {
-			$orderId = $this->getCartPage()->suuid()->value();
-
-			kirby()->impersonate( 'kirby' );
-			$this->getCartPage()->update( ['title' => "ord-$orderId", 'orderstatus' => 'paid', 'payment' => $paymentMethod] );
-			$this->cartPage = null;
 			$this->getCartPage()->changeSlug( "ord-$orderId" );
-			$this->cartPage = null;
-			$this->logger->info( "order status updated to paid", ['txn' => $txn, 'order' => $orderId, 'payment_method' => $paymentMethod] );
-
-			$this->session->set( 'state', 'success' );
-			$this->session->set( 'order', str_replace( '_', '-', "ord-$orderId" ) );
-			$this->session->remove( 'txn' );
-		} catch( \Exception $e ) {
-			$this->logger->error( "failed to finalize order", ['txn' => $txn, 'order' => $orderId, 'reason' => $e->getMessage()] );
-			sendAlert( $txn, $orderId, $e->getMessage() );
-			return false;
+		} catch( \Throwable $t ) {
+			$this->logger->error( "order paid but could not be renamed", ['txn' => $txn, 'order' => $orderId, 'reason' => $t->getMessage()] );
+			sendAlert( $txn, $orderId, $t->getMessage() );
 		}
+		$this->cartPage = null;
+
+		$this->session->set( 'state', 'success' );
+		$this->session->set( 'order', str_replace( '_', '-', "ord-$orderId" ) );
+		$this->session->remove( 'txn' );
 	}
 
 	/**

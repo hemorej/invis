@@ -120,6 +120,26 @@ class StripeConnector
 	}
 
 	/**
+	 * Expires an open Checkout session so it can no longer be paid
+	 * (used when the cart changes after the session was created).
+	 *
+	 * @param string $sid Stripe Checkout session id
+	 * @return bool True if the session was expired; false if Stripe refused
+	 *              (e.g. it was already completed or expired) or errored
+	 */
+	public function expireSession( string $sid ): bool
+	{
+		try {
+			$this->stripe->checkout->sessions->expire( $sid );
+			$this->logger->info( 'stripe checkout session expired', ['session_id' => $sid] );
+			return true;
+		} catch( \Throwable $e ) {
+			$this->logger->warning( 'stripe checkout session not expired', ['session_id' => $sid, 'reason' => $e->getMessage()] );
+			return false;
+		}
+	}
+
+	/**
 	 * Fetches a PaymentIntent with its latest charge expanded, so the caller
 	 * can check both `status` and `latest_charge->paid`.
 	 *
