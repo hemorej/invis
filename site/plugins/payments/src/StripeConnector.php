@@ -76,7 +76,6 @@ class StripeConnector
 			}
 
 			$sessionObject = [
-				'payment_method_types' => ['card'],
 				'mode' => 'payment',
 				'line_items' => $sessionLineItems,
 				'success_url' => kirby()->site()->url() . '/order/success/stripe?sid={CHECKOUT_SESSION_ID}',
