@@ -77,6 +77,11 @@ var app = new Vue({
                 this.items = response.data.items
                 this.total += this.shipping
               })
+              .catch(error => {
+                // The server answers with a JSON {message} on validation, rate-limit and server errors
+                this.orderWaiting = false
+                alert((error.response && error.response.data && error.response.data.message) || 'Something went wrong, please try again')
+              })
         },
         redirectStripe: function(){
             this.stripe.redirectToCheckout({

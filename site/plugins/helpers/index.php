@@ -16,30 +16,34 @@ Kirby::plugin( 'helpers/helpers', [
 /**
  * Upserts a single row into a Kirby structure field, keyed by its `suuid`.
  *
- * The existing row with the same `suuid` (if any) is removed and the new
- * `$data` appended, so callers can treat it as "set this variant/order line
- * to exactly these values" without worrying about duplicates.
+ * An existing row with the same `suuid` is replaced in place; otherwise the
+ * new `$data` is appended. Callers can treat it as "set this variant/order line
+ * to exactly these values" without worrying about duplicates or row order.
  *
  * @param \Kirby\Cms\Page $page  Page owning the field
  * @param string          $field Structure field name (e.g. 'variants')
  * @param array           $data  Row data; must contain a 'suuid' key
- * @return string|true  True on success, or the exception message on failure
- * @throws Throwable
+ * @return \Kirby\Cms\Page The updated page
+ * @throws \Kirby\Exception\InvalidArgumentException When `$data` has no `suuid`
+ * @throws \Throwable When the page update fails (callers must handle it)
  */
 function addToStructure( $page, $field, $data = [] )
 {
-	$fieldData = $page->$field()->yaml();
-	$key = array_search( $data['suuid'], array_column( $fieldData, 'suuid' ) );
-	unset( $fieldData[$key] );
-	$fieldData = array_values( $fieldData );
+	if( empty( $data['suuid'] ) )
+		throw new \Kirby\Exception\InvalidArgumentException( 'addToStructure requires a suuid in $data' );
 
-	$fieldData[] = $data;
-	$fieldData = Yaml::encode( $fieldData );
-	try {
-		return $page->update( [$field => $fieldData] );
-	} catch( Exception $e ) {
-		return $e->getMessage();
+	$fieldData = $page->$field()->yaml();
+
+	// Compare as strings: YAML may hand back numeric-looking ids as ints.
+	$key = array_search( (string) $data['suuid'], array_map( 'strval', array_column( $fieldData, 'suuid' ) ), true );
+
+	if( $key === false ) {
+		$fieldData[] = $data;
+	} else {
+		$fieldData[$key] = $data;
 	}
+
+	return $page->update( [$field => Yaml::encode( array_values( $fieldData ) )] );
 }
 
 /**

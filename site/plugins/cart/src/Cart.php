@@ -17,6 +17,9 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Cart
 {
+	/** Shipping charged (CAD) when no rate is configured for the destination or the 'rest' region. */
+	private const DEFAULT_SHIPPING = 32.32;
+
 	/** @var \Kirby\Cache\Cache */
 	protected $cache;
 
@@ -48,6 +51,34 @@ class Cart
 	}
 
 	/**
+	 * Fixed-window, per-IP rate limit backed by the plugin cache.
+	 * Counts this call, and reports whether the caller is now over the limit.
+	 *
+	 * @param string $bucket        Name of the limited action
+	 * @param int    $max           Allowed calls per window
+	 * @param int    $windowMinutes Window length in minutes
+	 * @return bool True when the request should be rejected
+	 */
+	public static function rateLimited( string $bucket, int $max, int $windowMinutes ): bool
+	{
+		$cache = kirby()->cache( 'helpers.helpers.backend' );
+		$key = 'rate-' . $bucket . '-' . hash( 'sha256', (string) kirby()->visitor()->ip() );
+		$now = time();
+
+		$state = $cache->get( $key );
+		if( !is_array( $state ) || $now - ( $state['start'] ?? 0 ) >= $windowMinutes * 60 )
+			$state = ['start' => $now, 'count' => 0];
+
+		if( $state['count'] >= $max )
+			return true;
+
+		$state['count']++;
+		$cache->set( $key, $state, $windowMinutes );
+
+		return false;
+	}
+
+	/**
 	 * Converts a CAD subtotal into a formatted USD/EUR/GBP estimate using live Fixer.io rates.
 	 *
 	 * @param int|float $total Amount in CAD
@@ -56,13 +87,12 @@ class Cart
 	 */
 	public function estimateCurrency( $total )
 	{
-		if( $data = $this->cache->get( 'rates' ) ) {
-			$rates = json_decode( $data );
-		} else {
-			$access_key = kirby()->option( 'fixer_key' );
-			$data = Remote::get( 'http://data.fixer.io/api/latest?access_key=' . $access_key . '&symbols=USD,CAD,GBP' );
-			$this->cache->set( 'rates', $data->content(), 1440 );
-			$rates = json_decode( $data->content() );
+		try {
+			$rates = $this->getRates();
+		} catch( \Throwable $t ) {
+			// The estimate is cosmetic: never let a rates failure break the cart or checkout.
+			$this->logger->warning( "could not fetch currency rates", ['reason' => $t->getMessage()] );
+			return '';
 		}
 
 		$eurBase = $total / $rates->rates->CAD;
@@ -74,6 +104,32 @@ class Cart
 			. round( $gbp, 0 ) . '£';
 
 		return $estimate;
+	}
+
+	/**
+	 * Returns the Fixer.io rates (EUR base), cached for 24h. Only well-formed,
+	 * successful responses are cached, so an API error can't poison the cache.
+	 *
+	 * @return object
+	 * @throws \Exception When the API call fails or returns an unexpected payload
+	 */
+	private function getRates()
+	{
+		if( $data = $this->cache->get( 'rates' ) ) {
+			return json_decode( $data );
+		}
+
+		$access_key = kirby()->option( 'fixer_key' );
+		$response = Remote::get( 'http://data.fixer.io/api/latest?access_key=' . $access_key . '&symbols=USD,CAD,GBP', ['timeout' => 5] );
+		$rates = json_decode( $response->content() );
+
+		if( empty( $rates->success ) || !isset( $rates->rates->CAD, $rates->rates->USD, $rates->rates->GBP ) ) {
+			throw new \Exception( 'Unexpected response from the rates API' );
+		}
+
+		$this->cache->set( 'rates', $response->content(), 1440 );
+
+		return $rates;
 	}
 
 	/**
@@ -174,8 +230,8 @@ class Cart
 	public function getLineItems( $shipping = 0 )
 	{
 		$lineItems = [];
-		$products = $this->getCartPage()?->products()?->toStructure();
-		if(empty($products)) {
+		$products = $this->getCartPage()?->products()->toStructure();
+		if( $products === null || $products->isEmpty() ) {
 			return $lineItems;
 		}
 
@@ -185,7 +241,7 @@ class Cart
 				'price_external_id' => $product->price_external_id()->value,
 				'name' => $product->variant()->value,
 				'description' => $product->name()->value,
-				'amount' => $product->amount()->value * 100,
+				'amount' => (int) round( (float) $product->amount()->value * 100 ),
 				'images' => [$preview],
 				'currency' => 'CAD',
 				'quantity' => $product->quantity()->value];
@@ -195,7 +251,7 @@ class Cart
 			$lineItems[] = [
 				'name' => 'Shipping',
 				'description' => 'Standard shipping by Canada Post',
-				'amount' => $shipping * 100,
+				'amount' => (int) round( (float) $shipping * 100 ),
 				'currency' => 'CAD',
 				'quantity' => 1];
 		}
@@ -218,7 +274,7 @@ class Cart
 		$items = $this->getCartPage()->products()->toStructure();
 
 		// Return the empty collection if there are no items
-		if( empty( $items ) ) return $return;
+		if( $items->isEmpty() ) return $return;
 
 		foreach( $items as $key => $item )
 			$return->append( $key, $item );
@@ -244,17 +300,31 @@ class Cart
 
 		try {
 			$quantityToAdd = $quantity ? intval( $quantity ) : 1;
-			$idParts = explode( '::', $id ); // $id is formatted uri::uuid
-			$uri = $idParts[0];
-			$uuid = $idParts[1];
+			$idParts = explode( '::', (string) $id ); // $id is formatted uri::suuid
+			if( count( $idParts ) !== 2 || $idParts[0] === '' || $idParts[1] === '' ) {
+				$this->logger->warning( "add to cart rejected, malformed item id", ['txn' => $this->session->get( 'txn' ), 'item' => $id] );
+				return;
+			}
+			[$uri, $uuid] = $idParts;
+
+			$product = $this->site->page( $uri );
+			$variant = $product?->variants()->toStructure()->findBy( 'suuid', $uuid );
+			if( empty( $product ) || empty( $variant ) ) {
+				$this->logger->warning( "add to cart rejected, unknown product or variant", ['txn' => $this->session->get( 'txn' ), 'item' => $id] );
+				return;
+			}
+
 			$item = empty( $this->getCartPage() ) ? null : $this->getCartPage()->products()->toStructure()->findBy( 'suuid', $uuid );
 			$items = empty( $this->getCartPage() ) ? [] : $this->getCartPage()->products()->yaml();
-			$product = $this->site->page( $uri );
-			$variant = $this->site->page( $uri )->variants()->toStructure()->findBy( 'suuid', $uuid );
 
 			if( empty( $item ) ) {
 				// Add a new item
 				$grantedQty = $this->updateQty( $id, $quantityToAdd );
+				if( $grantedQty <= 0 ) {
+					$this->logger->warning( "item not added, out of stock", ['txn' => $this->session->get( 'txn' ), 'item' => $id, 'requested' => $quantityToAdd] );
+					return;
+				}
+
 				$items[] = [
 					'id' => $id,
 					'uri' => $uri,
@@ -268,13 +338,14 @@ class Cart
 					'quantity' => $grantedQty,
 				];
 			} else {
-				// Increase the quantity of an existing item
-				$newQty = $quantity ? (int)$quantity : (int)$item->quantity()->value + 1;
+				// Update the quantity of an existing item: an explicit quantity
+				// replaces the current one, otherwise add one more.
+				$newQty = $quantity ? (int) $quantity : (int) $item->quantity()->value + 1;
 				$grantedQty = $this->updateQty( $id, $newQty );
 				foreach( $items as $key => $i ) {
-					if( $i['id'] == $item->id() ) {
+					if( $i['id'] === (string) $item->id() ) {
 						$items[$key]['quantity'] = $grantedQty;
-						continue;
+						break;
 					}
 				}
 				$quantityToAdd = $newQty;
@@ -289,7 +360,7 @@ class Cart
 
 				// Draft order pages live outside the visitor's permission scope.
 				kirby()->impersonate( 'kirby' );
-				Page::create( [
+				$this->cartPage = Page::create( [
 					'parent' => page( 'prints/orders' ),
 					'slug' => $this->txnId,
 					'template' => 'order',
@@ -317,7 +388,7 @@ class Cart
 			} else {
 				$this->logger->info( "item added to cart", ['txn' => $this->session->get( 'txn' ), 'item' => $id, 'quantity' => $grantedQty] );
 			}
-		} catch( \Exception $e ) {
+		} catch( \Throwable $e ) {
 			$this->logger->error( "failed to add item to cart", ['txn' => $this->session->get( 'txn' ), 'item' => $id, 'reason' => $e->getMessage()] );
 		}
 	}
@@ -394,15 +465,16 @@ class Cart
 	 */
 	public function delete( $id )
 	{
-		$items = $this->getCartPage()->products()->yaml();
-		foreach( $items as $key => $i ) {
-			if( $i['id'] == $id ) {
-				unset( $items[$key] );
-			}
-		}
+		$cartPage = $this->getCartPage();
+		if( empty( $cartPage ) ) return;
+
+		$items = array_values( array_filter(
+			$cartPage->products()->yaml(),
+			fn( $i ) => ( $i['id'] ?? null ) !== $id
+		) );
 
 		kirby()->impersonate( 'kirby' );
-		$this->getCartPage()->update( ['products' => \Yaml::encode( $items )] );
+		$cartPage->update( ['products' => \Yaml::encode( $items )] );
 		$this->cartPage = null;
 
 		$this->logger->info( "item removed from cart", ['txn' => $this->session->get( 'txn' ), 'item' => $id] );
@@ -436,27 +508,23 @@ class Cart
 	 */
 	public function addShipping( $country, $email )
 	{
-		$region = page( 'prints' )->regions()->toStructure()->findBy( 'country', $country );
+		$cartPage = $this->getCartPage();
+		if( empty( $cartPage ) )
+			throw new \Exception( 'No active cart to calculate shipping for' );
 
-		if( empty( $region ) ) {
-			$region = 'rest';
-		} else {
-			$region = $region->name()->value();
-		}
+		$prints = page( 'prints' );
+		$regionRow = $prints->regions()->toStructure()->findBy( 'country', $country );
+		$region = $regionRow ? $regionRow->name()->value() : 'rest';
 
-		$shippingRegion = page( 'prints' )->shipping()->toStructure()->findBy( 'region', $region );
+		$rates = $prints->shipping()->toStructure();
+		$rateRow = $rates->findBy( 'region', $region ) ?? $rates->findBy( 'region', 'rest' );
+		$amount = $rateRow?->amount()->value();
 
-		if( empty( $shippingRegion ) ) {
-			$shippingRegion = page( 'prints' )->shipping()->toStructure()->findBy( 'region', 'rest' );
-			$shipping = $shippingRegion->amount()->value();
-		} else {
-			$shipping = $shippingRegion->amount()->value();
-		}
+		// A configured 0 means free shipping; only a missing/blank rate falls back to the default.
+		$shipping = is_numeric( $amount ) ? (float) $amount : self::DEFAULT_SHIPPING;
 
-		if( empty( $shipping ) )
-			$shipping = 32.32;
-
-		$this->getCartPage()->update( ['shipping' => $shipping] );
+		kirby()->impersonate( 'kirby' );
+		$cartPage->update( ['shipping' => $shipping] );
 		$this->cartPage = null;
 		$stripeSession = $this->updateStripeSession( $email );
 
@@ -565,26 +633,42 @@ class Cart
 	private function updateInventory()
 	{
 		$orderId = $this->getCartPage()->suuid()->value();
+		$cartItems = $this->getCartPage()->products()->yaml();
 
-		foreach( $this->getCartPage()->products()->yaml() as $item ) {
+		// Draft/order flows run as an anonymous visitor; stock writes need elevated rights.
+		kirby()->impersonate( 'kirby' );
+
+		// Phase 1: validate every line before writing anything, so a late failure
+		// can't leave the stock half-deducted for an order that never finalizes.
+		$variantsByUri = [];
+		$changed = [];
+		foreach( $cartItems as $item ) {
 			$uri = $item['uri'];
-			$suuid = !empty( $item['suuid'] ) ? $item['suuid'] : ( explode( '::', $item['id'] )[1] ?? '' );
+			$suuid = (string) ( !empty( $item['suuid'] ) ? $item['suuid'] : ( explode( '::', $item['id'] )[1] ?? '' ) );
 
-			$allVariants = $this->site->page( $uri )->variants()->yaml();
-			$key = array_search( $suuid, array_column( $allVariants, 'suuid' ) );
+			$variantsByUri[$uri] ??= $this->site->page( $uri )->variants()->yaml();
+			$key = array_search( $suuid, array_map( 'strval', array_column( $variantsByUri[$uri], 'suuid' ) ), true );
 
 			if( $key === false )
 				throw new \Exception( "Variant not found for suuid: " . $suuid );
 
-			$variant = $allVariants[$key];
+			$stock = $variantsByUri[$uri][$key]['stock'] ?? '';
+			if( !is_numeric( $stock ) )
+				continue; // blank = untracked / unlimited, nothing to deduct
 
-			$remainingStock = intval( $variant['stock'] ) - intval( $item['quantity'] );
+			$remainingStock = intval( $stock ) - intval( $item['quantity'] );
 			if( $remainingStock < 0 )
-				throw new \Exception( "Insufficient stock for product " . page( $uri )->title()->value() . " (uuid: " . $variant['suuid'] . ")" );
+				throw new \Exception( "Insufficient stock for product " . page( $uri )->title()->value() . " (uuid: " . $suuid . ")" );
 
-			$variant['stock'] = $remainingStock;
-			addToStructure( page( $uri ), 'variants', $variant );
+			$variantsByUri[$uri][$key]['stock'] = $remainingStock;
+			$changed[$uri] = true;
 		}
+
+		// Phase 2: one write per product.
+		foreach( array_keys( $changed ) as $uri ) {
+			$this->site->page( $uri )->update( ['variants' => \Yaml::encode( array_values( $variantsByUri[$uri] ) )] );
+		}
+
 		$this->logger->info( "inventory updated after order", ['txn' => $this->session->get( 'txn' ), 'order' => $orderId] );
 	}
 
