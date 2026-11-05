@@ -23,12 +23,6 @@ async function buildCss() {
 	const purgeResult = await new PurgeCSS().purge({
 		content: ['site/**/*.php', 'assets/js/**/*.js'].map((p) => path.join(root, p)),
 		css: [{ raw: read('assets/css/vendor/tachyons.css') }],
-		// Kirby/Vue templates only ever use plain, literal tachyons class
-		// names (see product.js variant-on/off toggling, product.php,
-		// article.php, etc.) so the default extractor is sufficient. This
-		// safelist is a safety net for responsive/state suffixes in case a
-		// class is ever assembled dynamically rather than written literally.
-		safelist: [/-ns$/, /-m$/, /-l$/, /^hover-/, /^dim$/],
 	})
 	const purgedTachyons = purgeResult[0].css
 	const app = await minify(read('assets/css/app.css'), 'css')
