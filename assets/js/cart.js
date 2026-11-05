@@ -1,4 +1,19 @@
 document.addEventListener('alpine:init', function () {
+    var genericError = 'Something went wrong, please try again'
+
+    // POST a JSON body. Resolves with the response on a 2xx status; rejects with
+    // an Error carrying the server's {message} (or a generic one) otherwise.
+    function postJson(url, body) {
+        return fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        }).then(response => {
+            if (response.ok) return response
+            return response.json().catch(() => ({})).then(data => { throw new Error(data.message || genericError) })
+        }, () => { throw new Error(genericError) })
+    }
+
     // Kept outside the reactive data so Alpine does not proxy the Stripe client.
     var stripe = null
 
@@ -55,7 +70,7 @@ document.addEventListener('alpine:init', function () {
             // init stripe button
             stripe = Stripe(this.$refs.checkoutKey.value);
             this.orderWaiting = true
-            axios.post('/address', {
+            postJson('/address', {
                 name: this.name,
                 email: this.email,
                 line1: this.line1,
@@ -66,22 +81,22 @@ document.addEventListener('alpine:init', function () {
                 country: this.country,
                 csrf: this.$refs.checkoutCSRF.value
               })
-              .then(response => {
+              .then(response => response.json())
+              .then(data => {
                 this.orderWaiting = false
                 this.inShipping = false
                 this.inCheckout = true
                 this.inCart = true
 
-                this.$refs.checkoutSessionID.value = response.data.checkoutSessionId
-                this.currencies = response.data.currencies
-                this.shipping = response.data.shipping
-                this.items = response.data.items
+                this.$refs.checkoutSessionID.value = data.checkoutSessionId
+                this.currencies = data.currencies
+                this.shipping = data.shipping
+                this.items = data.items
                 this.total += this.shipping
               })
               .catch(error => {
-                // The server answers with a JSON {message} on validation, rate-limit and server errors
                 this.orderWaiting = false
-                alert((error.response && error.response.data && error.response.data.message) || 'Something went wrong, please try again')
+                alert(error.message)
               })
         },
         redirectStripe: function(){
@@ -103,7 +118,7 @@ document.addEventListener('alpine:init', function () {
                 this.error = true
                 return false;
             }else{
-                axios.post('/prints/cart', {
+                postJson('/prints/cart', {
                     id: id,
                     action: "add",
                     quantity: qty,

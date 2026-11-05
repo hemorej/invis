@@ -14,9 +14,9 @@ async function minify(code, loader) {
 }
 
 async function buildJsBundle(vendorPaths, sourcePath, outPath) {
-	const vendor = vendorPaths.map(read).join('\n')
-	const source = await minify(read(sourcePath), 'js')
-	write(outPath, vendor + '\n' + source)
+	const parts = vendorPaths.map(read)
+	parts.push(await minify(read(sourcePath), 'js'))
+	write(outPath, parts.join('\n'))
 }
 
 // Alpine is shared by the cart and product pages: shipped as its own file so
@@ -38,8 +38,8 @@ async function buildCss() {
 async function main() {
 	await Promise.all([
 		buildJsBundle(['assets/js/vendor/lazyload.min.js'], 'assets/js/app.js', 'assets/dist/app.min.js'),
-		buildJsBundle(['assets/js/vendor/axios.min.js'], 'assets/js/cart.js', 'assets/dist/cart.min.js'),
-		buildJsBundle(['assets/js/vendor/axios.min.js'], 'assets/js/product.js', 'assets/dist/product.min.js'),
+		buildJsBundle([], 'assets/js/cart.js', 'assets/dist/cart.min.js'),
+		buildJsBundle([], 'assets/js/product.js', 'assets/dist/product.min.js'),
 		buildCss(),
 		copyAlpine(),
 	])

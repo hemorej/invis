@@ -25,14 +25,22 @@ document.addEventListener('alpine:init', function () {
         addToCart: function(event){
             this.submitting = true
 
-            axios.post('/prints/cart', {
-                uri: this.$refs.uri.value,
-                variant: this.activeVariant,
-                action: 'add',
-                csrf: this.$refs.csrf.value
+            fetch('/prints/cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    uri: this.$refs.uri.value,
+                    variant: this.activeVariant,
+                    action: 'add',
+                    csrf: this.$refs.csrf.value
+                })
               })
-              .then(function (response) {
+              .then(response => {
+                if (!response.ok) throw new Error('HTTP ' + response.status)
                 document.location.replace('cart');
+              })
+              .catch(() => {
+                this.submitting = false
               })
         }
     }))

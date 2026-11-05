@@ -228,7 +228,6 @@
         <?= js('assets/dist/cart.min.js') ?>
         <?= js('assets/dist/alpine.min.js') ?>
     <?php else: ?>
-        <?= js('https://unpkg.com/axios/dist/axios.min.js') ?>
         <?= js('assets/js/cart.js') ?>
         <?= js('assets/js/vendor/alpine.min.js') ?>
     <?php endif ?>
