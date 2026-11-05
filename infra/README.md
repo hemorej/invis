@@ -45,9 +45,9 @@ No daemons or queue workers. One scheduled job, defined in Forge's Scheduler (do
 /mnt/data-volume/            15 GB block volume, the only persistent state
 ```
 
-Everything Kirby writes (orders, subscribers, journal, uploaded media, accounts) lands
+Everything Kirby writes (orders, journal, uploaded media, accounts) lands
 on the volume through those symlinks, so the volume snapshot is the backup of record.
-The real secrets (Stripe, Mailgun, `newsletter_*` keys, Kirby `.license`) are in
+The real secrets (Stripe, Mailgun, Kirby `.license`) are in
 `/mnt/data-volume/site/config/config.php` and `.license`, not in `.env`. One release
 still carries a stray `config.the-invisible-cities.ca.php -> config.php` symlink from
 before the domain change; `forge_deploy.sh` no longer creates it.

@@ -2,13 +2,19 @@
 
 namespace Cart;
 
-use Logger\Logger;
+use Kirby\Cache\Cache;
+use Kirby\Cms\Collection;
 use Kirby\Cms\Page;
-use Mailbun\Mailbun;
-use Kirby\Uuid\Uuid;
+use Kirby\Cms\Site;
+use Kirby\Data\Yaml;
 use Kirby\Http\Remote;
+use Kirby\Session\Session;
+use Kirby\Toolkit\A;
+use Kirby\Uuid\Uuid;
+use Logger\Logger;
+use Mailbun\Mailbun;
+use Monolog\Logger as Monolog;
 use Payments\StripeConnector as Stripe;
-use Kirby\Exception\InvalidArgumentException;
 
 /**
  * Manages the shopping cart backed by Kirby draft pages under prints/orders.
@@ -17,34 +23,50 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Cart
 {
-	/** @var \Kirby\Cache\Cache */
-	protected $cache;
+	/** Shipping charged (CAD) when no rate is configured for the destination or the 'rest' region. */
+	private const DEFAULT_SHIPPING = 32.32;
 
-	/** @var \Kirby\Cms\Site */
-	protected $site;
+	protected Cache $cache;
+	protected Site $site;
+	protected Session $session;
+	protected Monolog $logger;
+	protected ?string $txnId = null;
+	protected ?Page $cartPage = null;
 
-	/** @var \Kirby\Session\Session */
-	protected $session;
-
-	/** @var string|null */
-	protected $txnId;
-
-	/** @var \Monolog\Logger */
-	protected $logger;
-
-	/** @var \Kirby\Cms\Page|null */
-	protected $cartPage = null;
-
-	/**
-	 * @return void
-	 */
-	function __construct()
+	public function __construct()
 	{
 		$this->cache = kirby()->cache( 'helpers.helpers.backend' );
 		$this->site = kirby()->site();
 		$this->session = kirby()->session();
-		$instance = new Logger( 'cart' );
-		$this->logger = $instance->getLogger();
+		$this->logger = ( new Logger( 'cart' ) )->getLogger();
+	}
+
+	/**
+	 * Fixed-window, per-IP rate limit backed by the plugin cache.
+	 * Counts this call, and reports whether the caller is now over the limit.
+	 *
+	 * @param string $bucket        Name of the limited action
+	 * @param int    $max           Allowed calls per window
+	 * @param int    $windowMinutes Window length in minutes
+	 * @return bool True when the request should be rejected
+	 */
+	public static function rateLimited( string $bucket, int $max, int $windowMinutes ): bool
+	{
+		$cache = kirby()->cache( 'helpers.helpers.backend' );
+		$key = 'rate-' . $bucket . '-' . hash( 'sha256', (string) kirby()->visitor()->ip() );
+		$now = time();
+
+		$state = $cache->get( $key );
+		if( !is_array( $state ) || $now - ( $state['start'] ?? 0 ) >= $windowMinutes * 60 )
+			$state = ['start' => $now, 'count' => 0];
+
+		if( $state['count'] >= $max )
+			return true;
+
+		$state['count']++;
+		$cache->set( $key, $state, $windowMinutes );
+
+		return false;
 	}
 
 	/**
@@ -54,15 +76,14 @@ class Cart
 	 * @return string Formatted string, e.g. "42$/38€/33£"
 	 * @throws \Exception
 	 */
-	public function estimateCurrency( $total )
+	public function estimateCurrency( int|float $total ): string
 	{
-		if( $data = $this->cache->get( 'rates' ) ) {
-			$rates = json_decode( $data );
-		} else {
-			$access_key = kirby()->option( 'fixer_key' );
-			$data = Remote::get( 'http://data.fixer.io/api/latest?access_key=' . $access_key . '&symbols=USD,CAD,GBP' );
-			$this->cache->set( 'rates', $data->content(), 1440 );
-			$rates = json_decode( $data->content() );
+		try {
+			$rates = $this->getRates();
+		} catch( \Throwable $t ) {
+			// The estimate is cosmetic: never let a rates failure break the cart or checkout.
+			$this->logger->warning( "could not fetch currency rates", ['reason' => $t->getMessage()] );
+			return '';
 		}
 
 		$eurBase = $total / $rates->rates->CAD;
@@ -77,71 +98,79 @@ class Cart
 	}
 
 	/**
+	 * Returns the Fixer.io rates (EUR base), cached for 24h. Only well-formed,
+	 * successful responses are cached, so an API error can't poison the cache.
+	 *
+	 * @return object
+	 * @throws \Exception When the API call fails or returns an unexpected payload
+	 */
+	private function getRates(): object
+	{
+		if( $data = $this->cache->get( 'rates' ) ) {
+			return json_decode( $data );
+		}
+
+		$access_key = kirby()->option( 'fixer_key' );
+		$response = Remote::get( 'http://data.fixer.io/api/latest?access_key=' . $access_key . '&symbols=USD,CAD,GBP', ['timeout' => 5] );
+		$rates = json_decode( $response->content() );
+
+		if( empty( $rates->success ) || !isset( $rates->rates->CAD, $rates->rates->USD, $rates->rates->GBP ) ) {
+			throw new \Exception( 'Unexpected response from the rates API' );
+		}
+
+		$this->cache->set( 'rates', $response->content(), 1440 );
+
+		return $rates;
+	}
+
+	/**
 	 * Reports stock availability for a variant.
 	 *
-	 * Accepts either a variant structure object or a "uri::suuid" id string
-	 * (which is resolved to the variant first).
-	 *
-	 * @param mixed $variant Variant structure object, or a "uri::suuid" id
+	 * @param \Kirby\Cms\StructureObject $variant A row of a product's `variants` structure
 	 * @return bool|int  true = unlimited (blank stock field), false = out of
 	 *                   stock, or the positive integer quantity on hand
 	 */
 	public static function inStock( $variant )
 	{
-		// Id string form: split "uri::suuid" and look the variant up.
-		if( strstr( $variant->toString(), '::' ) ) {
-			$idParts = explode( '::', $variant );
-			$uri = $idParts[0];
-			$uuid = $idParts[1];
+		$stock = $variant->stock()->value;
 
-			$variant = page( $uri )->variants()->toStructure()->findBy( 'suuid', $uuid );
-			return $variant->stock()->value();
-		}
+		if( $stock === '' ) return true;               // blank = untracked / unlimited
+		if( !is_numeric( $stock ) ) return false;
+		if( (int) $stock <= 0 ) return false;          // 0 or negative = sold out
 
-		if( !is_numeric( $variant->stock()->value ) and $variant->stock()->value === '' ) return true;  // blank = untracked / unlimited
-		if( is_numeric( $variant->stock()->value ) and intval( $variant->stock()->value ) <= 0 ) return false; // 0 or negative = sold out
-		if( is_numeric( $variant->stock()->value ) and intval( $variant->stock()->value ) > 0 ) return intval( $variant->stock()->value );
-
-		return false;
+		return (int) $stock;
 	}
 
 	/**
 	 * Returns a human-readable summary of cart item types and quantities (e.g. "2 prints, 1 poster").
 	 *
-	 * @param \Collection $items Cart items structure
+	 * @param \Kirby\Cms\Collection|\Kirby\Cms\Structure $items Cart items structure
 	 * @return string
 	 */
-	public function contents( $items )
+	public function contents( $items ): string
 	{
 		$types = [];
-		$content = "";
 
 		foreach( $items as $item ) {
-			if( array_key_exists( $item->type()->value(), $types ) ) {
-				$types[$item->type()->value()] = $types[$item->type()->value()] + $item->quantity()->value();
-			} else {
-				$types[$item->type()->value()] = 1 * $item->quantity()->value();
-			}
+			$type = $item->type()->value();
+			$types[$type] = ( $types[$type] ?? 0 ) + (int) $item->quantity()->value();
 		}
 
+		$lines = [];
 		foreach( $types as $type => $quantity ) {
-			$line = join( ' ', [$quantity, $type] );
-			if( $quantity > 1 )
-				$line .= 's';
-
-			$content = $content . ', ' . $line;
+			$lines[] = $quantity . ' ' . $type . ( $quantity > 1 ? 's' : '' );
 		}
 
-		return ltrim( $content, ', ' );
+		return implode( ', ', $lines );
 	}
 
 	/**
 	 * Sums amount x quantity across cart items (CAD, pre-shipping).
 	 *
-	 * @param \Collection $items Cart items structure
+	 * @param \Kirby\Cms\Collection|\Kirby\Cms\Structure $items Cart items structure
 	 * @return int|float
 	 */
-	public function subtotal( $items )
+	public function subtotal( $items ): int|float
 	{
 		$subtotal = 0;
 		foreach( $items as $item ) {
@@ -156,7 +185,7 @@ class Cart
 	 *
 	 * @return Page|null
 	 */
-	public function getCartPage()
+	public function getCartPage(): ?Page
 	{
 		if( $this->cartPage !== null ) return $this->cartPage;
 		if( empty( $this->session->get( 'txn' ) ) ) return null;
@@ -171,11 +200,11 @@ class Cart
 	 * @param int|float $shipping Shipping amount in CAD; omit / 0 for no line
 	 * @return array<int, array<string, mixed>> Stripe-shaped line items
 	 */
-	public function getLineItems( $shipping = 0 )
+	public function getLineItems( int|float $shipping = 0 ): array
 	{
 		$lineItems = [];
-		$products = $this->getCartPage()?->products()?->toStructure();
-		if(empty($products)) {
+		$products = $this->getCartPage()?->products()->toStructure();
+		if( $products === null || $products->isEmpty() ) {
 			return $lineItems;
 		}
 
@@ -185,7 +214,7 @@ class Cart
 				'price_external_id' => $product->price_external_id()->value,
 				'name' => $product->variant()->value,
 				'description' => $product->name()->value,
-				'amount' => $product->amount()->value * 100,
+				'amount' => (int) round( (float) $product->amount()->value * 100 ),
 				'images' => [$preview],
 				'currency' => 'CAD',
 				'quantity' => $product->quantity()->value];
@@ -195,7 +224,7 @@ class Cart
 			$lineItems[] = [
 				'name' => 'Shipping',
 				'description' => 'Standard shipping by Canada Post',
-				'amount' => $shipping * 100,
+				'amount' => (int) round( (float) $shipping * 100 ),
 				'currency' => 'CAD',
 				'quantity' => 1];
 		}
@@ -206,11 +235,11 @@ class Cart
 	/**
 	 * Returns the cart's product rows as a Collection (empty if no active cart).
 	 *
-	 * @return \Collection
+	 * @return Collection
 	 */
-	public function items()
+	public function items(): Collection
 	{
-		$return = new \Collection();
+		$return = new Collection();
 
 		if( empty( $this->getCartPage() ) )
 			return $return;
@@ -218,7 +247,7 @@ class Cart
 		$items = $this->getCartPage()->products()->toStructure();
 
 		// Return the empty collection if there are no items
-		if( empty( $items ) ) return $return;
+		if( $items->isEmpty() ) return $return;
 
 		foreach( $items as $key => $item )
 			$return->append( $key, $item );
@@ -237,24 +266,38 @@ class Cart
 	 * @throws InvalidArgumentException
 	 * @throws \Throwable
 	 */
-	public function add( $id, $quantity )
+	public function add( string $id, int|string|null $quantity ): void
 	{
 		if( !empty( $quantity ) && $quantity <= 0 )
 			return;
 
 		try {
 			$quantityToAdd = $quantity ? intval( $quantity ) : 1;
-			$idParts = explode( '::', $id ); // $id is formatted uri::uuid
-			$uri = $idParts[0];
-			$uuid = $idParts[1];
+			$idParts = explode( '::', (string) $id ); // $id is formatted uri::suuid
+			if( count( $idParts ) !== 2 || $idParts[0] === '' || $idParts[1] === '' ) {
+				$this->logger->warning( "add to cart rejected, malformed item id", ['txn' => $this->session->get( 'txn' ), 'item' => $id] );
+				return;
+			}
+			[$uri, $uuid] = $idParts;
+
+			$product = $this->site->page( $uri );
+			$variant = $product?->variants()->toStructure()->findBy( 'suuid', $uuid );
+			if( empty( $product ) || empty( $variant ) ) {
+				$this->logger->warning( "add to cart rejected, unknown product or variant", ['txn' => $this->session->get( 'txn' ), 'item' => $id] );
+				return;
+			}
+
 			$item = empty( $this->getCartPage() ) ? null : $this->getCartPage()->products()->toStructure()->findBy( 'suuid', $uuid );
 			$items = empty( $this->getCartPage() ) ? [] : $this->getCartPage()->products()->yaml();
-			$product = $this->site->page( $uri );
-			$variant = $this->site->page( $uri )->variants()->toStructure()->findBy( 'suuid', $uuid );
 
 			if( empty( $item ) ) {
 				// Add a new item
 				$grantedQty = $this->updateQty( $id, $quantityToAdd );
+				if( $grantedQty <= 0 ) {
+					$this->logger->warning( "item not added, out of stock", ['txn' => $this->session->get( 'txn' ), 'item' => $id, 'requested' => $quantityToAdd] );
+					return;
+				}
+
 				$items[] = [
 					'id' => $id,
 					'uri' => $uri,
@@ -268,13 +311,14 @@ class Cart
 					'quantity' => $grantedQty,
 				];
 			} else {
-				// Increase the quantity of an existing item
-				$newQty = $quantity ? (int)$quantity : (int)$item->quantity()->value + 1;
+				// Update the quantity of an existing item: an explicit quantity
+				// replaces the current one, otherwise add one more.
+				$newQty = $quantity ? (int) $quantity : (int) $item->quantity()->value + 1;
 				$grantedQty = $this->updateQty( $id, $newQty );
 				foreach( $items as $key => $i ) {
-					if( $i['id'] == $item->id() ) {
+					if( $i['id'] === (string) $item->id() ) {
 						$items[$key]['quantity'] = $grantedQty;
-						continue;
+						break;
 					}
 				}
 				$quantityToAdd = $newQty;
@@ -289,7 +333,7 @@ class Cart
 
 				// Draft order pages live outside the visitor's permission scope.
 				kirby()->impersonate( 'kirby' );
-				Page::create( [
+				$this->cartPage = Page::create( [
 					'parent' => page( 'prints/orders' ),
 					'slug' => $this->txnId,
 					'template' => 'order',
@@ -301,14 +345,14 @@ class Cart
 						'orderstatus' => 'pending',
 						'session-start' => $timestamp,
 						'session-end' => $timestamp,
-						'products' => \Yaml::encode( $items ),
+						'products' => Yaml::encode( $items ),
 					],
 				] );
 
 				$this->session->set( 'txn', $this->txnId );
 			} else {
 				kirby()->impersonate( 'kirby' );
-				$this->getCartPage()->update( ['products' => \Yaml::encode( $items )] );
+				$this->getCartPage()->update( ['products' => Yaml::encode( $items )] + $this->expireStaleStripeSession() );
 				$this->cartPage = null;
 			}
 
@@ -317,72 +361,53 @@ class Cart
 			} else {
 				$this->logger->info( "item added to cart", ['txn' => $this->session->get( 'txn' ), 'item' => $id, 'quantity' => $grantedQty] );
 			}
-		} catch( \Exception $e ) {
+		} catch( \Throwable $e ) {
 			$this->logger->error( "failed to add item to cart", ['txn' => $this->session->get( 'txn' ), 'item' => $id, 'reason' => $e->getMessage()] );
 		}
 	}
 
 	/**
-	 * Clamps a requested quantity to what stock allows, accounting for the
-	 * quantity of the same variant's option siblings already in the cart.
+	 * Clamps a requested line quantity to the stock of that exact variant.
 	 *
-	 * @param string $id     Variant id, formatted "uri::variantslug::optionslug"
-	 * @param int    $newQty Requested quantity for this option
+	 * @param string $id     Variant id, formatted "uri::suuid"
+	 * @param int    $newQty Requested absolute quantity for the line
 	 * @return int The grantable quantity (may be less than requested, or 0)
 	 */
-	public function updateQty( $id, $newQty )
+	public function updateQty( string $id, int $newQty ): int
 	{
-		// $id is formatted uri::variantslug::optionslug
-		$idParts = explode( '::', $id );
-		$uri = $idParts[0];
-		$variantSlug = $idParts[1];
+		[$uri, $suuid] = array_pad( explode( '::', (string) $id ), 2, '' );
 
-		// Get combined quantity of this option's siblings
-		$siblingsQty = 0;
-		if( !empty( $this->getCartPage() ) ) {
-			foreach( $this->getCartPage()->products()->toStructure() as $item ) {
-				if( strpos( $item->id(), $uri . '::' . $variantSlug ) === 0 ) {
-					$siblingsQty += $item->quantity()->value;
-				}
-			}
-		}
+		$variant = $this->site->page( $uri )?->variants()->toStructure()->findBy( 'suuid', $suuid );
+		if( empty( $variant ) )
+			return 0;
 
-		foreach( $this->site->page( $uri )->variants()->toStructure() as $variant ) {
-			// Store the stock in a variable for quicker processing
-			if( !$this->inStock( $variant ) )
-				continue;
+		$stock = self::inStock( $variant ); // true = unlimited, false = sold out, int = on hand
 
-			$stock = self::inStock( $variant );
+		if( $stock === true )
+			return max( 0, (int) $newQty );
 
-			if( $siblingsQty === 0 ) {
-				// If there are no siblings
-				if( $stock === true or $stock >= $newQty ) {
-					// If there is enough stock
-					return $newQty;
-				} else if( $stock === false ) {
-					// If there is no stock
-					return 0;
-				} else {
-					// If there is insufficient stock
-					return $stock;
-				}
-			} else {
-				// If there are siblings
-				if( $stock === true or $stock >= $newQty ) {
-					// If the siblings plus $newQty won't exceed the max stock, go ahead
-					return $newQty;
-				} else if( $stock === false or $stock <= $siblingsQty ) {
-					// If the siblings have already maxed out the stock, return 0
-					return $siblingsQty;
-				} else if( $stock > $siblingsQty and $stock <= $siblingsQty + $newQty ) {
-					// If the siblings don't exceed max stock, but the newQty will, reduce newQty to the appropriate level
-					return $siblingsQty;
-				}
-			}
-		}
+		if( $stock === false )
+			return 0;
 
-		// The script should never get to this point
-		return 0;
+		return max( 0, min( (int) $newQty, $stock ) );
+	}
+
+	/**
+	 * Expires the order's open Stripe Checkout session, if any, so a cart that
+	 * changed after checkout started can't be paid at the old price/contents.
+	 * Returns the field changes to merge into the next cart-page update.
+	 * If Stripe won't expire it (already paid), the id is kept so the return
+	 * redirect still matches.
+	 *
+	 * @return array<string, string>
+	 */
+	private function expireStaleStripeSession(): array
+	{
+		$sid = $this->getCartPage()?->stripe_session_id()->value();
+		if( empty( $sid ) )
+			return [];
+
+		return ( new Stripe() )->expireSession( $sid ) ? ['stripe_session_id' => ''] : [];
 	}
 
 	/**
@@ -392,17 +417,18 @@ class Cart
 	 * @return void
 	 * @throws \Throwable
 	 */
-	public function delete( $id )
+	public function delete( string $id ): void
 	{
-		$items = $this->getCartPage()->products()->yaml();
-		foreach( $items as $key => $i ) {
-			if( $i['id'] == $id ) {
-				unset( $items[$key] );
-			}
-		}
+		$cartPage = $this->getCartPage();
+		if( empty( $cartPage ) ) return;
+
+		$items = array_values( array_filter(
+			$cartPage->products()->yaml(),
+			fn( $i ) => ( $i['id'] ?? null ) !== $id
+		) );
 
 		kirby()->impersonate( 'kirby' );
-		$this->getCartPage()->update( ['products' => \Yaml::encode( $items )] );
+		$cartPage->update( ['products' => Yaml::encode( $items )] + $this->expireStaleStripeSession() );
 		$this->cartPage = null;
 
 		$this->logger->info( "item removed from cart", ['txn' => $this->session->get( 'txn' ), 'item' => $id] );
@@ -414,10 +440,10 @@ class Cart
 	 * @param array $customer ['name', 'email', 'address' => [...]] as built by the /address route
 	 * @return void
 	 */
-	public function setCustomer( array $customer )
+	public function setCustomer( array $customer ): void
 	{
 		kirby()->impersonate( 'kirby' );
-		$this->getCartPage()->update( ['customer' => \Yaml::encode( $customer )] );
+		$this->getCartPage()->update( ['customer' => Yaml::encode( $customer )] );
 		$this->cartPage = null;
 
 		$this->logger->info( "customer details set for order", ['txn' => $this->session->get( 'txn' ), 'email' => maskEmail( $customer['email'] ), 'country' => $customer['address']['country'] ?? null] );
@@ -434,29 +460,25 @@ class Cart
 	 * @return array{total: float, currencies: string, shipping: float|string, checkoutSessionId: string, items: array}
 	 * @throws \Exception
 	 */
-	public function addShipping( $country, $email )
+	public function addShipping( string $country, string $email ): array
 	{
-		$region = page( 'prints' )->regions()->toStructure()->findBy( 'country', $country );
+		$cartPage = $this->getCartPage();
+		if( empty( $cartPage ) )
+			throw new \Exception( 'No active cart to calculate shipping for' );
 
-		if( empty( $region ) ) {
-			$region = 'rest';
-		} else {
-			$region = $region->name()->value();
-		}
+		$prints = page( 'prints' );
+		$regionRow = $prints->regions()->toStructure()->findBy( 'country', $country );
+		$region = $regionRow ? $regionRow->name()->value() : 'rest';
 
-		$shippingRegion = page( 'prints' )->shipping()->toStructure()->findBy( 'region', $region );
+		$rates = $prints->shipping()->toStructure();
+		$rateRow = $rates->findBy( 'region', $region ) ?? $rates->findBy( 'region', 'rest' );
+		$amount = $rateRow?->amount()->value();
 
-		if( empty( $shippingRegion ) ) {
-			$shippingRegion = page( 'prints' )->shipping()->toStructure()->findBy( 'region', 'rest' );
-			$shipping = $shippingRegion->amount()->value();
-		} else {
-			$shipping = $shippingRegion->amount()->value();
-		}
+		// A configured 0 means free shipping; only a missing/blank rate falls back to the default.
+		$shipping = is_numeric( $amount ) ? (float) $amount : self::DEFAULT_SHIPPING;
 
-		if( empty( $shipping ) )
-			$shipping = 32.32;
-
-		$this->getCartPage()->update( ['shipping' => $shipping] );
+		kirby()->impersonate( 'kirby' );
+		$cartPage->update( ['shipping' => $shipping] );
 		$this->cartPage = null;
 		$stripeSession = $this->updateStripeSession( $email );
 
@@ -478,11 +500,14 @@ class Cart
 	 * @return string The new Stripe session id
 	 * @throws \Exception
 	 */
-	public function updateStripeSession( $customerEmail )
+	public function updateStripeSession( string $customerEmail ): string
 	{
 		$shipping = empty( $this->getCartPage()->shipping()->value() )
 			? 0
 			: (float) $this->getCartPage()->shipping()->value();
+
+		// A re-submitted address supersedes any earlier session; keep only one payable.
+		$this->expireStaleStripeSession();
 
 		$lineItems = $this->getLineItems( $shipping );
 		$session = ( new Stripe() )->createSession( $lineItems, $customerEmail );
@@ -499,42 +524,59 @@ class Cart
 	 *
 	 * Verifies the returned `sid` matches the one stored on the order (replay
 	 * guard), confirms the PaymentIntent actually succeeded, then — only if the
-	 * order is still 'pending', so a page reload can't double-process — deducts
-	 * inventory, sends notifications and marks the order paid. Failures are
+	 * order is still 'pending' — deducts inventory, marks the order paid and
+	 * sends notifications. The whole section runs under a per-order file lock
+	 * and re-reads the order once the lock is held, so concurrent requests
+	 * (reloads, double clicks) can't process the same order twice. Failures are
 	 * logged, alerted, and surfaced to the visitor via a session `error`.
 	 *
 	 * @return bool True if the order was finalized (or already was), false on any failure
 	 */
-	public function processStripe()
+	public function processStripe(): bool
 	{
 		$txn = $this->session->get( 'txn' );
+		$returnedSid = get( 'sid' );
+		$lock = null;
 
 		try {
-			if( empty( get( 'sid' ) ) || empty( $txn ) ) {
+			if( empty( $returnedSid ) || !is_string( $returnedSid ) || empty( $txn ) ) {
 				$this->logger->debug( "processStripe called with no session id or txn, nothing to do", ['txn' => $txn] );
 				return false;
 			}
 
-			$storedSid = $this->getCartPage()?->stripe_session_id()->value();
-			if( get( 'sid' ) !== $storedSid ) {
-				$this->logger->error( "SID mismatch, possible replay attempt", ['txn' => $txn, 'sid' => get( 'sid' ), 'stored_sid' => $storedSid] );
+			// Serialize processing per order; take the lock before reading any order content.
+			$lock = fopen( kirby()->root( 'cache' ) . '/order-' . preg_replace( '/[^a-z0-9]/i', '', $txn ) . '.lock', 'c' );
+			if( $lock === false || !flock( $lock, LOCK_EX ) )
+				throw new \Exception( 'Could not lock order for processing' );
+
+			$cartPage = $this->getCartPage();
+			if( empty( $cartPage ) ) {
+				// A concurrent request already finalized (and renamed) this order.
+				$this->logger->info( "order already finalized by another request, skipping", ['txn' => $txn] );
+				return true;
+			}
+
+			$storedSid = $cartPage->stripe_session_id()->value();
+			if( $returnedSid !== $storedSid ) {
+				$this->logger->error( "SID mismatch, possible replay attempt", ['txn' => $txn, 'sid' => $returnedSid, 'stored_sid' => $storedSid] );
 				$this->session->set( 'error', 'Invalid payment session.' );
 				return false;
 			}
 
 			$stripe = new Stripe();
-			$sid = $stripe->retrieveSession( get( 'sid' ) );
+			$sid = $stripe->retrieveSession( $returnedSid );
 			$pi = $stripe->retrievePaymentIntent( $sid->payment_intent );
 
 			// stripe checkout went well
-			if( $pi->status == 'succeeded' && $pi->latest_charge->paid ) {
-				// order still pending, finalize details
+			if( $pi->status === 'succeeded' && $pi->latest_charge->paid ) {
 				// check status to avoid repeat processing if client reloads page
-				if( $this->getCartPage()->content()->get( 'orderstatus' ) == 'pending' ) {
+				if( $cartPage->content()->get( 'orderstatus' )->value() === 'pending' ) {
 					$this->logger->info( "payment captured, finalizing order", ['txn' => $txn, 'session_id' => $sid->id, 'payment_intent_id' => $pi->id] );
+					$this->checkPaidAmount( $sid, $txn );
 					$this->updateInventory();
+					$this->markPaid( 'stripe' ); // persisted before emails so a reload can't repeat them
 					$this->sendNotifications();
-					$this->updateOrder( 'stripe' );
+					$this->updateOrder();
 				} else {
 					$this->logger->info( "order already finalized, skipping repeat processing", ['txn' => $txn, 'session_id' => $sid->id] );
 				}
@@ -543,15 +585,39 @@ class Cart
 				$this->session->set( 'error', 'There was an error with the payment processing, I have been notified of the issue.' );
 				return false;
 			}
-		} catch( \Exception $e ) {
+		} catch( \Throwable $e ) {
 			$this->logger->error( "general error processing stripe payment", ['txn' => $txn, 'reason' => $e->getMessage()] );
 			sendAlert( $txn, $this->getCartPage()?->suuid()->value(), $e->getMessage() );
 			$this->session->set( 'error', 'There was an unspecified error with the site, I have been notified of this issue. You may try again later' );
 			return false;
+		} finally {
+			if( is_resource( $lock ) ) {
+				flock( $lock, LOCK_UN );
+				fclose( $lock );
+			}
 		}
 
 		return true;
+	}
 
+	/**
+	 * Safety net: compares what Stripe actually charged with the cart total and
+	 * alerts the site owner on a mismatch. It never blocks finalization — the
+	 * customer has already paid — it just makes a discrepancy visible.
+	 *
+	 * @param \Stripe\Checkout\Session $session Retrieved Checkout session
+	 * @param string                    $txn     Transaction id (for logging)
+	 * @return void
+	 */
+	private function checkPaidAmount( $session, $txn ): void
+	{
+		$expected = (int) round( ( $this->subtotal( $this->items() ) + (float) $this->getCartPage()->shipping()->value() ) * 100 );
+
+		if( (int) $session->amount_total !== $expected ) {
+			$message = "Charged amount {$session->amount_total} differs from cart total {$expected} (cents)";
+			$this->logger->error( "paid amount does not match cart total", ['txn' => $txn, 'session_id' => $session->id, 'charged' => $session->amount_total, 'expected' => $expected] );
+			sendAlert( $txn, $this->getCartPage()->suuid()->value(), $message );
+		}
 	}
 
 	/**
@@ -562,61 +628,91 @@ class Cart
 	 * @return void
 	 * @throws \Throwable
 	 */
-	private function updateInventory()
+	private function updateInventory(): void
 	{
 		$orderId = $this->getCartPage()->suuid()->value();
+		$cartItems = $this->getCartPage()->products()->yaml();
 
-		foreach( $this->getCartPage()->products()->yaml() as $item ) {
+		// Draft/order flows run as an anonymous visitor; stock writes need elevated rights.
+		kirby()->impersonate( 'kirby' );
+
+		// Phase 1: validate every line before writing anything, so a late failure
+		// can't leave the stock half-deducted for an order that never finalizes.
+		$variantsByUri = [];
+		$changed = [];
+		foreach( $cartItems as $item ) {
 			$uri = $item['uri'];
-			$suuid = !empty( $item['suuid'] ) ? $item['suuid'] : ( explode( '::', $item['id'] )[1] ?? '' );
+			$suuid = (string) ( !empty( $item['suuid'] ) ? $item['suuid'] : ( explode( '::', $item['id'] )[1] ?? '' ) );
 
-			$allVariants = $this->site->page( $uri )->variants()->yaml();
-			$key = array_search( $suuid, array_column( $allVariants, 'suuid' ) );
+			$variantsByUri[$uri] ??= $this->site->page( $uri )->variants()->yaml();
+			$key = array_search( $suuid, array_map( 'strval', array_column( $variantsByUri[$uri], 'suuid' ) ), true );
 
 			if( $key === false )
 				throw new \Exception( "Variant not found for suuid: " . $suuid );
 
-			$variant = $allVariants[$key];
+			$stock = $variantsByUri[$uri][$key]['stock'] ?? '';
+			if( !is_numeric( $stock ) )
+				continue; // blank = untracked / unlimited, nothing to deduct
 
-			$remainingStock = intval( $variant['stock'] ) - intval( $item['quantity'] );
+			$remainingStock = intval( $stock ) - intval( $item['quantity'] );
 			if( $remainingStock < 0 )
-				throw new \Exception( "Insufficient stock for product " . page( $uri )->title()->value() . " (uuid: " . $variant['suuid'] . ")" );
+				throw new \Exception( "Insufficient stock for product " . page( $uri )->title()->value() . " (uuid: " . $suuid . ")" );
 
-			$variant['stock'] = $remainingStock;
-			addToStructure( page( $uri ), 'variants', $variant );
+			$variantsByUri[$uri][$key]['stock'] = $remainingStock;
+			$changed[$uri] = true;
 		}
+
+		// Phase 2: one write per product.
+		foreach( array_keys( $changed ) as $uri ) {
+			$this->site->page( $uri )->update( ['variants' => Yaml::encode( array_values( $variantsByUri[$uri] ) )] );
+		}
+
 		$this->logger->info( "inventory updated after order", ['txn' => $this->session->get( 'txn' ), 'order' => $orderId] );
 	}
 
 	/**
-	 * Marks the order as paid, renames the draft page to ord-{uuid}, and updates the session state.
+	 * Persists the 'paid' status in a single update. This is what stops a reload
+	 * from re-running inventory/notifications, so a failure is thrown to the caller.
 	 *
 	 * @param string $paymentMethod Payment provider identifier (e.g. 'stripe')
-	 * @return void|false Returns false on exception; otherwise void
+	 * @return void
+	 * @throws \Throwable When the paid status could not be persisted
 	 */
-	private function updateOrder( $paymentMethod )
+	private function markPaid( string $paymentMethod ): void
 	{
-		$orderId = null;
+		$orderId = $this->getCartPage()->suuid()->value();
+
+		kirby()->impersonate( 'kirby' );
+		$this->getCartPage()->update( ['title' => "ord-$orderId", 'orderstatus' => 'paid', 'payment' => $paymentMethod] );
+		$this->cartPage = null;
+
+		$this->logger->info( "order status updated to paid", ['txn' => $this->session->get( 'txn' ), 'order' => $orderId, 'payment_method' => $paymentMethod] );
+	}
+
+	/**
+	 * Final bookkeeping for a paid order: renames the draft page to ord-{uuid}
+	 * and updates the session state. The order is already paid by now, so a
+	 * failed rename is only logged and alerted.
+	 *
+	 * @return void
+	 */
+	private function updateOrder(): void
+	{
 		$txn = $this->session->get( 'txn' );
+		$orderId = $this->getCartPage()->suuid()->value();
 
+		kirby()->impersonate( 'kirby' );
 		try {
-			$orderId = $this->getCartPage()->suuid()->value();
-
-			kirby()->impersonate( 'kirby' );
-			$this->getCartPage()->update( ['title' => "ord-$orderId", 'orderstatus' => 'paid', 'payment' => $paymentMethod] );
-			$this->cartPage = null;
 			$this->getCartPage()->changeSlug( "ord-$orderId" );
-			$this->cartPage = null;
-			$this->logger->info( "order status updated to paid", ['txn' => $txn, 'order' => $orderId, 'payment_method' => $paymentMethod] );
-
-			$this->session->set( 'state', 'success' );
-			$this->session->set( 'order', str_replace( '_', '-', "ord-$orderId" ) );
-			$this->session->remove( 'txn' );
-		} catch( \Exception $e ) {
-			$this->logger->error( "failed to finalize order", ['txn' => $txn, 'order' => $orderId, 'reason' => $e->getMessage()] );
-			sendAlert( $txn, $orderId, $e->getMessage() );
-			return false;
+		} catch( \Throwable $t ) {
+			$this->logger->error( "order paid but could not be renamed", ['txn' => $txn, 'order' => $orderId, 'reason' => $t->getMessage()] );
+			sendAlert( $txn, $orderId, $t->getMessage() );
 		}
+		$this->cartPage = null;
+
+		$this->session->set( 'state', 'success' );
+		$this->session->set( 'order', str_replace( '_', '-', "ord-$orderId" ) );
+		$this->session->remove( 'txn' );
 	}
 
 	/**
@@ -626,7 +722,7 @@ class Cart
 	 *
 	 * @return void
 	 */
-	private function sendNotifications()
+	private function sendNotifications(): void
 	{
 		$orderId = $this->getCartPage()->suuid()->value();
 		$customer = $this->getCartPage()->customer()->yaml();
@@ -656,7 +752,7 @@ class Cart
 				$customer['email'],
 				'Your order from The Invisible Cities has been received',
 				'confirm',
-				\A::merge( $order, [
+				A::merge( $order, [
 					'title' => 'Your order from The Invisible Cities has been received',
 					'subtitle' => 'Order confirmation',
 					'preview' => 'Order confirmation. We received your order and will prepare it for shipping soon. Below is your order information.',
@@ -669,7 +765,7 @@ class Cart
 				kirby()->option( 'alert_address' ),
 				'New order at The Invisible Cities!',
 				'confirm',
-				\A::merge( $order, [
+				A::merge( $order, [
 					'title' => 'A new order at the Invisible Cities has been received',
 					'subtitle' => 'Order summary',
 					'preview' => 'Order summary',

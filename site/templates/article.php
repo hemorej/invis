@@ -142,10 +142,10 @@
 <?php snippet('partials/footer', ['ldjson' => $structuredData], false, true) ?>
 <?php slot('scripts') ?>
 	<?php if(@option('env') == 'prod'): ?>
-		<?= js('assets/dist/app.min.js') ?>
+		<?= js('assets/dist/app.min.js', ['defer' => true]) ?>
 	<?php else: ?>
-		<?= js('https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.3.0/dist/lazyload.min.js') ?>
-		<?= js('assets/js/app.js') ?>
+		<?= js('https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.3.0/dist/lazyload.min.js', ['defer' => true]) ?>
+		<?= js('assets/js/app.js', ['defer' => true]) ?>
 	<?php endif ?>
 <?php endslot() ?>
 <?php endsnippet() ?>

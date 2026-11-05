@@ -34,7 +34,7 @@
 </noscript>
 <?php endif ?>
 
-<div id="prod">
+<div id="prod"<?= $page->type()->value() === 'print' ? ' x-data="product"' : '' ?>>
     <div class="mb-48">
         <span class="spectral f-23 fw5 ink-dark ttl">
             <a class="lnk-nav spectral f-23 ttl"
@@ -71,11 +71,10 @@
                             <?php $loopIdx = 0; foreach($variants as $variant): ?>
                                 <?php if(Cart::inStock($variant)): ?>
                                     <a
-                                        <?php if($loopIdx === 0): ?>ref="active"<?php endif ?>
                                         class="variant-lnk spectral f-19 <?= $loopIdx === 0 ? 'variant-on' : 'variant-off' ?>"
                                         data-option-variant='<?= html($variant->suuid()) ?>'
                                         data-option-product='<?= html($page->title() . $variant->name()) ?>'
-                                        v-on:click.prevent='makeActive'>
+                                        @click.prevent="makeActive($event)">
                                         <span><?= html($variant->name()) ?></span>
                                         <span class="ink-subtle">$<?= html($variant->price()) ?></span>
                                     </a>
@@ -84,16 +83,16 @@
                         </div>
 
                         <form id="cart-form" method="post" action="">
-                            <input type="hidden" name="csrf" ref="csrf" value="<?= csrf() ?>">
+                            <input type="hidden" name="csrf" x-ref="csrf" value="<?= csrf() ?>">
                             <input type="hidden" name="action" value="add">
-                            <input type="hidden" name="uri" ref="uri" value="<?= html($page->uri()) ?>">
+                            <input type="hidden" name="uri" x-ref="uri" value="<?= html($page->uri()) ?>">
                             <button
-                                :disabled="submitting == true"
-                                v-on:click.prevent='addToCart'
+                                :disabled="submitting"
+                                @click.prevent="addToCart()"
                                 class="btn-cart"
-                                :class="[submitting == true ? 'ink-subtle' : '']">
-                                <span v-if="submitting == true">adding&ensp;&hellip;</span>
-                                <span v-else>add to cart</span>
+                                :class="submitting ? 'ink-subtle' : ''">
+                                <span x-show="submitting" x-cloak>adding&ensp;&hellip;</span>
+                                <span x-show="!submitting">add to cart</span>
                             </button>
                         </form>
                     </section>
@@ -166,11 +165,11 @@
 <?php slot('scripts') ?>
     <?php if($page->type()->value() === 'print'): ?>
         <?php if(@option('env') == 'prod'): ?>
-            <?= js('assets/dist/product.min.js') ?>
+            <?= js('assets/dist/product.min.js', ['defer' => true]) ?>
+            <?= js('assets/dist/alpine.min.js', ['defer' => true]) ?>
         <?php else: ?>
-            <?= js('https://cdn.jsdelivr.net/npm/vue/dist/vue.js') ?>
-            <?= js('https://unpkg.com/axios/dist/axios.min.js') ?>
-            <?= js('assets/js/product.js') ?>
+            <?= js('assets/js/product.js', ['defer' => true]) ?>
+            <?= js('assets/js/vendor/alpine.min.js', ['defer' => true]) ?>
         <?php endif ?>
     <?php endif ?>
 <?php endslot() ?>

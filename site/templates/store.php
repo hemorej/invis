@@ -37,9 +37,9 @@
 <?php snippet('partials/footer', [], false, true) ?>
 <?php slot('scripts') ?>
 	<?php if(option('env') == 'prod'): ?>
-		<?= js('assets/dist/app.min.js') ?>
+		<?= js('assets/dist/app.min.js', ['defer' => true]) ?>
 	<?php else: ?>
-		<?= js('assets/js/app.js') ?>
+		<?= js('assets/js/app.js', ['defer' => true]) ?>
 	<?php endif ?>
 <?php endslot() ?>
 <?php endsnippet() ?>

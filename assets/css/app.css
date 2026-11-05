@@ -285,3 +285,6 @@ body { background: var(--bg); }
   .article-portrait { margin-bottom: 36px; }
   .article-portrait img { max-width: 100%; }
 }
+
+/* hide Alpine-controlled elements until Alpine has initialised */
+[x-cloak] { display:none !important; }

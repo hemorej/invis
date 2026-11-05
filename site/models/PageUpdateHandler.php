@@ -50,6 +50,11 @@ class PageUpdateHandler
 	 */
 	public function createOrUpdate( $page, $oldPage )
 	{
+		// Variants need their suuid before anything reads or syncs them. Kirby
+		// doesn't re-run this hook for the update below (hooks are not re-entered
+		// while they are running), so continue with the returned, updated page.
+		$page = ensureVariantIds( $page );
+
 		$this->logger->debug( "delegating page update to product handler", ['page' => $page->id()] );
 
 		$productHandler = new ProductHandler();

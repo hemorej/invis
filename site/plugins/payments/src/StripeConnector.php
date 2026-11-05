@@ -76,7 +76,6 @@ class StripeConnector
 			}
 
 			$sessionObject = [
-				'payment_method_types' => ['card'],
 				'mode' => 'payment',
 				'line_items' => $sessionLineItems,
 				'success_url' => kirby()->site()->url() . '/order/success/stripe?sid={CHECKOUT_SESSION_ID}',
@@ -116,6 +115,26 @@ class StripeConnector
 		} catch( Exception $e ) {
 			$this->logger->error( 'stripe general error getting session', ['session_id' => $sid, 'reason' => $e->getMessage()] );
 			throw new Exception( 'Stripe general error' );
+		}
+	}
+
+	/**
+	 * Expires an open Checkout session so it can no longer be paid
+	 * (used when the cart changes after the session was created).
+	 *
+	 * @param string $sid Stripe Checkout session id
+	 * @return bool True if the session was expired; false if Stripe refused
+	 *              (e.g. it was already completed or expired) or errored
+	 */
+	public function expireSession( string $sid ): bool
+	{
+		try {
+			$this->stripe->checkout->sessions->expire( $sid );
+			$this->logger->info( 'stripe checkout session expired', ['session_id' => $sid] );
+			return true;
+		} catch( \Throwable $e ) {
+			$this->logger->warning( 'stripe checkout session not expired', ['session_id' => $sid, 'reason' => $e->getMessage()] );
+			return false;
 		}
 	}
 

@@ -1,12 +1,28 @@
-var app = new Vue({
-    el: '#cart',
-    data: {
+document.addEventListener('alpine:init', function () {
+    var genericError = 'Something went wrong, please try again'
+
+    // POST a JSON body. Resolves with the response on a 2xx status; rejects with
+    // an Error carrying the server's {message} (or a generic one) otherwise.
+    function postJson(url, body) {
+        return fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        }).then(response => {
+            if (response.ok) return response
+            return response.json().catch(() => ({})).then(data => { throw new Error(data.message || genericError) })
+        }, () => { throw new Error(genericError) })
+    }
+
+    // Kept outside the reactive data so Alpine does not proxy the Stripe client.
+    var stripe = null
+
+    Alpine.data('cart', () => ({
         inCart: true,
         inShipping: false,
         inCheckout: false,
         total: 0,
         currencies: null,
-        stripe: null,
         name: null,
         email: null,
         line1: null,
@@ -21,19 +37,19 @@ var app = new Vue({
         step: '1. cart',
         orderWaiting: false,
         shipping: 0,
-        items: null
-    },
-    mounted() {
-        this.country = this.$refs.userLocation.value
-        this.total = parseInt(this.$refs.checkoutTotal.value)
-        this.currencies = this.$refs.currencies.value
-    },
-    computed: {
-        shippingIncomplete: function(){
+        items: null,
+
+        init() {
+            // refs are only registered once the children have been initialised
+            this.$nextTick(() => {
+                this.country = this.$refs.userLocation.value
+                this.total = parseInt(this.$refs.checkoutTotal.value)
+                this.currencies = this.$refs.currencies.value
+            })
+        },
+        get shippingIncomplete() {
             return this.isEmpty(this.name) || this.isEmpty(this.email) || this.isEmpty(this.line1) || this.isEmpty(this.city) || this.isEmpty(this.province) || this.isEmpty(this.postcode) || this.isEmpty(this.country) || !this.validEmail(this.email)
-        }
-    },
-    methods: {
+        },
         resetToCart: function(){
             this.inCart = true;
             this.inShipping = false;
@@ -52,9 +68,9 @@ var app = new Vue({
             this.step = '1. cart   2. shipping address   3. payment';
 
             // init stripe button
-            this.stripe = Stripe(this.$refs.checkoutKey.value);
+            stripe = Stripe(this.$refs.checkoutKey.value);
             this.orderWaiting = true
-            axios.post('/address', {
+            postJson('/address', {
                 name: this.name,
                 email: this.email,
                 line1: this.line1,
@@ -65,21 +81,26 @@ var app = new Vue({
                 country: this.country,
                 csrf: this.$refs.checkoutCSRF.value
               })
-              .then(response => {
+              .then(response => response.json())
+              .then(data => {
                 this.orderWaiting = false
                 this.inShipping = false
                 this.inCheckout = true
                 this.inCart = true
 
-                this.$refs.checkoutSessionID.value = response.data.checkoutSessionId
-                this.currencies = response.data.currencies
-                this.shipping = response.data.shipping
-                this.items = response.data.items
+                this.$refs.checkoutSessionID.value = data.checkoutSessionId
+                this.currencies = data.currencies
+                this.shipping = data.shipping
+                this.items = data.items
                 this.total += this.shipping
+              })
+              .catch(error => {
+                this.orderWaiting = false
+                alert(error.message)
               })
         },
         redirectStripe: function(){
-            this.stripe.redirectToCheckout({
+            stripe.redirectToCheckout({
                 sessionId: this.$refs.checkoutSessionID.value
             }).then(function (result) {
                 alert(result.error.message);
@@ -97,7 +118,7 @@ var app = new Vue({
                 this.error = true
                 return false;
             }else{
-                axios.post('/prints/cart', {
+                postJson('/prints/cart', {
                     id: id,
                     action: "add",
                     quantity: qty,
@@ -132,5 +153,5 @@ var app = new Vue({
         isEmpty: function(str) {
             return (!str || /^\s*$/.test(str));
         }
-    }
-});
+    }))
+})

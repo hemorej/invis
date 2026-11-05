@@ -1,13 +1,16 @@
 <?php
 
-@include_once __DIR__ . '/vendor/autoload.php';
-
-use Mailbun\Mailbun;
+use Kirby\Cms\App;
+use Kirby\Cms\File;
+use Kirby\Cms\Page;
 use Kirby\Data\Yaml;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Remote;
-use Kirby\Toolkit\Date;
+use Kirby\Uuid\Uuid;
+use Logger\Logger;
+use Mailbun\Mailbun;
 
-Kirby::plugin( 'helpers/helpers', [
+App::plugin( 'helpers/helpers', [
 	'options' => [
 		'cache.backend' => true,
 	],
@@ -16,30 +19,68 @@ Kirby::plugin( 'helpers/helpers', [
 /**
  * Upserts a single row into a Kirby structure field, keyed by its `suuid`.
  *
- * The existing row with the same `suuid` (if any) is removed and the new
- * `$data` appended, so callers can treat it as "set this variant/order line
- * to exactly these values" without worrying about duplicates.
+ * An existing row with the same `suuid` is replaced in place; otherwise the
+ * new `$data` is appended. Callers can treat it as "set this variant/order line
+ * to exactly these values" without worrying about duplicates or row order.
  *
  * @param \Kirby\Cms\Page $page  Page owning the field
  * @param string          $field Structure field name (e.g. 'variants')
  * @param array           $data  Row data; must contain a 'suuid' key
- * @return string|true  True on success, or the exception message on failure
- * @throws Throwable
+ * @return \Kirby\Cms\Page The updated page
+ * @throws InvalidArgumentException When `$data` has no `suuid`
+ * @throws \Throwable When the page update fails (callers must handle it)
  */
-function addToStructure( $page, $field, $data = [] )
+function addToStructure( Page $page, string $field, array $data = [] ): Page
 {
-	$fieldData = $page->$field()->yaml();
-	$key = array_search( $data['suuid'], array_column( $fieldData, 'suuid' ) );
-	unset( $fieldData[$key] );
-	$fieldData = array_values( $fieldData );
+	if( empty( $data['suuid'] ) )
+		throw new InvalidArgumentException( 'addToStructure requires a suuid in $data' );
 
-	$fieldData[] = $data;
-	$fieldData = Yaml::encode( $fieldData );
-	try {
-		return $page->update( [$field => $fieldData] );
-	} catch( Exception $e ) {
-		return $e->getMessage();
+	$fieldData = $page->$field()->yaml();
+
+	// Compare as strings: YAML may hand back numeric-looking ids as ints.
+	$key = array_search( (string) $data['suuid'], array_map( 'strval', array_column( $fieldData, 'suuid' ) ), true );
+
+	if( $key === false ) {
+		$fieldData[] = $data;
+	} else {
+		$fieldData[$key] = $data;
 	}
+
+	return $page->update( [$field => Yaml::encode( array_values( $fieldData ) )] );
+}
+
+/**
+ * Gives every variant of a product page a `suuid` if it doesn't have one yet.
+ *
+ * The `suuid` is the stable id the cart, the order lines and the Stripe price
+ * lookup key all rely on, so it must exist before a product is synced or sold.
+ * Existing ids are never changed. Returns the page unchanged when nothing was
+ * missing, or the updated page (use that one, the passed-in object is stale).
+ *
+ * @param Page $page A page that may have a `variants` structure (only `product` pages are touched)
+ * @return Page
+ * @throws \Throwable When the page update fails
+ */
+function ensureVariantIds( Page $page ): Page
+{
+	if( $page->intendedTemplate()->name() !== 'product' )
+		return $page;
+
+	$variants = $page->variants()->yaml();
+	$changed = false;
+
+	foreach( $variants as &$variant ) {
+		if( empty( $variant['suuid'] ) ) {
+			$variant['suuid'] = Uuid::generate();
+			$changed = true;
+		}
+	}
+	unset( $variant );
+
+	if( !$changed )
+		return $page;
+
+	return kirby()->impersonate( 'kirby', fn() => $page->update( ['variants' => Yaml::encode( $variants )] ) );
 }
 
 /**
@@ -49,9 +90,8 @@ function addToStructure( $page, $field, $data = [] )
  * @param \Kirby\Cms\File $image
  * @return string Resized image URL
  */
-function getPreview( $image )
+function getPreview( File $image ): string
 {
-
 	if( $image->isLandscape() )
 		return $image->resize( 600 )->url();
 
@@ -65,14 +105,18 @@ function getPreview( $image )
  * @param string $string Any strtotime()-parseable date
  * @return string
  */
-function archiveDate( $string )
+function archiveDate( string $string ): string
 {
-	$month = date( 'F', strtotime( $string ) );
-	$day = date( 'j', strtotime( $string ) ); // day of month, 1-31
-	$year = '\'' . date( 'y', strtotime( $string ) );
+	try {
+		$date = new DateTimeImmutable( $string );
+	} catch( Exception ) {
+		return $string; // not a parseable date: show it as entered
+	}
+
+	$month = $date->format( 'F' );
+	$day = (int) $date->format( 'j' ); // day of month, 1-31
 
 	// Index 0 = "first"; look up with $day - 1 below.
-
 	$textualNumbers = [
 		'first',
 		'second',
@@ -116,10 +160,9 @@ function archiveDate( $string )
  * The list of eligible filenames is cached for 12 hours (43200s); only the
  * filename list is cached, a fresh random pick happens on every call.
  *
- * @return array{images: \Kirby\Cms\File}
- * @throws \Kirby\Exception\InvalidArgumentException
+ * @return array{images: \Kirby\Cms\File|null} `images` is null when there is nothing to show
  */
-function getHomeImage()
+function getHomeImage(): array
 {
 	$cache = kirby()->cache( 'helpers.helpers.backend' );
 
@@ -127,12 +170,18 @@ function getHomeImage()
 	if( $data = $cache->get( 'images' ) ) {
 		$images = json_decode( $data );
 	} else {
-		foreach( page( 'projects/portfolio' )->files() as $image ) {
+		foreach( page( 'projects/portfolio' )?->files() ?? [] as $image ) {
 			if( $image->isLandscape() )
 				$images[] = $image->filename();
 		}
-		$cache->set( 'images', json_encode( $images ), 43200 );
+		// Don't cache an empty list, so adding images shows up immediately.
+		if( $images !== [] )
+			$cache->set( 'images', json_encode( $images ), 43200 );
 	}
+
+	// No portfolio images (e.g. a bare local checkout): the home page renders without a hero.
+	if( $images === [] )
+		return ['images' => null];
 
 	$file = $images[array_rand( $images )];
 	$image = page( "projects/portfolio/" )->file( $file );
@@ -159,46 +208,49 @@ function maskEmail( ?string $email ): string
  * Resolves the visitor's approximate location from their IP via ipapi.co.
  *
  * In non-production environments this skips the lookup and returns the
- * hard-coded `geolocation` option. Successful lookups are cached per IP.
- * Returns 'CA' when the remote address is unusable and null on API error.
+ * hard-coded `geolocation` option. Lookups are cached per IP for a day; a
+ * failed lookup (or a non-public IP) yields a Canada default, cached briefly
+ * on failure so a rate-limited or unreachable API isn't hit on every request.
+ * Always returns an object, so callers can read `->country_name` safely.
  *
- * @return object|string|null Decoded ipapi.co response, a country code, or null
+ * @return object Decoded ipapi.co response, the dev `geolocation` option, or the default
  */
-function location()
+function location(): object
 {
 	if( !in_array( kirby()->option( 'env', 'dev' ), ['prod', 'production'] ) )
 		return kirby()->option( 'geolocation' );
 
+	$default = (object) ['country_code' => 'CA', 'country_name' => 'Canada'];
+
+	$ip = filter_var( kirby()->visitor()->ip(), FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE );
+	if( $ip === false )
+		return $default;
+
+	$cache = kirby()->cache( 'helpers.helpers.backend' );
+	$cacheKey = 'geo-' . $ip;
+
+	if( $data = $cache->get( $cacheKey ) )
+		return json_decode( $data );
+
 	try {
-		$cache = kirby()->cache( 'helpers.helpers.backend' );
-		$remote = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP );
+		$key = kirby()->option( 'ipapi_key' );
+		$response = Remote::get( "https://ipapi.co/$ip/json?key=$key", ['timeout' => 3] );
+		$loc = json_decode( $response->content() );
 
-		if( $remote == false )
-			return 'CA';
+		// ipapi reports failures (rate limit, bad key...) as JSON with `error: true`
+		if( $response->code() !== 200 || !is_object( $loc ) || !empty( $loc->error ) )
+			throw new Exception( $loc->reason ?? 'HTTP ' . $response->code() );
 
-		if( $data = $cache->get( $remote ) ) {
-			$loc = json_decode( $data );
-		} else {
-			$key = kirby()->option( 'ipapi_key' );
-			$requestURL = "https://ipapi.co/$remote/json?key=$key";
-
-			$data = Remote::get( $requestURL );
-			$response = $data->content();
-
-			if( property_exists( $response, 'error' ) && $response->error == true ) {
-				throw new Exception( $response->error );
-			}
-
-			$cache->set( $remote, $response );
-			$loc = json_decode( $response );
-		}
+		$cache->set( $cacheKey, $response->content(), 1440 );
 
 		return $loc;
 	} catch( Exception $e ) {
-		$logger = ( new Logger\Logger( 'geolocation' ) )->getLogger();
-		$logger->error( 'could not resolve IP address', ['ip' => $remote ?? null, 'reason' => $e->getMessage()] );
+		$logger = ( new Logger( 'geolocation' ) )->getLogger();
+		$logger->error( 'could not resolve IP address', ['ip' => $ip, 'reason' => $e->getMessage()] );
 
-		return null;
+		$cache->set( $cacheKey, json_encode( $default ), 10 );
+
+		return $default;
 	}
 }
 
@@ -212,9 +264,9 @@ function location()
  * @param string $error    Human-readable failure reason
  * @return void
  */
-function sendAlert( $sid, $orderId, $error = "Unknown reason" )
+function sendAlert( ?string $sid, ?string $orderId, string $error = "Unknown reason" ): void
 {
-	$logger = ( new Logger\Logger( 'order' ) )->getLogger();
+	$logger = ( new Logger( 'order' ) )->getLogger();
 
 	try {
 		$mailbun = new Mailbun();
@@ -236,7 +288,7 @@ function sendAlert( $sid, $orderId, $error = "Unknown reason" )
  *
  * @return string[]
  */
-function countryList()
+function countryList(): array
 {
 	return [
 		"Afghanistan",
@@ -451,7 +503,7 @@ function countryList()
  *
  * @return string
  */
-function getToday()
+function getToday(): string
 {
-	return Date::today(new DateTimeZone('America/Montreal'))->format('Y-m-d');
+	return ( new DateTimeImmutable( 'now', new DateTimeZone( 'America/Montreal' ) ) )->format( 'Y-m-d' );
 }
