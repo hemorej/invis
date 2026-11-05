@@ -1,16 +1,15 @@
 <?php
 
-use Kirby\Cms\App as Kirby;
+use Kirby\Cms\App;
 use Kirby\Uuid\Uuid;
 
-Kirby::plugin('autoranduuid/autoranduuid', [
-    'fields' => [
-        'autoranduuid' => [
-            'props' => [
-                'autoranduuid' => function ($autoranduuid = null) {
-                    return Uuid::generate();
-                }
-            ]
-        ]
-    ]
-]);
+App::plugin( 'autoranduuid/autoranduuid', [
+	'fields' => [
+		'autoranduuid' => [
+			'props' => [
+				// Generates a fresh UUID for the field; the incoming blueprint value is unused.
+				'autoranduuid' => fn( mixed $autoranduuid = null ): string => Uuid::generate(),
+			],
+		],
+	],
+] );

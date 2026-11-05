@@ -1,13 +1,15 @@
 <?php
 
-@include_once __DIR__ . '/vendor/autoload.php';
-
-use Mailbun\Mailbun;
+use Kirby\Cms\App;
+use Kirby\Cms\File;
+use Kirby\Cms\Page;
 use Kirby\Data\Yaml;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Remote;
-use Kirby\Toolkit\Date;
+use Logger\Logger;
+use Mailbun\Mailbun;
 
-Kirby::plugin( 'helpers/helpers', [
+App::plugin( 'helpers/helpers', [
 	'options' => [
 		'cache.backend' => true,
 	],
@@ -24,13 +26,13 @@ Kirby::plugin( 'helpers/helpers', [
  * @param string          $field Structure field name (e.g. 'variants')
  * @param array           $data  Row data; must contain a 'suuid' key
  * @return \Kirby\Cms\Page The updated page
- * @throws \Kirby\Exception\InvalidArgumentException When `$data` has no `suuid`
+ * @throws InvalidArgumentException When `$data` has no `suuid`
  * @throws \Throwable When the page update fails (callers must handle it)
  */
-function addToStructure( $page, $field, $data = [] )
+function addToStructure( Page $page, string $field, array $data = [] ): Page
 {
 	if( empty( $data['suuid'] ) )
-		throw new \Kirby\Exception\InvalidArgumentException( 'addToStructure requires a suuid in $data' );
+		throw new InvalidArgumentException( 'addToStructure requires a suuid in $data' );
 
 	$fieldData = $page->$field()->yaml();
 
@@ -53,9 +55,8 @@ function addToStructure( $page, $field, $data = [] )
  * @param \Kirby\Cms\File $image
  * @return string Resized image URL
  */
-function getPreview( $image )
+function getPreview( File $image ): string
 {
-
 	if( $image->isLandscape() )
 		return $image->resize( 600 )->url();
 
@@ -69,14 +70,18 @@ function getPreview( $image )
  * @param string $string Any strtotime()-parseable date
  * @return string
  */
-function archiveDate( $string )
+function archiveDate( string $string ): string
 {
-	$month = date( 'F', strtotime( $string ) );
-	$day = date( 'j', strtotime( $string ) ); // day of month, 1-31
-	$year = '\'' . date( 'y', strtotime( $string ) );
+	try {
+		$date = new DateTimeImmutable( $string );
+	} catch( Exception ) {
+		return $string; // not a parseable date: show it as entered
+	}
+
+	$month = $date->format( 'F' );
+	$day = (int) $date->format( 'j' ); // day of month, 1-31
 
 	// Index 0 = "first"; look up with $day - 1 below.
-
 	$textualNumbers = [
 		'first',
 		'second',
@@ -123,7 +128,7 @@ function archiveDate( $string )
  * @return array{images: \Kirby\Cms\File}
  * @throws \Kirby\Exception\InvalidArgumentException
  */
-function getHomeImage()
+function getHomeImage(): array
 {
 	$cache = kirby()->cache( 'helpers.helpers.backend' );
 
@@ -168,7 +173,7 @@ function maskEmail( ?string $email ): string
  *
  * @return object|string|null Decoded ipapi.co response, a country code, or null
  */
-function location()
+function location(): object|string|null
 {
 	if( !in_array( kirby()->option( 'env', 'dev' ), ['prod', 'production'] ) )
 		return kirby()->option( 'geolocation' );
@@ -177,7 +182,7 @@ function location()
 		$cache = kirby()->cache( 'helpers.helpers.backend' );
 		$remote = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP );
 
-		if( $remote == false )
+		if( $remote === false )
 			return 'CA';
 
 		if( $data = $cache->get( $remote ) ) {
@@ -199,7 +204,7 @@ function location()
 
 		return $loc;
 	} catch( Exception $e ) {
-		$logger = ( new Logger\Logger( 'geolocation' ) )->getLogger();
+		$logger = ( new Logger( 'geolocation' ) )->getLogger();
 		$logger->error( 'could not resolve IP address', ['ip' => $remote ?? null, 'reason' => $e->getMessage()] );
 
 		return null;
@@ -216,9 +221,9 @@ function location()
  * @param string $error    Human-readable failure reason
  * @return void
  */
-function sendAlert( $sid, $orderId, $error = "Unknown reason" )
+function sendAlert( ?string $sid, ?string $orderId, string $error = "Unknown reason" ): void
 {
-	$logger = ( new Logger\Logger( 'order' ) )->getLogger();
+	$logger = ( new Logger( 'order' ) )->getLogger();
 
 	try {
 		$mailbun = new Mailbun();
@@ -240,7 +245,7 @@ function sendAlert( $sid, $orderId, $error = "Unknown reason" )
  *
  * @return string[]
  */
-function countryList()
+function countryList(): array
 {
 	return [
 		"Afghanistan",
@@ -455,7 +460,7 @@ function countryList()
  *
  * @return string
  */
-function getToday()
+function getToday(): string
 {
-	return Date::today(new DateTimeZone('America/Montreal'))->format('Y-m-d');
+	return ( new DateTimeImmutable( 'now', new DateTimeZone( 'America/Montreal' ) ) )->format( 'Y-m-d' );
 }

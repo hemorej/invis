@@ -2,13 +2,19 @@
 
 namespace Cart;
 
-use Logger\Logger;
+use Kirby\Cache\Cache;
+use Kirby\Cms\Collection;
 use Kirby\Cms\Page;
-use Mailbun\Mailbun;
-use Kirby\Uuid\Uuid;
+use Kirby\Cms\Site;
+use Kirby\Data\Yaml;
 use Kirby\Http\Remote;
+use Kirby\Session\Session;
+use Kirby\Toolkit\A;
+use Kirby\Uuid\Uuid;
+use Logger\Logger;
+use Mailbun\Mailbun;
+use Monolog\Logger as Monolog;
 use Payments\StripeConnector as Stripe;
-use Kirby\Exception\InvalidArgumentException;
 
 /**
  * Manages the shopping cart backed by Kirby draft pages under prints/orders.
@@ -20,34 +26,19 @@ class Cart
 	/** Shipping charged (CAD) when no rate is configured for the destination or the 'rest' region. */
 	private const DEFAULT_SHIPPING = 32.32;
 
-	/** @var \Kirby\Cache\Cache */
-	protected $cache;
+	protected Cache $cache;
+	protected Site $site;
+	protected Session $session;
+	protected Monolog $logger;
+	protected ?string $txnId = null;
+	protected ?Page $cartPage = null;
 
-	/** @var \Kirby\Cms\Site */
-	protected $site;
-
-	/** @var \Kirby\Session\Session */
-	protected $session;
-
-	/** @var string|null */
-	protected $txnId;
-
-	/** @var \Monolog\Logger */
-	protected $logger;
-
-	/** @var \Kirby\Cms\Page|null */
-	protected $cartPage = null;
-
-	/**
-	 * @return void
-	 */
-	function __construct()
+	public function __construct()
 	{
 		$this->cache = kirby()->cache( 'helpers.helpers.backend' );
 		$this->site = kirby()->site();
 		$this->session = kirby()->session();
-		$instance = new Logger( 'cart' );
-		$this->logger = $instance->getLogger();
+		$this->logger = ( new Logger( 'cart' ) )->getLogger();
 	}
 
 	/**
@@ -85,7 +76,7 @@ class Cart
 	 * @return string Formatted string, e.g. "42$/38€/33£"
 	 * @throws \Exception
 	 */
-	public function estimateCurrency( $total )
+	public function estimateCurrency( int|float $total ): string
 	{
 		try {
 			$rates = $this->getRates();
@@ -113,7 +104,7 @@ class Cart
 	 * @return object
 	 * @throws \Exception When the API call fails or returns an unexpected payload
 	 */
-	private function getRates()
+	private function getRates(): object
 	{
 		if( $data = $this->cache->get( 'rates' ) ) {
 			return json_decode( $data );
@@ -145,7 +136,7 @@ class Cart
 	public static function inStock( $variant )
 	{
 		// Id string form: split "uri::suuid" and look the variant up.
-		if( strstr( $variant->toString(), '::' ) ) {
+		if( str_contains( $variant->toString(), '::' ) ) {
 			$idParts = explode( '::', $variant );
 			$uri = $idParts[0];
 			$uuid = $idParts[1];
@@ -154,50 +145,45 @@ class Cart
 			return $variant->stock()->value();
 		}
 
-		if( !is_numeric( $variant->stock()->value ) and $variant->stock()->value === '' ) return true;  // blank = untracked / unlimited
-		if( is_numeric( $variant->stock()->value ) and intval( $variant->stock()->value ) <= 0 ) return false; // 0 or negative = sold out
-		if( is_numeric( $variant->stock()->value ) and intval( $variant->stock()->value ) > 0 ) return intval( $variant->stock()->value );
+		$stock = $variant->stock()->value;
 
-		return false;
+		if( $stock === '' ) return true;               // blank = untracked / unlimited
+		if( !is_numeric( $stock ) ) return false;
+		if( (int) $stock <= 0 ) return false;          // 0 or negative = sold out
+
+		return (int) $stock;
 	}
 
 	/**
 	 * Returns a human-readable summary of cart item types and quantities (e.g. "2 prints, 1 poster").
 	 *
-	 * @param \Collection $items Cart items structure
+	 * @param \Kirby\Cms\Collection|\Kirby\Cms\Structure $items Cart items structure
 	 * @return string
 	 */
-	public function contents( $items )
+	public function contents( $items ): string
 	{
 		$types = [];
-		$content = "";
 
 		foreach( $items as $item ) {
-			if( array_key_exists( $item->type()->value(), $types ) ) {
-				$types[$item->type()->value()] = $types[$item->type()->value()] + $item->quantity()->value();
-			} else {
-				$types[$item->type()->value()] = 1 * $item->quantity()->value();
-			}
+			$type = $item->type()->value();
+			$types[$type] = ( $types[$type] ?? 0 ) + (int) $item->quantity()->value();
 		}
 
+		$lines = [];
 		foreach( $types as $type => $quantity ) {
-			$line = join( ' ', [$quantity, $type] );
-			if( $quantity > 1 )
-				$line .= 's';
-
-			$content = $content . ', ' . $line;
+			$lines[] = $quantity . ' ' . $type . ( $quantity > 1 ? 's' : '' );
 		}
 
-		return ltrim( $content, ', ' );
+		return implode( ', ', $lines );
 	}
 
 	/**
 	 * Sums amount x quantity across cart items (CAD, pre-shipping).
 	 *
-	 * @param \Collection $items Cart items structure
+	 * @param \Kirby\Cms\Collection|\Kirby\Cms\Structure $items Cart items structure
 	 * @return int|float
 	 */
-	public function subtotal( $items )
+	public function subtotal( $items ): int|float
 	{
 		$subtotal = 0;
 		foreach( $items as $item ) {
@@ -212,7 +198,7 @@ class Cart
 	 *
 	 * @return Page|null
 	 */
-	public function getCartPage()
+	public function getCartPage(): ?Page
 	{
 		if( $this->cartPage !== null ) return $this->cartPage;
 		if( empty( $this->session->get( 'txn' ) ) ) return null;
@@ -227,7 +213,7 @@ class Cart
 	 * @param int|float $shipping Shipping amount in CAD; omit / 0 for no line
 	 * @return array<int, array<string, mixed>> Stripe-shaped line items
 	 */
-	public function getLineItems( $shipping = 0 )
+	public function getLineItems( int|float $shipping = 0 ): array
 	{
 		$lineItems = [];
 		$products = $this->getCartPage()?->products()->toStructure();
@@ -262,11 +248,11 @@ class Cart
 	/**
 	 * Returns the cart's product rows as a Collection (empty if no active cart).
 	 *
-	 * @return \Collection
+	 * @return Collection
 	 */
-	public function items()
+	public function items(): Collection
 	{
-		$return = new \Collection();
+		$return = new Collection();
 
 		if( empty( $this->getCartPage() ) )
 			return $return;
@@ -293,7 +279,7 @@ class Cart
 	 * @throws InvalidArgumentException
 	 * @throws \Throwable
 	 */
-	public function add( $id, $quantity )
+	public function add( string $id, int|string|null $quantity ): void
 	{
 		if( !empty( $quantity ) && $quantity <= 0 )
 			return;
@@ -372,14 +358,14 @@ class Cart
 						'orderstatus' => 'pending',
 						'session-start' => $timestamp,
 						'session-end' => $timestamp,
-						'products' => \Yaml::encode( $items ),
+						'products' => Yaml::encode( $items ),
 					],
 				] );
 
 				$this->session->set( 'txn', $this->txnId );
 			} else {
 				kirby()->impersonate( 'kirby' );
-				$this->getCartPage()->update( ['products' => \Yaml::encode( $items )] + $this->expireStaleStripeSession() );
+				$this->getCartPage()->update( ['products' => Yaml::encode( $items )] + $this->expireStaleStripeSession() );
 				$this->cartPage = null;
 			}
 
@@ -400,7 +386,7 @@ class Cart
 	 * @param int    $newQty Requested absolute quantity for the line
 	 * @return int The grantable quantity (may be less than requested, or 0)
 	 */
-	public function updateQty( $id, $newQty )
+	public function updateQty( string $id, int $newQty ): int
 	{
 		[$uri, $suuid] = array_pad( explode( '::', (string) $id ), 2, '' );
 
@@ -444,7 +430,7 @@ class Cart
 	 * @return void
 	 * @throws \Throwable
 	 */
-	public function delete( $id )
+	public function delete( string $id ): void
 	{
 		$cartPage = $this->getCartPage();
 		if( empty( $cartPage ) ) return;
@@ -455,7 +441,7 @@ class Cart
 		) );
 
 		kirby()->impersonate( 'kirby' );
-		$cartPage->update( ['products' => \Yaml::encode( $items )] + $this->expireStaleStripeSession() );
+		$cartPage->update( ['products' => Yaml::encode( $items )] + $this->expireStaleStripeSession() );
 		$this->cartPage = null;
 
 		$this->logger->info( "item removed from cart", ['txn' => $this->session->get( 'txn' ), 'item' => $id] );
@@ -467,10 +453,10 @@ class Cart
 	 * @param array $customer ['name', 'email', 'address' => [...]] as built by the /address route
 	 * @return void
 	 */
-	public function setCustomer( array $customer )
+	public function setCustomer( array $customer ): void
 	{
 		kirby()->impersonate( 'kirby' );
-		$this->getCartPage()->update( ['customer' => \Yaml::encode( $customer )] );
+		$this->getCartPage()->update( ['customer' => Yaml::encode( $customer )] );
 		$this->cartPage = null;
 
 		$this->logger->info( "customer details set for order", ['txn' => $this->session->get( 'txn' ), 'email' => maskEmail( $customer['email'] ), 'country' => $customer['address']['country'] ?? null] );
@@ -487,7 +473,7 @@ class Cart
 	 * @return array{total: float, currencies: string, shipping: float|string, checkoutSessionId: string, items: array}
 	 * @throws \Exception
 	 */
-	public function addShipping( $country, $email )
+	public function addShipping( string $country, string $email ): array
 	{
 		$cartPage = $this->getCartPage();
 		if( empty( $cartPage ) )
@@ -527,7 +513,7 @@ class Cart
 	 * @return string The new Stripe session id
 	 * @throws \Exception
 	 */
-	public function updateStripeSession( $customerEmail )
+	public function updateStripeSession( string $customerEmail ): string
 	{
 		$shipping = empty( $this->getCartPage()->shipping()->value() )
 			? 0
@@ -559,7 +545,7 @@ class Cart
 	 *
 	 * @return bool True if the order was finalized (or already was), false on any failure
 	 */
-	public function processStripe()
+	public function processStripe(): bool
 	{
 		$txn = $this->session->get( 'txn' );
 		$returnedSid = get( 'sid' );
@@ -655,7 +641,7 @@ class Cart
 	 * @return void
 	 * @throws \Throwable
 	 */
-	private function updateInventory()
+	private function updateInventory(): void
 	{
 		$orderId = $this->getCartPage()->suuid()->value();
 		$cartItems = $this->getCartPage()->products()->yaml();
@@ -691,7 +677,7 @@ class Cart
 
 		// Phase 2: one write per product.
 		foreach( array_keys( $changed ) as $uri ) {
-			$this->site->page( $uri )->update( ['variants' => \Yaml::encode( array_values( $variantsByUri[$uri] ) )] );
+			$this->site->page( $uri )->update( ['variants' => Yaml::encode( array_values( $variantsByUri[$uri] ) )] );
 		}
 
 		$this->logger->info( "inventory updated after order", ['txn' => $this->session->get( 'txn' ), 'order' => $orderId] );
@@ -705,7 +691,7 @@ class Cart
 	 * @return void
 	 * @throws \Throwable When the paid status could not be persisted
 	 */
-	private function markPaid( $paymentMethod )
+	private function markPaid( string $paymentMethod ): void
 	{
 		$orderId = $this->getCartPage()->suuid()->value();
 
@@ -723,7 +709,7 @@ class Cart
 	 *
 	 * @return void
 	 */
-	private function updateOrder()
+	private function updateOrder(): void
 	{
 		$txn = $this->session->get( 'txn' );
 		$orderId = $this->getCartPage()->suuid()->value();
@@ -749,7 +735,7 @@ class Cart
 	 *
 	 * @return void
 	 */
-	private function sendNotifications()
+	private function sendNotifications(): void
 	{
 		$orderId = $this->getCartPage()->suuid()->value();
 		$customer = $this->getCartPage()->customer()->yaml();
@@ -779,7 +765,7 @@ class Cart
 				$customer['email'],
 				'Your order from The Invisible Cities has been received',
 				'confirm',
-				\A::merge( $order, [
+				A::merge( $order, [
 					'title' => 'Your order from The Invisible Cities has been received',
 					'subtitle' => 'Order confirmation',
 					'preview' => 'Order confirmation. We received your order and will prepare it for shipping soon. Below is your order information.',
@@ -792,7 +778,7 @@ class Cart
 				kirby()->option( 'alert_address' ),
 				'New order at The Invisible Cities!',
 				'confirm',
-				\A::merge( $order, [
+				A::merge( $order, [
 					'title' => 'A new order at the Invisible Cities has been received',
 					'subtitle' => 'Order summary',
 					'preview' => 'Order summary',
