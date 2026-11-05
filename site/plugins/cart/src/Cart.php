@@ -126,25 +126,12 @@ class Cart
 	/**
 	 * Reports stock availability for a variant.
 	 *
-	 * Accepts either a variant structure object or a "uri::suuid" id string
-	 * (which is resolved to the variant first).
-	 *
-	 * @param mixed $variant Variant structure object, or a "uri::suuid" id
+	 * @param \Kirby\Cms\StructureObject $variant A row of a product's `variants` structure
 	 * @return bool|int  true = unlimited (blank stock field), false = out of
 	 *                   stock, or the positive integer quantity on hand
 	 */
 	public static function inStock( $variant )
 	{
-		// Id string form: split "uri::suuid" and look the variant up.
-		if( str_contains( $variant->toString(), '::' ) ) {
-			$idParts = explode( '::', $variant );
-			$uri = $idParts[0];
-			$uuid = $idParts[1];
-
-			$variant = page( $uri )->variants()->toStructure()->findBy( 'suuid', $uuid );
-			return $variant->stock()->value();
-		}
-
 		$stock = $variant->stock()->value;
 
 		if( $stock === '' ) return true;               // blank = untracked / unlimited

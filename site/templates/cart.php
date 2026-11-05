@@ -60,6 +60,10 @@
         $cartItemsArr = $cartItems;
         foreach($cartItemsArr as $i => $item):
             $product = page($item->uri());
+            // Stock of this exact variant: unlimited (true) gets a generous cap; sold out or removed gets 0
+            $variant = $product?->variants()->toStructure()->findBy('suuid', $item->suuid()->value());
+            $stock = $variant ? Cart::inStock($variant) : false;
+            $maxQty = $stock === true ? 99 : (int) $stock;
         ?>
         <div class="cart-item-grid bt-rule pt-30" data-qty-row>
             <img src="<?= html($product->images()->first()->crop(96)->url()) ?>" alt="<?= html($item->name()) ?>" class="db" style="width:96px;height:96px;object-fit:cover;filter:none">
@@ -82,7 +86,7 @@
                         id="<?= html($item->uri()) ?>::<?= html($item->suuid()) ?>"
                         value="<?= html($item->quantity()) ?>"
                         min="0"
-                        max="<?= html(Cart::inStock($item->variant())) ?>"
+                        max="<?= $maxQty ?>"
                         data-sku="<?= html($item->suuid()) ?>"
                         data-amount="<?= html($item->amount()->value()) ?>"
                         data-name="<?= html($item->name()) ?>"
