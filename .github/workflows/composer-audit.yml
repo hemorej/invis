@@ -40,6 +40,13 @@ jobs:
               echo "::endgroup::"
               continue
             fi
+            # A plugin that only requires php has no packages; `composer audit`
+            # exits 1 ("No installed packages found") instead of skipping.
+            if [ -z "$(composer show --name-only --working-dir="$dir")" ]; then
+              echo "no packages - skipping audit"
+              echo "::endgroup::"
+              continue
+            fi
             if ! composer audit --working-dir="$dir"; then
               status=1
             fi
