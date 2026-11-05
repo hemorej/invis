@@ -11,22 +11,22 @@ class ComposerStaticIniteaa10299fa512c51fc49a8c37be39488
     );
 
     public static $prefixLengthsPsr4 = array (
-        'S' => 
+        'S' =>
         array (
             'Stripe\\' => 7,
         ),
-        'P' => 
+        'P' =>
         array (
             'Payments\\' => 9,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Stripe\\' => 
+        'Stripe\\' =>
         array (
             0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
         ),
-        'Payments\\' => 
+        'Payments\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
