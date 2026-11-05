@@ -10,5 +10,8 @@
             "email": "hello@jerome-arfouche.com",
             "homepage": "https://jerome-arfouche.com"
         }
-    ]
+    ],
+    "require": {
+        "php": "^8.5"
+    }
 }
