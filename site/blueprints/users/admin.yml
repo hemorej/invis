@@ -1,8 +1,0 @@
-title: User
-type: fields
-headline: User
-fields:
-  totp:
-    label: TOTP code
-    type:  text
-    disabled: true
