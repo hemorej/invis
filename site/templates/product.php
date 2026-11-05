@@ -165,11 +165,11 @@
 <?php slot('scripts') ?>
     <?php if($page->type()->value() === 'print'): ?>
         <?php if(@option('env') == 'prod'): ?>
-            <?= js('assets/dist/product.min.js') ?>
-            <?= js('assets/dist/alpine.min.js') ?>
+            <?= js('assets/dist/product.min.js', ['defer' => true]) ?>
+            <?= js('assets/dist/alpine.min.js', ['defer' => true]) ?>
         <?php else: ?>
-            <?= js('assets/js/product.js') ?>
-            <?= js('assets/js/vendor/alpine.min.js') ?>
+            <?= js('assets/js/product.js', ['defer' => true]) ?>
+            <?= js('assets/js/vendor/alpine.min.js', ['defer' => true]) ?>
         <?php endif ?>
     <?php endif ?>
 <?php endslot() ?>

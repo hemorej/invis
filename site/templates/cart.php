@@ -225,11 +225,11 @@
 <?php snippet('partials/footer', [], false, true) ?>
 <?php slot('scripts') ?>
     <?php if(@option('env') == 'prod'): ?>
-        <?= js('assets/dist/cart.min.js') ?>
-        <?= js('assets/dist/alpine.min.js') ?>
+        <?= js('assets/dist/cart.min.js', ['defer' => true]) ?>
+        <?= js('assets/dist/alpine.min.js', ['defer' => true]) ?>
     <?php else: ?>
-        <?= js('assets/js/cart.js') ?>
-        <?= js('assets/js/vendor/alpine.min.js') ?>
+        <?= js('assets/js/cart.js', ['defer' => true]) ?>
+        <?= js('assets/js/vendor/alpine.min.js', ['defer' => true]) ?>
     <?php endif ?>
     <?= js('https://js.stripe.com/v3/', ['async' => true]) ?>
 <?php endslot() ?>
