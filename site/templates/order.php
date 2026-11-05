@@ -81,5 +81,5 @@
 <?php snippet('partials/footer') ?>
 
 <?php else: ?>
-    <?= @go('/prints') ?>
+    <?php \Kirby\Http\Response::go('/prints') ?>
 <?php endif ?>
