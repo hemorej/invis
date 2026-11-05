@@ -1,6 +1,6 @@
 import { transform } from 'esbuild'
 import { PurgeCSS } from 'purgecss'
-import { readFileSync, writeFileSync } from 'fs'
+import { copyFileSync, readFileSync, writeFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import path from 'path'
 
@@ -19,6 +19,12 @@ async function buildJsBundle(vendorPaths, sourcePath, outPath) {
 	write(outPath, vendor + '\n' + source)
 }
 
+// Alpine is shared by the cart and product pages: shipped as its own file so
+// the browser caches it once instead of once per page bundle.
+function copyAlpine() {
+	copyFileSync(path.join(root, 'assets/js/vendor/alpine.min.js'), path.join(root, 'assets/dist/alpine.min.js'))
+}
+
 async function buildCss() {
 	const purgeResult = await new PurgeCSS().purge({
 		content: ['site/**/*.php', 'assets/js/**/*.js'].map((p) => path.join(root, p)),
@@ -32,9 +38,10 @@ async function buildCss() {
 async function main() {
 	await Promise.all([
 		buildJsBundle(['assets/js/vendor/lazyload.min.js'], 'assets/js/app.js', 'assets/dist/app.min.js'),
-		buildJsBundle(['assets/js/vendor/vue.min.js', 'assets/js/vendor/axios.min.js'], 'assets/js/cart.js', 'assets/dist/cart.min.js'),
-		buildJsBundle(['assets/js/vendor/vue.min.js', 'assets/js/vendor/axios.min.js'], 'assets/js/product.js', 'assets/dist/product.min.js'),
+		buildJsBundle(['assets/js/vendor/axios.min.js'], 'assets/js/cart.js', 'assets/dist/cart.min.js'),
+		buildJsBundle(['assets/js/vendor/axios.min.js'], 'assets/js/product.js', 'assets/dist/product.min.js'),
 		buildCss(),
+		copyAlpine(),
 	])
 }
 

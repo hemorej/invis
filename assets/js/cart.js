@@ -1,12 +1,13 @@
-var app = new Vue({
-    el: '#cart',
-    data: {
+document.addEventListener('alpine:init', function () {
+    // Kept outside the reactive data so Alpine does not proxy the Stripe client.
+    var stripe = null
+
+    Alpine.data('cart', () => ({
         inCart: true,
         inShipping: false,
         inCheckout: false,
         total: 0,
         currencies: null,
-        stripe: null,
         name: null,
         email: null,
         line1: null,
@@ -21,19 +22,19 @@ var app = new Vue({
         step: '1. cart',
         orderWaiting: false,
         shipping: 0,
-        items: null
-    },
-    mounted() {
-        this.country = this.$refs.userLocation.value
-        this.total = parseInt(this.$refs.checkoutTotal.value)
-        this.currencies = this.$refs.currencies.value
-    },
-    computed: {
-        shippingIncomplete: function(){
+        items: null,
+
+        init() {
+            // refs are only registered once the children have been initialised
+            this.$nextTick(() => {
+                this.country = this.$refs.userLocation.value
+                this.total = parseInt(this.$refs.checkoutTotal.value)
+                this.currencies = this.$refs.currencies.value
+            })
+        },
+        get shippingIncomplete() {
             return this.isEmpty(this.name) || this.isEmpty(this.email) || this.isEmpty(this.line1) || this.isEmpty(this.city) || this.isEmpty(this.province) || this.isEmpty(this.postcode) || this.isEmpty(this.country) || !this.validEmail(this.email)
-        }
-    },
-    methods: {
+        },
         resetToCart: function(){
             this.inCart = true;
             this.inShipping = false;
@@ -52,7 +53,7 @@ var app = new Vue({
             this.step = '1. cart   2. shipping address   3. payment';
 
             // init stripe button
-            this.stripe = Stripe(this.$refs.checkoutKey.value);
+            stripe = Stripe(this.$refs.checkoutKey.value);
             this.orderWaiting = true
             axios.post('/address', {
                 name: this.name,
@@ -84,7 +85,7 @@ var app = new Vue({
               })
         },
         redirectStripe: function(){
-            this.stripe.redirectToCheckout({
+            stripe.redirectToCheckout({
                 sessionId: this.$refs.checkoutSessionID.value
             }).then(function (result) {
                 alert(result.error.message);
@@ -137,5 +138,5 @@ var app = new Vue({
         isEmpty: function(str) {
             return (!str || /^\s*$/.test(str));
         }
-    }
-});
+    }))
+})
