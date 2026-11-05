@@ -125,8 +125,7 @@ function archiveDate( string $string ): string
  * The list of eligible filenames is cached for 12 hours (43200s); only the
  * filename list is cached, a fresh random pick happens on every call.
  *
- * @return array{images: \Kirby\Cms\File}
- * @throws \Kirby\Exception\InvalidArgumentException
+ * @return array{images: \Kirby\Cms\File|null} `images` is null when there is nothing to show
  */
 function getHomeImage(): array
 {
@@ -136,12 +135,18 @@ function getHomeImage(): array
 	if( $data = $cache->get( 'images' ) ) {
 		$images = json_decode( $data );
 	} else {
-		foreach( page( 'projects/portfolio' )->files() as $image ) {
+		foreach( page( 'projects/portfolio' )?->files() ?? [] as $image ) {
 			if( $image->isLandscape() )
 				$images[] = $image->filename();
 		}
-		$cache->set( 'images', json_encode( $images ), 43200 );
+		// Don't cache an empty list, so adding images shows up immediately.
+		if( $images !== [] )
+			$cache->set( 'images', json_encode( $images ), 43200 );
 	}
+
+	// No portfolio images (e.g. a bare local checkout): the home page renders without a hero.
+	if( $images === [] )
+		return ['images' => null];
 
 	$file = $images[array_rand( $images )];
 	$image = page( "projects/portfolio/" )->file( $file );
@@ -168,46 +173,49 @@ function maskEmail( ?string $email ): string
  * Resolves the visitor's approximate location from their IP via ipapi.co.
  *
  * In non-production environments this skips the lookup and returns the
- * hard-coded `geolocation` option. Successful lookups are cached per IP.
- * Returns 'CA' when the remote address is unusable and null on API error.
+ * hard-coded `geolocation` option. Lookups are cached per IP for a day; a
+ * failed lookup (or a non-public IP) yields a Canada default, cached briefly
+ * on failure so a rate-limited or unreachable API isn't hit on every request.
+ * Always returns an object, so callers can read `->country_name` safely.
  *
- * @return object|string|null Decoded ipapi.co response, a country code, or null
+ * @return object Decoded ipapi.co response, the dev `geolocation` option, or the default
  */
-function location(): object|string|null
+function location(): object
 {
 	if( !in_array( kirby()->option( 'env', 'dev' ), ['prod', 'production'] ) )
 		return kirby()->option( 'geolocation' );
 
+	$default = (object) ['country_code' => 'CA', 'country_name' => 'Canada'];
+
+	$ip = filter_var( kirby()->visitor()->ip(), FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE );
+	if( $ip === false )
+		return $default;
+
+	$cache = kirby()->cache( 'helpers.helpers.backend' );
+	$cacheKey = 'geo-' . $ip;
+
+	if( $data = $cache->get( $cacheKey ) )
+		return json_decode( $data );
+
 	try {
-		$cache = kirby()->cache( 'helpers.helpers.backend' );
-		$remote = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP );
+		$key = kirby()->option( 'ipapi_key' );
+		$response = Remote::get( "https://ipapi.co/$ip/json?key=$key", ['timeout' => 3] );
+		$loc = json_decode( $response->content() );
 
-		if( $remote === false )
-			return 'CA';
+		// ipapi reports failures (rate limit, bad key...) as JSON with `error: true`
+		if( $response->code() !== 200 || !is_object( $loc ) || !empty( $loc->error ) )
+			throw new Exception( $loc->reason ?? 'HTTP ' . $response->code() );
 
-		if( $data = $cache->get( $remote ) ) {
-			$loc = json_decode( $data );
-		} else {
-			$key = kirby()->option( 'ipapi_key' );
-			$requestURL = "https://ipapi.co/$remote/json?key=$key";
-
-			$data = Remote::get( $requestURL );
-			$response = $data->content();
-
-			if( property_exists( $response, 'error' ) && $response->error == true ) {
-				throw new Exception( $response->error );
-			}
-
-			$cache->set( $remote, $response );
-			$loc = json_decode( $response );
-		}
+		$cache->set( $cacheKey, $response->content(), 1440 );
 
 		return $loc;
 	} catch( Exception $e ) {
 		$logger = ( new Logger( 'geolocation' ) )->getLogger();
-		$logger->error( 'could not resolve IP address', ['ip' => $remote ?? null, 'reason' => $e->getMessage()] );
+		$logger->error( 'could not resolve IP address', ['ip' => $ip, 'reason' => $e->getMessage()] );
 
-		return null;
+		$cache->set( $cacheKey, json_encode( $default ), 10 );
+
+		return $default;
 	}
 }
 
