@@ -5,4 +5,4 @@
 check /etc/nginx/sites-available/the-invisible-cities.com  nginx.conf
 pull  /etc/nginx/forge-conf/3311015/site.conf                                            forge-conf/site.conf
 pull  /etc/nginx/forge-conf/3311015/the-invisible-cities.com/before/redirect.conf        forge-conf/before/redirect.conf
-pull  /etc/nginx/forge-conf/3311015/the-invisible-cities.com/before/ssl_redirect.conf    forge-conf/before/ssl_redirect.conf
+check /etc/nginx/forge-conf/3311015/the-invisible-cities.com/before/ssl_redirect.conf    forge-conf/before/ssl_redirect.conf
