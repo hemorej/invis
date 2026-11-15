@@ -51,6 +51,7 @@ return [
 	'mailgun_domain' => '',
 	'mailgun_key' => '',
 	'alert_address' => '',
+	'sentry_dsn' => '', // empty disables Sentry (site/plugins/sentry)
 	'from_address' => '',
 	'reply-to_address' => '',
 
