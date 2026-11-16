@@ -20,6 +20,20 @@ ddev xdebug        # toggle Xdebug
 ddev stop
 ```
 
+#### checking the page cache locally
+
+Pages are cached by [Staticache](https://github.com/getkirby/staticache) and, as in production, nginx serves
+the cached files without starting PHP (`.ddev/nginx_full/nginx-site.conf`; run `ddev restart` after changing it).
+Copy the `cache` block from `site/config/config.base` into your `site/config/config.php`.
+
+```sh
+rm -rf site/cache/invis.ddev.site/pages/journal           # force a miss
+curl -sI https://invis.ddev.site/journal/ | grep -iE 'etag|last-modified'   # miss: Kirby renders it, no output
+curl -sI https://invis.ddev.site/journal/ | grep -iE 'etag|last-modified'   # hit: nginx sent the file, so ETag + Last-Modified
+```
+
+`home` and `prints/*` are deliberately never cached. See `infra/README.md` for the details and the rollout.
+
 ### frontend build
 
 Requires [pnpm](https://pnpm.io) (v11+).
