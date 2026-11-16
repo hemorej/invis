@@ -69,6 +69,9 @@ button:focus, input:focus, select:focus {outline:0}
 .s721-cd-light{ font-family: 'swiss721-cd-light', sans-serif }
 
 img { filter: var(--photo); }
+/* Series / travel pages show the photographs as shot; everywhere else (covers, thumbnails,
+   journal, store) stays grayscale. The class comes from partials/header.php. */
+.tpl-article { --photo:none; }
 
 select option { background: var(--surface); }
 

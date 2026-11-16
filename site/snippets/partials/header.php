@@ -20,7 +20,7 @@ if( page()->parent() && page()->parent()->title() == 'journal' ) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="tpl-<?= html( page()->intendedTemplate()->name() ) ?>">
 <head>
     <title><?= html( site()->title() ) ?> — <?= html( strtolower( $title ) ) ?></title>
     <meta charset="utf-8"/>
