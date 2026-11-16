@@ -75,6 +75,60 @@ pieces come from `~/Code/util/infra/nginx/` (`snippets/bot-mitigation.conf`, the
 It sets its own access log (`/var/log/nginx/access.log`); the error log is
 `/var/log/nginx/3311015-error.log`, rotated by `/etc/logrotate.d/forge-3311015`.
 
+## Page cache (Staticache)
+
+Kirby's `getkirby/staticache` plugin writes every rendered page to
+`site/cache/<host>/pages/<path>/index.html` (inside the release, so each deploy starts with an
+empty cache), and the vhost's `location /` serves those files straight from disk before falling
+back to `index.php` (`nginx.conf`, "Site links"). A cache hit never starts PHP; a miss renders
+through Kirby and writes the file for next time. Panel edits purge the cache automatically.
+
+How the pieces fit — change one and the others must follow:
+
+| Where | What |
+|---|---|
+| `nginx.conf` → `location /` | `try_files` looks in `/site/cache/$host/pages/…`; any verb other than GET/HEAD skips the cache and goes to PHP. Applied **by hand** on the server (below). |
+| `site/config/config.the-invisible-cities.com.php` (on the volume, `/mnt/data-volume/site/config/`) | The `cache.pages` block. Not in git; the template is `site/config/config.base`. |
+| `.ddev/nginx_full/nginx-site.conf` | The same `location /` for local testing |
+
+Production `cache.pages` must read:
+
+```php
+'cache' => [
+    'pages' => [
+        'active'  => true,
+        'type'    => 'static',
+        'headers' => false,   // nginx can't read the header block `true` stores; the files must be body-only
+        'ignore'  => function ($page) {   // exact page ids only: array entries are NOT wildcards
+            $id = $page->id();
+            return $id === 'home' || $id === 'prints' || str_starts_with($id, 'prints/');
+        },
+    ],
+],
+```
+
+Things that behave differently once nginx serves the files:
+
+- A served page skips **all** PHP: no session, cart, geolocation or CSRF logic runs for it. That is why
+  `home` and everything under `prints` are ignored, and why Kirby itself refuses to cache a page that
+  touches the session.
+- Changing `ignore` does not remove files already cached; delete them
+  (`rm -rf site/cache/<host>/pages/prints*`) or they keep being served.
+- `headers => true` and this nginx rule are incompatible (the status/header lines would be sent as page body).
+- After a deploy the first visit to each page is slow (it is the one that writes the file).
+
+**Rolling it out on the server** (steps 1 and 3 as `forge`, step 2 as root because it writes `/etc/nginx`):
+
+1. Edit `/mnt/data-volume/site/config/config.the-invisible-cities.com.php`: set `headers` to `false` and
+   replace the `ignore` array with the closure above (`php -l` it).
+2. Copy `nginx.conf` to `/etc/nginx/sites-available/the-invisible-cities.com`, then `nginx -t && service nginx reload`.
+3. Clear the stale cache so the new ignore rule takes effect: `rm -rf /home/forge/the-invisible-cities.com/current/site/cache/the-invisible-cities.com/pages`.
+4. `./snapshot.sh` — the vhost should report no drift.
+
+Check it on a real request with `curl -sI <url>`: a hit is a plain file from nginx, so it carries `ETag` and
+`Last-Modified`; a page rendered by Kirby has neither. (Don't look for `X-Powered-By`: `expose_php` is Off.)
+Request a not-yet-cached URL twice: no `ETag` the first time, an `ETag` the second.
+
 ## Leaving Forge — what needs a new owner
 
 - **Release handling** — clone, symlinks, `current` swap, pruning old releases, the `.env` link

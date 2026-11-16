@@ -30,11 +30,14 @@ return [
 		'pages' => [
 			'active' => true,
 			'type' => 'static',
-			'headers' => true,
-			'ignore' => [
-				'home',
-				'prints/*',
-			],
+			// nginx serves the cached files itself and can't read a header block, so keep the
+			// files body-only. (`true` is only for the PHP loader / Apache / Caddy.)
+			'headers' => false,
+			// Page ids; array entries are exact matches (no wildcards), hence the closure.
+			'ignore' => function ($page) {
+				$id = $page->id();
+				return $id === 'home' || $id === 'prints' || str_starts_with($id, 'prints/');
+			},
 		],
 	],
 

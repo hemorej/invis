@@ -30,4 +30,7 @@ site/config/config.php
 site/config/license
 site/config/.license
 .ddev/*
+!.ddev/nginx_full/
+.ddev/nginx_full/*
+!.ddev/nginx_full/nginx-site.conf
 CLAUDE.md
