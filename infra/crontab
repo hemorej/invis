@@ -4,4 +4,8 @@
 # other way; leaving Forge means adding them to the forge user's crontab (`crontab -e`).
 
 # kirby cache cleanup — empties Kirby's generated page-media cache on the volume (Forge "weekly")
-@weekly rm -rf /mnt/data-volume/media/pages/*
+# The static page cache (site/cache/<host>/pages) holds HTML that points at those thumbnails, and
+# Kirby can only regenerate a thumbnail from its .jobs/*.json file, which the wipe also deletes. So
+# the page cache MUST be cleared in the same job, otherwise cached pages 404 their images until
+# the next deploy/Panel edit. Order matters: media first, then pages.
+@weekly rm -rf /mnt/data-volume/media/pages/* /home/forge/the-invisible-cities.com/current/site/cache/the-invisible-cities.com/pages
