@@ -16,7 +16,7 @@ everything specific to this site. Facts as of 2026-10-23.
 | Runs as | `forge` |
 
 No daemons or queue workers. One scheduled job, defined in Forge's Scheduler (documented in `crontab`): a weekly
-`rm -rf /mnt/data-volume/media/pages/*` that empties Kirby's generated page-media cache.
+`rm -rf /mnt/data-volume/media/pages/* <current>/site/cache/the-invisible-cities.com/pages` that empties Kirby's generated page-media cache **and** the static page cache. Both must go together: cached HTML references thumbnails that only exist (or can be regenerated, via `.jobs/*.json`) until the media wipe, so wiping media alone makes cached pages 404 their images.
 
 ## Files here
 
