@@ -2,29 +2,29 @@ title: Articles
 icon: page
 columns:
   - width: 1/4
-    sections:
+    fields:
       hidden:
-        type: pages
-        headline: Hidden
+        type: pagelist
+        label: Hidden
         status: unlisted
-        templates:
+        blueprints:
           - article
           - product
 
   - width: 1/4
-    sections:
+    fields:
       drafts:
-        type: pages
-        headline: Drafts
+        type: pagelist
+        label: Drafts
         status: draft
         create: 
           - article
           - product
 
   - width: 1/2
-    sections:
+    fields:
       listed:
-        type: pages
-        headline: Published
+        type: pagelist
+        label: Published
         status: listed
         sortBy: published desc

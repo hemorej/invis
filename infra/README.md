@@ -9,7 +9,7 @@ everything specific to this site. Facts as of 2026-10-23.
 | | |
 |---|---|
 | Domain | `the-invisible-cities.com` (`www.` → 301 to the apex; port 80 → 301 to https) |
-| Stack | Kirby 5 flat-file CMS on PHP 8.5-FPM (`/run/php/php8.5-fpm.sock`), no database |
+| Stack | Kirby 6 flat-file CMS on PHP 8.5-FPM (`/run/php/php8.5-fpm.sock`), no database |
 | Site root | `/home/forge/the-invisible-cities.com/current/` → `releases/<id>/`, 4 releases kept (Forge setting) |
 | Forge site id | `3311015` (appears in `forge-conf/3311015/…` and the error-log name) |
 | TLS | Let's Encrypt via Forge, renewed Mon 11:01 (`/root/.letsencrypt-renew/3647249`) |

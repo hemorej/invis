@@ -2,10 +2,10 @@ title: Site
 columns:
   sidebar: 
     width: 1/3
-    sections:
+    fields:
       pages:
-        type: pages
-        templates:
+        type: pagelist
+        blueprints:
           - about
           - articles
           - journal

@@ -3,7 +3,7 @@ icon: image
 fields:
   image:
     label: Image
-    type: files
+    type: filepicker
     query: page.images
     layout: cards
     multiple: false

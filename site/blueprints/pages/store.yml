@@ -5,28 +5,28 @@ tabs:
     label: Products
     columns:
       - width: 1/3
-        sections:
+        fields:
           hidden:
-            type: pages
-            headline: Hidden
+            type: pagelist
+            label: Hidden
             status: unlisted
-            templates:
+            blueprints:
               - product
               - article
       - width: 1/3
-        sections:
+        fields:
           drafts:
-            type: pages
-            headline: Drafts
+            type: pagelist
+            label: Drafts
             status: draft
             create: 
               - product
               - article
       - width: 1/3
-        sections:
+        fields:
           listed:
-            type: pages
-            headline: Published
+            type: pagelist
+            label: Published
             status: listed
 
   regions:
@@ -47,33 +47,31 @@ tabs:
     label: Orders
     columns:
       - width: 1/3
-        sections:
+        fields:
           shipped:
-            headline: Shipped orders
-            template: order
+            label: Shipped orders
+            type: pagelist
+            blueprint: order
             create: false
-            type: pages
             query: site.find('orders').drafts.filterBy('orderstatus', '==', 'shipped')
             sortBy: shipping_date desc
 
       - width: 1/3
-        sections:
+        fields:
           paid:
-            type: pages
-            headline: Completed orders
-            template: order
+            type: pagelist
+            label: Completed orders
+            blueprint: order
             create: false
-            type: pages
             query: site.find('orders').drafts.filterBy('orderstatus', '==', 'paid')                                     
             sortBy: txn_date desc
 
       - width: 1/3
-        sections:
+        fields:
           unshipped:
-            type: pages
-            headline: Other orders
-            template: order
+            type: pagelist
+            label: Other orders
+            blueprint: order
             create: false
-            type: pages
             query: site.find('orders').drafts.filterBy('orderstatus', 'in', ['pending', 'canceled', 'returned'])        
             sortBy: txn_date desc
