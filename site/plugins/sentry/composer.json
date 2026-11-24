@@ -14,5 +14,10 @@
 		"allow-plugins": {
 			"php-http/discovery": true
 		}
+	},
+	"extra": {
+		"kirby": {
+			"compatible": "^5.0 || ^6.0"
+		}
 	}
 }

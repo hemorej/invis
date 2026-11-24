@@ -13,5 +13,10 @@
     ],
     "require": {
         "php": "^8.5"
+    },
+    "extra": {
+        "kirby": {
+            "compatible": "^5.0 || ^6.0"
+        }
     }
 }

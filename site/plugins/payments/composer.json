@@ -25,5 +25,10 @@
 		"allow-plugins": {
 			"cweagans/composer-configurable-plugin": true
 		}
+	},
+	"extra": {
+		"kirby": {
+			"compatible": "^5.0 || ^6.0"
+		}
 	}
 }

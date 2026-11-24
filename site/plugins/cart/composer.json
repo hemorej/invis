@@ -18,5 +18,10 @@
         "psr-4": {
             "Cart\\": "src/"
         }
-    }
+    },
+	"extra": {
+		"kirby": {
+			"compatible": "^5.0 || ^6.0"
+		}
+	}
 }
