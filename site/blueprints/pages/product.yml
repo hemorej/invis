@@ -118,7 +118,7 @@ columns:
           uploads:
             label: Images
             required: true
-            type: files
+            type: filepicker
             query: page.images
             layout: list
             multiple: true

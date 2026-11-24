@@ -3,18 +3,18 @@ icon: book
 
 columns:
   - width: 1/2
-    sections:
+    fields:
       drafts:
-        type: pages
-        headline: Drafts
+        type: pagelist
+        label: Drafts
         status: draft
         create: 
           - article
 
   - width: 1/2
-    sections:
+    fields:
       listed:
-        type: pages
-        headline: Published
+        type: pagelist
+        label: Published
         status: listed
         flip: true
