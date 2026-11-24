@@ -75,7 +75,6 @@ return [
 		],
 	],
 
-	'panel.vue.compiler' => false,
 
 
 	'hooks' => [
