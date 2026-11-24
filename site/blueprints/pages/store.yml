@@ -50,9 +50,9 @@ tabs:
         sections:
           shipped:
             headline: Shipped orders
+            type: pages
             template: order
             create: false
-            type: pages
             query: site.find('orders').drafts.filterBy('orderstatus', '==', 'shipped')
             sortBy: shipping_date desc
 
@@ -63,7 +63,6 @@ tabs:
             headline: Completed orders
             template: order
             create: false
-            type: pages
             query: site.find('orders').drafts.filterBy('orderstatus', '==', 'paid')                                     
             sortBy: txn_date desc
 
@@ -74,6 +73,5 @@ tabs:
             headline: Other orders
             template: order
             create: false
-            type: pages
             query: site.find('orders').drafts.filterBy('orderstatus', 'in', ['pending', 'canceled', 'returned'])        
             sortBy: txn_date desc
