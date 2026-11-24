@@ -60,7 +60,6 @@ return [
 
 	'stripe_key_pub' => '',
 	'stripe_key_prv' => '',
-	'webhook_secret' => '',
 
 	'fixer_key' => '',
 	'ipapi_key' => '',
@@ -76,10 +75,8 @@ return [
 		],
 	],
 
-
-
 	'hooks' => [
-		'page.update:after' => function ( $newPage, $oldPage ) {
+		'page.update:after' => function ( Page $newPage, ?Page $oldPage = null ) {
 			$updateHandler = new PageUpdateHandler();
 			$updateHandler->handle( $newPage, $oldPage );
 		},
