@@ -69,9 +69,10 @@ return [
 
 	'auth' => [
 		'trials' => 5,
-		'challenges' => ['totp', 'email'],
+		'challenges' => ['webauthn', 'totp', 'email'],
 		'methods' => [
 			'password' => ['2fa' => true],
+			'webauthn' => true,
 		],
 	],
 
