@@ -12,3 +12,10 @@ allowBuilds:
 # patches you've manually verified): add the package name here.
 # minimumReleaseAgeExclude:
 #   - some-package
+
+# Supply-chain safety net: never run install/postinstall scripts from
+# dependencies. esbuild's platform binary and purgecss don't need
+# lifecycle scripts to work (verified with `pnpm run build`); this
+# blocks arbitrary code execution from a compromised package's
+# install hooks.
+ignoreScripts: true
