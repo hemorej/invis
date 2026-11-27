@@ -26,7 +26,8 @@ Links:
   text: jungjin lee
   separator: ""
 - 
-  link: https://www.shashasha.co/en/artist/tamiko-nishimura
+  link: >
+    https://www.shashasha.co/en/artist/tamiko-nishimura
   text: tamiko nishimura
   separator: ""
 - 
@@ -34,11 +35,13 @@ Links:
   text: koji onaka
   separator: ""
 - 
-  link: https://www.saulleiterfoundation.org/color
+  link: >
+    https://www.saulleiterfoundation.org/color
   text: saul leiter
   separator: ""
 - 
-  link: https://www.shashasha.co/en/artist/kazuo-kitai
+  link: >
+    https://www.shashasha.co/en/artist/kazuo-kitai
   text: kazuo kitai
   separator: photographers i follow
 - 
@@ -54,11 +57,13 @@ Links:
   text: ralph gibson
   separator: ""
 - 
-  link: https://www.magnumphotos.com/photographer/josef-koudelka/
+  link: >
+    https://www.magnumphotos.com/photographer/josef-koudelka/
   text: josef koudelka
   separator: ""
 - 
-  link: https://www.shashasha.co/en/artist/miyako-ishiuchi
+  link: >
+    https://www.shashasha.co/en/artist/miyako-ishiuchi
   text: miyako ishiuchi
   separator: ""
 - 
@@ -66,7 +71,8 @@ Links:
   text: carolyn drake
   separator: ""
 - 
-  link: https://www.magnumphotos.com/photographer/raymond-depardon/
+  link: >
+    https://www.magnumphotos.com/photographer/raymond-depardon/
   text: raymond depardon
   separator: ""
 - 
@@ -74,7 +80,8 @@ Links:
   text: christophe agou
   separator: ""
 - 
-  link: https://www.magnumphotos.com/photographer/larry-towell/
+  link: >
+    https://www.magnumphotos.com/photographer/larry-towell/
   text: larry towell
   separator: ""
 - 
@@ -94,7 +101,8 @@ Links:
   text: luo yang
   separator: ""
 - 
-  link: https://www.shashasha.co/en/artist/masako-tomiya
+  link: >
+    https://www.shashasha.co/en/artist/masako-tomiya
   text: masako tomiya
   separator: ""
 - 
@@ -106,7 +114,8 @@ Links:
   text: rebecca norris webb
   separator: ""
 - 
-  link: https://www.magnumphotos.com/photographer/thomas-dworzak/
+  link: >
+    https://www.magnumphotos.com/photographer/thomas-dworzak/
   text: thomas dworzak
   separator: ""
 - 
@@ -126,7 +135,8 @@ Links:
   text: jens olof lasthein
   separator: ""
 - 
-  link: https://www.magnumphotos.com/photographer/olivia-arthur/
+  link: >
+    https://www.magnumphotos.com/photographer/olivia-arthur/
   text: olivia arthur
   separator: ""
 - 
@@ -146,15 +156,18 @@ Links:
   text: yurie nagashima
   separator: ""
 - 
-  link: https://www.artsy.net/artist/william-eggleston
+  link: >
+    https://www.artsy.net/artist/william-eggleston
   text: william eggleston
   separator: ""
 - 
-  link: https://www.magnumphotos.com/photographer/newsha-tavakolian/
+  link: >
+    https://www.magnumphotos.com/photographer/newsha-tavakolian/
   text: newsha tavakolian
   separator: ""
 - 
-  link: https://www.artsy.net/artist/lee-gap-chul
+  link: >
+    https://www.artsy.net/artist/lee-gap-chul
   text: gap-chul lee
   separator: ""
 - 
@@ -162,7 +175,8 @@ Links:
   text: issei suda
   separator: ""
 - 
-  link: http://www.artnet.com/artists/shikanosuke-yagaki/
+  link: >
+    http://www.artnet.com/artists/shikanosuke-yagaki/
   text: shikanosuke yagaki
   separator: ""
 
